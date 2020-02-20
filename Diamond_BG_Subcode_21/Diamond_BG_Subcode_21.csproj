@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="1111.cs" />
     <Compile Include="ConvertToDiamond.cs" />
     <Compile Include="CreateTetml.cs" />
     <Compile Include="DiamondSender.cs" />
