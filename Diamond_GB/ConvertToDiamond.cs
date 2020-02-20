@@ -39,8 +39,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 8 converted successfully.\tPatents:\t" + fullGazetteInfo.Count + "\n");
             return fullGazetteInfo;
         }
 
@@ -74,8 +76,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 9 converted successfully.\tPatents:\t" + fullGazetteInfo.Count + "\n");
             return fullGazetteInfo;
         }
 
@@ -108,8 +112,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 10 converted successfully.\tPatents:\t" + fullGazetteInfo.Count + "\n");
             return fullGazetteInfo;
         }
 
@@ -141,8 +147,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 11 converted successfully.\tPatents:\t" + fullGazetteInfo.Count + "\n");
             return fullGazetteInfo;
         }
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub12(List<OutElements.Sub12> elementOuts)
@@ -173,8 +181,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 12 converted successfully.\tPatents:\t" + fullGazetteInfo.Count + "\n");
             return fullGazetteInfo;
         }
 
@@ -206,8 +216,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 42 converted successfully.\tPatents:\t"+fullGazetteInfo.Count+"\n");
             return fullGazetteInfo;
         }
 
@@ -239,8 +251,10 @@ namespace Diamond_GB
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
+                    Console.WriteLine("Record\t" + legalEvent.Biblio.Publication.Number + "\t:\tconverted successfully.");
                 }
             }
+            Console.WriteLine("Subcode 43 converted successfully.\tPatents:\t" + fullGazetteInfo.Count + "\n");
             return fullGazetteInfo;
         }
     }

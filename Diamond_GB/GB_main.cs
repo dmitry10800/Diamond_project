@@ -127,12 +127,12 @@ namespace Diamond_GB
                 /*Applications Terminated before Publication under Section 16(1)*/
                 if (sub8 != null && sub8.Count() > 0)
                 {
-                    Process.Sub8.Run(sub8);
+                    //Process.Sub8.Run(sub8);
                 }
                 /*Applications Terminated after Publication under Section 16(1)*/
                 if (sub9 != null && sub9.Count() > 0)
                 {
-                    Process.Sub9.Run(sub9);
+                    //Process.Sub9.Run(sub9);
                 }
                 /*European Patents Revoked*/
                 if (sub10 != null && sub10.Count() > 0)
