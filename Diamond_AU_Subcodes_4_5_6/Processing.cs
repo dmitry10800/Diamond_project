@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Diamond_AU_Subcodes_4_5_6;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Diamond_AU_Subcodes_4_5_6
+namespace AU
 {
     class Processing
     {
@@ -76,7 +75,7 @@ namespace Diamond_AU_Subcodes_4_5_6
                 var match = Regex.Match(elem.Value, @"(\d{4}\s*(\d{10}\s*\(\s*\d{1,2}[A-Z]{0,2}\s*\)\s*)+|\s*(\d{10}\s*\(\s*\d{1,2}[A-Z]{0,2}\s*\)\s*){3,})");
                 if (match.Value == elem.Value)
                 {
-                    var numbers = Regex.Matches(elem.Value, @"\d{10}\s*\(\s*([1-9]|1(1|[7-8])|2[4-8])(A|B|C|D|N|CN)?\s*\)");
+                    var numbers = Regex.Matches(elem.Value, @"\d{10}\s*\(\s*([1-9]|1(1|[7-8])|2[4-8])(A|B|C|D|N|CN|AN)?\s*\)");
                     foreach (Match number in numbers)
                     {
                         var currentElement = new Elements.SubCode6();
@@ -93,6 +92,17 @@ namespace Diamond_AU_Subcodes_4_5_6
             }
 
             return sub6List;
+        }
+
+        public static string DateNormalize(string s)
+        {
+            string dateNormalized = s;
+            var date = Regex.Match(s, @"(?<month>\d{2})[^0-9]*(?<day>\d{1,2})[^0-9]*(?<year>\d{4})");
+            var day = date.Groups["day"].Value;
+            if (date.Groups["day"].Length == 1)
+                day = $"0{day}";
+            dateNormalized = date.Groups["year"].Value + date.Groups["month"].Value + day;
+            return dateNormalized;
         }
     }
 }
