@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AU;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Diamond_AU_Subcodes_4_5_6
 {
     class AU_main
     {
-        public static DirectoryInfo PathToTetml = new DirectoryInfo(@"C:\Users\Razrab\Desktop\AU\");
+        public static DirectoryInfo PathToTetml = new DirectoryInfo(@"D:\DIAMOND\AU\20200227\AU_20200227_08");
         public static FileInfo currentFile = null;
         public static string currentFileName = null;
 
