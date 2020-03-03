@@ -10,7 +10,7 @@ namespace Diamond_MX_Subcode_4
 {
     class MX_main
     {
-        public static DirectoryInfo PathToTetml = new DirectoryInfo(@"C:\Users\Razrab\Desktop\MX\");
+        public static DirectoryInfo PathToTetml = new DirectoryInfo(@"D:\DIAMOND\MX\20200302\MX_20200221_01(LT)");
         public static FileInfo currentFile = null;
         public static string currentFileName = null;
 

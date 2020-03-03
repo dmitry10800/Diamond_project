@@ -18,8 +18,8 @@ namespace Diamond_MX_Subcode_4
                 if (i < events.Count)
                 {
                     string tmpValue = JsonConvert.SerializeObject(events[i]);
-                    //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
-                    string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //Production
+                    string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
+                    //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //Production
                     HttpClient httpClient = new HttpClient();
                     httpClient.BaseAddress = new Uri(url);
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

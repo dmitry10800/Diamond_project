@@ -24,7 +24,13 @@ namespace Diamond_MX_Subcode_4
                     {
                         var text = elem.Value.Replace(appNumber.Value, "").Trim();
                         var pubNumber = Regex.Match(text, @"\d+");
-                        var owner = text.Replace(pubNumber.Value, "").Trim();
+                        var owner = "";
+                        if (pubNumber.Success)
+                        {
+                            owner = text.Replace(pubNumber.Value, "").Trim();
+                        }
+                        else
+                            owner = text;
                         var eventDate = Regex.Match(MX_main.currentFileName, @"20\d{6}");
                         var year = eventDate.Value.Substring(0, 4);
                         var month = eventDate.Value.Substring(4, 2);
