@@ -122,8 +122,8 @@ namespace Diamond_MY
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
+                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
+                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -147,7 +147,10 @@ namespace Diamond_MY
             //{
             //    Console.WriteLine("I11 identification error");
             //}
-            a.Number = v.Trim();
+            var number = Regex.Match(v, @"(?<ContryCode>MY)\s*-(?<Number>\d+)\s*-(?<Kind>[A-Z]{1}\d{0,2})");
+            if (number.Success)
+                a.Number = number.Groups["Number"].Value;
+                a.Kind = number.Groups["Kind"].Value;
             return a;
         }
        /* internal static List<ElementOut.PrioStruct> PriorityProcess(string v)

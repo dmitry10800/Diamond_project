@@ -34,9 +34,10 @@ namespace Diamond_MY
                     biblioData.Application.Number = record.I21App;
                     biblioData.Application.Date = record.I22Date;
                     biblioData.Publication.Number = record.I11Values.Number;
+                    biblioData.Publication.Kind = record.I11Values.Kind;
                     biblioData.DOfPublication = new DOfPublication { date_47 = record.I47Date };
                     /*30 priorities*/
-                    if (record.I30Prio != null && record.I30Prio.Count > 0)
+                    /*if (record.I30Prio != null && record.I30Prio.Count > 0)
                     {
                         biblioData.Priorities = new List<Priority>();
                         for (int i = 0; i < record.I30Prio.Count(); i++)
@@ -49,7 +50,7 @@ namespace Diamond_MY
                             };
                             biblioData.Priorities.Add(priority);
                         }
-                    }
+                    }*/
                     /*---------------------*/
                     /*51 international classification*/
                     if (record.I51IntCl != null && record.I51IntCl.Count > 0)
@@ -66,7 +67,7 @@ namespace Diamond_MY
                     }
                     /*---------------------*/
                     /*54 Title*/
-                    if (record.I54Title != null)
+                    /*if (record.I54Title != null)
                     {
                         Title title = new Title()
                         {
@@ -74,9 +75,9 @@ namespace Diamond_MY
                             Language = "EN"
                         };
                         biblioData.Titles.Add(title);
-                    }
+                    }*/
                     /*54 Title*/
-                    if (record.I57Absract != null)
+                   /* if (record.I57Absract != null)
                     {
                         Abstract desc = new Abstract()
                         {
@@ -84,9 +85,9 @@ namespace Diamond_MY
                             Language = "EN"
                         };
                         biblioData.Abstracts.Add(desc);
-                    }
+                    }*/
                     /*72 name, country code*/
-                    if (record.I72Inventors != null && record.I72Inventors.Count > 0)
+                    /*if (record.I72Inventors != null && record.I72Inventors.Count > 0)
                     {
                         biblioData.Inventors = new List<PartyMember>();
                         for (int i = 0; i < record.I72Inventors.Count(); i++)
@@ -96,10 +97,10 @@ namespace Diamond_MY
                             inventors.Language = "EN";
                             biblioData.Inventors.Add(inventors);
                         }
-                    }
+                    }*/
                     /*--------------*/
                     /*73 name*/
-                    if (record.I73Owners != null && record.I73Owners.Count > 0)
+                    /*if (record.I73Owners != null && record.I73Owners.Count > 0)
                     {
                         biblioData.Assignees = new List<PartyMember>();
                         for (int i = 0; i < record.I73Owners.Count(); i++)
@@ -111,9 +112,9 @@ namespace Diamond_MY
                             assignees.Language = "EN";
                             biblioData.Assignees.Add(assignees);
                         }
-                    }
+                    }*/
                     /*74 name addres*/
-                    if (record.I74Agent.Name != null)
+                    /*if (record.I74Agent.Name != null)
                     {
                         biblioData.Agents = new List<PartyMember>();
                         PartyMember agents = new PartyMember();
@@ -122,7 +123,7 @@ namespace Diamond_MY
                         agents.Country = "MY";
                         agents.Language = "EN";
                         biblioData.Agents.Add(agents);
-                    }
+                    }*/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
                 }

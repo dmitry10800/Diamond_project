@@ -29,7 +29,7 @@ namespace Diamond_MY
         static void Main()
         {
             /*Folder with tetml files to process*/
-            var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\MY\20190829");
+            var dir = new DirectoryInfo(@"D:\TET_DEV\Diamond\MY\");
             /*list of tetml files*/
             var files = new List<string>();
             foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
