@@ -150,7 +150,7 @@ namespace Diamond_MY
             a.Number = v.Trim();
             return a;
         }
-        internal static List<ElementOut.PrioStruct> PriorityProcess(string v)
+       /* internal static List<ElementOut.PrioStruct> PriorityProcess(string v)
         {
             List<ElementOut.PrioStruct> prioList = new List<ElementOut.PrioStruct>();
             ElementOut.PrioStruct a;
@@ -174,7 +174,7 @@ namespace Diamond_MY
                 }
             }
             return prioList;
-        }
+        }*/
         internal static List<ElementOut.IntClassStruct> IntClasProcess(string v)
         {
             List<ElementOut.IntClassStruct> intList = new List<ElementOut.IntClassStruct>();
@@ -233,7 +233,7 @@ namespace Diamond_MY
             }
             return intList;
         }
-        internal static List<ElementOut.InventorsStruct> InventorsProcess(string v)
+        /*internal static List<ElementOut.InventorsStruct> InventorsProcess(string v)
         {
             List<ElementOut.InventorsStruct> invList = new List<ElementOut.InventorsStruct>();
             List<string> tmp = new List<string>();
@@ -289,6 +289,6 @@ namespace Diamond_MY
                 agent.Address = "";
             }
             return agent;
-        }
+        }*/
     }
 }

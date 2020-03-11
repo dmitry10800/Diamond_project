@@ -14,7 +14,7 @@ namespace Diamond_BG
         static void Main(string[] args)
         {
             /*Folder with tetml files to process*/
-            var dir = new DirectoryInfo(@"D:\TET_DEV\Diamond\BG\20200218\BG_20200217_02(1)\");
+            var dir = new DirectoryInfo(@"D:\TET_DEV\Diamond\BG\20200311\BG_20200228_02(2)");
             /*list of tetml files*/
             var files = new List<string>();
             foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
@@ -79,7 +79,7 @@ namespace Diamond_BG
 
                 /*7 subcode*/
                 grantedCertForUM = tet.Descendants().Where(d => d.Name.LocalName == "Text" && d.Value != "PATENTS")
-                    .SkipWhile(e => !e.Value.StartsWith("ИЗДАДЕНИ СВИДЕТЕЛСТВА ЗА\nРЕГИСТРАЦИЯ НА ПОЛЕЗНИ МОДЕЛИ"))
+                    .SkipWhile(e => !e.Value.StartsWith("ИЗДАДЕНИ СВИДЕТЕЛСТВА ЗА РЕГИСТРАЦИЯ НА\nПОЛЕЗНИ МОДЕЛИ"))
                     .TakeWhile(e => !e.Value.StartsWith("ПУБЛИКУВАНЕ НА ОПИСАНИЯ КЪМ СВИДЕТЕЛСТВА\nЗА РЕГИСТРАЦИЯ НА ПОЛЕЗНИ МОДЕЛИ"))
                     .Where(e => !e.Value.StartsWith("ИЗДАДЕНИ СВИДЕТЕЛСТВА ЗА\nРЕГИСТРАЦИЯ НА ПОЛЕЗНИ МОДЕЛИ")
                     && e.Value != "И З О Б Р Е Т Е Н И Я"
@@ -157,7 +157,7 @@ namespace Diamond_BG
                 }
 
                 /*Granted European patents valid in the Republic of Bulgaria 1 subcode*/
-                /*if (publishedAppForInventions != null && publishedAppForInventions.Count() > 0)
+                if (publishedAppForInventions != null && publishedAppForInventions.Count() > 0)
                 {
                     ProcessPublishedApplicationsForInventions publApp = new ProcessPublishedApplicationsForInventions();
                     List<ProcessPublishedApplicationsForInventions.ElementOut> el = publApp.OutputValue(publishedAppForInventions);
@@ -171,7 +171,7 @@ namespace Diamond_BG
                         Console.WriteLine("Sending error");
                         throw;
                     }
-                }*/
+                }
             }
         }
     }

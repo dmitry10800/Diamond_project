@@ -86,18 +86,18 @@ namespace Diamond_MY
                                 }
                                 currentElement.I12Value = tmpValue.Replace(I12, "").Trim();
                             }
-                            if (record.StartsWith(I21))
+                            /*if (record.StartsWith(I21))
                             {
                                 currentElement.I21App = record.Replace(I21, "").Trim();
-                            }
-                            if (record.StartsWith(I22))
+                            }*/
+                            /*if (record.StartsWith(I22))
                             {
                                 currentElement.I22Date = Methods.DateNormalize(record.Replace(I22, "").Trim());
-                            }
-                            if (record.StartsWith(I30))
+                            }*/
+                            /*if (record.StartsWith(I30))
                             {
                                 currentElement.I30Prio = Methods.PriorityProcess(record.Replace(I30, "").Trim());
-                            }
+                            }*/
                             if (record.StartsWith(I47))
                             {
                                 currentElement.I47Date = Methods.DateNormalize(record.Replace(I47, "").Trim());
@@ -106,26 +106,26 @@ namespace Diamond_MY
                             {
                                 currentElement.I51IntCl = Methods.IntClasProcess(record.Replace(I51, "").Trim());
                             }
-                            if (record.StartsWith(I54))
+                            /*if (record.StartsWith(I54))
                             {
                                 currentElement.I54Title = record.Replace(I54, "").Replace("\n", " ");
-                            }
-                            if (record.StartsWith(I57))
+                            }*/
+                           /* if (record.StartsWith(I57))
                             {
                                 currentElement.I57Absract = record.Replace(I57, "").Replace("\n", " ");
-                            }
-                            if (record.StartsWith(I72))
+                            }*/
+                            /*if (record.StartsWith(I72))
                             {
                                 currentElement.I72Inventors = Methods.InventorsProcess(record.Replace(I72, "").Trim());
-                            }
-                            if (record.StartsWith(I73))
+                            }*/
+                            /*if (record.StartsWith(I73))
                             {
                                 currentElement.I73Owners = Methods.OwnersProcess(record.Replace(I73, "").Trim());
                             }
                             if (record.StartsWith(I74))
                             {
                                 currentElement.I74Agent = Methods.AgentProcess(record.Replace(I74, "").Trim());
-                            }
+                            }*/
                         }
                     }
                 }
