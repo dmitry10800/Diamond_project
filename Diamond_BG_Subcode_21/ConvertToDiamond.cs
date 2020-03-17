@@ -22,7 +22,7 @@ namespace Diamond_BG_Subcode_21
                 legalEvent.SectionCode = "MM";
                 legalEvent.CountryCode = "BG";
                 legalEvent.Id = id++;
-                biblio.Publication.Number = elem.PublicationNumber;
+               // biblio.Publication.Number = elem.PublicationNumber;
                 if (elem.PublicationKind != null)
                 {
                     biblio.Publication.Kind = elem.PublicationKind;
