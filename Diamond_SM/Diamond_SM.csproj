@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2F2B369C-BB66-472D-91AE-DE531C39B0F1}</ProjectGuid>
+    <ProjectGuid>{16B79222-BD42-47B8-8FC2-4C707A4A56A5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Diamond_SM</RootNamespace>
     <AssemblyName>Diamond_SM</AssemblyName>
@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,11 +46,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ConvertToDiamond.cs" />
+    <Compile Include="Diamond_SM_main.cs" />
+    <Compile Include="Methods.cs" />
+    <Compile Include="ProcessFirstList.cs" />
+    <Compile Include="ProcessSecondList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Countries\DiamondClasses\DiamondProjectClasses.csproj">
+      <Project>{316759e5-c753-4a26-acfb-d078bd432177}</Project>
+      <Name>DiamondProjectClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
