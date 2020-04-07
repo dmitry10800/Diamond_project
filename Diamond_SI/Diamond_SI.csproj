@@ -52,6 +52,7 @@
     <Compile Include="Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SI_main.cs" />
+    <Compile Include="SubCode20_Processing.cs" />
     <Compile Include="SubCode3Processing.cs" />
     <Compile Include="SubCode4Processing.cs" />
     <Compile Include="Subcodes.cs" />
