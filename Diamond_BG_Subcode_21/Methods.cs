@@ -17,6 +17,11 @@ namespace Diamond_BG_Subcode_21
             {
                 Regex reg = new Regex(@"BG/EP \d{7}");
                 MatchCollection matches = reg.Matches(tempStr);
+                if(matches.Count == 0)
+                {
+                    reg = new Regex(@"EP \d{7}");
+                    matches = reg.Matches(tempStr);
+                }
 
                 if (matches.Count > 0)
                 {
