@@ -22,14 +22,14 @@ namespace Diamond_BG_Subcode_21
                 legalEvent.SectionCode = "MM";
                 legalEvent.CountryCode = "BG";
                 legalEvent.Id = id++;
-               // biblio.Publication.Number = elem.PublicationNumber;
+                biblio.Publication.Number = elem.PublicationNumber;
                 if (elem.PublicationKind != null)
                 {
                     biblio.Publication.Kind = elem.PublicationKind;
                 }
                 legalEvent.GazetteName = gazetteName;
                 legalEvent.LegalEvent.Date = elem.LegalStatusEvents.EventDate;
-                legalEvent.LegalEvent.Number = elem.LegalStatusEvents.PatentNumber;
+                //legalEvent.LegalEvent.Number = elem.LegalStatusEvents.PatentNumber;
                 legalEvent.Biblio = biblio;
                 legalEvents.Add(legalEvent);
             }
