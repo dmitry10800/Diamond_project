@@ -71,7 +71,7 @@ namespace Diamond_IE_Subcodes_7_8
                     if (value.StartsWith(startChapterStr))
                         startsChapterList.Add(i);
 
-                    if (value.StartsWith(endChapterStr))
+                    if (value.StartsWith(endChapterStr) || value.StartsWith("Designs Registered Under The Industrial Designs Act"))
                         endsChapterList.Add(i);
 
                 }
