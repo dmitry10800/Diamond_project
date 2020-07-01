@@ -64,7 +64,8 @@ namespace Diamond_AR_Subcodes_2_3
                             new NoteTranslation
                             {
                                 Tr = rec.Tranlation,
-                                Language = "EN"
+                                Language = "EN",
+                                Type = "INID"
                             }
                         }
                     };
@@ -162,7 +163,8 @@ namespace Diamond_AR_Subcodes_2_3
                             new NoteTranslation
                             {
                                 Language = "EN",
-                                Tr = rec.Tranlation
+                                Tr = rec.Tranlation,
+                                Type = "INID"
                             }
                         }
                     };
