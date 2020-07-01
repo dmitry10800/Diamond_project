@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace DIamond_AR_Andrey
+namespace Diamond_AR_Subcodes_2_3
 {
     class Methods
     {
@@ -17,7 +16,7 @@ namespace DIamond_AR_Andrey
                     s = s.Replace(param, $"***{param}");
             }
 
-            return s.Split("***".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+            return s.Split("***", StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
         public static string DateNormalize(string s)

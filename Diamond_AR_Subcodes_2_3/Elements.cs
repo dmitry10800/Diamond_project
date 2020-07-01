@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace DIamond_AR_Andrey
+namespace Diamond_AR_Subcodes_2_3
 {
     class Elements
     {

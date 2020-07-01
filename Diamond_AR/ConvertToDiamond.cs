@@ -148,7 +148,7 @@ namespace Diamond_AR
                         if (record.I83 != null) tmpNote += "|| (83) Deposit Microorganisms | " + record.I83 + " ";
                         noteTransl.Tr = tmpNote;
                         noteTransl.Language = "EN";
-                        noteTransl.Type = "";
+                        noteTransl.Type = "INID";
                         legalEvent.LegalEvent.Translations.Add(noteTransl);
 
                     }

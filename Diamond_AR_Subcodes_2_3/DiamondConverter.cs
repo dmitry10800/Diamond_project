@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
 using Integration;
 
-namespace DIamond_AR_Andrey
+namespace Diamond_AR_Subcodes_2_3
 {
     class DiamondConverter
     {
@@ -64,8 +64,7 @@ namespace DIamond_AR_Andrey
                             new NoteTranslation
                             {
                                 Tr = rec.Tranlation,
-                                Language = "EN",
-                                Type = "INID"
+                                Language = "EN"
                             }
                         }
                     };
@@ -163,8 +162,7 @@ namespace DIamond_AR_Andrey
                             new NoteTranslation
                             {
                                 Language = "EN",
-                                Tr = rec.Tranlation,
-                                Type = "INID"
+                                Tr = rec.Tranlation
                             }
                         }
                     };

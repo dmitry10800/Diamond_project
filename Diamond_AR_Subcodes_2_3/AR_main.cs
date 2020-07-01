@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace DIamond_AR_Andrey
+namespace Diamond_AR_Subcodes_2_3
 {
     class AR_main
     {

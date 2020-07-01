@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace DIamond_AR_Andrey
+namespace Diamond_AR_Subcodes_2_3
 {
     class Processing
     {
@@ -293,7 +292,7 @@ namespace DIamond_AR_Andrey
                             curElem.Agents = new List<Agent>();
                             for (int j = 0; j < splittedAgents.Count(); j++)
                             {
-                                curElem.Agents.Add(new AR.Agent
+                                curElem.Agents.Add(new Agent
                                 {
                                     Name = splittedAgents[j].Trim()
                                 });
