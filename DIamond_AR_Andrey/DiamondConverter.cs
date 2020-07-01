@@ -64,7 +64,8 @@ namespace DIamond_AR_Andrey
                             new NoteTranslation
                             {
                                 Tr = rec.Tranlation,
-                                Language = "EN"
+                                Language = "EN",
+                                Type = "INID"
                             }
                         }
                     };
@@ -162,7 +163,8 @@ namespace DIamond_AR_Andrey
                             new NoteTranslation
                             {
                                 Language = "EN",
-                                Tr = rec.Tranlation
+                                Tr = rec.Tranlation,
+                                Type = "INID"
                             }
                         }
                     };

@@ -17,7 +17,7 @@ namespace DIamond_AR_Andrey
                     s = s.Replace(param, $"***{param}");
             }
 
-            return s.Split("***", StringSplitOptions.RemoveEmptyEntries).ToList();
+            return s.Split("***".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
         public static string DateNormalize(string s)
