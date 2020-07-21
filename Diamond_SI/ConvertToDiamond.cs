@@ -92,10 +92,15 @@ namespace Diamond_SI
 
                 if(elem.Field_86.Count > 0 && elem.Field_87.Count > 0)
                 {
-                    biblio.IntConvention.PctApplNumber = elem.Field_86[0].Number;
-                    biblio.IntConvention.PctApplDate = elem.Field_86[0].Date;
-                    biblio.IntConvention.PctPublNumber = elem.Field_87[0].Number;
-                    biblio.IntConvention.PctPublDate = elem.Field_87[0].Date;
+                    //biblio.IntConvention.PctApplNumber = elem.Field_86[0].Number;
+                    //biblio.IntConvention.PctApplDate = elem.Field_86[0].Date;
+                    //biblio.IntConvention.PctPublNumber = elem.Field_87[0].Number;
+                    //biblio.IntConvention.PctPublDate = elem.Field_87[0].Date;
+
+                    biblio.IntConvention.PctApplNumber = elem.Field_86?.FirstOrDefault()?.Number;
+                    biblio.IntConvention.PctApplDate = elem.Field_86?.FirstOrDefault()?.Date;
+                    biblio.IntConvention.PctPublNumber = elem.Field_87?.FirstOrDefault()?.Number;
+                    biblio.IntConvention.PctPublDate = elem.Field_87?.FirstOrDefault()?.Date;
                 }
 
                 int maxSizeList = elem.Field_96.Count;
@@ -117,6 +122,7 @@ namespace Diamond_SI
                     {
                         AppNumber = elem.Field_96[i].Number,
                         AppDate = elem.Field_96[i].Date,
+                        P
                         PubNumber = elem.Field_97[i].Number,
                         PubDate = elem.Field_97[i].Date
                     };

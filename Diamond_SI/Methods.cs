@@ -80,6 +80,9 @@ namespace Diamond_SI
         {
             List<Fields_86_87_96_97> outList = new List<Fields_86_87_96_97>();
             var list = GetClassificationArray(str);
+            if (list.Length == 1)
+                list = list[0].Split(new string[] {";"}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
+                    .ToArray();
             Fields_86_87_96_97 field = null;
 
             foreach (var item in list)
@@ -91,10 +94,12 @@ namespace Diamond_SI
                 switch (numberField)
                 {
                     case 86:
-                        field86_87_96_97 = Regex.Match(item, @"(?<Date>\d{2}\.\d{2}\.\d{4})\s*[A-Z]{2}\s*(?<Number>.*)");
+                        //field86_87_96_97 = Regex.Match(item, @"(?<Date>\d{2}\.\d{2}\.\d{4})\s*[A-Z]{2}\s*(?<Number>.*)");
+                        field86_87_96_97 = Regex.Match(item, @"(?<Date>\d{2}\.\d{2}\.\d{4})\s*(?<Country>[A-Z]{2})\s*(?<Number>.*)");
                         break;
                     case 87:
-                        field86_87_96_97 = Regex.Match(item, @"[A-Z]{2}\s*(?<Number>.*)\s*,\s*(?<Date>\d{2}\.\d{2}\.\d{4})");
+                        //field86_87_96_97 = Regex.Match(item, @"[A-Z]{2}\s*(?<Number>.*)\s*,\s*(?<Date>\d{2}\.\d{2}\.\d{4})");
+                        field86_87_96_97 = Regex.Match(item, @"(?<Country>[A-Z]{2})\s*(?<Number>.*)\s*,\s*(?<Date>\d{2}\.\d{2}\.\d{4})");
                         break;
                     case 96:
                         field86_87_96_97 = Regex.Match(item, @"(?<Date>\d{2}\.\d{2}\.\d{4})\s*(?<Country>[A-Z]{2})\s*(?<Number>.*)");
