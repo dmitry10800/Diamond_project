@@ -87,9 +87,17 @@ namespace Integration
 
         public string AppDate { get; set; }
 
+        public string AppKind { get; set; }
+
+        public string AppCountry { get; set; }
+
         public string PubNumber { get; set; }
 
         public string PubDate { get; set; }
+
+        public string PubKind { get; set; }
+
+        public string PubCountry { get; set; }
 
         public string Date { get; set; }
 
@@ -99,9 +107,15 @@ namespace Integration
 
         public string Spc92Number { get; set; }
 
+        public string Spc92Date { get; set; }
+
+        public string Spc92Country { get; set; }
+
         public string SpcDate { get; set; }
 
         public string ExpiredDate { get; set; }
+
+        public string Country { get; set; }
     }
 
     public class DOfPublication

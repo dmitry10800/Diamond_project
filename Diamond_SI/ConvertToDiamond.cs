@@ -122,9 +122,11 @@ namespace Diamond_SI
                     {
                         AppNumber = elem.Field_96[i].Number,
                         AppDate = elem.Field_96[i].Date,
-                        P
+                        AppCountry = elem.Field_96[i].Country,
                         PubNumber = elem.Field_97[i].Number,
-                        PubDate = elem.Field_97[i].Date
+                        PubDate = elem.Field_97[i].Date,
+                        PubCountry = elem.Field_97[i].Country,
+                        PubKind = elem.Field_97[i].kind,
                     };
                     biblio.EuropeanPatents.Add(euPatent);
                 }
