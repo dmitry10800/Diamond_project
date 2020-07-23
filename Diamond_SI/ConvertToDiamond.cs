@@ -99,8 +99,11 @@ namespace Diamond_SI
 
                     biblio.IntConvention.PctApplNumber = elem.Field_86?.FirstOrDefault()?.Number;
                     biblio.IntConvention.PctApplDate = elem.Field_86?.FirstOrDefault()?.Date;
+                    biblio.IntConvention.PctApplCountry = elem.Field_86?.FirstOrDefault()?.Country;
+
                     biblio.IntConvention.PctPublNumber = elem.Field_87?.FirstOrDefault()?.Number;
                     biblio.IntConvention.PctPublDate = elem.Field_87?.FirstOrDefault()?.Date;
+                    biblio.IntConvention.PctPublCountry = elem.Field_87?.FirstOrDefault()?.Country;
                 }
 
                 int maxSizeList = elem.Field_96.Count;
