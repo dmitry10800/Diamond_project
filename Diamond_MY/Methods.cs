@@ -61,7 +61,11 @@ namespace Diamond_MY
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace("(54) Title :", I54).Replace("(57) Abstract :", I57).Trim();
+            string tempStrC = recString.Replace("(54) Title :", I54).Replace("(57) Abstract :", I57)
+                .Replace("(21)", "")
+                .Replace("(22)", "")
+                .Replace("(47)", "")
+                .Trim();
             tempStrC = tempStrC/*.Replace(I11, "*****" + I11)*/
                 .Replace(I21, "*****" + I21)
                 .Replace(I22, "*****" + I22)
@@ -122,8 +126,8 @@ namespace Diamond_MY
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
+                //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
+                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -153,7 +157,7 @@ namespace Diamond_MY
                 a.Kind = number.Groups["Kind"].Value;
             return a;
         }
-       /* internal static List<ElementOut.PrioStruct> PriorityProcess(string v)
+        internal static List<ElementOut.PrioStruct> PriorityProcess(string v)
         {
             List<ElementOut.PrioStruct> prioList = new List<ElementOut.PrioStruct>();
             ElementOut.PrioStruct a;
@@ -177,7 +181,7 @@ namespace Diamond_MY
                 }
             }
             return prioList;
-        }*/
+        }
         internal static List<ElementOut.IntClassStruct> IntClasProcess(string v)
         {
             List<ElementOut.IntClassStruct> intList = new List<ElementOut.IntClassStruct>();
@@ -236,7 +240,7 @@ namespace Diamond_MY
             }
             return intList;
         }
-        /*internal static List<ElementOut.InventorsStruct> InventorsProcess(string v)
+        internal static List<ElementOut.InventorsStruct> InventorsProcess(string v)
         {
             List<ElementOut.InventorsStruct> invList = new List<ElementOut.InventorsStruct>();
             List<string> tmp = new List<string>();
@@ -292,6 +296,6 @@ namespace Diamond_MY
                 agent.Address = "";
             }
             return agent;
-        }*/
+        }
     }
 }
