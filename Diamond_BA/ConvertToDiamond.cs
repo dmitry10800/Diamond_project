@@ -235,7 +235,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -244,7 +245,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }
@@ -365,7 +367,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -374,7 +377,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }
@@ -462,7 +466,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -471,7 +476,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }
