@@ -31,7 +31,7 @@ namespace Diamond_PH
                 currentFileName = Path.GetFileName(file);
                 var text = File.ReadAllText(file);
 
-                var splitText = text.Split(new string[] { "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                var splitText = text.Split("\r\n\r\n".ToCharArray());
                 subCode7List = splitText.ToList();
             }
 

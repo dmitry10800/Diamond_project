@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using DiamondProjectClasses;
 using Integration;
 
 namespace Diamond.Core.Models
@@ -26,7 +24,5 @@ namespace Diamond.Core.Models
         public int Id { get; set; }
 
         public string GazetteName { get; set; }
-
-        public LicenseInformation LicenseInformation { get; set; }
     }
 }

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Diamond_BG_Subcode_21;
 
-namespace Diamond_BG_Subcode_21
+namespace BG
 {
     public class ProcessSubCode21
     {
@@ -23,6 +25,10 @@ namespace Diamond_BG_Subcode_21
                 {
                     if (Regex.IsMatch(elements[i], @"^BG/EP"))
                         fullStrWithPatents += elements[i];
+
+                    if (Regex.IsMatch(elements[i], @"^EP"))
+                        fullStrWithPatents += elements[i];
+
                 }
             }
 
@@ -55,6 +61,18 @@ namespace Diamond_BG_Subcode_21
                         //нету kind code
 
                         var patent = Regex.Match(splittedRecord, @"(?<PublNumber>BG/EP \d{7})");
+
+                        if (patent.Success)
+                        {
+                            currentElement.PublicationNumber = patent.Groups["PublNumber"].Value;
+                            legalStatus.PatentNumber = patent.Groups["PublNumber"].Value;
+                            legalStatus.EventDate = Methods.GetLegalEventDate(nameGazette);
+                            currentElement.LegalStatusEvents = legalStatus;
+                        }
+                    }
+                    else if (Regex.IsMatch(splittedRecord, @"EP \d{7}"))
+                    {
+                        var patent = Regex.Match(splittedRecord, @"(?<PublNumber>EP \d{7})");
 
                         if (patent.Success)
                         {

@@ -12,7 +12,6 @@ namespace Integration
 
         public string Date { get; set; }
 
-        public string Language { get; set; }
-
+        public string LanguageDesignation { get; set; }
     }
 }

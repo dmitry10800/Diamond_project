@@ -29,7 +29,7 @@ namespace Diamond_BG_Subcode_21
                 }
                 legalEvent.GazetteName = gazetteName;
                 legalEvent.LegalEvent.Date = elem.LegalStatusEvents.EventDate;
-                legalEvent.LegalEvent.Number = elem.LegalStatusEvents.PatentNumber;
+                //legalEvent.LegalEvent.Number = elem.LegalStatusEvents.PatentNumber;
                 legalEvent.Biblio = biblio;
                 legalEvents.Add(legalEvent);
             }
