@@ -470,8 +470,6 @@ namespace IN
         public static List<Integration.PartyMember> ConvertApplicants(string applicants, string type) // 71,73
         {
             var appList = new List<Integration.PartyMember>();
-            string overallAddress = null;
-            string overallCountry = null;
             var multipleApplicants = Regex.Split(applicants, @"\b[^A-Z,\/]\d{1,2}\b\)")
                 .Where(x => !string.IsNullOrEmpty(x))
                 .Select(x => x.Trim())
@@ -479,41 +477,34 @@ namespace IN
             var appRegex = new Regex(@"(?<Name>.*)Address of Applicant(?<Address>.*)");
             foreach (var applicant in multipleApplicants)
             {
-                var match = appRegex.Match(new Regex(@"^\d+\)").Replace(applicant, ""));
-                if (match.Success)
+                if (applicant.Contains("Address of Applicant"))
                 {
-                    var tmpApp = new Integration.PartyMember();
-                    tmpApp.Name = match.Groups["Name"].Value.Trim();
-                    tmpApp.Address1 = match.Groups["Address"].Value.Trim();
-                    if (overallAddress == null)
-                        overallAddress = tmpApp.Address1;
-                    if (tmpApp.Address1.Contains(","))
+                    var match = appRegex.Match(new Regex(@"^\d+\)").Replace(applicant, ""));
+                    if (match.Success)
                     {
-                        tmpApp.Country = ToCountry(tmpApp.Address1.Substring(tmpApp.Address1.LastIndexOf(",")).Trim());
+                        var tmpApp = new Integration.PartyMember();
+                        tmpApp.Name = match.Groups["Name"].Value.Trim();
+                        tmpApp.Address1 = match.Groups["Address"].Value.Trim();
+                        if (tmpApp.Address1.Contains(","))
+                        {
+                            tmpApp.Country = ToCountry(tmpApp.Address1.Substring(tmpApp.Address1.LastIndexOf(",")).Trim());
+                        }
+                        else
+                            tmpApp.Country = ToCountry(tmpApp.Address1);
+
+                        if (tmpApp.Country == tmpApp.Address1)
+                            tmpApp.Country = "IN";
+
+                        appList.Add(tmpApp);
                     }
                     else
-                        tmpApp.Country = ToCountry(tmpApp.Address1);
-
-                    if (tmpApp.Country == tmpApp.Address1)
-                        tmpApp.Country = "IN";
-
-                    if (overallCountry == null)
-                        overallCountry = tmpApp.Country;
-
-                    appList.Add(tmpApp);
-                }
-                else if (overallAddress != null && overallCountry != null)
-                {
-                    appList.Add(new Integration.PartyMember 
                     {
-                        Name = applicant,
-                        Address1 = overallAddress,
-                        Country = overallCountry
-                    });
+                        Console.WriteLine($"Applicant value doesn't match pattern: {applicant}");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"Applicant value doesn't match pattern: {applicant}");
+                    appList.Add(new Integration.PartyMember { Name = applicant.Trim() });
                 }
             }
             return appList;

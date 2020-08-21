@@ -11,7 +11,7 @@ namespace IN
 {
     class Diamond_IN
     {
-        public const string _pathToText = @"D:\_DFA_main\_Patents\IN\tst";
+        public const string _pathToText = @"E:\Work\IN";
         public static bool _isStaging = true;
         public static FileInfo _currentFileInProcess;
         public static List<string> _txt;
@@ -58,7 +58,7 @@ namespace IN
                 if (_sub2Elements != null && _sub2Elements.Count() > 0)
                 {
                     var sub2records = Subcodes.Process2SubCode(_sub2Elements, "2", "FG", currentFileName + ".pdf");
-                    DiamondSender.SendToDiamond(sub2records, _isStaging);
+                    //DiamondSender.SendToDiamond(sub2records, _isStaging);
                 }
                 if (_sub3Elements != null && _sub3Elements.Count() > 0)
                 {
