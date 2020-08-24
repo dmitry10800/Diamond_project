@@ -26,7 +26,7 @@ namespace Diamond_SI
 
             string correct51Field = "(51) ";
 
-            Regex reg1 = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1} \d{1,2}/\d{1,2}");
+            Regex reg1 = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1} \d{1,3}/\d{1,2}");
             MatchCollection matches51 = reg1.Matches(tempStr);
 
             if(matches51.Count > 0)
