@@ -11,7 +11,7 @@ namespace IN
 {
     class Diamond_IN
     {
-        public const string _pathToText = @"E:\Work\IN";
+        public const string _pathToText = @"D:\_DFA_main\_Patents\IN\20200821";
         public static bool _isStaging = true;
         public static FileInfo _currentFileInProcess;
         public static List<string> _txt;

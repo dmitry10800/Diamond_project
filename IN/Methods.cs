@@ -579,11 +579,11 @@ namespace IN
         {
             classificationInfo = Regex.Replace(classificationInfo, @"\.*\,*", "").ToUpper();
             var ips = new List<Integration.Ipc>();
-            int tmpEdition = 0;
             var typeOne = new Regex(@"(?<Value>[A-Z]{1}\d{2}[A-Z]{1}\d+\b)");
             var typeOneAdditional = new Regex(@"(?<P1>[A-Z]{1}\d{2}[A-Z]{1})(?<P2>\d{4})(?<P3>\d+)");
             var typeTwo = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s*\d+\/\d+");
-            MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
+            //MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
+            MatchCollection typeOneMatches = typeOneAdditional.Matches(classificationInfo);
             MatchCollection typeTwoMatches = typeTwo.Matches(classificationInfo);
             if (typeOneMatches.Count > 0)
             {
