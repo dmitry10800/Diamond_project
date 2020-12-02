@@ -36,8 +36,8 @@ namespace Diamond_SG
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
+                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -54,18 +54,27 @@ namespace Diamond_SG
             var yearPattern = new Regex(@"(\d+th\sYear)");
             var recordPattern = new Regex(@"(?<AppNumber>\(21\).*)(?<Owner>\(71\).*)");
             var tmpList = yearPattern.Split(v);
-            foreach (var rec in tmpList)
+            if (tmpList.Count() > 1)
             {
-                if (yearPattern.Match(rec).Success)
+                foreach (var rec in tmpList)
                 {
-                    splittedRecords.Add(rec);
+                    if (yearPattern.Match(rec).Success)
+                    {
+                        splittedRecords.Add(rec);
+                    }
+                    else if (rec.Trim().StartsWith("(21)"))
+                    {
+                        var a = rec.Trim().Replace("(21)", "*****(21)").Replace("\n", " ").Trim();
+                        var b = a.Split(new string[] { "*****" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        splittedRecords.AddRange(b);
+                    }
                 }
-                else if (rec.Trim().StartsWith("(21)"))
-                {
-                    var a = rec.Trim().Replace("(21)", "*****(21)").Replace("\n", " ").Trim();
-                    var b = a.Split(new string[] { "*****" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    splittedRecords.AddRange(b);
-                }
+            }
+            else
+            {
+                var a = v.Trim().Replace("(21)", "*****(21)").Replace("\n", " ").Trim();
+                var b = a.Split(new string[] { "*****" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                splittedRecords.AddRange(b.Where(x => x.StartsWith("(21)")));
             }
             return splittedRecords;
         }
