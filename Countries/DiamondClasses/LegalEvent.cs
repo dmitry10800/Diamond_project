@@ -16,8 +16,15 @@ namespace Integration
 
         public string Language { get; set; }
 
-        /*translations*/
-        public List<NoteTranslation> Translations = new List<NoteTranslation>();
+        public List<NoteTranslation> Translations { get; set; }
+    }
 
+    public class NoteTranslation
+    {
+        public string Tr { get; set; }
+
+        public string Type { get; set; }
+
+        public string Language { get; set; }
     }
 }

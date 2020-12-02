@@ -1,0 +1,1678 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by the PDFlib Text and Image Extraction Toolkit TET (www.pdflib.com) -->
+<TET xmlns="http://www.pdflib.com/XML/TET5/TET-5.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.pdflib.com/XML/TET5/TET-5.0
+ http://www.pdflib.com/XML/TET5/TET-5.0.xsd"
+ version="5.1">
+<Creation platform="Win64" tetVersion="5.1" date="2020-09-07T16:54:34+03:00" />
+<Document filename="C:\Users\Serjei\source\Andri_Diam\Diamond_project\TET_library_data_extraction\Section.pdf" pageCount="20" filesize="355326" linearized="false" pdfVersion="1.4">
+<DocInfo>
+<CreationDate>2020-09-07T15:28:11+03:00</CreationDate>
+<ModDate>2020-09-07T15:28:11+03:00</ModDate>
+<Producer>iTextSharp™ 5.5.13.1 ©2000-2019 iText Group NV (AGPL-version)</Producer>
+</DocInfo>
+<Options>tetml={filename={C:\Users\Serjei\source\Andri_Diam\Diamond_project\TET_library_data_extraction\Section.tetml}} </Options>
+<Pages>
+<Page number="1" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<Para>
+ <Box llx="58.50" lly="722.40" urx="391.41" ury="734.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="665.52" urx="190.41" ury="689.46">
+  <Line>
+   <Text>JAIPURIA 1</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="646.26" urx="178.62" ury="658.26">
+  <Line>
+   <Text>2966930 20/05/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="609.00" urx="395.50" ury="641.70">
+  <Line>
+   <Text>SMV AGENCIES PVT . LTD,</Text>
+  </Line>
+  <Line>
+   <Text>1862, MAHALXMI MARKET, BHAGIRATH PALACE, CHANDNI CHOWK, DELHI-11006,</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="593.40" urx="296.24" ury="605.40">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="556.02" urx="428.22" ury="588.78">
+  <Line>
+   <Text>SWARAM &amp; CO</Text>
+  </Line>
+  <Line>
+   <Text>408-A NEW LAWYERS CHAMBERS-III DELHI HIGH COURT SHER SHAH ROAD NEW DELHI-3</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :01/05/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="540.42" urx="172.16" ury="552.42">
+  <Line>
+   <Text>To be associated with:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="527.58" urx="120.69" ury="535.86">
+  <Line>
+   <Text>2966926, 2966927</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="511.80" urx="94.47" ury="523.80">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="489.54" urx="539.89" ury="507.12">
+  <Line>
+   <Text>RETAIL STORES, ADVERTISING, ADVERTISING MATERIAL, DEMONSTRATION OF GOODS, DISTRIBUTION OF SAMPLES,</Text>
+  </Line>
+  <Line>
+   <Text>MARKETING RESEARCH, SALES PROMOTION AU INCLUDED IN CLASS 35.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="2" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I0" x="182.28" y="621.96" width="235.44" height="56.22" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="603.36" urx="178.62" ury="615.36">
+  <Line>
+   <Text>2974135 28/05/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="590.46" urx="126.47" ury="598.74">
+  <Line>
+   <Text>GOBIND KUMAR</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="574.86" urx="263.87" ury="586.86">
+  <Line>
+   <Text>trading as ;UNITED AGRO BUSINESS</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="537.60" urx="465.37" ury="570.24">
+  <Line>
+   <Text>27-LAKSH ICON SOCIETY, INSIDE H.M. PATEL STATUE, V.V. NAGAR ROAD, ANAND, GUJARAT-388001</Text>
+  </Line>
+  <Line>
+   <Text>Merchants &amp; Manufacturers</Text>
+  </Line>
+  <Line>
+   <Text>PROPRIETORSHIP FIRM</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="521.94" urx="285.54" ury="533.94">
+  <Line>
+   <Text>Address for service in India/Agents address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="484.56" urx="327.71" ury="517.38">
+  <Line>
+   <Text>RAHUL RAJPUT.</Text>
+  </Line>
+  <Line>
+   <Text>B-336, BHAI RANDHIR SINGH NAGAR, LUDHIANA - 141 004 PUNJAB.</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :07/06/2012</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="468.90" urx="137.09" ury="480.90">
+  <Line>
+   <Text>AHMEDABAD</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="446.64" urx="525.76" ury="464.16">
+  <Line>
+   <Text>Advertising. Marketing, Retail , wholesale &amp; Trading services relating to preserved, frozen, dried and cooked fruits and</Text>
+  </Line>
+  <Line>
+   <Text>vegetables; fresh fruits and vegetables</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="3" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="653.52" urx="125.12" ury="677.46">
+  <Line>
+   <Text>AXEN</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="634.26" urx="178.62" ury="646.26">
+  <Line>
+   <Text>2976589 02/06/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="621.42" urx="166.44" ury="629.70">
+  <Line>
+   <Text>AXEN TELECOM PVT.LTD.</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="605.76" urx="273.15" ury="617.76">
+  <Line>
+   <Text>trading as ;AXEN TELECOM PVT.LTD.</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="568.50" urx="395.27" ury="601.20">
+  <Line>
+   <Text>HOUSE NO 16 GROUND FLOOR BLOCK C MAHENDRU ENCLAVE NEW DELHI 110033</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+  <Line>
+   <Text>A COMPANY INCORPORATED UNDE THE COMPANIES ACT 1956</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="552.90" urx="296.24" ury="564.90">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="515.52" urx="188.75" ury="548.28">
+  <Line>
+   <Text>ULTIMATE SOLUTIONS</Text>
+  </Line>
+  <Line>
+   <Text>A-4/61, SEC-17, ROHINI DELHI-89</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :26/12/2013</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="499.92" urx="172.16" ury="511.92">
+  <Line>
+   <Text>To be associated with:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="487.08" urx="120.69" ury="495.36">
+  <Line>
+   <Text>2976590, 3045666</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="471.36" urx="94.47" ury="483.36">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.49" lly="421.26" urx="532.53" ury="466.62">
+  <Line>
+   <Text>WHOLESALE &amp; RETAIL SHOPS, OUTLET, TRADING, MARKETING AND DISTRIBUTION IN RESPECT OF MOBILE AND</Text>
+  </Line>
+  <Line>
+   <Text>MOBILE PHONE ACCESSORIES ELECTRIC AND ELECTRONIC APPARATUS AND INSTRUMENTS, MOBILE BATTERY</Text>
+  </Line>
+  <Line>
+   <Text>PACKS, MOBILE ADAPTORS &amp; CHARGER, MOBILE COVERS, DATA CABLES, BLUE TOOTH DEVICES, DATA STORAGE</Text>
+  </Line>
+  <Line>
+   <Text>DEVICES, BATTERY, POWER BANK, LCD, LED, HOME THEATRE, SPEAKERS, MULTIMEDIA CARD, ELECTRONIC</Text>
+  </Line>
+  <Line>
+   <Text>COMPUTERS</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="4" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I1" x="187.50" y="490.68" width="225.00" height="187.50" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="472.08" urx="178.62" ury="484.08">
+  <Line>
+   <Text>3016069 24/07/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="422.64" urx="357.04" ury="467.46">
+  <Line>
+   <Text>MSG ALL TRADING INTERNATIONAL PVT. LTD.</Text>
+  </Line>
+  <Line>
+   <Text>80, EAST AZAD NAGAR, RAGHUBAR PURA ROAD SHAHDARA, DELHI-51</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDERS</Text>
+  </Line>
+  <Line>
+   <Text>A COMPANY INCORPORATED UNDER THE INDIAN COMPANIES ACT, 1956</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="407.04" urx="296.24" ury="419.04">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="369.60" urx="235.34" ury="402.42">
+  <Line>
+   <Text>K D S CONSULTANTS</Text>
+  </Line>
+  <Line>
+   <Text>G-22/93, SECTOR-07, ROHINI, NEW DELHI-85</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :01/04/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="353.94" urx="94.47" ury="365.94">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="322.38" urx="503.07" ury="349.20">
+  <Line>
+   <Text>TRADING, RETAIL STORE, ONLINE SALE, IMPORT, EXPORT, WHOLESALE, MARKETING, DISTRIBUTION,</Text>
+  </Line>
+  <Line>
+   <Text>ADVERTISEMENT, BUSINESS ADMINISTRATION, OFFICE FUNCTION AND BUSINESS MANAGEMENT SERVICES</Text>
+  </Line>
+  <Line>
+   <Text>INCLUDED IN CLASS-35.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="5" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="626.71" urx="445.09" ury="677.46">
+  <Line>
+   <Text>NISCM (NATIONAL INSTITUTE OF</Text>
+  </Line>
+  <Line>
+   <Text>SUPPLY CHAIN MANAGEMENT)</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="607.44" urx="178.62" ury="619.44">
+  <Line>
+   <Text>3027016 07/08/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="594.60" urx="117.25" ury="602.88">
+  <Line>
+   <Text>KETUL PATEL</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="579.00" urx="267.54" ury="591.00">
+  <Line>
+   <Text>trading as ;TEKNOKRET SOLUTIONS</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="541.56" urx="332.84" ury="574.38">
+  <Line>
+   <Text>204, Yash Aqua, Near Vijay Char Rasta, Ahmedabad 380 009.Gujarat, India.</Text>
+  </Line>
+  <Line>
+   <Text>SERVICES</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :27/07/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="525.90" urx="137.09" ury="537.90">
+  <Line>
+   <Text>AHMEDABAD</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="503.64" urx="496.58" ury="521.16">
+  <Line>
+   <Text>BUSINESS MANAGEMENT AND ORGANIZATION CONSULTANCY, BUSINESS RESEARCH AND SUPPLY CHAIN</Text>
+  </Line>
+  <Line>
+   <Text>MANAGEMENT INCLUDED IN CLASS-35.</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="482.16" urx="515.49" ury="499.68">
+  <Line>
+   <Text>REGISTRATION OF THIS TRADE MARK SHALL GIVE NO RIGHT TO THE EXCLUSIVE USE OF THE.words NATIONAL</Text>
+  </Line>
+  <Line>
+   <Text>INSTITUTE OF SUPPLY CHAIN MANAGEMENT.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="6" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.25" lly="569.58" urx="182.37" ury="581.58">
+  <Line>
+   <Text>3055111 14/09/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.25" lly="532.32" urx="272.33" ury="565.02">
+  <Line>
+   <Text>M/S. BISCO LIMITED</Text>
+  </Line>
+  <Line>
+   <Text>10TH K.M. STONE, DELHI ROAD, HISSAR, HARYANA</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.25" lly="516.72" urx="299.99" ury="528.72">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.25" lly="479.34" urx="364.03" ury="512.10">
+  <Line>
+   <Text>S.SINGH &amp; ASSOCIATES</Text>
+  </Line>
+  <Line>
+   <Text>213, 3RD FLOOR PARMANAND COLONY, DR. MUKHERJEE NAGAR DELHI-9</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :10/12/2011</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.25" lly="463.62" urx="98.22" ury="475.62">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.25" lly="432.12" urx="530.55" ury="458.94">
+  <Line>
+   <Text>wholesale &amp; retail outlets &amp; shops including services related to trading, marketing, whole selling, retailing, exporting &amp;</Text>
+  </Line>
+  <Line>
+   <Text>distribution services in respect of unwrought &amp; party wrought common metals and their alloys including beams,</Text>
+  </Line>
+  <Line>
+   <Text>channels, angels, girders, strips, joists, rounds, flats, T.M.T. bars (made of common metal)</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="62.26" lly="419.88" urx="500.68" ury="428.16">
+  <Line>
+   <Text>REGISTRATION OF THIS TRADE MARK SHALL GIVE NO RIGHT TO THE EXCLUSIVE USE OF WORD &quot;HEAVY” .</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="7" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I2" x="150.00" y="603.18" width="300.00" height="75.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="584.58" urx="178.62" ury="596.58">
+  <Line>
+   <Text>3056029 16/09/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="547.32" urx="314.45" ury="579.96">
+  <Line>
+   <Text>AARTI KHOSLA</Text>
+  </Line>
+  <Line>
+   <Text>W9 GROUND FLOOR, GREATER KAILASH-2, NEW DELHI-110048</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDERS</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="531.72" urx="296.24" ury="543.72">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="494.34" urx="304.99" ury="527.10">
+  <Line>
+   <Text>SIEBENIP</Text>
+  </Line>
+  <Line>
+   <Text>293, R.P.S. FLATS, SHEIKH SARAI PHASE-1 NEW DELHI 110017</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :31/07/2007</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="478.62" urx="94.47" ury="490.62">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="465.66" urx="400.27" ury="473.94">
+  <Line>
+   <Text>ADVERTISEMENTS AND PROMOTIONS, OFFICE FUNCTIONS INCLUDED IN CLASS 35.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="8" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I3" x="88.50" y="392.46" width="423.00" height="285.72" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="373.86" urx="178.62" ury="385.86">
+  <Line>
+   <Text>3076720 13/10/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="360.96" urx="117.27" ury="369.24">
+  <Line>
+   <Text>JATIN SINGLA</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="345.36" urx="305.13" ury="357.36">
+  <Line>
+   <Text>trading as ;COLORVILLA PAINT INDUSTRY</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="320.28" urx="278.16" ury="340.74">
+  <Line>
+   <Text>527/6 PATEL NAGAR KURUKSHETRA HARYANA 136118</Text>
+  </Line>
+  <Line>
+   <Text>MERCHANTS &amp; MANUFACTURERS</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="304.68" urx="285.54" ury="316.68">
+  <Line>
+   <Text>Address for service in India/Agents address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="267.30" urx="433.20" ury="300.06">
+  <Line>
+   <Text>PURI &amp; PURI (ADVOCATES)</Text>
+  </Line>
+  <Line>
+   <Text>4969/5, IST FLOOR, SIRKIWALAN, (NEAR HAUZ QAZI POLICE STATION) HAUZ QAZI, DELHI-6</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :29/05/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="251.58" urx="94.47" ury="263.58">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="192.24" urx="531.66" ury="246.90">
+  <Line>
+   <Text>WHOLESALE &amp; RETAIL AGENCY SERVICES RETAIL OUTLET CHAIN STORE, PROMOTION, ONLINE MARKETING AND</Text>
+  </Line>
+  <Line>
+   <Text>DISTRIBUTION OF PAINTS, VARNISHES, AERASOL PAINT, OILS, COLORS, ENAMELS, DISTEMPERS, WOOD COATING,</Text>
+  </Line>
+  <Line>
+   <Text>LACQUERS, DISINFECTANTS, TURPENTINE, STAIN COATING, WATERPROOF, COATINGS, COMPOUND, DYES, GLUE,</Text>
+  </Line>
+  <Line>
+   <Text>WALL PUTTY, PIGMENTS, PIGMENT EMULSION, DISPERSIONS, THINNER, CHEMICALS, FOR MAKING COLORS,</Text>
+  </Line>
+  <Line>
+   <Text>PRESERVATIVES AGAINST AND AGAINST DETERIORATION OF WOOD, COLORANTS, MORDENTS, RAW NATURAL IN</Text>
+  </Line>
+  <Line>
+   <Text>FOIL AND POWDER FORM FOR PAINTERS, DECORATORS, PRINTERS AS ARTISTS. AS PER CLASS-35.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="9" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I4" x="75.00" y="603.18" width="450.00" height="75.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="584.58" urx="178.62" ury="596.58">
+  <Line>
+   <Text>3147428 01/01/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="547.32" urx="314.21" ury="579.96">
+  <Line>
+   <Text>KWALITY OVERSEAS PVT. LTD.</Text>
+  </Line>
+  <Line>
+   <Text>D-15/2 PHASE-I OKHLA INDUSTRIAL AREA-I NEW DELHI 110020</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="531.72" urx="296.24" ury="543.72">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="494.34" urx="459.48" ury="527.10">
+  <Line>
+   <Text>RANJAN &amp; COMPANY</Text>
+  </Line>
+  <Line>
+   <Text>690-691, 2nd FLOOR, GURUDWARA ROAD, WEST GURU ANGAD NAGR, LAXMI NAGAR, DELHI 110092</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :14/05/2015</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="478.62" urx="94.47" ury="490.62">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="465.66" urx="432.03" ury="473.94">
+  <Line>
+   <Text>ADVERTISING, BUSINESS MANAGEMENT, BUSINESS ADMINISTRATION, OFFICE FUNCTIONS</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="10" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="653.52" urx="327.76" ury="677.46">
+  <Line>
+   <Text>KriKave Private Limited</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="634.26" urx="178.62" ury="646.26">
+  <Line>
+   <Text>3276887 04/06/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="621.42" urx="176.54" ury="629.70">
+  <Line>
+   <Text>KRIKAVE PRIVATE LIMITED</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="605.76" urx="287.84" ury="617.76">
+  <Line>
+   <Text>trading as ;KRIKAVE PRIVATE LIMITED</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="568.50" urx="390.45" ury="601.20">
+  <Line>
+   <Text>E-237, FIRST FLOOR, PHASE-VIII B, INDUSTRIAL AREA, MOHALI (PUNJAB)-160062</Text>
+  </Line>
+  <Line>
+   <Text>Online retail &amp; wholesale store services relating to grocery, clothings, beauty and pharma otc,</Text>
+  </Line>
+  <Line>
+   <Text>PRIVATE LIMITED</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="552.90" urx="296.24" ury="564.90">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="540.00" urx="161.33" ury="548.28">
+  <Line>
+   <Text>RAJESH KUMAR KADIAN</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="518.64" urx="511.33" ury="536.10">
+  <Line>
+   <Text>Rajesh Kadian, H.No-236, Himshikha Colony Near CRPF Group Centre, Pinjore, District-Panchkula, Haryana,Pincode-134104</Text>
+  </Line>
+  <Line>
+   <Text>Ph.017332666666, 9216333435</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="506.34" urx="149.82" ury="514.62">
+  <Line>
+   <Text>Used Since :24/05/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="490.62" urx="94.47" ury="502.62">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="477.66" urx="429.42" ury="485.94">
+  <Line>
+   <Text>Online retail &amp; wholesale store services relating to grocery, clothings, beauty and pharma otc,</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="11" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I5" x="242.22" y="621.18" width="115.56" height="57.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="602.58" urx="178.62" ury="614.58">
+  <Line>
+   <Text>3333032 09/08/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="565.32" urx="391.37" ury="597.96">
+  <Line>
+   <Text>M/S. P &amp; D ENTERPRISES PRIVATE LIMITED</Text>
+  </Line>
+  <Line>
+   <Text>H.No.602/D2, WARD NO.3, NEAR BADI WALA KUAN, MEHRAULI, NEW DELHI-110030</Text>
+  </Line>
+  <Line>
+   <Text>SERVICES</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="549.72" urx="296.24" ury="561.72">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="512.34" urx="318.15" ury="545.10">
+  <Line>
+   <Text>GIRI &amp; COMPANY</Text>
+  </Line>
+  <Line>
+   <Text>A-212C/306, TIRUPATI PLAZA GALI NO.1, SHAKARPUR, DELHI-92</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :05/05/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="496.62" urx="94.47" ury="508.62">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="465.12" urx="490.61" ury="491.94">
+  <Line>
+   <Text>TRADING AS EYEWEAR/SUNGLASSES, ARTIFICIAL JEWELLERY, CAR ACCESSORIES, MARBLE ANTIQUES,</Text>
+  </Line>
+  <Line>
+   <Text>FOOTWEAR, CLOTHING FASHION ACCESSORIES, ADVERTISING, BUSINESS MANAGEMENT, BUSINESS</Text>
+  </Line>
+  <Line>
+   <Text>ADMINISTRATION, OFFICE FUNCTIONS.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="12" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="315.33" urx="185.37" ury="327.33">
+  <Line>
+   <Text>3372501 26/09/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="302.49" urx="167.34" ury="310.77">
+  <Line>
+   <Text>DHARMENDRA DWIVEDI</Text>
+  </Line>
+ </Box>
+ <Box llx="65.25" lly="286.83" urx="286.34" ury="298.83">
+  <Line>
+   <Text>trading as ;M/S. ARISE EARTHMOVERS</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="261.75" urx="309.72" ury="282.27">
+  <Line>
+   <Text>SHOP NO.-3, 3210/14, RAM BAZAR, MORI GATE, DELHI-110006</Text>
+  </Line>
+  <Line>
+   <Text>service provider</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="246.15" urx="302.99" ury="258.15">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="208.78" urx="367.03" ury="241.59">
+  <Line>
+   <Text>S.SINGH &amp; ASSOCIATES</Text>
+  </Line>
+  <Line>
+   <Text>213, 3RD FLOOR PARMANAND COLONY, DR. MUKHERJEE NAGAR DELHI-9</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :10/12/2014</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="193.11" urx="101.22" ury="205.11">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="65.25" lly="170.85" urx="518.34" ury="188.37">
+  <Line>
+   <Text>Trading, retailing, wholesaling, marketing, outlets and import-export services in respect of auto parts, earthmoving</Text>
+  </Line>
+  <Line>
+   <Text>spares, pin, bush, filters, seal kits and fabrication products</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="13" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I6" x="132.00" y="519.18" width="336.00" height="159.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="500.58" urx="178.62" ury="512.58">
+  <Line>
+   <Text>3378509 03/10/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="438.85" urx="413.60" ury="496.02">
+  <Line>
+   <Text>RFL INSURANCE BROKING PVT LTD</Text>
+  </Line>
+  <Line>
+   <Text>802, ATLANTA CENTRE LTD., SONAWALA ROAD, GOREGAON (EAST), MUMBAI - 400063</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+  <Line>
+   <Text>A REGISTERED INDIAN COMPANY INCORPORATED UNDER THE COMPANIES ACT, 1956</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :15/09/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="423.12" urx="107.78" ury="435.12">
+  <Line>
+   <Text>MUMBAI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="391.56" urx="535.36" ury="418.44">
+  <Line>
+   <Text>INSURANCE LEAD COLLECTION AND MATCHING SERVICES, NAMELY, MATCHING CONSUMER REQUESTS FOR</Text>
+  </Line>
+  <Line>
+   <Text>INSURANCE POLICY QUOTES COLLECTED OVER THE INTERNET TO PRE-QUALIFIED INSURANCE BROKERS, AGENTS</Text>
+  </Line>
+  <Line>
+   <Text>AND AGENCIES INTERESTED IN THOSE REQUEST</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="14" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I7" x="205.86" y="651.96" width="188.28" height="26.22" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="633.36" urx="178.62" ury="645.36">
+  <Line>
+   <Text>3386855 13/10/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="583.86" urx="257.39" ury="628.74">
+  <Line>
+   <Text>JASEEM KUMMANGOTTU KANDIYIL ATHRU</Text>
+  </Line>
+  <Line>
+   <Text>P.O. BOX 7192, AJMAN, UNITED ARAB EMIRATES.</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+  <Line>
+   <Text>A CITIZEN OF UNITED ARAB EMIRATES.</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="568.26" urx="285.54" ury="580.26">
+  <Line>
+   <Text>Address for service in India/Agents address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="543.18" urx="327.71" ury="563.64">
+  <Line>
+   <Text>RAHUL RAJPUT.</Text>
+  </Line>
+  <Line>
+   <Text>B-336, BHAI RANDHIR SINGH NAGAR, LUDHIANA - 141 004 PUNJAB.</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="511.02" urx="178.59" ury="539.46">
+  <Line>
+   <Text>Proposed to be Used</Text>
+  </Line>
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="498.06" urx="368.48" ury="506.34">
+  <Line>
+   <Text>Advertising; business management; business administration; office functions.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="15" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I8" x="206.22" y="630.18" width="187.56" height="48.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="611.58" urx="178.62" ury="623.58">
+  <Line>
+   <Text>3398074 27/10/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="562.14" urx="449.62" ury="606.96">
+  <Line>
+   <Text>MR. PARIKSHIT GANDHI</Text>
+  </Line>
+  <Line>
+   <Text>1st Floor, Plot-841/B, Jamna Nivas, Opposite Gujarat Samachar, Udhana Darwaja ,Ring Road, Surat - 395002</Text>
+  </Line>
+  <Line>
+   <Text>MANUFACTURER AND MERCHANTS</Text>
+  </Line>
+  <Line>
+   <Text>INDIVIDUAL</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="546.54" urx="296.24" ury="558.54">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="509.10" urx="409.18" ury="541.92">
+  <Line>
+   <Text>C.M.ANKOLERKAR, ADVOCATE</Text>
+  </Line>
+  <Line>
+   <Text>C-443, B.G.TOWERS, OUT SIDE DELHI GATE, SHAHIBAUG ROAD, AHMEDABAD - 380 004</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :16/10/2007</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="493.44" urx="137.09" ury="505.44">
+  <Line>
+   <Text>AHMEDABAD</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="461.88" urx="524.70" ury="488.70">
+  <Line>
+   <Text>RETAILING, DISTRIBUTION, RETAIL OUTLETS, SHOWROOMS, ADVERTISING, ONLINE SERVICES, ADMINISTRATION,</Text>
+  </Line>
+  <Line>
+   <Text>OFFICE FUNCTIONS, MARKETING, ADVERTISEMENT FOR BUSINESS PROMOTION BUSINESS MANAGEMENT,</Text>
+  </Line>
+  <Line>
+   <Text>FRANCHISING BRANCHES.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="16" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I9" x="191.28" y="591.18" width="217.44" height="87.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="572.58" urx="178.62" ury="584.58">
+  <Line>
+   <Text>3421104 28/11/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="559.74" urx="255.48" ury="568.02">
+  <Line>
+   <Text>WINGS2ASPIRATION START-UP INDIA PVT. LTD.</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="544.08" urx="401.94" ury="556.08">
+  <Line>
+   <Text>trading as ;WINGS2ASPIRATION START-UP INDIA PVT. LTD.</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="519.00" urx="431.83" ury="539.52">
+  <Line>
+   <Text>204, RADHA MOHAN PLAZA, 40 DLF INDUSTRIAL AREA, KIRTI NAGAR, DELHI-110015, INDIA.</Text>
+  </Line>
+  <Line>
+   <Text>Services</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="503.40" urx="296.24" ury="515.40">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="466.03" urx="174.93" ury="498.84">
+  <Line>
+   <Text>LALJI ADVOCATES</Text>
+  </Line>
+  <Line>
+   <Text>A-48, Yojna Vihar, Delhi-110092</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :01/11/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="450.36" urx="94.47" ury="462.36">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="418.80" urx="540.89" ury="445.62">
+  <Line>
+   <Text>ADVERTISING, MARKET RESEARCH, PUBLIC RELATIONS AND BUSINESS ORGANIZATION, COMPUTER PROGRAMMING</Text>
+  </Line>
+  <Line>
+   <Text>SERVICES, SOFTWARE, COMPUTER RENTAL SERVICES, E-COMMERCE PORTAL AND APPLICATION SERVICES,</Text>
+  </Line>
+  <Line>
+   <Text>PLANNING AND INFORMATION SERVICES, PROMOTIONAL SERVICES INCLUDED IN CLASS 35.</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="406.56" urx="505.35" ury="414.84">
+  <Line>
+   <Text>REGISTRATION OF THIS TRADE MARK SHALL GIVE NO RIGHT TO THE EXCLUSIVE USE OF THE WORD TRADE.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="17" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I10" x="150.00" y="468.18" width="300.00" height="210.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="449.58" urx="178.62" ury="461.58">
+  <Line>
+   <Text>3422920 30/11/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="400.14" urx="336.31" ury="444.96">
+  <Line>
+   <Text>UMANG DAIRIES LTD.</Text>
+  </Line>
+  <Line>
+   <Text>GULAB BHAWAN, 6A, BAHADUR SHAH ZAFAR, MARG, NEW DELHI</Text>
+  </Line>
+  <Line>
+   <Text>MANUFACTURERS, TRADERS AND SERVICE PROVIDERS</Text>
+  </Line>
+  <Line>
+   <Text>A COMPANY INCORPORATED UNDER THE INDIAN COMAPNIES ACT</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="384.54" urx="285.54" ury="396.54">
+  <Line>
+   <Text>Address for service in India/Agents address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="347.10" urx="245.50" ury="379.92">
+  <Line>
+   <Text>THE ACME COMPANY</Text>
+  </Line>
+  <Line>
+   <Text>B-41, NIZAMUDDIN EAST, NEW DELHI - 110013.</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :01/07/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="331.44" urx="94.47" ury="343.44">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="299.88" urx="539.50" ury="326.70">
+  <Line>
+   <Text>SERVICES RELATED TO ADVERTISING, BUSINESS ADMINISTRATION, OFFICE FUNCTIONS, TRADING AND MARKETING,</Text>
+  </Line>
+  <Line>
+   <Text>DISPLAY EXHIBITION, WHOLESALE, RETAIL, ONLINE MARKETING OF MILK AND MILK, PRODUCTS SERVICES FALLING</Text>
+  </Line>
+  <Line>
+   <Text>IN CLASS 35.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="18" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I11" x="131.22" y="625.68" width="337.50" height="52.50" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="607.08" urx="178.62" ury="619.08">
+  <Line>
+   <Text>3438467 21/12/2016</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="557.64" urx="241.44" ury="602.46">
+  <Line>
+   <Text>ALLIANCES GALORE PVT.LTD.</Text>
+  </Line>
+  <Line>
+   <Text>11/22, West Patel Nagar, New Delhi - 110 008, India</Text>
+  </Line>
+  <Line>
+   <Text>Service Provider</Text>
+  </Line>
+  <Line>
+   <Text>Body Incorporate</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="542.04" urx="296.24" ury="554.04">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="504.60" urx="343.87" ury="537.42">
+  <Line>
+   <Text>KSHITIJ MALHOTRA</Text>
+  </Line>
+  <Line>
+   <Text>B 703 CROWN APARTMENTS PLOT -18B SEC-7 DWARKA NEW DELHI 75</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :04/07/2013</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="488.94" urx="94.47" ury="500.94">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="466.68" urx="521.09" ury="484.20">
+  <Line>
+   <Text>SERVICES RELATED TO ADVERTISING / PUBLICITY, MARKETING, PUBLIC RELATIONS, SHOP WINDOW DRESSING,</Text>
+  </Line>
+  <Line>
+   <Text>ADMINISTRATION OF CONSUMER LOYALTY PROGRAMS AND BUSINESS APPRAISALS.</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="19" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I12" x="112.50" y="528.18" width="375.00" height="150.00" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="509.58" urx="178.62" ury="521.58">
+  <Line>
+   <Text>3447008 02/01/2017</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="496.74" urx="186.25" ury="505.02">
+  <Line>
+   <Text>MR. SATYA PRAKASH SHARMA</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="481.08" urx="263.57" ury="493.08">
+  <Line>
+   <Text>trading as ;S.P. JAGANNATH &amp; SONS</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="456.00" urx="422.01" ury="476.52">
+  <Line>
+   <Text>2366 SATYA CHAMBERS CHUNA MANDI RAJGURU ROAD PAHAR GANJ NEW DELHI 110055</Text>
+  </Line>
+  <Line>
+   <Text>SERVICE PROVIDER</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="440.40" urx="285.54" ury="452.40">
+  <Line>
+   <Text>Address for service in India/Agents address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="403.03" urx="317.88" ury="435.84">
+  <Line>
+   <Text>AMARJIT &amp; ASSOCIATES.</Text>
+  </Line>
+  <Line>
+   <Text>SUITE 404, LAW ARCADE, 18, - PUSA ROAD, NEW DELHI - 110 005.</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :01/03/2002</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="387.48" urx="172.16" ury="399.48">
+  <Line>
+   <Text>To be associated with:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="374.58" urx="153.90" ury="382.86">
+  <Line>
+   <Text>3421599, 3446994, 3446998</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="358.86" urx="94.47" ury="370.86">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="308.76" urx="533.39" ury="354.12">
+  <Line>
+   <Text>BUYING, SELLING IMPORTING, TRADING AND RETAILING IN ALL TYPES OF MERCHANDISE, COMMODITIES, THINGS,</Text>
+  </Line>
+  <Line>
+   <Text>GOODS AND ARTICLES INCLUDED, TO CARRY ON THE BUSINESS OF RUNNING RETAIL OUTLETS, DEPARTMENTAL</Text>
+  </Line>
+  <Line>
+   <Text>STORES, MALLS, ADVERTISING, BUSINESS MANAGEMENT, BUSINESS ADMINISTRATION, OFFICE FUNCTIONS IN THE</Text>
+  </Line>
+  <Line>
+   <Text>FIELD OF PROVIDING ELECTRONIC TRACKING OF INFORMATION THROUGH A WEBSITE AND APPLICATION TO</Text>
+  </Line>
+  <Line>
+   <Text>CUSTOMERS FOR BUSINESS ADMINISTRATION PURPOSES</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Page number="20" width="612.00" height="792.00">
+<Options>includebox={{0 45 600 790}} docstyle=forms imageanalysis={smallimages={disable}} layouthint={header=true footer=true} contentanalysis={dehyphenate=true} layouteffort=high granularity=line</Options>
+<Content granularity="line" dehyphenation="false" dropcap="false" font="false" geometry="false" shadow="false" sub="false" sup="false">
+<PlacedImage image="I13" x="269.64" y="616.68" width="60.72" height="61.50" />
+<Para>
+ <Box llx="58.50" lly="710.40" urx="391.41" ury="722.40">
+  <Line>
+   <Text>Trade Marks Journal No: 1956 , 13/07/2020 Class 35</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="598.08" urx="178.62" ury="610.08">
+  <Line>
+   <Text>3456258 11/01/2017</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="585.18" urx="133.88" ury="593.46">
+  <Line>
+   <Text>MANINDER SINGH</Text>
+  </Line>
+ </Box>
+ <Box llx="58.50" lly="569.58" urx="248.84" ury="581.58">
+  <Line>
+   <Text>trading as ;M/S DV DESIGN VILLA</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="544.50" urx="303.14" ury="565.02">
+  <Line>
+   <Text>NEAR SHIVALA MANDIR,O/S ZIRA GATE, FEROZEPUR CITY.</Text>
+  </Line>
+  <Line>
+   <Text>SERVICES</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="528.90" urx="296.24" ury="540.90">
+  <Line>
+   <Text>Address for service in India/Attorney address:</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="491.53" urx="242.37" ury="524.34">
+  <Line>
+   <Text>RAVINDER MALIK</Text>
+  </Line>
+  <Line>
+   <Text>KALER COMPLEX, ZIRA ROAD, MOGA-142001</Text>
+  </Line>
+  <Line>
+   <Text>Used Since :01/04/2014</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="475.86" urx="94.47" ury="487.86">
+  <Line>
+   <Text>DELHI</Text>
+  </Line>
+ </Box>
+</Para>
+<Para>
+ <Box llx="58.50" lly="462.84" urx="115.15" ury="471.12">
+  <Line>
+   <Text>ADVERTISING</Text>
+  </Line>
+ </Box>
+</Para>
+</Content>
+</Page>
+<Resources>
+<Fonts>
+ <Font id="F0" name="Arial-BoldMT" fullname="EQIKOZ+Arial-BoldMT" type="TrueType" embedded="true" ascender="720.00" capheight="728.00" italicangle="0.00" descender="0.00" weight="400.00" xheight="475.00"/>
+ <Font id="F1" name="TimesNewRomanPS-BoldMT" fullname="UVBUGT+TimesNewRomanPS-BoldMT" type="TrueType" embedded="true" ascender="720.00" capheight="693.00" italicangle="0.00" descender="0.00" weight="400.00" xheight="475.00"/>
+ <Font id="F2" name="Arial" fullname="TQCAZU+Arial" type="TrueType" embedded="true" ascender="720.00" capheight="718.00" italicangle="0.00" descender="0.00" weight="400.00" xheight="475.00"/>
+ <Font id="F3" name="Arial-BoldItalicMT" fullname="BGRXDZ+Arial-BoldItalicMT" type="TrueType" embedded="true" ascender="720.00" capheight="728.00" italicangle="-12.00" descender="0.00" weight="400.00" xheight="475.00"/>
+</Fonts>
+<Images>
+ <Image id="I0" filename="Section_I0.jpg" extractedAs=".jpg" width="314" height="75" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I1" filename="Section_I1.jpg" extractedAs=".jpg" width="300" height="250" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I2" filename="Section_I2.tif" extractedAs=".tif" width="400" height="100" colorspace="CS2" bitsPerComponent="8"/>
+ <Image id="I3" filename="Section_I3.jpg" extractedAs=".jpg" width="564" height="381" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I4" filename="Section_I4.jpg" extractedAs=".jpg" width="600" height="100" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I5" filename="Section_I5.jpg" extractedAs=".jpg" width="154" height="76" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I6" filename="Section_I6.jpg" extractedAs=".jpg" width="448" height="212" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I7" filename="Section_I7.jpg" extractedAs=".jpg" width="251" height="35" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I8" filename="Section_I8.jpg" extractedAs=".jpg" width="250" height="64" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I9" filename="Section_I9.jpg" extractedAs=".jpg" width="290" height="116" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I10" filename="Section_I10.tif" extractedAs=".tif" width="400" height="280" colorspace="CS3" bitsPerComponent="8"/>
+ <Image id="I11" filename="Section_I11.jpg" extractedAs=".jpg" width="450" height="70" colorspace="CS1" bitsPerComponent="8"/>
+ <Image id="I12" filename="Section_I12.tif" extractedAs=".tif" width="500" height="200" colorspace="CS4" bitsPerComponent="8"/>
+ <Image id="I13" filename="Section_I13.jpg" extractedAs=".jpg" width="81" height="82" colorspace="CS1" bitsPerComponent="8"/>
+</Images>
+<ColorSpaces>
+ <ColorSpace id="CS0" name="DeviceGray" components="1"/>
+ <ColorSpace id="CS1" name="ICCBased" components="3" iccprofile="ICC0"/>
+ <ColorSpace id="CS2" name="Indexed" components="1" base="CS1" hival="104">
+  <Lookup>FFFFFFFDFDFDFEFEFEFBFBFBF7F7F7F3F3F3F5F5F5FAFAFAFCFCFCF8F8F8F6F6F6F9F9F9F2F2F20B0B0BEAEAEAE6E6E6F0F0F0F4F4F4EEEEEEEFEFEFECECECEDEDEDDFDFDFF1F1F1E7E7E7E8E8E8EBEBEB0F0F0F0000000C0C0C0808080101010E0E0E020202E9E9E9D6D6D6DADADA030303060606131313D2D2D2E1E1E1121212070707D4D4D41C1C1C0A0A0ADCDCDC0505050404041414142626262121210909090D0D0DDEDEDEE5E5E5111111151515191919101010181818E2E2E21616161717171E1E1EDDDDDDE4E4E41D1D1DE3E3E3DBDBDB1A1A1A2525251B1B1BE0E0E0D3D3D32222222020201F1F1FCDCDCDD8D8D8CFCFCFD9D9D9C8C8C8363636272727D7D7D72929292A2A2A2F2F2F303030D5D5D52323232D2D2D2828282C2C2CC6C6C63333332424242E2E2ED0D0D02B2B2BC1C1C1383838D1D1D1</Lookup>
+ </ColorSpace>
+ <ColorSpace id="CS3" name="Indexed" components="1" base="CS1" hival="255">
+  <Lookup>FFFFFFFEFEFEFDFDFDFCFCFC7979794747479A9A9AE5E5E5F5F5F5FAFAFAF9F9F9FBFBFB767676D9D9D9F8F8F8F1F1F1EBEBEBEAEAEAECECECF7F7F7F4F4F4F3F3F3F6F6F6EFEFEFE9E9E9EDEDEDF0F0F0EEEEEEE7E7E7F2F2F2E8E8E8E2E2E2DDDDDDE3E3E3E4E4E4D7D7D7E6E6E6E1E1E1DFDFDFDEDEDE2020202424245F5F5F000000727272CACACA9B9B9B5A5A5A5959592828282A2A2A5858585D5D5D6161616060605C5C5C5B5B5B5252524B4B4B4545454242424343432222222D2D2D2525253030301D1D1D1313132F2F2F1414140F0F0F1717171B1B1B2727273838382929292323231919190C0C0C1010101515150202020303030404040505050101010707070B0B0B1111111616161818181C1C1C0909090D0D0D0606060808083434346D6D6D3F3F3F3333331F1F1F1212121A1A1A0E0E0E4646460A0A0A4A4A4A4C4C4C2E2E2E8E8E8E8080806868686363638787877A7A7A696969515151848484A6A6A6A8A8A8979797949494BEBEBED4D4D4D6D6D6D3D3D3C7C7C7B7B7B7ACACACAAAAAAADADADBCBCBC8B8B8B626262717171A2A2A2BABABA9F9F9F7777776C6C6C6F6F6F7E7E7E8D8D8D969696999999A3A3A3C5C5C5CDCDCDB3B3B39595953D3D3D3636365454545353534F4F4FA7A7A7A9A9A9B4B4B42C2C2C3737373232321E1E1E3C3C3C5757574848482121214141413939394444444D4D4D4949493A3A3A4040405050506767676B6B6B6565658383838C8C8C9393937D7D7DA1A1A1B6B6B68686866A6A6AB0B0B0A4A4A46464648282829090909C9C9C3131312626262B2B2BABABABA0A0A0DCDCDCAEAEAEB8B8B8B5B5B5919191B9B9B97C7C7C7F7F7F9D9D9DA5A5A58585855555554E4E4E8888887B7B7B3B3B3B353535757575D2D2D2E0E0E08F8F8F5E5E5EC3C3C3DADADA9292927474743E3E3ECBCBCBC4C4C4D1D1D1666666787878707070898989D0D0D0C8C8C8CECECE6E6E6EDBDBDB8A8A8ACFCFCFCCCCCCC9C9C9C0C0C0AFAFAFC6C6C6BDBDBDB2B2B2C1C1C1D5D5D5C2C2C29E9E9E565656BBBBBBBFBFBFB1B1B1989898737373818181D8D8D8</Lookup>
+ </ColorSpace>
+ <ColorSpace id="CS4" name="Indexed" components="1" base="CS1" hival="255">
+  <Lookup>FFFFFFFBFBFBFCFCFCFDFDFDFEFEFEE4E4E4EDEDEDE7E7E7FAFAFAF1F1F1ECECECF7F7F7F3F3F3F0F0F0F8F8F8E5E5E5E8E8E8F4F4F4EFEFEFF9F9F9D4D4D4E0E0E0E9E9E9E6E6E6F2F2F2F6F6F6B1B1B1636363DBDBDBDDDDDD919191E2E2E2EAEAEAD0D0D05353537F7F7F999999C8C8C8EBEBEB848484C7C7C75E5E5E6767677878782A2A2ACDCDCDE3E3E3101010BFBFBFD3D3D3A0A0A0B9B9B9DEDEDED6D6D6CBCBCBAEAEAE1313136565652D2D2DDCDCDC9292924747470D0D0D505050A7A7A73E3E3EABABABCFCFCF4A4A4ACECECE7B7B7BC0C0C0BBBBBBC2C2C2AFAFAFA9A9A98989896C6C6CF5F5F59F9F9FE1E1E18383837E7E7EB4B4B4A1A1A1CCCCCCC6C6C69595956D6D6D5858583131318E8E8E868686BCBCBC0B0B0BB3B3B38181819898986F6F6F7C7C7CA3A3A35B5B5BB7B7B7808080B6B6B6949494B0B0B0EEEEEE9090909A9A9AAAAAAABEBEBE424242777777D7D7D71D1D1D6B6B6BA2A2A2C1C1C15252527A7A7A0C0C0CCACACA7D7D7DC4C4C40000009797972020205555559C9C9C4F4F4FA4A4A4626262393939B5B5B5D8D8D8D9D9D9D1D1D17676764343439696969393934E4E4E5454545D5D5D4040405C5C5C9B9B9BDADADA4D4D4DC5C5C58D8D8DA5A5A58C8C8CACACAC9D9D9DC3C3C3757575606060828282515151333333A6A6A6595959D2D2D23838381B1B1B8B8B8B737373020202ADADAD4646467070708F8F8F3D3D3DA8A8A87474748A8A8A717171B2B2B2BDBDBD4545451A1A1AC9C9C96A6A6ABABABAD5D5D5DFDFDF5A5A5A2222221C1C1C6161616969694B4B4B4444448888884848482E2E2E2929299E9E9E7979791111113232325656566E6E6E1F1F1F858585B8B8B82F2F2F3434342C2C2C0E0E0E1919193A3A3A2323233535351616162B2B2B3636363030301515152828280909093737373C3C3C3F3F3F2727272525253B3B3B2121211717175757577272724949491414141E1E1E8787874141410606060505056666664C4C4C0808082424246868681818186464640303032626265F5F5F0101011212120404040A0A0A0707070F0F0F</Lookup>
+ </ColorSpace>
+</ColorSpaces>
+</Resources>
+<Graphics>
+<Colors>
+ <Color id="C0" colorspace="CS0" svgname="black">
+  <Value>0.00</Value>
+ </Color>
+</Colors>
+<ICCProfiles>
+ <ICCProfile id="ICC0" embedded="true" iccversion="2.1" profilename="sRGB IEC61966-2.1" checksum="1D3FDA2EDB4A89AB60A23C5F7C7D81DD" profilecs="RGB " deviceclass="mntr" fromCIE="true" toCIE="true"/>
+</ICCProfiles>
+</Graphics>
+</Pages>
+</Document>
+</TET>
