@@ -72,7 +72,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -81,7 +82,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }
@@ -233,7 +235,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -242,7 +245,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }
@@ -309,7 +313,7 @@ namespace Diamond_BA
                             Note = $"|| Broj ostalih patentnih zahtjeva | {record.I99}",
                             Language = "HR",
                             Translations = new List<NoteTranslation> {
-                            new NoteTranslation {Language = "EN", Tr = $"|| The number of other claims | {record.I99}" }
+                            new NoteTranslation {Language = "EN", Tr = $"|| The number of other claims | {record.I99}", Type = "note" }
                         }
                         };
                     }
@@ -363,7 +367,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -372,7 +377,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }
@@ -460,7 +466,8 @@ namespace Diamond_BA
                     /*54 Title*/
                     Title title = new Title()
                     {
-                        Text = record.I54
+                        Text = record.I54,
+                        Language = "HR"
                     };
                     biblioData.Titles.Add(title);
                     /*--------*/
@@ -469,7 +476,8 @@ namespace Diamond_BA
                     {
                         Abstract desc = new Abstract()
                         {
-                            Text = record.I57
+                            Text = record.I57,
+                            Language = "HR"
                         };
                         biblioData.Abstracts.Add(desc);
                     }

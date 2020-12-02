@@ -29,12 +29,13 @@ namespace Diamond_MY
         static void Main()
         {
             /*Folder with tetml files to process*/
-            var dir = new DirectoryInfo(@"D:\TET_DEV\Diamond\MY\");
+            var dir = new DirectoryInfo(@"E:\Work\MY\Original");
             /*list of tetml files*/
             var files = new List<string>();
             foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null;
+            List<XElement> secondList = null;
 
             foreach (var tetFile in files)
             {
@@ -45,7 +46,7 @@ namespace Diamond_MY
                 /*List of Lapsed Patent Applications*/
                 firstList = tet.Descendants().Where(d => d.Name.LocalName == "Text")
                     .Where(x => x.Value != I11
-                    && x.Value != I12
+                    //&& x.Value != I12
                     && x.Value != I21
                     && x.Value != I22
                     && x.Value != I30
@@ -60,14 +61,32 @@ namespace Diamond_MY
                 //.SkipWhile(e => e.Value != "Objava zahtjeva za proširenje evropskih prijava patenata")
                 //.TakeWhile(e => e.Value != "Indeks brojeva zahtjeva za proširenje evropskih prijava patenta")
                 .ToList();
+                secondList = tet.Descendants().Where(x => x.Name.LocalName == "Text")
+                    .SkipWhile(x => !x.Value.StartsWith("UTILITY INNOVATIONS HAVE LAPSED"))
+                    .TakeWhile(x => !x.Value.StartsWith("REINSTATEMENT OF LAPSED PATENT"))
+                    .ToList();
 
                 Console.WriteLine("***************************" + Path.GetFileNameWithoutExtension(tetFile) + "***************************");
 
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessGrants firstListValues = new ProcessGrants();
-                    List<ProcessGrants.ElementOut> el = firstListValues.OutputValue(firstList);
-                    var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
+                    //ProcessGrants firstListValues = new ProcessGrants();
+                    //List<ProcessGrants.ElementOut> el = firstListValues.OutputValue(firstList);
+                    //var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
+                    //try
+                    //{
+                    //    Methods.SendToDiamond(legalStatusEvents);
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    Console.WriteLine("Sending error");
+                    //    throw;
+                    //}
+                }
+                if (secondList != null && secondList.Count() > 0)
+                {
+
+                    var legalStatusEvents = ProcessLegalEvents.Process2SubCode(secondList);
                     try
                     {
                         Methods.SendToDiamond(legalStatusEvents);

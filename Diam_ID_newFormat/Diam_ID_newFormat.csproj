@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8C7D666E-21B0-4031-B047-4945E244E135}</ProjectGuid>
+    <ProjectGuid>{CF3FF100-E802-4E63-8982-4F4730EB1295}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Diamond_MY</RootNamespace>
-    <AssemblyName>Diamond_MY</AssemblyName>
+    <RootNamespace>Diam_ID_newFormat</RootNamespace>
+    <AssemblyName>Diam_ID_newFormat</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -47,15 +47,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertToDiamond.cs" />
+    <Compile Include="Diamond_ID_main.cs" />
     <Compile Include="Methods.cs" />
-    <Compile Include="MY_main.cs" />
-    <Compile Include="ProcessGrants.cs" />
-    <Compile Include="ProcessLegalEvents.cs" />
+    <Compile Include="ProcessFirstList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Countries\DiamondClasses\DiamondProjectClasses.csproj">
