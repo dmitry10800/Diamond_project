@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,6 +10,10 @@ namespace Diamond_VN
 {
     class Methods
     {
+        public static List<FileInfo> GetTetmlFiles(string path)
+        {
+            return Directory.GetFiles(path, @"*.tetml", SearchOption.TopDirectoryOnly).Select(x => new FileInfo(x)).ToList();
+        }
         public static List<string> RecSplit(string s, string[] parameters)
         {
             string tmpAbstract = null;

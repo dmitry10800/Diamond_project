@@ -9,22 +9,26 @@ namespace Diamond_VN
 {
     class DiamondSender
     {
-        public static void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        public static void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool isStaging)
         {
-            for (int i = 0; i < 1000; i++)
+            string url;
+            if (isStaging)
             {
-                if (i < events.Count)
-                {
-                    string tmpValue = JsonConvert.SerializeObject(events[i]);
-                    string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
-                    //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //Production
-                    HttpClient httpClient = new HttpClient();
-                    httpClient.BaseAddress = new Uri(url);
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                    var result = httpClient.PostAsync(url, content).Result;
-                    var answer = result.Content.ReadAsStringAsync().Result;
-                }
+                url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
+            }
+            else
+            {
+                url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //Production
+            }
+            foreach (var @event in events)
+            {
+                string tmpValue = JsonConvert.SerializeObject(@event);
+                HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(url);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync(url, content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

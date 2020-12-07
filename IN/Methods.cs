@@ -455,21 +455,49 @@ namespace IN
         {
             return s.Length == 1 ? 0 + s : s;
         }
+        private static string GetMonthValue(string month)
+        {
+            switch (month)
+            {
+                case "Jan": return "01";
+                case "Feb": return "02";
+                case "Mar": return "03";
+                case "Apr": return "04";
+                case "May": return "05";
+                case "Jun": return "06";
+                case "Jyl": return "07";
+                case "Jul": return "07";
+                case "Aug": return "08";
+                case "Sep": return "09";
+                case "Ocr": return "10";
+                case "Oct": return "10";
+                case "Nov": return "11";
+                case "Dec": return "12";
+                default: return month;
+            }
+        }
         public static string ConvertDate(string s)
         {
-            var datePat = new Regex(@"(?<day>\d+)[\/\-\.,\s](?<month>\d+)[\/\-\.,\s](?<year>\d{4})");
-            var a = datePat.Match(s);
-            if (a.Success)
+            var datePat = new Regex(@"(?<day>\d+)[\/\-\.,\s](?<month>\d+|[a-zA-Z]{3})[\/\-\.,\s](?<year>\d{4})");
+            if (!string.IsNullOrEmpty(s))
             {
-                return a.Groups["year"].Value + "-" + a.Groups["month"].Value + "-" + DateZeroAdd(a.Groups["day"].Value);
+                var a = datePat.Match(s);
+                if (a.Success)
+                {
+                    return a.Groups["year"].Value + "-" + GetMonthValue(a.Groups["month"].Value) + "-" + DateZeroAdd(a.Groups["day"].Value);
+                }
+                else
+                    Console.WriteLine($"Date pattern doesn't match\t {s}");
+                return s;
             }
             else
-                Console.WriteLine($"Date pattern doesn't match\t {s}");
-            return s;
+                return s;
         }
         public static List<Integration.PartyMember> ConvertApplicants(string applicants, string type) // 71,73
         {
             var appList = new List<Integration.PartyMember>();
+            string overallAddress = null;
+            string overallCountry = null;
             var multipleApplicants = Regex.Split(applicants, @"\b[^A-Z,\/]\d{1,2}\b\)")
                 .Where(x => !string.IsNullOrEmpty(x))
                 .Select(x => x.Trim())
@@ -477,34 +505,41 @@ namespace IN
             var appRegex = new Regex(@"(?<Name>.*)Address of Applicant(?<Address>.*)");
             foreach (var applicant in multipleApplicants)
             {
-                if (applicant.Contains("Address of Applicant"))
+                var match = appRegex.Match(new Regex(@"^\d+\)").Replace(applicant, ""));
+                if (match.Success)
                 {
-                    var match = appRegex.Match(new Regex(@"^\d+\)").Replace(applicant, ""));
-                    if (match.Success)
+                    var tmpApp = new Integration.PartyMember();
+                    tmpApp.Name = match.Groups["Name"].Value.Trim();
+                    tmpApp.Address1 = match.Groups["Address"].Value.Trim();
+                    if (overallAddress == null)
+                        overallAddress = tmpApp.Address1;
+                    if (tmpApp.Address1.Contains(","))
                     {
-                        var tmpApp = new Integration.PartyMember();
-                        tmpApp.Name = match.Groups["Name"].Value.Trim();
-                        tmpApp.Address1 = match.Groups["Address"].Value.Trim();
-                        if (tmpApp.Address1.Contains(","))
-                        {
-                            tmpApp.Country = ToCountry(tmpApp.Address1.Substring(tmpApp.Address1.LastIndexOf(",")).Trim());
-                        }
-                        else
-                            tmpApp.Country = ToCountry(tmpApp.Address1);
-
-                        if (tmpApp.Country == tmpApp.Address1)
-                            tmpApp.Country = "IN";
-
-                        appList.Add(tmpApp);
+                        tmpApp.Country = ToCountry(tmpApp.Address1.Substring(tmpApp.Address1.LastIndexOf(",")).Trim());
                     }
                     else
+                        tmpApp.Country = ToCountry(tmpApp.Address1);
+
+                    if (tmpApp.Country == tmpApp.Address1)
+                        tmpApp.Country = "IN";
+
+                    if (overallCountry == null)
+                        overallCountry = tmpApp.Country;
+
+                    appList.Add(tmpApp);
+                }
+                else if (overallAddress != null && overallCountry != null)
+                {
+                    appList.Add(new Integration.PartyMember
                     {
-                        Console.WriteLine($"Applicant value doesn't match pattern: {applicant}");
-                    }
+                        Name = applicant,
+                        Address1 = overallAddress,
+                        Country = overallCountry
+                    });
                 }
                 else
                 {
-                    appList.Add(new Integration.PartyMember { Name = applicant.Trim() });
+                    Console.WriteLine($"Applicant value doesn't match pattern: {applicant}");
                 }
             }
             return appList;
@@ -579,11 +614,11 @@ namespace IN
         {
             classificationInfo = Regex.Replace(classificationInfo, @"\.*\,*", "").ToUpper();
             var ips = new List<Integration.Ipc>();
+            int tmpEdition = 0;
             var typeOne = new Regex(@"(?<Value>[A-Z]{1}\d{2}[A-Z]{1}\d+\b)");
             var typeOneAdditional = new Regex(@"(?<P1>[A-Z]{1}\d{2}[A-Z]{1})(?<P2>\d{4})(?<P3>\d+)");
             var typeTwo = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s*\d+\/\d+");
-            //MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
-            MatchCollection typeOneMatches = typeOneAdditional.Matches(classificationInfo);
+            MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
             MatchCollection typeTwoMatches = typeTwo.Matches(classificationInfo);
             if (typeOneMatches.Count > 0)
             {
@@ -632,6 +667,10 @@ namespace IN
         public static List<FileInfo> GetTxtFiles(string path)
         {
             return Directory.GetFiles(path, @"*.txt", SearchOption.TopDirectoryOnly).Select(x => new FileInfo(x)).ToList();
+        }
+        public static List<FileInfo> GetXlsFiles(string path)
+        {
+            return Directory.GetFiles(path, @"*.xlsx", SearchOption.TopDirectoryOnly).Select(x => new FileInfo(x)).ToList();
         }
         public static List<string> SplitRecordsByRegex(string record)
         {

@@ -42,7 +42,7 @@ namespace Diamond_VN
         public static Diamond.Core.Models.LegalStatusEvent _patentRecord;
         public static string GetKindValue(string subcode)
         {
-            Dictionary<string, string> pairs = new Dictionary<string, string> { ["12"] = "A", ["13"] = "U", ["14"] = "B", ["15"] = "Y"};
+            Dictionary<string, string> pairs = new Dictionary<string, string> { ["12"] = "A", ["13"] = "U", ["14"] = "B", ["15"] = "Y" };
             return pairs[subcode];
         }
         public static List<Diamond.Core.Models.LegalStatusEvent> ProcessSubCodes(List<XElement> xElements, string subcode, string sectionCode, string gazetteName)
@@ -110,7 +110,7 @@ namespace Diamond_VN
                         }
                         else if (inid.StartsWith(I54))
                         {
-                            _patentRecord.Biblio.Titles.Add(new Integration.Title 
+                            _patentRecord.Biblio.Titles.Add(new Integration.Title
                             {
                                 Text = inidValue,
                                 Language = "VI"
@@ -118,7 +118,7 @@ namespace Diamond_VN
                         }
                         else if (inid.StartsWith(I57))
                         {
-                            _patentRecord.Biblio.Abstracts.Add(new Integration.Abstract 
+                            _patentRecord.Biblio.Abstracts.Add(new Integration.Abstract
                             {
                                 Text = inidValue,
                                 Language = "VI"
@@ -279,10 +279,10 @@ namespace Diamond_VN
                     Name = match.Groups["Name"].Value,
                     Language = "VI",
                     Country = "VN",
-                    Translations = new List<Integration.Translation> 
+                    Translations = new List<Integration.Translation>
                     {
                         new Integration.Translation
-                        { 
+                        {
                             Language = "EN",
                             TrName = match.Groups["VN_Name"].Value.Trim(),
                             Type = type
@@ -337,7 +337,7 @@ namespace Diamond_VN
         public static List<Integration.PartyMember> ConvertInventors(string inventors, string type) // 72
         {
             var invList = new List<Integration.PartyMember>();
-            
+
             var multipleInventors = inventors?.Split(';').Select(x => x.Replace(",", "").Trim()).ToList();
             var invRegex = new Regex(@"(?<Name>.*)\((?<Country>[A-Z]{2})\)");
             foreach (var inventor in multipleInventors)
@@ -450,7 +450,7 @@ namespace Diamond_VN
             var match = ipsRegex.Match(classificationInfo);
             if (match.Success)
             {
-                classificationInfo = match.Groups["Value"].Value.Replace(",","");
+                classificationInfo = match.Groups["Value"].Value.Replace(",", "");
                 if (match.Groups["Edition"].Value != "")
                     tmpEdition = Int32.Parse(match.Groups["Edition"].Value);
                 var splittedIps = classificationInfo?.Split(' ').Select(x => x.Trim()).ToList();
@@ -467,7 +467,7 @@ namespace Diamond_VN
                     {
                         if (tmpValueFirst != null)
                         {
-                            tmpIps.Class = tmpValueFirst + " " +  item;
+                            tmpIps.Class = tmpValueFirst + " " + item;
                             ips.Add(tmpIps);
                             tmpIps = new Integration.Ipc();
                         }
@@ -476,7 +476,7 @@ namespace Diamond_VN
             }
             else
             {
-                
+
             }
             return ips;
         }
@@ -569,7 +569,7 @@ namespace Diamond_VN
         }
         static string DateZeroAdd(string s)
         {
-            return s.Length == 1 ? 0 + s : s; 
+            return s.Length == 1 ? 0 + s : s;
         }
         public static string ConvertDate(string s)
         {

@@ -1,5 +1,9 @@
-﻿using System;
+﻿using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -64,7 +68,7 @@ namespace IN
                         var inidValue = inid.Replace(":", "").Trim();
                         if (inid.StartsWith(I12))
                         {
-                            _patentRecord.Biblio.Publication.LanguageDesignation = inidValue.Replace(@"(12)","").Trim();
+                            _patentRecord.Biblio.Publication.LanguageDesignation = inidValue.Replace(@"(12)", "").Trim();
                         }
                         else if (inid.StartsWith(I21))
                         {
@@ -106,17 +110,17 @@ namespace IN
                         }
                         else if (inid.StartsWith(I43))
                         {
-                            _patentRecord.Biblio.Publication.Date = Methods.ConvertDate(inidValue.Replace(I43,"").Trim());
+                            _patentRecord.Biblio.Publication.Date = Methods.ConvertDate(inidValue.Replace(I43, "").Trim());
                         }
                         else if (inid.StartsWith(I51))
                         {
-                            _patentRecord.Biblio.Ipcs = Methods.ConvertClassificationInfo(inidValue.Replace(I51,"").Trim());
+                            _patentRecord.Biblio.Ipcs = Methods.ConvertClassificationInfo(inidValue.Replace(I51, "").Trim());
                         }
                         else if (inid.StartsWith(I54))
                         {
                             _patentRecord.Biblio.Titles.Add(new Integration.Title
                             {
-                                Text = inidValue.Replace(I54,"").Trim(),
+                                Text = inidValue.Replace(I54, "").Trim(),
                                 Language = "EN"
                             });
                         }
@@ -164,7 +168,7 @@ namespace IN
                         }
                         else if (inid.StartsWith(I86) && !inid.Contains("NA"))
                         {
-                            var tmp = Methods.ConvertPCT(inidValue.Replace(I86,"").Trim());
+                            var tmp = Methods.ConvertPCT(inidValue.Replace(I86, "").Trim());
                             _patentRecord.Biblio.IntConvention.PctApplNumber = tmp.Number;
                             _patentRecord.Biblio.IntConvention.PctApplDate = tmp.Date;
                         }
@@ -188,85 +192,72 @@ namespace IN
             }
             return _patentRecordsList;
         }
-        public static List<Diamond.Core.Models.LegalStatusEvent> Process2SubCode(List<string> elements, string subcode, string sectionCode, string gazetteName)
+        public static List<Diamond.Core.Models.LegalStatusEvent> Process2SubCode(string filePath, string subcode, string sectionCode, string gazetteName)
         {
+            XSSFWorkbook OpenedDocument;
+            using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                OpenedDocument = new XSSFWorkbook(file);
+            }
+            ISheet sheet = OpenedDocument.GetSheet("Лист1");
+
+
             _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
             int tmpID = 0;
-            var totalRecords = Methods.SplitStringByRegex2(elements, _sub2Regex);
-            foreach (var record in totalRecords)
+
+            for (int row = 0; row <= sheet.LastRowNum; row++)
             {
-                var tmpRecord = record;
-                if (tmpRecord.Contains("The Patent Office Journal"))
+                if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                 {
-                    tmpRecord = record.Remove(tmpRecord.LastIndexOf("The Patent Office Journal")).Trim();
-                }
-                if (_sub2Regex.Match(tmpRecord).Success)
-                {
-                    var splittedRecord = tmpRecord.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Where(x => !x.StartsWith("The Patent Office Journal")).ToList();
+                    _patentRecord = new Diamond.Core.Models.LegalStatusEvent();
+                    _patentRecord.GazetteName = gazetteName;
+                    _patentRecord.Biblio = new Integration.Biblio();
+                    //_patentRecord.Biblio.IntConvention = new Integration.IntConvention();
+                    _patentRecord.LegalEvent = new Integration.LegalEvent();
+                    _patentRecord.SubCode = subcode;
+                    _patentRecord.SectionCode = sectionCode;
+                    _patentRecord.CountryCode = "IN";
+                    _patentRecord.Id = tmpID++;
+                    _patentRecord.Biblio.Publication.Kind = "FG";
 
-                    if (splittedRecord.Count == 9 || splittedRecord.Count == 8)
+                    _patentRecord.Biblio.Publication.Number = sheet.GetRow(row).GetCell(1).ToString();
+                    _patentRecord.Biblio.Application.Number = sheet.GetRow(row).GetCell(2).ToString();
+
+                    _patentRecord.Biblio.Application.Date = Methods.ConvertDate(sheet.GetRow(row).GetCell(3).ToString());
+
+                    try
                     {
-                        _patentRecord = new Diamond.Core.Models.LegalStatusEvent();
-                        _patentRecord.GazetteName = gazetteName;
-                        _patentRecord.Biblio = new Integration.Biblio();
-                        _patentRecord.Biblio.IntConvention = new Integration.IntConvention();
-                        _patentRecord.LegalEvent = new Integration.LegalEvent();
-                        _patentRecord.SubCode = subcode;
-                        _patentRecord.SectionCode = sectionCode;
-                        _patentRecord.CountryCode = "IN";
-                        _patentRecord.Id = tmpID++;
-                        _patentRecord.Biblio.Publication.Kind = "FG";
-                        Integration.NoteTranslation noteTranslation = new Integration.NoteTranslation();
-
-                        _patentRecord.Biblio.Publication.Number = splittedRecord[1].Trim();
-                        _patentRecord.Biblio.Application.Number = splittedRecord[2].Trim();
-                        _patentRecord.Biblio.Application.Date = Methods.ConvertDate(splittedRecord[3].Trim());
-
-                        if (splittedRecord.Count == 8)
-                        {
-                            _patentRecord.Biblio.Titles.Add(new Integration.Title
-                            {
-                                Text = splittedRecord[4].Trim(),
-                                Language = "EN"
-                            });
-                            _patentRecord.Biblio.Assignees = new List<Integration.PartyMember>
-                                { new Integration.PartyMember
-                                    {
-                                        Name = splittedRecord[5].Trim()
-                                    }
-                                };
-                            _patentRecord.LegalEvent.Note = $"|| Date of Publication of Abstract u/s 11(A) | {Methods.ConvertDate(splittedRecord[6].Trim())}\n|| Appropriate Office | {splittedRecord[7].Trim()}";
-                            _patentRecord.LegalEvent.Language = "EN";
-                        }
-                        else if (splittedRecord.Count == 9)
+                        if (!string.IsNullOrEmpty(sheet.GetRow(row).GetCell(4).ToString()))
                         {
                             _patentRecord.Biblio.Priorities = new List<Integration.Priority>
                             {
                                 new Integration.Priority
                                 {
-                                    Date = Methods.ConvertDate(splittedRecord[4].Trim())
+                                    Date = Methods.ConvertDate(sheet.GetRow(row).GetCell(4).ToString())
                                 }
                             };
-                            _patentRecord.Biblio.Titles.Add(new Integration.Title
-                            {
-                                Text = splittedRecord[5].Trim(),
-                                Language = "EN"
-                            });
-                            _patentRecord.Biblio.Assignees = new List<Integration.PartyMember>
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine($"Priority processing error: {_patentRecord.Biblio.Publication.Number}, value: {sheet.GetRow(row).GetCell(4)}");
+                    }
+
+                    _patentRecord.Biblio.Titles.Add(new Integration.Title
+                    {
+                        Text = sheet.GetRow(row).GetCell(5).ToString(),
+                        Language = "EN"
+                    });
+                    _patentRecord.Biblio.Assignees = new List<Integration.PartyMember>
                                 { new Integration.PartyMember
                                     {
-                                        Name = splittedRecord[6].Trim()
+                                        Name = sheet.GetRow(row).GetCell(6).ToString()
                                     }
                                 };
-                            _patentRecord.LegalEvent.Note = $"|| Date of Publication of Abstract u/s 11(A) | {Methods.ConvertDate(splittedRecord[7].Trim())}\n|| Appropriate Office | {splittedRecord[8].Trim()}";
-                            _patentRecord.LegalEvent.Language = "EN";
-                        }
-                        _patentRecordsList.Add(_patentRecord);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Issue was detected with: {record}");
-                    }
+                    _patentRecord.LegalEvent.Note = $"|| Date of Publication of Abstract u/s 11(A) | {Methods.ConvertDate(sheet.GetRow(row).GetCell(7).ToString())}\n|| Appropriate Office | {sheet.GetRow(row).GetCell(8)}";
+                    _patentRecord.LegalEvent.Language = "EN";
+
+                    _patentRecordsList.Add(_patentRecord);
                 }
             }
             return _patentRecordsList;

@@ -20,7 +20,7 @@ namespace Diamond_VN
         public static List<XElement> _sub15Elements;
         public static string _chapterBeginning;
         public static string _chapterEnding;
-        
+
         static void Main()
         {
             var tetmlFiles = Methods.GetTetmlFiles(_pathToTetml);
@@ -49,7 +49,7 @@ namespace Diamond_VN
                         .ToList();
                     _sub13Elements = _tet.Descendants().Where(x => x.Name.LocalName == "Text")  //Sub13 - chapter title of beginning
                         .SkipWhile(x => x.Value != @"§¥N Y£U CÇU CÊP B»NG ®éc quyÒn gi¶I ph¸p h÷u Ých")  //Sub13 - chapter title of ending
-                        .TakeWhile(x => x.Value != @"PhÇn iii" && 
+                        .TakeWhile(x => x.Value != @"PhÇn iii" &&
                         x.Value != @"Y£U CÇU thÈm ®Þnh NéI DUNG" &&
                         x.Value != @"PHẦN III")
                         .ToList();
@@ -60,7 +60,7 @@ namespace Diamond_VN
                         .SkipWhile(x => x.Value != @"S¸ng chÕ ®−îc cÊp b»ng ®éc quyÒn"
                         && x.Value != "SÁNG CHẾ Đ¦ỢC CẤP BẰNG ĐỘC QUYỀN"
                         && x.Value != "S¸NG CHÕ ®−îc cÊp b»ng ®éc quyÒn") //Sub14 - chapter title of beginning
-                        .TakeWhile(x => x.Value != @"PhÇn iI" 
+                        .TakeWhile(x => x.Value != @"PhÇn iI"
                         && x.Value != @"Gi¶I ph¸p h÷u Ých ®−îc cÊp b»ng ®éc quyÒn"
                         && x.Value != @"PHÇN II"
                         && x.Value != "PHẦN II") //Sub14 - chapter title of ending
@@ -69,8 +69,8 @@ namespace Diamond_VN
                         .SkipWhile(x => x.Value != @"Gi¶I ph¸p h÷u Ých ®−îc cÊp b»ng ®éc quyÒn"
                         && x.Value != "GIẢI PHÁP HỮU ÍCH ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"
                         && x.Value != "GI¶I PH¸P H÷U ÝCH ®−îc cÊp b»ng ®éc quyÒn") //Sub15 - chapter title of beginning
-                        .TakeWhile(x => x.Value != @"PHÇN II" && 
-                        x.Value != "PHẦN II" && 
+                        .TakeWhile(x => x.Value != @"PHÇN II" &&
+                        x.Value != "PHẦN II" &&
                         x.Value != @"§¥N Y£U CÇU CÊP B»NG gi¶I ph¸p h÷u Ých" &&
                         x.Value != @"PhÇn iii" &&
                         x.Value != @"PhÇn iii" &&

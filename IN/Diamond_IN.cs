@@ -11,23 +11,21 @@ namespace IN
 {
     class Diamond_IN
     {
-        public const string _pathToText = @"D:\_DFA_main\_Patents\IN\20200821";
+        public const string _pathToFiles = @"D:\_DFA_main\_Patents\IN\20201207\IN_20201204_49\2_sub";
         public static bool _isStaging = true;
         public static FileInfo _currentFileInProcess;
         public static List<string> _txt;
         public static List<string> _sub1Elements;
-        public static List<string> _sub2Elements;
         public static List<string> _sub3Elements;
 
         static void Main(string[] args)
         {
-            var textFiles = Methods.GetTxtFiles(_pathToText);
-
+            var textFiles = Methods.GetTxtFiles(_pathToFiles);
+            var xlsFiles = Methods.GetXlsFiles(_pathToFiles);
             foreach (var textFile in textFiles)
             {
                 _txt = File.ReadAllLines(textFile.FullName).ToList();
                 _sub1Elements = new List<string>();
-                _sub2Elements = new List<string>();
                 _sub3Elements = new List<string>();
                 _currentFileInProcess = textFile;
 
@@ -39,11 +37,8 @@ namespace IN
                     .SkipWhile(e => !e.StartsWith(@"(12) PATENT APPLICATION PUBLICATION"))
                     .TakeWhile(e => !e.StartsWith(@"WEEKLY ISSUED") && !e.StartsWith(@"Publication After 18 Months") && !e.StartsWith(@"CONTINUED TO PART- 2"))
                     .ToList();
-                _sub2Elements = _txt.SkipWhile(e => !e.StartsWith(@"Publication Under Section 43(2) in Respect of the Grant"))
-                    .TakeWhile(e => !e.StartsWith(@"PUBLICATION U/R 84(3) IN RESPECT OF APPLICATION") && !e.StartsWith("CONTINUED TO PART- 3"))
-                    .ToList();
                 _sub3Elements = _txt
-                    .SkipWhile(e => !e.StartsWith(@"Publication After 18 Months"))
+                    //.SkipWhile(e => !e.StartsWith(@"Publication After 18 Months"))
                     .SkipWhile(e => !e.StartsWith(@"(12) PATENT APPLICATION PUBLICATION"))
                     .TakeWhile(e => !e.StartsWith(@"PUBLICATION U/R 84(3) IN RESPECT OF APPLICATION"))
                     .ToList();
@@ -52,19 +47,20 @@ namespace IN
 
                 if (_sub1Elements != null && _sub1Elements.Count() > 0)
                 {
-                    var sub1records = Subcodes.Process1SubCode(_sub1Elements, "1", "BZ", currentFileName + ".pdf");
-                    DiamondSender.SendToDiamond(sub1records, _isStaging);
-                }
-                if (_sub2Elements != null && _sub2Elements.Count() > 0)
-                {
-                    var sub2records = Subcodes.Process2SubCode(_sub2Elements, "2", "FG", currentFileName + ".pdf");
-                    //DiamondSender.SendToDiamond(sub2records, _isStaging);
+                    //var sub1records = Subcodes.Process1SubCode(_sub1Elements, "1", "BZ", currentFileName + ".pdf");
+                    //DiamondSender.SendToDiamond(sub1records, _isStaging);
                 }
                 if (_sub3Elements != null && _sub3Elements.Count() > 0)
                 {
                     var sub1records = Subcodes.Process1SubCode(_sub3Elements, "3", "BZ", currentFileName + ".pdf");
                     DiamondSender.SendToDiamond(sub1records, _isStaging);
                 }
+            }
+            foreach (var xlsFile in xlsFiles)
+            {
+                string currentFileName = Path.GetFileNameWithoutExtension(xlsFile.FullName);
+                var sub2records = Subcodes.Process2SubCode(xlsFile.FullName, "2", "FG", currentFileName + ".pdf");
+                DiamondSender.SendToDiamond(sub2records, _isStaging);
             }
         }
     }
