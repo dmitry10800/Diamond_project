@@ -64,6 +64,7 @@ namespace Diamond_SI
                 //string endChapterSubcode20 = "Kazalo po kodah MPK";
                 string startChapterSubcode20 = "Prevodi zahtevkov evro";
                 string endChapterSubcode20 = "Kazalo po";
+                string startAmendmentsSubcode15 = "Popravki prevodov zahtevkov evropskih patentov";
 
                 int tempInc = 0;
                 for (int i = 0; i < allElementsList.Count; i++)
@@ -92,8 +93,9 @@ namespace Diamond_SI
                         {
                             subCode20.Add(allElementsList[tempInc]);
                             tempInc++;
-                        } while (tempInc < allElementsList.Count &&
-                                 !allElementsList[tempInc].Value.Contains(endChapterSubcode20));
+                        } while (tempInc < allElementsList.Count 
+                                 && !allElementsList[tempInc].Value.Contains(endChapterSubcode20)
+                                 && !allElementsList[tempInc].Value.Contains(startAmendmentsSubcode15));
                     }
                 }
 
