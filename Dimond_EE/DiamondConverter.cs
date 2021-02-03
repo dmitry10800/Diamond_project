@@ -168,7 +168,9 @@ namespace Dimond_EE
 
                         string date = match.Groups["date"].Value.Trim();
 
-                        string formatDate = DateTime.Parse(date).ToString("MM.dd.yyyy").Replace(".","/");
+                        var ruCulture = new System.Globalization.CultureInfo("ru-RU");
+
+                        string formatDate = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("MM.dd.yyyy").Replace(".","/");
 
                         forNote.Add(text);
 

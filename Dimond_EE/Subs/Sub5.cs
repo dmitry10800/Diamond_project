@@ -96,10 +96,14 @@ namespace Dimond_EE.Subs
 
                                 if (match.Success)
                                 {
+
+                                    var ruCulture = new System.Globalization.CultureInfo("ru-RU");
+
                                     string tmp = match.Groups["Date"].Value.Trim();
+
                                     patent.i30.Add(new Priorities
                                     {
-                                        date = DateTime.Parse(tmp).ToString("yyyy/MM/dd"),
+                                        date = DateTime.Parse(tmp, ruCulture.DateTimeFormat).ToString("yyyy/MM/dd"),
                                         kind = match.Groups["Kind"].Value.Trim(),
                                         number = match.Groups["Number"].Value.Trim()
                                     });
@@ -115,8 +119,10 @@ namespace Dimond_EE.Subs
 
                             if (result.Success)
                             {
+                                var ruCulture = new System.Globalization.CultureInfo("ru-RU");
+
                                 string date = result.Groups["group1"].Value.Trim();
-                                patent.i96appDate = DateTime.Parse(date).ToString("yyyy/MM/dd");
+                                patent.i96appDate = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("yyyy/MM/dd");
                                 patent.i96appNumber = result.Groups["group2"].Value.Trim();
                             }
                         }
@@ -128,10 +134,11 @@ namespace Dimond_EE.Subs
                             Match match = regex.Match(I_97);
                             if (match.Success)
                             {
-                                string date = match.Groups["group1"].Value.Trim();
+                                var ruCulture = new System.Globalization.CultureInfo("ru-RU");
+                                string date = match.Groups["group1"].Value.Replace(".", "/").Trim();
                                 patent.i97.Add(new Priorities
                                 {
-                                    date = DateTime.Parse(date).ToString("yyyy/MM/dd"),
+                                    date = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("yyyy/MM/dd"),
                                     kind = match.Groups["group2"].Value.Trim(),
                                     number = match.Groups["group3"].Value.Trim()
                                 });
