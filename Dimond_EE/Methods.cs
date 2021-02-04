@@ -86,7 +86,6 @@ namespace Dimond_EE
                 }
             }
 
-           
             return workLine;
         }
 
@@ -109,10 +108,11 @@ namespace Dimond_EE
 
         public List<string> RecSplit(string record)
         {
-            string tmpRecordString = record;
+            string tmpRecordString = record;      
             string I51Value = null;
             string I51 = "(51)";
             string I11 = "(11)";
+      
             List<string> splittedRecords = new List<string>();
 
             if (record.Contains(I51))
@@ -138,7 +138,7 @@ namespace Dimond_EE
                 if (!string.IsNullOrEmpty(I51Value))
                 {
                     splittedRecords.Add(I51Value);
-                }
+                }            
             }
             return splittedRecords;
         }

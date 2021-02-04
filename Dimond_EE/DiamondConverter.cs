@@ -170,7 +170,7 @@ namespace Dimond_EE
 
                         var ruCulture = new System.Globalization.CultureInfo("ru-RU");
 
-                        string formatDate = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("MM.dd.yyyy").Replace(".","/");
+                        string formatDate = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("yyyy.MM.dd").Replace(".","/");
 
                         forNote.Add(text);
 
@@ -184,9 +184,9 @@ namespace Dimond_EE
                     int count = forNote.Count;
                     Console.WriteLine();
 
-                    string tmpNote = "|| "+ forNote[0] + " |" + forNote[1] + "\n" + "|| "+forNote[2] + " | " + forNote[3] ;
+                    string tmpNote = "|| "+ forNote[0] + " | " + forNote[1] + "\n" + "|| "+ forNote[2] + " | " + forNote[4] ;
                     
-                    string tmpTranlation = "|| " + forNote[0] + " |Registration number " + forNote[1] + "\n" + "|| Date of filing of the translation of the specification "  + forNote[4]; ;
+                    string tmpTranlation = "|| " + forNote[0] + " |Registration number " + forNote[1] + "\n" + "|| Date of filing of the translation of the specification | "  + forNote[4]; ;
 
                    
                     if (!string.IsNullOrEmpty(tmpNote))
