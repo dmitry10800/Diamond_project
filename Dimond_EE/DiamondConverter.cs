@@ -210,7 +210,5 @@ namespace Dimond_EE
 
             return legalEvents;
         }
-
-
     }
 }
