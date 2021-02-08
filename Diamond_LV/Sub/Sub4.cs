@@ -156,6 +156,26 @@ namespace Diamond_LV.Sub
                                     i33List.Add(match1.Groups["kind"].Value.Trim());
                                 }
 
+                                else
+                                {
+                                    Regex regex = new Regex(@"(?<date>\d{2}.\d{2}.\d{4})\s(?<number>.+)\s(?<kind>[A-Z]{2})");
+
+                                    Match match = regex.Match(notes[i]);
+
+                                    if (match.Success)
+                                    {
+                                        i31List.Add(match1.Groups["number"].Value.Trim());
+
+                                        string date = match1.Groups["date"].Value.Trim();
+
+                                        CultureInfo cultureInfo = new CultureInfo("ru-Ru");
+
+                                        i32List.Add(DateTime.Parse(date, cultureInfo.DateTimeFormat).ToString("yyyy/MM/dd"));
+
+                                        i33List.Add(match1.Groups["kind"].Value.Trim());
+                                    }
+                                }
+
                             }
 
                             patent.i31 = i31List;
