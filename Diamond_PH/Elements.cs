@@ -12,7 +12,13 @@ namespace Diamond_PH
         public string Title { get; set; }
         public string AppDate { get; set; }
         public string EventDate { get; set; }
-        public Owner Owner { get; set; }
+        public List<Owner> Owner { get; set; }
+
+        public override string ToString()
+        {
+            return $"{ AppNumber}";
+        }
+
     }
 
     public class Owner

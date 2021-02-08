@@ -50,7 +50,6 @@
     <Compile Include="DiamondConverter.cs" />
     <Compile Include="DiamondSender.cs" />
     <Compile Include="Elements.cs" />
-    <Compile Include="Methods.cs" />
     <Compile Include="PH_main.cs" />
     <Compile Include="Processing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

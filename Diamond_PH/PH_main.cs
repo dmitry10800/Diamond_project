@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -10,7 +11,7 @@ namespace Diamond_PH
 {
     class PH_main
     {
-        public static DirectoryInfo PathToTetml = new DirectoryInfo(@"C:\Users\Razrab\Desktop\PH\");
+        public static DirectoryInfo PathToTetml = new DirectoryInfo(@"C:\Work\PH\PH_20201125_129");
         public static FileInfo currentFile = null;
         public static string currentFileName = null;
 
@@ -29,16 +30,20 @@ namespace Diamond_PH
             {
                 currentFile = new FileInfo(file);
                 currentFileName = Path.GetFileName(file);
-                var text = File.ReadAllText(file);
+                string text = File.ReadAllText(file);
 
-                var splitText = text.Split("\r\n\r\n".ToCharArray());
-                subCode7List = splitText.ToList();
+                Regex regex = new Regex(@"(?<=\[[A-Z]{2}\]\s?\r\n)");
+                List<string> splitText = regex.Split(text).Where(val => !string.IsNullOrEmpty(val)).ToList(); 
+
+                subCode7List = splitText;
             }
 
             if (subCode7List.Count > 0)
             {
-                var processedRecords = Processing.SubCode7(subCode7List);
+                List<Elements> processedRecords = Processing.SubCode7(subCode7List);
+
                 var legalEvents = DiamondConverter.Sub7Convert(processedRecords);
+
                 DiamondSender.SendToDiamond(legalEvents);
             }
         }
