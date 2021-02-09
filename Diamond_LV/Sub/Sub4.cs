@@ -194,23 +194,45 @@ namespace Diamond_LV.Sub
 
                             var notes = regex.Split(I_73).Where(val => !string.IsNullOrEmpty(val)).Select(x => x.Trim()).ToList();
 
-                            Regex pattern = new Regex(@"(?<name>.+?)(,|;)(?<adress>.+),\s(?<kind>[A-Z]{2})");
+
+
+                            Regex pattern = new Regex(@"(?<name>.+?),(?<adress>.+),\s(?<kind>[A-Z]{2})");
+
+                            Regex pattern1 = new Regex(@"(?<name>.+?);(?<adress>.+),\s(?<kind>[A-Z]{2})");
 
                             foreach (var item in notes)
                             {
                                 string note = item.Replace("\n", " ").Trim();
 
-                                Match match = pattern.Match(note);
-
-                                if (match.Success)
+                                if (note.Contains(';'))
                                 {
-                                    patent.i73.Add(new Person
+                                    Match match = pattern1.Match(note);
+
+                                    if (match.Success)
                                     {
-                                        name = match.Groups["name"].Value.Trim(),
-                                        adress = match.Groups["adress"].Value.Trim(),
-                                        country = match.Groups["kind"].Value.Trim(),
-                                    });
+                                        patent.i73.Add(new Person
+                                        {
+                                            name = match.Groups["name"].Value.Trim(),
+                                            adress = match.Groups["adress"].Value.Trim(),
+                                            country = match.Groups["kind"].Value.Trim(),
+                                        });
+                                    }
                                 }
+                                else
+                                {
+                                    Match match = pattern.Match(note);
+
+                                    if (match.Success)
+                                    {
+                                        patent.i73.Add(new Person
+                                        {
+                                            name = match.Groups["name"].Value.Trim(),
+                                            adress = match.Groups["adress"].Value.Trim(),
+                                            country = match.Groups["kind"].Value.Trim(),
+                                        });
+                                    }
+                                }
+                               
                             }
                         }
                         else

@@ -10,7 +10,7 @@ namespace Diamond_LV
     class Program
     {
 
-        static string path = @"C:\Work\LV\LV_20201220_12";
+        static string path = @"C:\Work\LV\LV_20210120_01";
 
         static string sub = "4";
         static void Main(string[] args)
