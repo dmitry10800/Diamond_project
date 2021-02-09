@@ -50,7 +50,7 @@ namespace Diamond_EA
             var pat = new Regex(@"(?=\d{6})");
             var getText = File.ReadAllText(v).Replace("\r\n", " ").Replace("\n", " ");
             var splitText = pat.Split(getText).Where(x => x != "").Select(x => x.Trim()).ToList();
-            var recordPat = new Regex(@"(?<number>\d{6})\s*(?<kind>[A-Z]{1}\d)\s*(?<dateFirst>\d{4}\.\d{2}\.\d{2})\s*(?<numberSecond>№\d+\b)\s*(?<countriesFirst>.*)\s*(?<dateSecond>\d{4}\.\d{2}\.\d{2})\s*(?<countriesSecornd>.*)");
+            var recordPat = new Regex(@"(?<number>.+\d)\s*(?<kind>[A-Z]{1}\d)\s*(?<dateFirst>\d{4}\.\d{2}\.\d{2})\s*(?<numberSecond>[N|№]\s?\d{1,2})\s*(?<countriesFirst>.+)\s*(?<dateSecond>\d{4}\.\d{2}\.\d{2})\s*(?<countriesSecornd>.+)\s*(?<dateThird>\d{4}\.\d{2}\.\d{2})");
             foreach (var rec in splitText)
             {
                 var a = recordPat.Match(rec);
@@ -62,10 +62,11 @@ namespace Diamond_EA
                         LeNumber = a.Groups["number"].Value,
                         PubKind = a.Groups["kind"].Value,
                         I45Date = a.Groups["dateFirst"].Value.Replace(".", "-"),
-                        LeBulletinNumber = a.Groups["numberSecond"].Value,
+                        LeBulletinNumber = a.Groups["numberSecond"].Value.Replace(" ", ""),
                         LeCcTerminated = a.Groups["countriesFirst"].Value,
                         LeDate = a.Groups["dateSecond"].Value.Replace(".", "-"),
-                        LeCcValid = a.Groups["countriesSecornd"].Value
+                        LeCcValid = a.Groups["countriesSecornd"].Value,
+                        NoteDate = a.Groups["dateThird"].Value.Replace(".", "-")
                     });
                 }
                 else
@@ -73,6 +74,7 @@ namespace Diamond_EA
             }
             /*Conver to Diamond*/
             var diamFormat = ConvertToDiamond.Sub12(elems);
+            Console.WriteLine();
             /*Send on Diamond staging or Production*/
             Methods.SendToDiamond(diamFormat);
         }

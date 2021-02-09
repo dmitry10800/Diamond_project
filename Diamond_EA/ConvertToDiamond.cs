@@ -22,7 +22,7 @@ namespace Diamond_EA
                 foreach (var record in elementOuts)
                 {
                     Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                    legalEvent.GazetteName = Path.GetFileName(EA_main.CurrentFileName.Replace("_sub5.txt", ".pdf").Replace("_sub5.TXT", ".pdf"));
+                    legalEvent.GazetteName = Path.GetFileName(EA_main.CurrentFileName.Replace(".txt", ".pdf").Replace(".TXT", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "5";
                     /*Setting Section Code*/
@@ -59,7 +59,8 @@ namespace Diamond_EA
         {
             /*list of record for whole gazette chapter*/
             List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(EA_main.CurrentFileName);
+       //     string dateFromName = Methods.GetDateFromGazette(EA_main.CurrentFileName);
+           
             if (elementOuts != null)
             {
                 int leCounter = 1;
@@ -67,7 +68,7 @@ namespace Diamond_EA
                 foreach (var record in elementOuts)
                 {
                     Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                    legalEvent.GazetteName = Path.GetFileName(EA_main.CurrentFileName.Replace("_sub12.txt", ".pdf").Replace("_sub12.TXT", ".pdf"));
+                    legalEvent.GazetteName = Path.GetFileName(EA_main.CurrentFileName.Replace(".txt", ".pdf").Replace(".TXT", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "12";
                     /*Setting Section Code*/
@@ -81,18 +82,26 @@ namespace Diamond_EA
                     biblioData.Publication.Number = record.PubNumber;
                     biblioData.Publication.Kind = record.PubKind;
                     biblioData.DOfPublication = new DOfPublication { date_45 = record.I45Date };
-                    legalEvent.LegalEvent = new LegalEvent { Number = record.LeNumber, Date = record.LeDate };
-                    legalEvent.LegalEvent.Language = "RU";
-                    legalEvent.LegalEvent.Note = $"|| № Бюллетеня | {record.LeBulletinNumber} " +
+                    legalEvent.LegalEvent = new LegalEvent
+                    { 
+                        Number = record.LeNumber, 
+                        Date = record.LeDate, 
+                        Note = $"|| № Бюллетеня | {record.LeBulletinNumber} " +
                         $"|| Код государства, на территории которого прекращено действие патента | {record.LeCcTerminated}" +
-                        $"|| Код государства, на территории которого продолжается действие патента | {record.LeCcValid}";
-                    legalEvent.LegalEvent.Translations.Add(new NoteTranslation
-                    {
-                        Language = "EN",
-                        Tr = $"|| Bulletin No. | {record.LeBulletinNumber} " +
+                        $"|| Код государства, на территории которого продолжается действие патента | {record.LeCcValid}" +
+                        $"|| Дата публикации извещения | {record.NoteDate}",
+                        Language = "RU",
+                        Translations = new List<NoteTranslation>
+                        {
+                            new NoteTranslation {
+                                Language = "EN",
+                            Tr = $"|| Bulletin No. | {record.LeBulletinNumber} " +
                         $"|| Country code in which territory the patent is terminated | {record.LeCcTerminated}" +
-                        $"|| Country code in which territory the patent is valid | {record.LeCcValid}"
-                    });
+                        $"|| Country code in which territory the patent is valid | {record.LeCcValid}" +
+                        $"|| Publication date of notice | {record.NoteDate}"
+                            }
+                        }
+                    };
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
                 }

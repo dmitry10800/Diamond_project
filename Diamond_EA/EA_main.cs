@@ -14,7 +14,8 @@ namespace Diamond_EA
         static void Main(string[] args)
         {
             /*Folder with tetml files to process*/
-            var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\EA\20200122");
+            var dir = new DirectoryInfo(@"C:\Work\EA\EA_20201130_11");
+            string subcode = "12";
             /*list of tetml files*/
             var files = new List<string>();
             foreach (FileInfo file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
@@ -22,13 +23,13 @@ namespace Diamond_EA
             foreach (var textFile in files)
             {
                 CurrentFileName = textFile;
-                if (Path.GetFileNameWithoutExtension(textFile).EndsWith("_sub12"))
+                if (subcode == "12")
                 {
-                    //Process.Sub12(textFile);
+                    Process.Sub12(textFile);
                     Console.WriteLine("Subcode 12 sended!");
                 }
                 else
-                if (Path.GetFileNameWithoutExtension(textFile).EndsWith("_sub5"))
+                if (subcode == "5")
                 {
                     Process.Sub5(textFile);
                     Console.WriteLine("Subcode 5 sended!");

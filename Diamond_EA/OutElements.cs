@@ -27,6 +27,7 @@ namespace Diamond_EA
             public string LeDate { get; set; }
             public string PubKind { get; set; }
             public string I45Date { get; set; }
+            public string NoteDate { get; set; }
 
         }
     }
