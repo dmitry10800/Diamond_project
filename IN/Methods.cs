@@ -734,8 +734,8 @@ namespace IN
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
+         //       string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

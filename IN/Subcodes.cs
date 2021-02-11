@@ -262,5 +262,89 @@ namespace IN
             }
             return _patentRecordsList;
         }
+
+        public static List<Diamond.Core.Models.LegalStatusEvent> Process10SubCode(string filePath, string subcode, string sectionCode, string gazetteName)
+        {
+            XSSFWorkbook OpenedDocument;
+            using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                OpenedDocument = new XSSFWorkbook(file);
+            }
+            ISheet sheet = OpenedDocument.GetSheet("Лист1");
+
+
+            _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
+            int tmpID = 0;
+
+            for (int row = 0; row <= sheet.LastRowNum; row++)
+            {
+                if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
+                {
+                    _patentRecord = new Diamond.Core.Models.LegalStatusEvent();
+                    _patentRecord.GazetteName = gazetteName;
+                    _patentRecord.Biblio = new Integration.Biblio();
+                    //_patentRecord.Biblio.IntConvention = new Integration.IntConvention();
+                    _patentRecord.LegalEvent = new Integration.LegalEvent();
+                    _patentRecord.SubCode = subcode;
+                    _patentRecord.SectionCode = sectionCode;
+                    _patentRecord.CountryCode = "IN";
+                    _patentRecord.Id = tmpID++;
+
+
+                    _patentRecord.Biblio.Application.Number = sheet.GetRow(row).GetCell(2).ToString();
+
+                    _patentRecord.LegalEvent.Date = Methods.ConvertDate(sheet.GetRow(row).GetCell(3).ToString());
+
+
+                    string fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', ' ').Replace('\n', ' ');
+
+                
+
+                    Regex regex = new Regex(@"((Mobile|Phone|Telephone|India Ph|India Tel|PHONE|INDIA Tel Nos).+\d)");
+
+                    Match match = regex.Match(fullInfo);
+
+                    string phoneInfo = "";
+
+                    if (match.Success)
+                    {
+                        phoneInfo = match.Value;
+                        
+                    }
+
+                    if (!string.IsNullOrEmpty(phoneInfo))
+                    {
+                        fullInfo = fullInfo.Replace(phoneInfo, "").Trim();
+
+                        _patentRecord.Biblio.Agents = new List<Integration.PartyMember>
+                                { new Integration.PartyMember
+                                    {
+                                        Name = fullInfo,
+                                        Country = "IN"
+                                    }
+                                };
+
+                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5)}";
+                        _patentRecord.LegalEvent.Language = "EN";
+
+                    }
+                    else
+                    {
+                        _patentRecord.Biblio.Agents = new List<Integration.PartyMember>
+                                { new Integration.PartyMember
+                                    {
+                                        Name =  fullInfo,
+                                        Country = "IN"
+                                    }
+                                };
+                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information || EMAIL | {sheet.GetRow(row).GetCell(5)}";
+                        _patentRecord.LegalEvent.Language = "EN";
+                    }
+                    _patentRecordsList.Add(_patentRecord);
+                }
+            }
+            return _patentRecordsList;
+        }
+
     }
 }
