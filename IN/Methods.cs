@@ -442,6 +442,9 @@ namespace IN
                 case var country when new Regex(@"Zâmbia", RegexOptions.IgnoreCase).Match(country).Success: return "ZM";
                 case var country when new Regex(@"Zimbábue", RegexOptions.IgnoreCase).Match(country).Success: return "ZW";
                 case var country when new Regex(@"União Europ(é|e)ia", RegexOptions.IgnoreCase).Match(country).Success: return "EM";
+                case var country when new Regex(@"UK", RegexOptions.IgnoreCase).Match(country).Success: return "GB";
+                case var country when new Regex(@"Antigua (and|&) Barbuda", RegexOptions.IgnoreCase).Match(country).Success: return "AG";
+                case var country when new Regex(@"Cayman Islands (and|&) Antigua (and|&) Barbuda", RegexOptions.IgnoreCase).Match(country).Success: return "KY & AG";
                 case var country when new Regex(@"(Reino Unido)|(U\.K\.)", RegexOptions.IgnoreCase).Match(country).Success: return "UK";
             }
             return s;

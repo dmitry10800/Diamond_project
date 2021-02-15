@@ -41,7 +41,8 @@ namespace Diamond_FR
                     legalEvent.LegalEvent.Translations.Add(new NoteTranslation
                     {
                         Language = "EN",
-                        Tr = $"|| Registration number | {record.LeNoteNumber} || Nature of application | {record.LeNoteCountry}"
+                        Tr = $"|| Registration number | {record.LeNoteNumber} || Nature of application | {record.LeNoteCountry}",
+                        Type = "note"
                     });
                     /**********************/
                     legalEvent.Biblio = biblioData;
@@ -156,7 +157,8 @@ namespace Diamond_FR
                     legalEvent.LegalEvent.Translations.Add(new NoteTranslation
                     {
                         Language = "EN",
-                        Tr = $"|| Registration number | {record.RegNumber}\n|| Nature of application | {record.NatureOfApplication}"
+                        Tr = $"|| Registration number | {record.RegNumber}\n|| Nature of application | {record.NatureOfApplication}",
+                        Type = "note"
                     });
                     /**********************/
                     legalEvent.Biblio = biblioData;
@@ -197,7 +199,8 @@ namespace Diamond_FR
                     legalEvent.LegalEvent.Translations.Add(new NoteTranslation
                     {
                         Language = "EN",
-                        Tr = $"|| Registration number | {record.RegNumber}\n|| Nature of application | {record.NatureOfApplication}"
+                        Tr = $"|| Registration number | {record.RegNumber}\n|| Nature of application | {record.NatureOfApplication}",
+                        Type = "note"
                     });
                     /**********************/
                     legalEvent.Biblio = biblioData;

@@ -90,20 +90,20 @@ namespace Dimond_EE
                 biblioData.Titles.Add(title);
 
 
-                if(record.i73 != null)
-                {
-                    biblioData.Assignees = new List<PartyMember>();
-
-                    foreach (var item in record.i73)
+                    if(record.i73 != null)
                     {
-                        biblioData.Assignees.Add(new PartyMember
+                        biblioData.Assignees = new List<PartyMember>();
+
+                        foreach (var item in record.i73)
                         {
-                            Name = item.name,
-                            Address1 = item.adress,
-                            Country = item.country
-                        });
+                            biblioData.Assignees.Add(new PartyMember
+                            {
+                                Name = item.name,
+                                Address1 = item.adress,
+                                Country = item.country
+                            });
+                        }
                     }
-                }
 
                 if (record.i72 != null)
                 {
@@ -186,7 +186,7 @@ namespace Dimond_EE
 
                     string tmpNote = "|| "+ forNote[0] + " | " + forNote[1] + "\n" + "|| "+ forNote[2] + " | " + forNote[4] ;
                     
-                    string tmpTranlation = "|| " + forNote[0] + " |Registration number " + forNote[1] + "\n" + "|| Date of filing of the translation of the specification | "  + forNote[4]; ;
+                    string tmpTranlation = "|| " + forNote[0] + " | Registration number " + forNote[1] + "\n" + "|| Date of filing of the translation of the specification | "  + forNote[4]; ;
 
                    
                     if (!string.IsNullOrEmpty(tmpNote))
@@ -194,13 +194,19 @@ namespace Dimond_EE
                         legalEvent.LegalEvent = new LegalEvent
                         {
                             Note = tmpNote,
+                            
                             Language = "ET",
-                            Translations = new List<NoteTranslation> {
-                            new NoteTranslation {Language = "EN", Tr = tmpTranlation }
+                            Translations = new List<NoteTranslation>
+                            {
+                                new NoteTranslation 
+                                {
+                                    Language = "EN",
+                                    Tr = tmpTranlation,
+                                    Type = "note"
+                                }
                             }
                         };
                     }
-
                 }
 
                 legalEvent.Biblio = biblioData;

@@ -71,7 +71,8 @@ namespace Diamond_MX
                         legalEvent.LegalEvent.Translations.Add(new NoteTranslation
                         {
                             Language = "EN",
-                            Tr = tmpLeNoteTranslation.Trim()
+                            Tr = tmpLeNoteTranslation.Trim(),
+                            Type = "note"
                         });
                     }
 

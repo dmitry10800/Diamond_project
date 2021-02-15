@@ -45,7 +45,8 @@ namespace Diamond_EA
                         Translations = new List<NoteTranslation> {
                             new NoteTranslation {
                                 Language = "EN",
-                                Tr = $"|| Bulletin No. | {record.LeBulletinNumber}"
+                                Tr = $"|| Bulletin No. | {record.LeBulletinNumber}",
+                                Type = "note"
                             }
                         }
                     };
@@ -98,7 +99,8 @@ namespace Diamond_EA
                             Tr = $"|| Bulletin No. | {record.LeBulletinNumber} " +
                         $"|| Country code in which territory the patent is terminated | {record.LeCcTerminated}" +
                         $"|| Country code in which territory the patent is valid | {record.LeCcValid}" +
-                        $"|| Publication date of notice | {record.NoteDate}"
+                        $"|| Publication date of notice | {record.NoteDate}",
+                            Type = "note"
                             }
                         }
                     };

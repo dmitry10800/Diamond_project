@@ -12,7 +12,7 @@ namespace Diamond_IN
         public static string CurrentFileName;
         static void Main(string[] args)
         {
-            string folderPath = @"D:\_DFA_main\_Patents\IN\TableTest";
+            string folderPath = @"C:\Work\IN\IN_20210101_01(1)";
             List<string> FerFilesGet = new List<string>(Directory.GetFiles(folderPath, "*_TableFER.txt")); //Copy/Paste text from original pdf to txt file that ends with _TableFER.txt
             if (FerFilesGet.Count > 0)
             {
@@ -24,7 +24,7 @@ namespace Diamond_IN
                     var legalStatusEvents = ConvertToDiamond.FerTableConvertation(el);
                     try
                     {
-                        Methods.SendToDiamond(legalStatusEvents);
+                       Methods.SendToDiamond(legalStatusEvents);
                     }
                     catch (Exception)
                     {

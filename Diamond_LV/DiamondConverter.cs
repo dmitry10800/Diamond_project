@@ -121,7 +121,7 @@ namespace Diamond_LV
                         Note = record.note,
                         Language = "LV",
                         Translations = new List<NoteTranslation> {
-                            new NoteTranslation {Language = "EN", Tr = tmpTranlation }
+                            new NoteTranslation {Language = "EN", Tr = tmpTranlation, Type = "note" }
                             }
                     };
                 }

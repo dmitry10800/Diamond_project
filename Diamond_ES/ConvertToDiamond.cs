@@ -70,7 +70,7 @@ namespace Diamond_ES
 
                         if (i == 1)
                         {
-                            legalEvent.LegalEvent.Translations.Add(new NoteTranslation { Language = elem.LegalStatusEvents_Note[1].Language, Tr = elem.LegalStatusEvents_Note[1].Note });
+                            legalEvent.LegalEvent.Translations.Add(new NoteTranslation { Language = elem.LegalStatusEvents_Note[1].Language, Tr = elem.LegalStatusEvents_Note[1].Note, Type = "note" });
                         }
                     }
                 }
@@ -129,7 +129,7 @@ namespace Diamond_ES
 
                         if (i == 1)
                         {
-                            legalEvent.LegalEvent.Translations.Add(new NoteTranslation { Language = elem.LegalStatusEvents_Note[1].Language, Tr = elem.LegalStatusEvents_Note[1].Note });
+                            legalEvent.LegalEvent.Translations.Add(new NoteTranslation { Language = elem.LegalStatusEvents_Note[1].Language, Tr = elem.LegalStatusEvents_Note[1].Note, Type = "note" });
                         }
                     }
                 }
@@ -189,7 +189,7 @@ namespace Diamond_ES
 
                         if (i == 1)
                         {
-                            legalEvent.LegalEvent.Translations.Add(new NoteTranslation { Language = elem.LegalStatusEvents_Note[1].Language, Tr = elem.LegalStatusEvents_Note[1].Note });
+                            legalEvent.LegalEvent.Translations.Add(new NoteTranslation { Language = elem.LegalStatusEvents_Note[1].Language, Tr = elem.LegalStatusEvents_Note[1].Note, Type = "note" });
                         }
                     }
                 }
