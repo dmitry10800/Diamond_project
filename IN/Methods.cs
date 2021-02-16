@@ -531,13 +531,14 @@ namespace IN
 
                     appList.Add(tmpApp);
                 }
-                else if (overallAddress != null && overallCountry != null)
+                else 
+                if(!match.Success)
                 {
+                    
                     appList.Add(new Integration.PartyMember
                     {
                         Name = applicant,
-                        Address1 = overallAddress,
-                        Country = overallCountry
+                        Country = "IN"
                     });
                 }
                 else
@@ -618,38 +619,56 @@ namespace IN
             classificationInfo = Regex.Replace(classificationInfo, @"\.*\,*", "").ToUpper();
             var ips = new List<Integration.Ipc>();
             int tmpEdition = 0;
-            var typeOne = new Regex(@"(?<Value>[A-Z]{1}\d{2}[A-Z]{1}\d+\b)");
-            var typeOneAdditional = new Regex(@"(?<P1>[A-Z]{1}\d{2}[A-Z]{1})(?<P2>\d{4})(?<P3>\d+)");
-            var typeTwo = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s*\d+\/\d+");
-            MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
-            MatchCollection typeTwoMatches = typeTwo.Matches(classificationInfo);
-            if (typeOneMatches.Count > 0)
+            if (classificationInfo.Contains('/'))
             {
-                foreach (Match value in typeOneMatches)
+                Regex typeTwo = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s*\d+\/\d+");
+                MatchCollection typeTwoMatches = typeTwo.Matches(classificationInfo);
+                if (typeTwoMatches.Count > 0)
                 {
-                    var m = typeOneAdditional.Match(value.Value);
-                    if (m.Success)
+                    foreach (Match value in typeTwoMatches)
                     {
-                        var tmpValue = $"{m.Groups["P1"].Value} {m.Groups["P2"].Value.TrimStart('0')}/";
-                        var p3 = m.Groups["P3"].Value.TrimEnd('0');
-                        if (p3.Length == 0)
-                            p3 = "00";
-                        tmpValue += p3;
-                        ips.Add(new Integration.Ipc { Class = tmpValue });
+
+                        Regex regex = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+");
+                        Match match = regex.Match(value.Value);
+                        if (match.Success)
+                        {
+                            ips.Add(new Integration.Ipc { Class = value.Value });
+                        }
+                        else
+                        {
+                            Regex regex1 = new Regex(@"(?<gr1>[A-Z]{1}\d{2}[A-Z]{1})(?<gr2>\d+\/\d{2})");
+                            Match match1 = regex1.Match(value.Value);
+                            ips.Add(new Integration.Ipc { Class = match1.Groups["gr1"].Value.Trim() + " " + match1.Groups["gr2"].Value.Trim() });
+                        }
                     }
                 }
             }
-            else if (typeTwoMatches.Count > 0)
-            {
-                foreach (Match value in typeTwoMatches)
+            else {
+
+                Regex typeOne = new Regex(@"(?<Value>[A-Z]{1}\d{2}[A-Z]{1}\d+\b)");
+
+                Regex typeOneAdditional = new Regex(@"(?<P1>[A-Z]{1}\d{2}[A-Z]{1})(?<P2>\d{4})(?<P3>\d+)");
+
+                MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
+
+                if (typeOneMatches.Count > 0)
                 {
-                    ips.Add(new Integration.Ipc { Class = value.Value });
+                    foreach (Match value in typeOneMatches)
+                    {
+                        var m = typeOneAdditional.Match(value.Value);
+                        if (m.Success)
+                        {
+                            var tmpValue = $"{m.Groups["P1"].Value} {m.Groups["P2"].Value.TrimStart('0')}/";
+                            var p3 = m.Groups["P3"].Value.TrimEnd('0');
+                            if (p3.Length == 0)
+                                p3 = "00";
+                            tmpValue += p3;
+                            ips.Add(new Integration.Ipc { Class = tmpValue });
+                        }
+                    }
                 }
             }
-            else
-            {
-
-            }
+         
             //var match = typeOne.Match(classificationInfo);
             //if (match.Success)
             //{
