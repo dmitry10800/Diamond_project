@@ -501,7 +501,7 @@ namespace IN
             var appList = new List<Integration.PartyMember>();
             string overallAddress = null;
             string overallCountry = null;
-            var multipleApplicants = Regex.Split(applicants, @"\b[^A-Z,\/]\d{1,2}\b\)")
+            var multipleApplicants = Regex.Split(applicants, @"\d{1,3}\)")
                 .Where(x => !string.IsNullOrEmpty(x))
                 .Select(x => x.Trim())
                 .ToList();
@@ -537,8 +537,7 @@ namespace IN
                     
                     appList.Add(new Integration.PartyMember
                     {
-                        Name = applicant,
-                        Country = "IN"
+                        Name = applicant                 
                     });
                 }
                 else

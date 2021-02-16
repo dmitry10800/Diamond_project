@@ -11,7 +11,7 @@ namespace IN
 {
     class Diamond_IN
     {
-        public const string _pathToFiles = @"C:\Work\IN\IN_20201009_41";
+        public const string _pathToFiles = @"C:\Work\IN\IN_20210212_07";
         public static string sub = "1";
         public static bool _isStaging = true;
         public static FileInfo _currentFileInProcess;
@@ -55,14 +55,15 @@ namespace IN
                     Console.WriteLine();
 
                  //   DiamondSender.SendToDiamond(sub1records, _isStaging);
-                }
+                    
+                    }
+
                 if (_sub3Elements != null && _sub3Elements.Count() > 0)
                     {
                         var sub1records = Subcodes.Process1SubCode(_sub3Elements, "3", "BZ", currentFileName + ".pdf");
 
                     Console.WriteLine();
-
-                    //      DiamondSender.SendToDiamond(sub1records, _isStaging);
+                    //     DiamondSender.SendToDiamond(sub1records, _isStaging);
                 }
                 }
             
