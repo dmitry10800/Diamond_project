@@ -296,7 +296,7 @@ namespace IN
                     _patentRecord.LegalEvent.Date = Methods.ConvertDate(sheet.GetRow(row).GetCell(3).ToString());
 
 
-                    string fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', ' ').Replace('\n', ' ');
+                    string fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', '~').Replace('\n', '~').Replace("~","");
 
                 
 
