@@ -324,7 +324,7 @@ namespace IN
                                     }
                                 };
 
-                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5).ToString().Replace('\r', '~').Replace('\n', '~').Replace("~", "").Replace(" ","")}";
+                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5).ToString().Replace("\r", "").Replace("\n", "")}"; 
                         _patentRecord.LegalEvent.Language = "EN";
 
                     }
