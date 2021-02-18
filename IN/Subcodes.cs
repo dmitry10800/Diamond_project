@@ -296,7 +296,7 @@ namespace IN
                     _patentRecord.LegalEvent.Date = Methods.ConvertDate(sheet.GetRow(row).GetCell(3).ToString());
 
 
-                    string fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', '~').Replace('\n', '~').Replace("~","");
+                    string fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', ' ').Replace('\n', ' ');
 
                 
 
@@ -324,7 +324,7 @@ namespace IN
                                     }
                                 };
 
-                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5)}";
+                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5).ToString().Replace('\r', '~').Replace('\n', '~').Replace("~", "")}";
                         _patentRecord.LegalEvent.Language = "EN";
 
                     }
