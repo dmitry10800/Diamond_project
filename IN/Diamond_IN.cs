@@ -12,7 +12,7 @@ namespace IN
     class Diamond_IN
     {
         public const string _pathToFiles = @"C:\Work\IN\IN_20210212_07";
-        public static string sub = "1";
+        public static string sub = "10";
         public static bool _isStaging = true;
         public static FileInfo _currentFileInProcess;
         public static List<string> _txt;
@@ -48,25 +48,25 @@ namespace IN
 
                     Console.WriteLine("Elements list completed");
 
-                    if (_sub1Elements != null && _sub1Elements.Count() > 0)
-                    {
+                if (_sub1Elements != null && _sub1Elements.Count() > 0)
+                {
                     var sub1records = Subcodes.Process1SubCode(_sub1Elements, "1", "BZ", currentFileName + ".pdf");
 
                     Console.WriteLine();
 
-                 //   DiamondSender.SendToDiamond(sub1records, _isStaging);
-                    
-                    }
+                    //   DiamondSender.SendToDiamond(sub1records, _isStaging);
+
+                }
 
                 if (_sub3Elements != null && _sub3Elements.Count() > 0)
-                    {
-                        var sub1records = Subcodes.Process1SubCode(_sub3Elements, "3", "BZ", currentFileName + ".pdf");
+                {
+                    var sub1records = Subcodes.Process1SubCode(_sub3Elements, "3", "BZ", currentFileName + ".pdf");
 
                     Console.WriteLine();
                     //     DiamondSender.SendToDiamond(sub1records, _isStaging);
                 }
-                }
-            
+            }
+
 
             foreach (var xlsFile in xlsFiles)
             {

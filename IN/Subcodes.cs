@@ -324,7 +324,7 @@ namespace IN
                                     }
                                 };
 
-                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5).ToString().Replace("\r", "").Replace("\n", "")}"; 
+                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information | {phoneInfo} || EMAIL | {sheet.GetRow(row).GetCell(5).ToString().Replace(" ", "")}"; 
                         _patentRecord.LegalEvent.Language = "EN";
 
                     }
@@ -337,7 +337,7 @@ namespace IN
                                         Country = "IN"
                                     }
                                 };
-                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information || EMAIL | {sheet.GetRow(row).GetCell(5)}";
+                        _patentRecord.LegalEvent.Note = $"|| LOCATION | {sheet.GetRow(row).GetCell(1)} || (74) | Agent Information || EMAIL | {sheet.GetRow(row).GetCell(5).ToString().Replace(" ", "")}";
                         _patentRecord.LegalEvent.Language = "EN";
                     }
                     _patentRecordsList.Add(_patentRecord);
