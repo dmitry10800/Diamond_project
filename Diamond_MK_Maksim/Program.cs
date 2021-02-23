@@ -6,7 +6,14 @@ namespace Diamond_MK_Maksim
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Hello World     !");
+
+            string sub = "3";
+
+            string hello = sub switch
+            {
+                "3" => "Max"
+            };
         }
     }
 }
