@@ -27,8 +27,6 @@ namespace Diamond_TR_Maksim
                 _ => null
             };
 
-            Console.WriteLine();
-
             if (convertedPatents != null)
             {
                 methods.SendToDiamond(convertedPatents);
