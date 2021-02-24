@@ -12,7 +12,7 @@ namespace BA
 {
     class Program
     {
-        private static readonly string TetmlDirectory = @"D:\_DFA_main\_Patents\BA\_Remade\Sub4";
+        private static readonly string TetmlDirectory = @"C:\Work\BA\BA_20201231_04";
         private static readonly bool IsStaging = true;
         private static readonly string StagingLensLink = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
         private static readonly string ProductionLensLink = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
@@ -31,7 +31,7 @@ namespace BA
                 {
                     sub4elements = elements.Descendants().Where(x => x.Name.LocalName == "Text" && !x.Value.Contains(Sub4Key) && !string.IsNullOrEmpty(x.Value)).ToList();
                     var patents = Subcodes.ProcessSubcode4(sub4elements, file.Name.Replace(".tetml", ".pdf"));
-                    SendToDiamond(patents);
+        //            SendToDiamond(patents);
                 }
             }
         }

@@ -164,7 +164,7 @@ namespace BA
         public static List<PartyMember> GetPersonsInfo(string tmpString)
         {
             List<PartyMember> persons = new List<PartyMember>();
-            var person = new PartyMember();
+            
             List<string> tmpSplValues = new List<string>();
             string tmpValues = tmpString.Replace("(72)", "").Replace("(73)", "").Replace("(75)", "").Replace("\n", "****").Trim();
             if (Regex.IsMatch(tmpValues, @"\*{4}[A-Z]{2}\*{4}"))
@@ -178,17 +178,24 @@ namespace BA
             foreach (var rec in tmpSplValues)
             {
                 string tmpName = rec.Remove(rec.IndexOf(Regex.Match(rec, @"\*{4}[A-Z]{2}$").Value)).Trim().Trim(',').Trim();
-                person.Country = Regex.Match(rec, @"\*{4}[A-Z]{2}$").Value.Replace("****", " ").Trim().Trim(',').Trim();
+
                 if (tmpName.Contains("****"))
                 {
-                    person.Name = tmpName.Remove(tmpName.IndexOf("****")).Trim();
-                    person.Address1 = tmpName.Substring(tmpName.IndexOf("****")).Replace("****", " ").Trim();
+                    persons.Add(new PartyMember
+                    {
+                        Name = tmpName.Remove(tmpName.IndexOf("****")).Trim(),
+                        Address1 = tmpName.Substring(tmpName.IndexOf("****")).Replace("****", " ").Trim(),
+                        Country = Regex.Match(rec, @"\*{4}[A-Z]{2}$").Value.Replace("****", " ").Trim().Trim(',').Trim()
+                    });
                 }
                 else
                 {
-                    person.Name = tmpName.Replace("****", " ").Trim().Trim(',').Trim();
+                    persons.Add(new PartyMember
+                    {
+                        Name = tmpName.Replace("****", " ").Trim().Trim(',').Trim(),
+                        Country = Regex.Match(rec, @"\*{4}[A-Z]{2}$").Value.Replace("****", " ").Trim().Trim(',').Trim()
+                    });
                 }
-                persons.Add(person);
             }
             return persons;
         }
