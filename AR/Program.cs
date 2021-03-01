@@ -12,7 +12,7 @@ namespace AR
 {
     class Program
     {
-        private static readonly string TetmlDirectory = @"D:\_DFA_main\_Patents\AR\_Test\Pdf";
+        private static readonly string TetmlDirectory = @"C:\Work\AR\AR_20200810_201905";
         private static readonly bool IsStaging = true;
         private static readonly string StagingLensLink = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
         private static readonly string ProductionLensLink = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
@@ -28,25 +28,45 @@ namespace AR
                 sub2sub3 = elements.Descendants()
                     .SkipWhile(x => !x.Value.StartsWith(@"<Primera>"))
                     .Where(x => x.Name.LocalName == "Text" && !string.IsNullOrEmpty(x.Value)).ToList();
-                var patents = Subcodes.ProcessSubcode4(sub2sub3, file.Name.Replace(".tetml", ".pdf"));
+                var patents = Subcodes.ProcessSubcode(sub2sub3, file.Name.Replace(".tetml", ".pdf"));
+                Console.WriteLine();
                 //SendToDiamond(patents);
             }
         }
 
-        private static void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        internal static void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
         {
-            var url = IsStaging ? StagingLensLink : ProductionLensLink;
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                HttpClient httpClient = new HttpClient { BaseAddress = new Uri(url) };
+                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var result = httpClient.PostAsync("", new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json")).Result;
-                if (!result.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error sending event: {result.Content.ReadAsStringAsync().Result}");
-                }
+                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
+
+
+
+
+        //private static void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        //{
+        //    var url = IsStaging ? StagingLensLink : ProductionLensLink;
+        //    foreach (var rec in events)
+        //    {
+        //        string tmpValue = JsonConvert.SerializeObject(rec);
+        //        HttpClient httpClient = new HttpClient { BaseAddress = new Uri(url) };
+        //        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //        var result = httpClient.PostAsync("", new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json")).Result;
+        //        if (!result.IsSuccessStatusCode)
+        //        {
+        //            Console.WriteLine($"Error sending event: {result.Content.ReadAsStringAsync().Result}");
+        //        }
+        //    }
+        //}
     }
 }

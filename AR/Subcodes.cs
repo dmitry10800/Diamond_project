@@ -1,8 +1,12 @@
 ﻿using Diamond.Core.Models;
 using Integration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,20 +16,22 @@ namespace AR
 {
     public class Subcodes
     {
-        private static readonly string I11 = "(11) Resolución Nº";
-        private static readonly string I21 = "(21) Acta Nº";
-        private static readonly string I22 = "(22) Fecha de Presentación";
-        private static readonly string I24 = "(24) Fecha de Resolución";
-        private static readonly string I24A = "(--) Fecha de Vencimiento";
-        private static readonly string I30 = "(30) Prioridad convenio de Paris";
-        private static readonly string I47 = "(47) Fecha de Puesta a Disposición";
-        private static readonly string I51 = "(51) Int. Cl.";
-        private static readonly string I54 = "(54) Titulo";
-        private static readonly string I57 = "(57) REIVINDICACIÓN";
-        private static readonly string I71 = "(71) Titular";
-        private static readonly string I72 = "(72) Inventor";
-        private static readonly string I74 = "(74) Agente/s";
-        private static readonly string I45 = "(45) Fecha de Publicación";
+        private static readonly string I10 = "(10)";
+        private static readonly string I11 = "(11)";
+        private static readonly string I21 = "(21)";
+        private static readonly string I22 = "(22)";
+        private static readonly string I24 = "(24)";
+        private static readonly string I24A = "(--)";
+        private static readonly string I30 = "(30)";
+        private static readonly string I47 = "(47)";
+        private static readonly string I51 = "(51)";
+        private static readonly string I54 = "(54)";
+        private static readonly string I57 = "(57)";
+        private static readonly string I71 = "(71)";
+        private static readonly string I72 = "(72)";
+        private static readonly string I74 = "(74)";
+        private static readonly string I45 = "(45)";
+        private static readonly string note = "Sigue";
 
         private static readonly Regex StartKeyPattern = new Regex(@"(?=\<Primera\>)");
         private static readonly Regex StartKeyPatternSub2 = new Regex(@"(?=\(10\)\s*Patente de Invención)");
@@ -44,193 +50,525 @@ namespace AR
             return splittedRecords;
         }
 
-        public static List<LegalStatusEvent> ProcessSubcode4(List<XElement> elemList, string gazetteName)
+        public static List<LegalStatusEvent> ProcessSubcode(List<XElement> elemList, string gazetteName)
         {
             string datePattern = @"\d{4}\-\d{2}\-\d{2}";
             List<LegalStatusEvent> processedRecords = new List<LegalStatusEvent>();
-            LegalStatusEvent patent;
             int patentCounter = 1;
             if (elemList != null && elemList.Count > 0)
             {
                 var records = GetRecordsFromTetml(elemList, StartKeyPattern).Where(x => !string.IsNullOrEmpty(x));
 
-                foreach (var record in records)
+                foreach (string record in records)
                 {
-                    var splittedRecords = Methods.RecSplit(record);
+                    List<string> splittedRecords = Methods.RecSplit(record);
                     if (splittedRecords.Count == 0)
                     {
                         Console.WriteLine($"Error splitting record by Inids: {record}");
                         continue;
                     }
 
+                    LegalStatusEvent legalEvent = new LegalStatusEvent();
 
-                    //patent = new LegalStatusEvent();
-                    //Biblio biblioData = new Biblio();
-                    //EuropeanPatent euPatent = new EuropeanPatent();
-                    //patent.GazetteName = gazetteName;
-                    //patent.SubCode = "4";
-                    //patent.SectionCode = "BA";
-                    //patent.CountryCode = "BA";
-                    //patent.Id = patentCounter++;
+                    legalEvent.CountryCode = "AR";
+                    legalEvent.Id = patentCounter++;
+                    legalEvent.GazetteName = gazetteName;
+                    legalEvent.SectionCode = "FG";
 
-                    //foreach (var rec in splittedRecords)
-                    //{
-                    //    if (rec.StartsWith(I11))
-                    //    {
-                    //        biblioData.Publication.Number = rec.Replace(I11, "").Replace("\n", "").Trim();
-                    //        if (biblioData.Publication.Number == null)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I11} data is missing in {rec}");
-                    //        }
-                    //    }
-                    //    else if (rec.StartsWith(I21))
-                    //    {
-                    //        biblioData.Application.Number = rec.Replace(I21, "").Replace("\n", "").Trim();
-                    //        if (biblioData.Application.Number == null)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I21} data is missing in {rec}");
-                    //        }
-                    //    }
-                    //    else if (rec.StartsWith(I22))
-                    //    {
-                    //        biblioData.Application.Date = rec.Replace(I22, "").Replace("\n", "").Trim();
-                    //        if (biblioData.Application.Date == null)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I22} data is missing in {rec}");
-                    //        }
-                    //    }
-                    //    else if (rec.StartsWith(I26))
-                    //    {
-                    //        var temp = rec.Replace(I26, "").Replace("\n", "").Trim();
-                    //        if (!string.IsNullOrEmpty(temp))
-                    //            biblioData.Publication.Authority = temp;
-                    //    }
-                    //    else if (rec.StartsWith(I31))
-                    //    {
-                    //        biblioData.Priorities = Methods.PrioritySplit(rec);
-                    //        if (biblioData.Priorities == null || biblioData.Priorities.Count == 0)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I31} data is missing in {rec}");
-                    //        }
-                    //    }
-                    //    else if (rec.StartsWith(I51))
-                    //    {
-                    //        biblioData.Ipcs = Methods.ClassificationInfoSplit(rec.Replace("\n", "").Trim());
-                    //        if (biblioData.Ipcs == null || biblioData.Ipcs.Count == 0)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I51} data is missing in {rec}");
-                    //        }
-                    //    }
-                    //    else if (rec.StartsWith(I54))
-                    //    {
-                    //        biblioData.Titles.Add(new Title
-                    //        {
-                    //            Language = "HR",
-                    //            Text = rec.Replace(I54, "").Replace("-\n", " ").Replace("\n", " ").Trim()
-                    //        });
-                    //        if (biblioData.Titles == null || biblioData.Titles.Count == 0)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I54} data is missing in {rec}");
-                    //        }
 
-                    //    }
-                    //    else if (rec.StartsWith(I57))
+                    Biblio biblioData = new Biblio();
+
+                    biblioData.EuropeanPatents = new List<EuropeanPatent>();
+
+                    EuropeanPatent europeanPatent = new EuropeanPatent();
+
+                    IntConvention intConvention = new IntConvention();
+
+                    CultureInfo cultureInfo = new CultureInfo("ru-Ru");
+
+                    LegalEvent legal = new LegalEvent();
+
+                    NoteTranslation noteTranslation = new NoteTranslation();
+
+                    DOfPublication dOfPublication = new DOfPublication();
+
+                    foreach (string element in splittedRecords)
+                    {
+
+                        if (element.StartsWith(I10))
+                        {
+                            string text = ReplaceInid(element, I10);
+
+                            if (text.Contains("Patente "))
+                            {
+                                legalEvent.SubCode = "2";
+                                biblioData.Publication.LanguageDesignation = text;
+                            }
+                            else
+                            if (text.Contains("Modelo ")) {
+                                legalEvent.SubCode = "3";
+                                biblioData.Publication.LanguageDesignation = text;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"В 10-м поле вот этот элемент не разбился - [{element}]");
+                            }
+                        }
+                        else
+                        if (element.StartsWith(I11))
+                        {
+                            string text = ReplaceInid(element, I11);
+
+                            Match match = Regex.Match(text, @"([A-Z]{2}\d+\D\d)");
+
+                            if (match.Success)
+                            {
+                                string tmp = match.Value.Trim();
+                                Match match1 = Regex.Match(tmp, @"(?<number>[A-Z]{2}\d+)(?<kind>[A-Z]\d+)");
+
+                                if (match1.Success)
+                                {
+                                    biblioData.Publication.Number = match1.Groups["number"].Value.Trim();
+                                    biblioData.Publication.Kind = match1.Groups["kind"].Value.Trim();
+                                }
+                                else Console.WriteLine($"В 11-м поле в match не разбились на группы- [{tmp}]");
+
+                            }
+                            else Console.WriteLine($"В 11-м поле не найдет Match - [{element}]");
+                        }
+                        else
+                        if (element.StartsWith(I21))
+                        {
+                            string text = ReplaceInid(element, I21);
+
+                            Match match = Regex.Match(text, @"[A-Z]\s\d+");
+
+                            if (match.Success)
+                            {
+                                biblioData.Application.Number = match.Value.Trim();
+                            }
+                            else Console.WriteLine($"В 21 поле не был найден App Number - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I22))
+                        {
+                            string text = ReplaceInid(element, I22);
+
+                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+
+                            if (match.Success)
+                            {
+                                biblioData.Application.Date = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace('.', '/').Trim();
+                            }
+                            else Console.WriteLine($"В 22 поле не был найден App Date - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I24))
+                        {
+                            string text = ReplaceInid(element, I24);
+
+                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+
+                            if (match.Success)
+                            {
+                                biblioData.Application.EffectiveDate = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace('.', '/').Trim();
+                            }
+                            else Console.WriteLine($"В 24 поле не был найден App Effect Date - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I24A))
+                        {
+                            string text = ReplaceInid(element, I24A);
+
+                            Match match = Regex.Match(text, @"(?<note>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
+
+                            if (match.Success)
+                            {
+                                legal.Note = "|| " + match.Groups["note"].Value.Trim() + " | " + DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
+                                legal.Language = "ES";
+                                noteTranslation.Language = "EN";
+                                noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
+                                noteTranslation.Type = "note";
+                            }
+                            else Console.WriteLine($"В -- поле не был найден LegalEvent.Date - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I30))
+                        {
+                            string text = ReplaceInid(element, I30);
+
+                            List<string> notes = Regex.Split(text, @";").ToList();
+
+                            biblioData.Priorities = new List<Priority>();
+
+                            foreach (string note in notes)
+                            {
+                                Match match = Regex.Match(note, @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>\d{2}\/\d{2}\/\d{3,4})");
+
+                                if (match.Success)
+                                {
+                                    biblioData.Priorities.Add(new Priority
+                                    {
+                                        Country = match.Groups["code"].Value.Trim(),
+                                        Number = match.Groups["number"].Value.Trim(),
+                                        Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace('.', '/').Trim()
+                                    });
+                                }
+                                else Console.WriteLine($"В 30-ом поле match не сработал на эту запись  - [{note}]");
+                            }
+                        }
+                        else
+                        if (element.StartsWith(I47))
+                        {
+                            string text = ReplaceInid(element, I47);
+
+                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+
+                            if (match.Success)
+                            {
+                                dOfPublication.date_47 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace('.', '/').Trim();
+                            }
+                            else Console.WriteLine($"В 47 поле не был найден App Effect Date - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I51))
+                        {
+                            string text = ReplaceInid(element, I51);
+
+                            biblioData.Ipcs = new List<Ipc>();
+
+                            List<string> ipcs = Regex.Split(text, @",|;").ToList();
+
+                            foreach (string ipc in ipcs)
+                            {
+                                List<string> ipcs2 = Regex.Split(ipc, @"(?<=\d\s)").ToList();
+
+                                foreach (string ipc2 in ipcs2)
+                                {
+
+                                    Match match = Regex.Match(ipc2, @"([A-Z]\d+[A-Z]\s\d+\/\d+)");
+
+                                    if (match.Success)
+                                    {
+                                        biblioData.Ipcs.Add(new Ipc
+                                        {
+                                            Class = match.Value.Trim()
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Match match1 = Regex.Match(ipc2, @"(?<gr1>[A-Z]\d+[A-Z])(?<gr2>.+)");
+
+                                        if (match1.Success)
+                                        {
+                                            string tmp = match1.Groups["gr1"].Value.Trim() + " " + match1.Groups["gr2"].Value.Trim();
+                                            biblioData.Ipcs.Add(new Ipc
+                                            {
+                                                Class = tmp
+                                            });
+                                        }
+                                        else
+                                        {
+                                            biblioData.Ipcs.Add(new Ipc
+                                            {
+                                                Class = ipc2
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        if (element.StartsWith(I54))
+                        {
+                            string text = ReplaceInid(element, I54);
+
+                            Match match = Regex.Match(text, @"([A-Z]{2}.+)");
+
+                            if (match.Success)
+                            {
+                                biblioData.Titles.Add(new Title
+                                {
+                                    Text = match.Value.TrimEnd('.').Trim(),
+                                    Language = "ES"
+                                });
+                            }
+                            else Console.WriteLine($"В 54 поле не был найден Title - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I57))
+                        {
+                            string text = ReplaceInid(element, I57);
+
+                            biblioData.Abstracts.Add(new Abstract
+                            {
+                                Text = text,
+                                Language = "ES"
+                            });
+                        }
+                        else
+                        if (element.StartsWith(note))
+                        {
+                            Match match = Regex.Match(element.Trim(), @"(?<gr1>.+)\s(?<gr2>.+)\s(?<gr3>.+)");
+
+                            legal.Note = legal.Note + " || REIVINDICACIONES | " + element.Trim();
+
+                            noteTranslation.Tr = noteTranslation.Tr + " || Claims | " + match.Groups["gr2"].Value.Trim() + " Claims follow";
+
+                            legal.Translations = new List<NoteTranslation> { noteTranslation };
+                            legalEvent.LegalEvent = legal;
+
+                        }
+                        else
+                        if (element.StartsWith(I71))
+                        {
+                            string text = ReplaceInid(element, I71);
+
+                            List<string> applicants = Regex.Split(text, @"(?<=,\s[A-Z]{2}\n?$)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            biblioData.Applicants = new List<PartyMember>();
+
+                            foreach (string applicant in applicants)
+                            {
+                                string tmp = applicant.Replace("\r", "").Replace("\n", " ").Trim();
+                                Match match = Regex.Match(tmp, @"(?<adress>[A-Z]{2}.+)\s(?<code>[A-Z]{2}$)");
+
+                                if (match.Success)
+                                {
+                                    biblioData.Applicants.Add(new PartyMember
+                                    {
+                                        Address1 = match.Groups["adress"].Value.Trim().TrimEnd(','),
+                                        Country = match.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else
+                                {
+                                    biblioData.Applicants.Add(new PartyMember
+                                    {
+                                        Address1 = tmp
+                                    });
+                                }
+                            }
+
+                        }
+                        else
+                        if (element.StartsWith(I72))
+                        {
+                            string text = ReplaceInid(element, I72).Replace("\r", "").Replace("\n", " ").Trim();
+
+                            Match match = Regex.Match(text, @"([A-Z]{2}.+)");
+
+                            biblioData.Inventors = new List<PartyMember>();
+
+                            if (match.Success)
+                            {
+                                string tmp = match.Value.Trim();
+
+                                biblioData.Inventors.Add(new PartyMember
+                                {
+                                    Name = tmp
+                                });
+                            }
+                        }
+                        else
+                        if (element.StartsWith(I74))
+                        {
+
+                            Match match = Regex.Match(element, @"(?<inid>\(\d{2}\))\s(?<info>.+)\s(?<numbers>\d+)");
+
+                            if (match.Success)
+                            {
+                                legal.Note = legal.Note + " || " + match.Groups["inid"].Value.Trim() + " | " + match.Groups["info"].Value.Trim() + " | " + match.Groups["numbers"].Value.Trim();
+                                noteTranslation.Tr = noteTranslation.Tr + " || " + match.Groups["inid"].Value.Trim() + " | Agent's number | " + match.Groups["numbers"].Value.Trim();
+                            }
+
+                            biblioData.Agents = new List<PartyMember>() { new PartyMember { Name = match.Groups["numbers"].Value.Trim() } };
+
+
+                        }
+                        else
+                        if (element.StartsWith(I45))
+                        {
+                            string text = ReplaceInid(element, I45);
+
+                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+
+                            if (match.Success)
+                            {
+                                dOfPublication.date_45 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace('.', '/').Trim();
+
+                                biblioData.DOfPublication = dOfPublication;
+                            }
+                            else Console.WriteLine($"В 45 поле не был найден App Effect Date - [{text}]");
+                        }
+                        else Console.WriteLine($"Этот inid не обработан {element}");
+                    }
+                    legalEvent.Biblio = biblioData;
+                    processedRecords.Add(legalEvent);
+
+
+
+                    //    patent.SubCode = "4";
+
+                    //    foreach (var rec in splittedRecords)
                     //    {
-                    //        var tmpAbstract = rec.Replace(I57, "").Replace("\n", " ").Trim();
-                    //        if (tmpAbstract.Contains(I99))
+                    //        if (rec.StartsWith(I11))
                     //        {
-                    //            var tmpNotes = tmpAbstract.Substring(tmpAbstract.IndexOf(I99)).Replace(I99, "").Trim();
-                    //            patent.LegalEvent = new LegalEvent
+                    //            biblioData.Publication.Number = rec.Replace(I11, "").Replace("\n", "").Trim();
+                    //            if (biblioData.Publication.Number == null)
                     //            {
-                    //                Note = $"|| Broj ostalih patentnih zahtjeva | {tmpNotes}",
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I11} data is missing in {rec}");
+                    //            }
+                    //        }
+                    //        else if (rec.StartsWith(I21))
+                    //        {
+                    //            biblioData.Application.Number = rec.Replace(I21, "").Replace("\n", "").Trim();
+                    //            if (biblioData.Application.Number == null)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I21} data is missing in {rec}");
+                    //            }
+                    //        }
+                    //        else if (rec.StartsWith(I22))
+                    //        {
+                    //            biblioData.Application.Date = rec.Replace(I22, "").Replace("\n", "").Trim();
+                    //            if (biblioData.Application.Date == null)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I22} data is missing in {rec}");
+                    //            }
+                    //        }
+                    //        else if (rec.StartsWith(I26))
+                    //        {
+                    //            var temp = rec.Replace(I26, "").Replace("\n", "").Trim();
+                    //            if (!string.IsNullOrEmpty(temp))
+                    //                biblioData.Publication.Authority = temp;
+                    //        }
+                    //        else if (rec.StartsWith(I31))
+                    //        {
+                    //            biblioData.Priorities = Methods.PrioritySplit(rec);
+                    //            if (biblioData.Priorities == null || biblioData.Priorities.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I31} data is missing in {rec}");
+                    //            }
+                    //        }
+                    //        else if (rec.StartsWith(I51))
+                    //        {
+                    //            biblioData.Ipcs = Methods.ClassificationInfoSplit(rec.Replace("\n", "").Trim());
+                    //            if (biblioData.Ipcs == null || biblioData.Ipcs.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I51} data is missing in {rec}");
+                    //            }
+                    //        }
+                    //        else if (rec.StartsWith(I54))
+                    //        {
+                    //            biblioData.Titles.Add(new Title
+                    //            {
                     //                Language = "HR",
-                    //                Translations = new List<NoteTranslation>
+                    //                Text = rec.Replace(I54, "").Replace("-\n", " ").Replace("\n", " ").Trim()
+                    //            });
+                    //            if (biblioData.Titles == null || biblioData.Titles.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I54} data is missing in {rec}");
+                    //            }
+
+                    //        }
+                    //        else if (rec.StartsWith(I57))
+                    //        {
+                    //            var tmpAbstract = rec.Replace(I57, "").Replace("\n", " ").Trim();
+                    //            if (tmpAbstract.Contains(I99))
+                    //            {
+                    //                var tmpNotes = tmpAbstract.Substring(tmpAbstract.IndexOf(I99)).Replace(I99, "").Trim();
+                    //                patent.LegalEvent = new LegalEvent
                     //                {
-                    //                    new NoteTranslation
+                    //                    Note = $"|| Broj ostalih patentnih zahtjeva | {tmpNotes}",
+                    //                    Language = "HR",
+                    //                    Translations = new List<NoteTranslation>
                     //                    {
-                    //                        Language = "EN",
-                    //                        Tr = $"|| The number of other claims | {tmpNotes}",
-                    //                        Type = "note"
+                    //                        new NoteTranslation
+                    //                        {
+                    //                            Language = "EN",
+                    //                            Tr = $"|| The number of other claims | {tmpNotes}",
+                    //                            Type = "note"
+                    //                        }
                     //                    }
-                    //                }
-                    //            };
+                    //                };
 
-                    //            tmpAbstract = tmpAbstract.Remove(tmpAbstract.IndexOf(I99)).Trim();
-                    //        }
+                    //                tmpAbstract = tmpAbstract.Remove(tmpAbstract.IndexOf(I99)).Trim();
+                    //            }
 
-                    //        biblioData.Abstracts.Add(new Abstract 
-                    //        {
-                    //            Language = "HR",
-                    //            Text = tmpAbstract
-                    //        });
-                    //        if (biblioData.Abstracts == null || biblioData.Abstracts.Count == 0)
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I57} data is missing in {rec}");
+                    //            biblioData.Abstracts.Add(new Abstract
+                    //            {
+                    //                Language = "HR",
+                    //                Text = tmpAbstract
+                    //            });
+                    //            if (biblioData.Abstracts == null || biblioData.Abstracts.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I57} data is missing in {rec}");
+                    //            }
                     //        }
-                    //    }
-                    //    else if (rec.StartsWith(I72))
-                    //    {
-                    //        biblioData.Inventors = Methods.GetPersonsInfo(rec.Replace(I72, "").Trim());
-                    //        if (biblioData.Inventors == null || biblioData.Inventors.Count == 0)
+                    //        else if (rec.StartsWith(I72))
                     //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I72} data is missing in {rec}");
+                    //            biblioData.Inventors = Methods.GetPersonsInfo(rec.Replace(I72, "").Trim());
+                    //            if (biblioData.Inventors == null || biblioData.Inventors.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I72} data is missing in {rec}");
+                    //            }
                     //        }
-                    //    }
-                    //    else if (rec.StartsWith(I73))
-                    //    {
-                    //        biblioData.Assignees = Methods.GetPersonsInfo(rec.Replace(I73, "").Trim());
-                    //        if (biblioData.Assignees == null || biblioData.Assignees.Count == 0)
+                    //        else if (rec.StartsWith(I73))
                     //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I73} data is missing in {rec}");
+                    //            biblioData.Assignees = Methods.GetPersonsInfo(rec.Replace(I73, "").Trim());
+                    //            if (biblioData.Assignees == null || biblioData.Assignees.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I73} data is missing in {rec}");
+                    //            }
                     //        }
-                    //    }
-                    //    else if (rec.StartsWith(I74))
-                    //    {
-                    //        biblioData.Agents = Methods.GetPersonsShortInfo(rec.Replace(I74, "").Trim());
-                    //        if (biblioData.Agents == null || biblioData.Agents.Count == 0)
+                    //        else if (rec.StartsWith(I74))
                     //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I74} data is missing in {rec}");
+                    //            biblioData.Agents = Methods.GetPersonsShortInfo(rec.Replace(I74, "").Trim());
+                    //            if (biblioData.Agents == null || biblioData.Agents.Count == 0)
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I74} data is missing in {rec}");
+                    //            }
                     //        }
-                    //    }
-                    //    else if (rec.StartsWith(I96))
-                    //    {
-                    //        var tmp = rec.Replace(I96, "").Replace("\n", "").Trim();
-                    //        if (Regex.IsMatch(tmp, datePattern))
+                    //        else if (rec.StartsWith(I96))
                     //        {
-                    //            euPatent.AppDate = Regex.Match(tmp, datePattern).Value;
-                    //            euPatent.AppNumber = Regex.Replace(tmp, datePattern, "").Replace(",", "").Trim();
+                    //            var tmp = rec.Replace(I96, "").Replace("\n", "").Trim();
+                    //            if (Regex.IsMatch(tmp, datePattern))
+                    //            {
+                    //                euPatent.AppDate = Regex.Match(tmp, datePattern).Value;
+                    //                euPatent.AppNumber = Regex.Replace(tmp, datePattern, "").Replace(",", "").Trim();
+                    //            }
+                    //            else
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I96} data is missing in {rec}");
+                    //            }
+                    //        }
+                    //        else if (rec.StartsWith(I97))
+                    //        {
+                    //            var tmp = rec.Replace(I97, "").Replace("\n", "").Trim();
+                    //            if (Regex.IsMatch(tmp, datePattern))
+                    //            {
+                    //                euPatent.PubDate = Regex.Match(tmp, datePattern).Value;
+                    //            }
+                    //            else
+                    //            {
+                    //                Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I97} data is missing in {rec}");
+                    //            }
                     //        }
                     //        else
                     //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I96} data is missing in {rec}");
+                    //            Console.WriteLine($"Element's Inid is missing: {rec}");
                     //        }
                     //    }
-                    //    else if (rec.StartsWith(I97))
+                    //    if (euPatent.AppNumber != null || euPatent.AppDate != null || euPatent.PubDate != null)
                     //    {
-                    //        var tmp = rec.Replace(I97, "").Replace("\n", "").Trim();
-                    //        if (Regex.IsMatch(tmp, datePattern))
-                    //        {
-                    //            euPatent.PubDate = Regex.Match(tmp, datePattern).Value;
-                    //        }
-                    //        else
-                    //        {
-                    //            Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I97} data is missing in {rec}");
-                    //        }
+                    //        biblioData.EuropeanPatents = new List<EuropeanPatent> { euPatent };
                     //    }
-                    //    else
-                    //    {
-                    //        Console.WriteLine($"Element's Inid is missing: {rec}");
-                    //    }
-                    //}
-                    //if (euPatent.AppNumber != null || euPatent.AppDate != null || euPatent.PubDate != null)
-                    //{
-                    //    biblioData.EuropeanPatents = new List<EuropeanPatent> { euPatent };
-                    //}
-                    //patent.Biblio = biblioData;
-                    //processedRecords.Add(patent);
+                    //    patent.Biblio = biblioData;
+                    //    processedRecords.Add(patent);
                 }
             }
             return processedRecords;
         }
+        internal static string ReplaceInid(string text, string inid) => text.Replace(inid, "").Trim();
     }
 }
