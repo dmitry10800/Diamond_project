@@ -31,6 +31,7 @@ namespace AR
         private static readonly string I72 = "(72)";
         private static readonly string I74 = "(74)";
         private static readonly string I45 = "(45)";
+        private static readonly string I62 = "(62)";
         private static readonly string note = "Sigue";
 
         private static readonly Regex StartKeyPattern = new Regex(@"(?=\<Primera\>)");
@@ -447,6 +448,25 @@ namespace AR
                                 biblioData.DOfPublication = dOfPublication;
                             }
                             else Console.WriteLine($"В 45 поле не был найден App Effect Date - [{text}]");
+                        }
+                        else
+                        if (element.StartsWith(I62))
+                        {
+                            string text = ReplaceInid(element, I62);
+
+                            Match match = Regex.Match(text, @"(?<number>[A-R]{2}\d+)(?<kind>[A-Z]\d+)");
+
+                            biblioData.Related = new List<RelatedDocument>();
+
+                            if (match.Success)
+                            {
+                                biblioData.Related.Add(new RelatedDocument
+                                {
+                                    Number = match.Groups["number"].Value.Trim(),
+                                    Type = match.Groups["kind"].Value.Trim(),
+                                    Source = "62"
+                                });
+                            }
                         }
                         else Console.WriteLine($"Этот inid не обработан {element}");
                     }

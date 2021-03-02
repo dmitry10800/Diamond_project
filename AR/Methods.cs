@@ -31,6 +31,40 @@ namespace AR
 
             string field57 = "";
 
+
+            if (tmp.Contains("(62)"))
+            {
+                field57 = tmp.Substring(tmp.IndexOf("(57)"), tmp.IndexOf("(62)") - tmp.IndexOf("(57)")).Trim();
+
+                Regex regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
+
+                Match match = regex.Match(field57);
+
+                string note = "";
+                if (match.Success)
+                {
+                    field57 = match.Groups["f57"].Value.Trim();
+                    note = match.Groups["note"].Value.Trim();
+                }
+                else
+                {
+                    note = "<>";
+                }
+
+                string textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(62)")).Trim();
+                if (s != "")
+                {
+
+                    Regex regexSplit = new Regex(@"(?=\(..\)\s)");
+                    splittedRecord = regexSplit.Split(textWithOut57field).ToList();
+                    splittedRecord.Add(field57);
+                    splittedRecord.Add(note);
+
+                }
+                return splittedRecord;
+
+            }
+            else
             if (tmp.Contains("(71)"))
             {
                 field57 = tmp.Substring(tmp.IndexOf("(57)"), tmp.IndexOf("(71)") - tmp.IndexOf("(57)")).Trim();
