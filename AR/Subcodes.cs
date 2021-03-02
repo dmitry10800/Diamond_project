@@ -233,49 +233,65 @@ namespace AR
                         else
                         if (element.StartsWith(I51))
                         {
-                            string text = ReplaceInid(element, I51);
+                            string text = ReplaceInid(element, I51).Replace("\r","").Replace("\n"," ").Trim();
 
                             biblioData.Ipcs = new List<Ipc>();
 
-                            List<string> ipcs = Regex.Split(text, @",|;").ToList();
+                            Match match = Regex.Match(text, @"([A-Z]\d+[A-Z].+)");
 
-                            foreach (string ipc in ipcs)
+                            string temp = match.Value.Replace(",", " ").Replace(":", " ").Trim();
+
+                            List<string> firstIpcs = Regex.Split(temp, @"\s").Where(val =>!string.IsNullOrEmpty(val)).ToList();
+
+                            List<string> secondIpcs = new List<string>();
+
+                            foreach (string firstIpc in firstIpcs)
                             {
-                                List<string> ipcs2 = Regex.Split(ipc, @"(?<=\d\s)").ToList();
+                                string tmp = firstIpc.TrimEnd(',').TrimEnd(';');
 
-                                foreach (string ipc2 in ipcs2)
+
+                                if(Regex.IsMatch(tmp, @"(?<gr1>[A-Z]\d+\D)(?<gr2>\d+\/\d+)"))
                                 {
+                                    Match match1 = Regex.Match(tmp, @"(?<gr1>[A-Z]\d+\D)(?<gr2>\d+\/\d+)");
 
-                                    Match match = Regex.Match(ipc2, @"([A-Z]\d+[A-Z]\s\d+\/\d+)");
+                                    secondIpcs.Add(match1.Groups["gr1"].Value.Trim());
 
-                                    if (match.Success)
+                                    secondIpcs.Add(match1.Groups["gr2"].Value.Trim());
+                                }
+                                else secondIpcs.Add(tmp);
+
+                            }
+
+                            List<string> finalIpcs = new List<string>();
+
+                            foreach (string secondIpc in secondIpcs)
+                            {
+                                if (secondIpc.Contains("/")) 
+                                {
+                                    if(Regex.IsMatch(finalIpcs[finalIpcs.Count-1], @"(?<gr1>[A-Z]\d+\D)\s(?<gr2>\d+\/\d+)"))
                                     {
-                                        biblioData.Ipcs.Add(new Ipc
-                                        {
-                                            Class = match.Value.Trim()
-                                        });
+                                        Match match1 = Regex.Match(finalIpcs[finalIpcs.Count - 1], @"(?<gr1>[A-Z]\d+\D)\s(?<gr2>\d+\/\d+)");
+
+                                        finalIpcs.Add(match1.Groups["gr1"].Value.Trim() + " " + secondIpc);
+
                                     }
                                     else
                                     {
-                                        Match match1 = Regex.Match(ipc2, @"(?<gr1>[A-Z]\d+[A-Z])(?<gr2>.+)");
-
-                                        if (match1.Success)
-                                        {
-                                            string tmp = match1.Groups["gr1"].Value.Trim() + " " + match1.Groups["gr2"].Value.Trim();
-                                            biblioData.Ipcs.Add(new Ipc
-                                            {
-                                                Class = tmp
-                                            });
-                                        }
-                                        else
-                                        {
-                                            biblioData.Ipcs.Add(new Ipc
-                                            {
-                                                Class = ipc2
-                                            });
-                                        }
+                                        finalIpcs[finalIpcs.Count - 1] = finalIpcs[finalIpcs.Count - 1] + " " + secondIpc;
                                     }
                                 }
+                                else
+                                {
+                                    finalIpcs.Add(secondIpc);
+                                }
+                            }
+
+                            foreach (string item in finalIpcs)
+                            {
+                                biblioData.Ipcs.Add(new Ipc
+                                {
+                                    Class = item
+                                });
                             }
                         }
                         else
@@ -307,17 +323,24 @@ namespace AR
                             });
                         }
                         else
-                        if (element.StartsWith(note))
+                        if (element.StartsWith(note)||element.StartsWith("<>"))
                         {
-                            Match match = Regex.Match(element.Trim(), @"(?<gr1>.+)\s(?<gr2>.+)\s(?<gr3>.+)");
+                            if (element != "<>")
+                            {
+                                Match match = Regex.Match(element.Trim(), @"(?<gr1>.+)\s(?<gr2>.+)\s(?<gr3>.+)");
 
-                            legal.Note = legal.Note + " || REIVINDICACIONES | " + element.Trim();
+                                legal.Note = legal.Note + " || REIVINDICACIONES | " + element.Trim();
 
-                            noteTranslation.Tr = noteTranslation.Tr + " || Claims | " + match.Groups["gr2"].Value.Trim() + " Claims follow";
+                                noteTranslation.Tr = noteTranslation.Tr + " || Claims | " + match.Groups["gr2"].Value.Trim() + " Claims follow";
 
-                            legal.Translations = new List<NoteTranslation> { noteTranslation };
-                            legalEvent.LegalEvent = legal;
-
+                                legal.Translations = new List<NoteTranslation> { noteTranslation };
+                                legalEvent.LegalEvent = legal;
+                            }
+                            else
+                            {
+                                legal.Translations = new List<NoteTranslation> { noteTranslation };
+                                legalEvent.LegalEvent = legal;
+                            }
                         }
                         else
                         if (element.StartsWith(I71))
@@ -360,13 +383,37 @@ namespace AR
 
                             biblioData.Inventors = new List<PartyMember>();
 
-                            if (match.Success)
-                            {
-                                string tmp = match.Value.Trim();
+                            List<string> names = Regex.Split(match.Value, @"\s").ToList();
 
+                            List <string> inventors = new List<string>();
+
+                            for (int i = 0; i < names.Count; i++)
+                            {
+                                if (names[i].Contains(","))
+                                {
+                                    string tmp = names[i].TrimEnd('-');
+                                    inventors.Add(tmp);
+                                }
+                                else
+                                {
+                                    if (inventors.Count != 0)
+                                    {
+                                        string tmp = names[i].TrimEnd('-');
+                                        inventors[inventors.Count - 1] = inventors[inventors.Count - 1] + " " + tmp;
+                                    }
+                                    else
+                                    {
+                                        string tmp = names[i].TrimEnd('-');
+                                        inventors.Add(tmp);
+                                    }
+
+                                }
+                            }
+                            foreach (string inventor in inventors)
+                            {
                                 biblioData.Inventors.Add(new PartyMember
                                 {
-                                    Name = tmp
+                                    Name = inventor
                                 });
                             }
                         }

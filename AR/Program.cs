@@ -12,7 +12,7 @@ namespace AR
 {
     class Program
     {
-        private static readonly string TetmlDirectory = @"C:\Work\AR\AR_20200810_201905";
+        private static readonly string TetmlDirectory = @"C:\Work\AR\AR_20201001_201906";
         private static readonly bool IsStaging = true;
         private static readonly string StagingLensLink = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
         private static readonly string ProductionLensLink = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
@@ -30,7 +30,8 @@ namespace AR
                     .Where(x => x.Name.LocalName == "Text" && !string.IsNullOrEmpty(x.Value)).ToList();
                 var patents = Subcodes.ProcessSubcode(sub2sub3, file.Name.Replace(".tetml", ".pdf"));
                 Console.WriteLine();
-                //SendToDiamond(patents);
+
+                SendToDiamond(patents);
             }
         }
 
