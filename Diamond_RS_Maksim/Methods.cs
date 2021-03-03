@@ -58,8 +58,6 @@ namespace Diamond_RS_Maksim
                     {
                         convertedPatents.Add(SplitNote(note, subCode, "FG"));
                     }
-
-                    Console.WriteLine();
                 }
             }
             return convertedPatents;

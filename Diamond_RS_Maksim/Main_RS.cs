@@ -21,8 +21,6 @@ namespace Diamond_RS_Maksim
                 _ => null
             };
 
-            Console.WriteLine();
-
             if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
             else Console.WriteLine("Wrong SubCode");
         }
