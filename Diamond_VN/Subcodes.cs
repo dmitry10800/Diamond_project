@@ -279,15 +279,15 @@ namespace Diamond_VN
                     Name = match.Groups["Name"].Value,
                     Language = "VI",
                     Country = "VN",
-                    Translations = new List<Integration.Translation>
-                    {
-                        new Integration.Translation
-                        {
-                            Language = "EN",
-                            TrName = match.Groups["VN_Name"].Value.Trim(),
-                            Type = type
-                        }
-                    }
+                    //Translations = new List<Integration.Translation>
+                    //{
+                    //    new Integration.Translation
+                    //    {
+                    //        Language = "EN",
+                    //        TrName = match.Groups["VN_Name"].Value.Trim(),
+                    //        Type = type
+                    //    }
+                    //}
                 });
             }
             else
@@ -351,15 +351,15 @@ namespace Diamond_VN
                     if (tmpInv.Country == "VN")
                     {
                         tmpInv.Language = "VI";
-                        tmpInv.Translations = new List<Integration.Translation>
-                        {
-                            new Integration.Translation
-                            {
-                                TrName = ConvertViToEn(tmpInv.Name),
-                                Language = "EN",
-                                Type = type
-                            }
-                        };
+                        //tmpInv.Translations = new List<Integration.Translation>
+                        //{
+                        //    new Integration.Translation
+                        //    {
+                        //        TrName = ConvertViToEn(tmpInv.Name),
+                        //        Language = "EN",
+                        //        Type = type
+                        //    }
+                        //};
                     }
                     else
                         tmpInv.Language = "EN";
@@ -394,15 +394,15 @@ namespace Diamond_VN
                     if (tmpApp.Country == "VN")
                     {
                         tmpApp.Language = "VI";
-                        tmpApp.Translations = new List<Integration.Translation>
-                        {
-                            new Integration.Translation
-                            {
-                                TrName = ConvertViToEn(tmpApp.Name),
-                                Language = "EN",
-                                Type = type
-                            }
-                        };
+                        //tmpApp.Translations = new List<Integration.Translation>
+                        //{
+                        //    new Integration.Translation
+                        //    {
+                        //        TrName = ConvertViToEn(tmpApp.Name),
+                        //        Language = "EN",
+                        //        Type = type
+                        //    }
+                        //};
                     }
                     else
                         tmpApp.Language = "EN";
