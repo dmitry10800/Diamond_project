@@ -56,7 +56,7 @@ namespace IS_Diamond_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Evrópsk einkaleyfi sem öðlast hafa"))
-                             .TakeWhile(val => !val.Value.StartsWith("Breytt útgáfa evrópskra einkaleyfa í gildi á slandi eftir takmörkun (T4)"))
+                             .TakeWhile(val => !val.Value.StartsWith("Breytt útgáfa evrópskra einkaleyfa í gildi á slandi eftir takmörkun (T4)") && !val.Value.StartsWith("Breytt útgáfa evrópskra einkaleyfa í"))
                              .ToList();
 
                     List<string> notes = Regex.Split(BuildText(xElements), @"(?=\(11\))").ToList();
