@@ -59,15 +59,7 @@ namespace IS_Diamond_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("Breytt útgáfa evrópskra einkaleyfa í gildi á slandi eftir takmörkun (T4)") && !val.Value.StartsWith("Breytt útgáfa evrópskra einkaleyfa í"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements), @"(?=\(11\))").ToList();
-
-                    for(int i = 0; i<notes.Count; i++)
-                    {
-                        if (!notes[i].StartsWith("(11)"))
-                        {
-                            notes.RemoveAt(i);
-                        }
-                    }
+                    List<string> notes = Regex.Split(BuildText(xElements), @"(?=\(11\))").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
 
                     foreach (string note in notes)
                     {
