@@ -1,0 +1,1238 @@
+﻿using Integration;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace Diamond_RO_Maksim
+{
+    class Methods
+    {
+        private string CurrentFileName;
+        private int id = 1;
+
+        private readonly string I11 = "(11)";
+        private readonly string I51 = "(51)";
+        private readonly string I21 = "(21)";
+        private readonly string I22 = "(22)";
+        private readonly string I41 = "(41)";
+        private readonly string I71 = "(71)";
+        private readonly string I72 = "(72)";
+        private readonly string I73 = "(73)";
+        private readonly string I74 = "(74)";
+        private readonly string I86 = "(86)";
+        private readonly string I87 = "(87)";
+        private readonly string I30 = "(30)";
+        private readonly string I54 = "(54)";
+        private readonly string I57 = "(57)";
+        private readonly string I57n = "(57n)";
+        private readonly string I45 = "(45)";
+        private readonly string I56 = "(56)";
+        private readonly string I96 = "(96)";
+        private readonly string I97 = "(97)";
+        private readonly string I80 = "(80)";
+        private readonly string I84 = "(84)";
+        private readonly string I66 = "(66)";
+        
+
+        internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
+        {
+            List<Diamond.Core.Models.LegalStatusEvent> events = new();
+
+            DirectoryInfo directory = new(path);
+
+            List<string> files = new();
+
+            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            {
+                files.Add(file.FullName);
+            }
+
+            XElement tet;
+
+            List<XElement> xElements = null;
+
+            foreach (string tetml in files)
+            {
+                CurrentFileName = tetml;
+
+                tet = XElement.Load(tetml);
+
+                if(subCode == "13")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Rezumatul invenţiei din cererea de brevet publicată serve"))
+                        .TakeWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie publicate con"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(11\).+\(51\))").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "BZ"));
+                    }
+                }
+                else
+                if(subCode == "14")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Orice persoană interesată are dreptul să ceară,"))
+                        .TakeWhile(val => !val.Value.StartsWith("BREVETE DE INVENŢIE"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(11\).+\(51\))").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "FG"));
+                    }
+                }
+                else
+                if(subCode == "16")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                       .SkipWhile(val => !val.Value.StartsWith("1. Brevete de invenþie europene pentru care a fost"))
+                       .TakeWhile(val => !val.Value.StartsWith("2. Brevete de invenþie europene pentru care a fost"))
+                       .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(51\))").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(51)")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "BZ"));
+                    }
+
+                }
+                else
+                if(subCode == "17")
+                {                   
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                       .SkipWhile(val => !val.Value.StartsWith("4. Brevete de invenþie europene cu efecte extinse"))
+                       .TakeWhile(val => !val.Value.StartsWith("5. Transmiteri de dreptu i înregistrate la Oficiul de Stat"))
+                       .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(51\))").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(51)")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "BZ"));
+                    }
+                }
+            }
+
+            return events;
+        }
+
+        internal string MakeText (List<XElement> xElement)
+        {
+            string text = null;
+
+            foreach (XElement element in xElement)
+            {
+                text += element.Value + "\n";
+            }
+
+            return text;
+        }
+
+        internal Diamond.Core.Models.LegalStatusEvent MakeConvertedPatent (string note, string subCode, string sectionCode)
+        {
+            Diamond.Core.Models.LegalStatusEvent legalStatus = new()
+            {
+                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                CountryCode = "RO",
+                SubCode = subCode,
+                SectionCode = sectionCode,
+                Id = id++
+            };
+
+            Biblio biblio = new();
+
+            CultureInfo cultureInfo = new("RU-ru");
+
+            if(subCode == "13") 
+            {
+                biblio.IntConvention = new IntConvention();
+
+                foreach (string inid in MakeInids13(note))
+                {
+                    if (inid.StartsWith(I11))
+                    {
+                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<number>\d+)\s(?<kind>[A-Z]{1}\d+)");
+                        if (match.Success)
+                        {
+                            biblio.Publication.Number = match.Groups["number"].Value.Trim();
+                            biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился");
+                    }
+                    else
+                    if (inid.StartsWith(I51))
+                    {
+                        biblio.Ipcs = new List<Ipc>();
+
+                        List<string> ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string ipc in ipcs)
+                        {
+                            Match match = Regex.Match(ipc, @"(?<class>.+)\s\((?<version>[0-9]{4}.[0-9]{2})\)?");
+
+                            if (match.Success)
+                            {
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = match.Groups["class"].Value.Trim(),
+                                    Date = match.Groups["version"].Value.Trim()
+                                });
+                            }
+                            else 
+                            {
+                                Console.WriteLine($"{ipc} не разбился в 51");
+
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = ipc.Trim(),
+                                    Date = "2006.01"
+                                });
+                            }                            
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I21))
+                    {
+                        biblio.Application.Number = inid.Replace(I21, "").Trim();
+                    }
+                    else
+                    if (inid.StartsWith(I22))
+                    {
+                        biblio.Application.Date = DateTime.Parse(inid.Replace(I22, "").Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                    }
+                    else
+                    if (inid.StartsWith(I41))
+                    {
+                        Match match = Regex.Match(inid.Replace(I41, ""), @"([0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+                        if (match.Success)
+                        {
+                            biblio.DOfPublication = new()
+                            {
+                                date_41 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
+                            };
+
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 41");
+                    }
+                    else
+                    if (inid.StartsWith(I71))
+                    {
+                        biblio.Applicants = new List<PartyMember>();
+
+                        Match match = Regex.Match(inid.Replace(I71, "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                        if (match.Success)
+                        {
+                            biblio.Applicants.Add(new PartyMember
+                            {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = match.Groups["country"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{inid} не разбился 71");
+                    }
+                    else
+                    if (inid.StartsWith(I72))
+                    {
+                        biblio.Inventors = new List<PartyMember>();
+
+                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string inventor in inventors)
+                        {
+                            Match match = Regex.Match(inventor, @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                            if (match.Success)
+                            {
+                                biblio.Inventors.Add(new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = match.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{inventor} не разбился в 72");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I54))
+                    {
+                        biblio.Titles = new List<Title>
+                        {
+                            new Title
+                            {
+                                Text = inid.Replace(I54, "").Trim(),
+                                Language = "RO"
+                            }
+                        };
+                    }
+                    else
+                    if (inid.StartsWith(I57))
+                    {
+                        biblio.Abstracts = new List<Abstract>
+                        {
+                            new Abstract
+                            {
+                                Text = inid.Replace(I57,"").Trim(),
+                                Language = "RO"
+                            }
+                        };
+                    }
+                    else
+                    if (inid.StartsWith(I57n))
+                    {
+                        Match match = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<r>R.+:)\s(?<rn>[0-9]+)\s(?<f>F.+:)\s(?<fn>[0-9]+)\s?");
+
+                        if (match.Success)
+                        {
+                            legalStatus.LegalEvent = new LegalEvent
+                            {
+                                Note = "|| " + match.Groups["r"].Value.Trim() + " | " + match.Groups["rn"].Value.Trim() + "\n" + "|| " + match.Groups["f"].Value.Trim() + " | " + match.Groups["fn"].Value.Trim(),
+                                Language = "RO",
+                                Translations = new List<NoteTranslation>
+                                {
+                                    new NoteTranslation
+                                    {
+                                        Language = "EN",
+                                        Tr = "|| Claims | " + match.Groups["rn"].Value.Trim() + "\n" + "|| Figures | " + match.Groups["fn"].Value.Trim(),
+                                        Type = "note"
+                                    }
+                                }
+                            };
+                        }
+                        else
+                        {
+                            Match match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<r>R.+:)\s(?<rn>[0-9]+)\s?");
+
+                            if (match1.Success)
+                            {
+                                legalStatus.LegalEvent = new LegalEvent
+                                {
+                                    Note = "|| " + match.Groups["r"].Value.Trim() + " | " + match.Groups["rn"].Value.Trim(),
+                                    Language = "RO",
+                                    Translations = new List<NoteTranslation>
+                                {
+                                    new NoteTranslation
+                                    {
+                                        Language = "EN",
+                                        Tr = "|| Claims | " + match.Groups["rn"].Value.Trim(),
+                                        Type = "note"
+                                    }
+                                }
+                                };
+                            }
+                            else Console.WriteLine($"{inid} не разбилось в 57n");
+                        }
+                    }
+                    else
+                    if(inid.StartsWith(I86))
+                    {
+                        Match match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            biblio.IntConvention.PctApplNumber = match.Groups["number"].Value.Trim();
+                            biblio.IntConvention.PctApplCountry = match.Groups["code"].Value.Trim();
+                            biblio.IntConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();                            
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 86");
+                    }
+                    else
+                    if(inid.StartsWith(I87))
+                    {
+                        Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            biblio.IntConvention.PctPublNumber = match.Groups["number"].Value.Trim();
+                            biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 87");
+                    }
+                    else
+                    if (inid.StartsWith(I30))
+                    {
+                        List<string> priorites = Regex.Split(inid.Replace(I30, "").Trim(), "").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        biblio.Priorities = new List<Priority>();
+
+                        foreach (string priority in priorites)
+                        {
+                            Match match = Regex.Match(priority.Trim(), @"(?<date>.+)\s(?<code>[A-Z]{2})\s(?<number>.+)");
+                            if (match.Success)
+                            {
+                                biblio.Priorities.Add(new Priority
+                                {
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim(),
+                                    Country = match.Groups["code"].Value.Trim(),
+                                    Number = match.Groups["number"].Value.Trim()
+                                });
+                            }
+                        }
+
+                    }
+                    else
+                    if (inid.StartsWith(I74))
+                    {
+                        Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                        if (match.Success) 
+                        { 
+                            biblio.Agents = new List<PartyMember>
+                            {
+                                new PartyMember
+                                {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = "RO"
+                                } 
+                            };
+                        }
+                        else Console.WriteLine($"{inid} не разбился 74");
+                    }
+                    else Console.WriteLine($"{inid} не обработан");
+                }
+
+                legalStatus.Biblio = biblio;
+
+            }
+            else
+            if(subCode == "14")
+            {
+                biblio.DOfPublication = new DOfPublication();
+
+                biblio.IntConvention = new IntConvention();
+
+                foreach (string inid in MakeInids14(note))
+                {
+                    if (inid.StartsWith(I11))
+                    {
+                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<number>\d+)\s(?<kind>[A-Z]{1}\d+)");
+                        if (match.Success)
+                        {
+                            biblio.Publication.Number = match.Groups["number"].Value.Trim();
+                            biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился");
+                    }
+                    else
+                    if (inid.StartsWith(I51))
+                    {
+                        biblio.Ipcs = new List<Ipc>();
+
+                        List<string> ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string ipc in ipcs)
+                        {
+                            Match match = Regex.Match(ipc, @"(?<class>.+)\s?\((?<version>[0-9]{4}.[0-9]{2})\)?");
+
+                            if (match.Success)
+                            {
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = match.Groups["class"].Value.Trim(),
+                                    Date = match.Groups["version"].Value.Trim()
+                                });
+                            }
+                            else
+                            {
+                                Console.WriteLine($"{ipc} не разбился в 51");
+                            }
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I21))
+                    {
+                        biblio.Application.Number = inid.Replace(I21, "").Trim();
+                    }
+                    else
+                    if (inid.StartsWith(I22))
+                    {
+                        biblio.Application.Date = DateTime.Parse(inid.Replace(I22, "").Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                    }
+                    else
+                    if (inid.StartsWith(I41))
+                    {
+                        Match match = Regex.Match(inid.Replace(I41, ""), @"([0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+                        if (match.Success)
+                        {
+                            biblio.DOfPublication.date_41 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 41");
+                    }
+                    else
+                    if (inid.StartsWith(I45))
+                    {
+                        Match match = Regex.Match(inid.Replace(I45, ""), @"([0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+                        if (match.Success)
+                        {
+                            biblio.DOfPublication.date_45 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 45");
+                    }
+                    else
+                    if (inid.StartsWith(I56))
+                    {
+                        List<string> patentCitations = Regex.Split(inid.Replace(I56, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        biblio.PatentCitations = new List<PatentCitation>();
+
+                        foreach (string patentCitation in patentCitations)
+                        {
+                            Match match = Regex.Match(patentCitation, @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<kind>[A-Z]{1,2}[0-9]{0,2})");
+
+                            if (match.Success)
+                            {
+                                biblio.PatentCitations.Add(new PatentCitation
+                                {
+                                    Kind = match.Groups["kind"].Value.Trim(),
+                                    Number = match.Groups["number"].Value.Trim(),
+                                    Authority = match.Groups["code"].Value.Trim()
+                                });
+                            }
+                            else
+                            {
+                                Match match1 = Regex.Match(patentCitation, @"(?<code>[A-Z]{2}).?\s(?<number>.+)");
+
+                                if (match1.Success)
+                                {
+                                    biblio.PatentCitations.Add(new PatentCitation
+                                    {
+                                        Number = match1.Groups["number"].Value.Trim(),
+                                        Authority = match1.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else
+                                {
+                                    Match match2 = Regex.Match(patentCitation, @"(?<number>.+)\s(?<kind>[A-Z]{1,2}[0-9]{0,2})");
+                                    if (match2.Success)
+                                    {
+                                        biblio.PatentCitations.Add(new PatentCitation
+                                        {
+                                            Number = match2.Groups["number"].Value.Trim(),
+                                            Kind = match2.Groups["kind"].Value.Trim(),
+                                        });
+                                    }
+                                    else
+                                    {
+                                        biblio.PatentCitations.Add(new PatentCitation
+                                        {
+                                            Number = patentCitation
+
+                                        });
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I73))
+                    {
+                        biblio.Assignees = new List<PartyMember>();
+
+                        Match match = Regex.Match(inid.Replace(I73, "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                        if (match.Success)
+                        {
+                            biblio.Assignees.Add(new PartyMember
+                            {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = match.Groups["country"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{inid} Не разбился в 73");
+                    }
+                    else
+                    if (inid.StartsWith(I72))
+                    {
+                        biblio.Inventors = new List<PartyMember>();
+
+                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string inventor in inventors)
+                        {
+                            Match match = Regex.Match(inventor, @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                            if (match.Success)
+                            {
+                                biblio.Inventors.Add(new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = match.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{inventor} не разбился в 72 --- {biblio.Publication.Number}");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I54))
+                    {
+                        biblio.Titles = new List<Title>
+                        {
+                            new Title
+                            {
+                                Text = inid.Replace(I54, "").Trim(),
+                                Language = "RO"
+                            }
+                        };
+                    }
+                    else
+                    if (inid.StartsWith(I74))
+                    {
+                        Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                        if (match.Success)
+                        {
+                            biblio.Agents = new List<PartyMember>
+                            {
+                                new PartyMember
+                                {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = "RO"
+                                }
+                            };
+                        }
+                        else Console.WriteLine($"{inid} не разбился 74");
+                    }
+                    else
+                    if (inid.StartsWith(I86))
+                    {
+                        Match match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<number>.+)\s?(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            biblio.IntConvention.PctApplNumber = match.Groups["number"].Value.Trim();
+                            biblio.IntConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 86");
+                    }
+                    else
+                    if (inid.StartsWith(I87))
+                    {
+                        Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+)\s?(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            biblio.IntConvention.PctPublNumber = match.Groups["number"].Value.Trim();
+                            biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 87");
+                    }
+                    else
+                    if (inid.StartsWith(I66))
+                    {
+                        biblio.Related = new List<RelatedDocument>();
+
+                        Match match = Regex.Match(inid.Replace(I66, "").Trim(), @"(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})\s?(?<country>[A-Z]{2})\s(?<number>.+)");
+
+                        if (match.Success)
+                        {
+                            biblio.Related.Add(new RelatedDocument
+                            {
+                                Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim(),
+                                Number = match.Groups["number"].Value.Trim(),
+                                Format = "66",
+                                Source = match.Groups["country"].Value.Trim()
+                            });
+                        }
+                    }
+                    else Console.WriteLine($"{inid} не обработан");
+                }
+
+                legalStatus.Biblio = biblio;
+
+            }
+            else
+            if(subCode == "16")
+            {
+                biblio.EuropeanPatents = new();
+                EuropeanPatent europeanPatent = new();
+
+                foreach (string inid in MakeInids16(note))
+                {
+                    if (inid.StartsWith(I51))
+                    {
+                        biblio.Ipcs = new();
+
+                        List<string> ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string ipc in ipcs)
+                        {
+                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<version>[0-9]{4}.[0-9]{2})\)?");
+
+                            if (match.Success)
+                            {
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = match.Groups["class"].Value.Trim(),
+                                    Date = match.Groups["version"].Value.Trim()
+                                });
+                            }
+                            else
+                            {
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = ipc.Trim(),
+                                    Date = "2006.01"
+                                });
+                            }
+                            
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I11))
+                    {
+                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<number>.+)\s(?<kind>[A-Z]{1}\d+)");
+
+                        if (match.Success)
+                        {
+                            biblio.Publication.Number = match.Groups["number"].Value.Trim();
+                            biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился");
+                    }
+                    else
+                    if (inid.StartsWith(I96))
+                    {
+                        Match match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            europeanPatent.AppNumber = match.Groups["number"].Value.Trim();
+                            europeanPatent.AppDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 96");
+                    }
+                    else
+                    if (inid.StartsWith(I97))
+                    {
+                        Match match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            europeanPatent.PubNumber = match.Groups["number"].Value.Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 97");
+                    }
+                    else
+                    if (inid.StartsWith(I80))
+                    {
+                        europeanPatent.PubDate = DateTime.Parse(inid.Replace(I80, "").Trim().TrimEnd(';'), cultureInfo).ToString("yyyy.MM.dd").Trim();
+
+                        biblio.EuropeanPatents.Add(europeanPatent);
+                    }
+                    else
+                    if (inid.StartsWith(I30))
+                    {
+                        biblio.Priorities = new();
+
+                        List<string> priorities = Regex.Split(inid.Replace(I30, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string priority in priorities)
+                        {
+                            Match match = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>.+)");
+
+                            if (match.Success)
+                            {
+                                biblio.Priorities.Add(new Priority
+                                {
+                                    Country = match.Groups["code"].Value.Trim(),
+                                    Number = match.Groups["number"].Value.Trim(),
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{priority} не разбился в 30");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I84))
+                    {
+                        biblio.IntConvention = new();
+                        biblio.IntConvention.DesignatedStates = new();
+
+                        List<string> designatedStates = Regex.Split(inid.Replace(I84, "").Trim(), @",\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string item in designatedStates)
+                        {
+                            if (item.Length == 2)
+                            {
+                                biblio.IntConvention.DesignatedStates.Add(item);
+                            }
+                            else
+                            if (item.Length == 3)
+                            {
+                                string tmp = item.Trim().TrimEnd(';');
+                                biblio.IntConvention.DesignatedStates.Add(tmp);
+                            }
+                            else
+                            {
+                                List<string> designatedStates1 = Regex.Split(inid.Replace(I84, "").Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string item1 in designatedStates1)
+                                {
+                                    if (item1.Length == 2)
+                                    {
+                                        biblio.IntConvention.DesignatedStates.Add(item1);
+                                    }
+                                    else
+                                    if (item1.Length == 3)
+                                    {
+                                        string tmp1 = item1.Trim().TrimEnd(';');
+                                        biblio.IntConvention.DesignatedStates.Add(tmp1);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"{item1}");
+                                    }
+                                }
+                            }                           
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I73))
+                    {
+                        biblio.Assignees = new();
+
+                        Match match = Regex.Match(inid.Replace(I73, "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                        if (match.Success)
+                        {
+                            biblio.Assignees.Add(new PartyMember
+                            {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = match.Groups["country"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{inid} Не разбился в 73");
+                    }
+                    else
+                    if (inid.StartsWith(I74))
+                    {
+                        Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                        if (match.Success)
+                        {
+                            biblio.Agents = new List<PartyMember>
+                            {
+                                new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = "RO"
+                                }
+                            };
+                        }
+                        else Console.WriteLine($"{inid} Не разделился в 74");
+                    }
+                    else
+                    if (inid.StartsWith(I72))
+                    {
+                        biblio.Inventors = new();
+
+                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string inventor in inventors)
+                        {
+                            Match match = Regex.Match(inventor.Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                            if (match.Success)
+                            {
+                                biblio.Inventors.Add(new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = match.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{inventor} не разбился в 72");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I54))
+                    {
+                        biblio.Titles = new List<Title>
+                        {
+                            new Title
+                            {
+                                Text = inid.Replace(I54, "").Trim(),
+                                Language = "RO"
+                            }
+                        };
+                    }
+                    else
+                    if (inid.StartsWith(I87))
+                    {
+                        Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            biblio.IntConvention = new IntConvention
+                            {
+                                PctPublNumber = match.Groups["number"].Value.Trim(),
+                                PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
+                            };
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 87");
+                    }
+                    else
+                    if (inid.StartsWith(I41))
+                    {
+                        Match match = Regex.Match(inid.Replace(I41, ""), @"([0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        if (match.Success)
+                        {
+                            biblio.DOfPublication = new()
+                            {
+                                date_41 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
+                            };
+
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 41");
+                    }
+                    else Console.WriteLine($"{inid} Не обработан");
+
+                    legalStatus.Biblio = biblio;
+                }
+            }
+            else
+            if(subCode == "17")
+            {
+                biblio.EuropeanPatents = new();
+                EuropeanPatent europeanPatent = new();
+
+                List<string> text = new();
+
+                foreach (string inid in MakeInids16(note))
+                {
+                    if (inid.StartsWith(I51))
+                    {
+                        biblio.Ipcs = new();
+
+                        List<string> ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string ipc in ipcs)
+                        {
+                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<version>[0-9]{4}.[0-9]{2})\)?");
+
+                            if (match.Success)
+                            {
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = match.Groups["class"].Value.Trim(),
+                                    Date = match.Groups["version"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{ipc} не разбилось");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I11))
+                    {
+                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<number>.+)\s(?<kind>[A-Z]{1}\d+)");
+
+                        if (match.Success)
+                        {
+                            biblio.Publication.Number = match.Groups["number"].Value.Trim();
+                            biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился");
+                    }
+                    else
+                    if (inid.StartsWith(I96))
+                    {
+                        Match match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            europeanPatent.AppNumber = match.Groups["number"].Value.Trim();
+                            europeanPatent.AppDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 96");
+                    }
+                    else
+                    if (inid.StartsWith(I97))
+                    {
+                        Match match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            europeanPatent.PubNumber = match.Groups["number"].Value.Trim();
+                            text.Add(DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"));
+                        }
+                        else Console.WriteLine($"{inid} не разбился в 97");
+                    }
+                    else
+                    if (inid.StartsWith(I80))
+                    {
+                        Match match = Regex.Match(inid.Replace(I80, "").Trim(), @"(?<s>.+?:)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4});(?<note>.+:)\s(?<date1>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        if (match.Success)
+                        {
+                            europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                        }
+                        else Console.WriteLine($"{inid} не разбился 80");
+
+                        legalStatus.LegalEvent = new LegalEvent
+                        {
+                            Note = "|| " + text[0] + " | " + text[1] + "\n" + "|| " + text[2] + " | " + text[3] + "\n" + "|| " + text[4] 
+                            + "\n" + "|| " + match.Groups["note"].Value.Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"),
+                            Language = "RO",
+                            Translations = new List<NoteTranslation>
+                                {
+                                    new NoteTranslation
+                                    {
+                                        Language = "EN",
+                                        Tr = "|| (45) Date of publication of the translation of the European patent dossier maintained in modified form | " + text[1] + "\n" +
+                                        "|| Date of publication of the translation of the European patent dossier | " + text[3] + "\n" +
+                                        "|| Date of publication of EP application | " + text[4] + "\n" +
+                                        "|| Date of publication by the European patent office of the mention of maintaining the European patent in modified form | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"),
+                                        Type = "note"
+                                    }
+                                }
+                        };
+
+
+                        biblio.EuropeanPatents.Add(europeanPatent);
+                    }
+                    else
+                    if (inid.StartsWith(I45))
+                    {
+                        Match match = Regex.Match(inid.Trim(), @"(?<s>.+?:)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4});(?<note>.+:)\s(?<date1>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+
+                        if (match.Success)
+                        {
+                            text.Add(match.Groups["s"].Value.Trim());
+                            text.Add(DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"));
+                            text.Add(match.Groups["note"].Value.Trim());
+                            text.Add(DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"));
+                        }
+                        else Console.WriteLine($"{inid} не разбилось 45");
+                    }
+                    else
+                    if (inid.StartsWith(I30))
+                    {
+                        biblio.Priorities = new();
+
+                        List<string> priorities = Regex.Split(inid.Replace(I30, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string priority in priorities)
+                        {
+                            Match match = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>.+)");
+
+                            if (match.Success)
+                            {
+                                biblio.Priorities.Add(new Priority
+                                {
+                                    Country = match.Groups["code"].Value.Trim(),
+                                    Number = match.Groups["number"].Value.Trim(),
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{priority} не разбился в 30");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I84))
+                    {
+                        biblio.IntConvention = new();
+                        biblio.IntConvention.DesignatedStates = new();
+
+                        List<string> designatedStates = Regex.Split(inid.Replace(I84, "").Trim(), @",\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string item in designatedStates)
+                        {
+                            if (item.Length == 2)
+                            {
+                                biblio.IntConvention.DesignatedStates.Add(item);
+                            }
+                            else
+                            if (item.Length == 3)
+                            {
+                                string tmp = item.Trim().TrimEnd(';');
+                                biblio.IntConvention.DesignatedStates.Add(tmp);
+                            }
+                            else
+                            {
+                                List<string> designatedStates1 = Regex.Split(inid.Replace(I84, "").Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string item1 in designatedStates1)
+                                {
+                                    if (item1.Length == 2)
+                                    {
+                                        biblio.IntConvention.DesignatedStates.Add(item1);
+                                    }
+                                    else
+                                    if (item1.Length == 3)
+                                    {
+                                        string tmp1 = item1.Trim().TrimEnd(';');
+                                        biblio.IntConvention.DesignatedStates.Add(tmp1);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"{item1}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I73))
+                    {
+                        biblio.Assignees = new();
+
+                        Match match = Regex.Match(inid.Replace(I73, "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                        if (match.Success)
+                        {
+                            biblio.Assignees.Add(new PartyMember
+                            {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = match.Groups["country"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{inid} Не разбился в 73");
+                    }
+                    else
+                    if (inid.StartsWith(I74))
+                    {
+                        Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                        if (match.Success)
+                        {
+                            biblio.Agents = new List<PartyMember>
+                            {
+                                new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = "RO"
+                                }
+                            };
+                        }
+                        else Console.WriteLine($"{inid} Не разделился в 74");
+                    }
+                    else
+                    if (inid.StartsWith(I72))
+                    {
+                        biblio.Inventors = new();
+
+                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string inventor in inventors)
+                        {
+                            Match match = Regex.Match(inventor.Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                            if (match.Success)
+                            {
+                                biblio.Inventors.Add(new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = match.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{inventor} не разбился в 72");
+                        }
+                    }
+                    else
+                    if (inid.StartsWith(I54))
+                    {
+                        biblio.Titles = new List<Title>
+                        {
+                            new Title
+                            {
+                                Text = inid.Replace(I54, "").Trim(),
+                                Language = "RO"
+                            }
+                        };
+                    }
+                    else Console.WriteLine($"{inid} Не обработан");
+
+                    legalStatus.Biblio = biblio;
+                }
+            }
+            return legalStatus;
+        }
+
+        internal List<string> MakeInids13 (string note)
+        {
+            string inid57 = note.Substring(note.IndexOf("(57)")).Replace("\r","").Replace("\n", " ").Trim();
+
+            string note57 = null;
+
+            if (inid57.Contains("(11)"))
+            {
+                inid57 = Regex.Replace(inid57, @"(\(11\)\s[0-9]{6}\s[A-Z]{1}[0-9]{1}\s)", "");
+
+            }
+
+            Match match = Regex.Match(inid57, @"(?<inid57>.+)\s(?<note>Revend.+)");
+            if (match.Success)
+            {
+                inid57 = match.Groups["inid57"].Value.Trim();
+                note57 ="(57n) " + match.Groups["note"].Value.Trim();
+            }
+            else
+            {
+                Console.WriteLine($"{inid57} не нашло note57");
+            }
+
+            string noteWithOut57 = Regex.Replace(note.Replace("\r", "").Replace("\n", " "), @"(\(57\).+)", "").Trim();
+
+            List<string> inids = Regex.Split(noteWithOut57, @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+            inids.Add(inid57);
+            inids.Add(note57);
+
+            return inids;
+        }
+
+        internal List<string> MakeInids14(string note)
+        {
+            string inid11 = note.Replace("\r", "").Replace("\n", "").Trim().Substring(note.IndexOf("(11)"), note.IndexOf("(51)")).Trim();
+
+            string inidsWithOutInid11 = Regex.Replace(note.Replace("\r", "").Replace("\n", "").Trim(), @"\(11\)\s[0-9]{6,7}\s[A-Z][0-9]","").Trim();
+
+            List<string> inids = Regex.Split(inidsWithOutInid11, @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+            inids.Add(inid11);
+
+            return inids;
+        }
+
+        internal List<string> MakeInids16(string note) => Regex.Split(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        {
+            foreach (var rec in events)
+            {
+                string tmpValue = JsonConvert.SerializeObject(rec);
+                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(url);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
+            }
+        }
+    }
+}
