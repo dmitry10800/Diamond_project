@@ -195,8 +195,6 @@ namespace Diamond_RO_Maksim
                             }
                             else 
                             {
-                                Console.WriteLine($"{ipc} не разбился в 51");
-
                                 biblio.Ipcs.Add(new Ipc
                                 {
                                     Class = ipc.Trim(),
@@ -233,19 +231,23 @@ namespace Diamond_RO_Maksim
                     if (inid.StartsWith(I71))
                     {
                         biblio.Applicants = new List<PartyMember>();
+                        List<string> applicants = Regex.Split(inid.Replace(I71, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        Match match = Regex.Match(inid.Replace(I71, "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
-
-                        if (match.Success)
+                        foreach (string applicant in applicants)
                         {
-                            biblio.Applicants.Add(new PartyMember
+                            Match match = Regex.Match(applicant, @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
+
+                            if (match.Success)
                             {
-                                Name = match.Groups["name"].Value.Trim(),
-                                Address1 = match.Groups["adress"].Value.Trim(),
-                                Country = match.Groups["country"].Value.Trim()
-                            });
-                        }
-                        else Console.WriteLine($"{inid} не разбился 71");
+                                biblio.Applicants.Add(new PartyMember
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = match.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{inid} не разбился 71");
+                        }                      
                     }
                     else
                     if (inid.StartsWith(I72))
@@ -1177,6 +1179,8 @@ namespace Diamond_RO_Maksim
 
             string note57 = null;
 
+            List<string> inids = new();
+
             if (inid57.Contains("(11)"))
             {
                 inid57 = Regex.Replace(inid57, @"(\(11\)\s[0-9]{6}\s[A-Z]{1}[0-9]{1}\s)", "");
@@ -1196,7 +1200,16 @@ namespace Diamond_RO_Maksim
 
             string noteWithOut57 = Regex.Replace(note.Replace("\r", "").Replace("\n", " "), @"(\(57\).+)", "").Trim();
 
-            List<string> inids = Regex.Split(noteWithOut57, @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+            Match match1 = Regex.Match(noteWithOut57, @"(?<inid11>\(11\).+)\s(?<note>\(51.+)");
+
+            if (match1.Success)
+            {
+                string tmp = Regex.Replace(match1.Groups["note"].Value.Trim(), @"\(11\)\s?[0-9]+\s[A-Z]+[0-9]+", "").Trim();
+
+                inids = Regex.Split(tmp, @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                inids.Add(match1.Groups["inid11"].Value.Trim());
+            }   
 
             inids.Add(inid57);
             inids.Add(note57);
@@ -1206,9 +1219,9 @@ namespace Diamond_RO_Maksim
 
         internal List<string> MakeInids14(string note)
         {
-            string inid11 = note.Replace("\r", "").Replace("\n", "").Trim().Substring(note.IndexOf("(11)"), note.IndexOf("(51)")).Trim();
+            string inid11 = note.Replace("\r", "").Replace("\n", " ").Trim().Substring(note.IndexOf("(11)"), note.IndexOf("(51)")).Trim();
 
-            string inidsWithOutInid11 = Regex.Replace(note.Replace("\r", "").Replace("\n", "").Trim(), @"\(11\)\s[0-9]{6,7}\s[A-Z][0-9]","").Trim();
+            string inidsWithOutInid11 = Regex.Replace(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\(11\)\s[0-9]{6,7}\s[A-Z][0-9]","").Trim();
 
             List<string> inids = Regex.Split(inidsWithOutInid11, @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
