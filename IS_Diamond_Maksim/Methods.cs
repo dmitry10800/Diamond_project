@@ -309,6 +309,10 @@ namespace IS_Diamond_Maksim
                 "Finnlandi" => "FI",
                 "Nyja Sjalandi" => "NZ",
                 "Nýja Sjálandi" => "NZ",
+                "Austurríki" => "AT",
+                "Suður-Kóreu" => "KR",
+                "Suður Kóreu" => "KR",
+
                 _ => null
             };
 
