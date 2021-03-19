@@ -5,9 +5,9 @@ namespace Diamond_RO_Maksim
 {
     class Main_RO
     {
-        private static readonly string path = @"C:\Work\RO\RO_20191030_10";
+        private static readonly string path = @"C:\Work\RO\RO_20191030_10_E";
 
-        private static readonly string subCode = "13";
+        private static readonly string subCode = "16";
 
         static void Main(string[] args)
         {

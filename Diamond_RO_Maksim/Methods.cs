@@ -668,6 +668,8 @@ namespace Diamond_RO_Maksim
             {
                 biblio.EuropeanPatents = new();
                 EuropeanPatent europeanPatent = new();
+                biblio.IntConvention = new();
+                biblio.IntConvention.DesignatedStates = new();
 
                 foreach (string inid in MakeInids16(note))
                 {
@@ -732,6 +734,21 @@ namespace Diamond_RO_Maksim
                         if (match.Success)
                         {
                             europeanPatent.PubNumber = match.Groups["number"].Value.Trim();
+
+                            legalStatus.LegalEvent = new LegalEvent
+                            {
+                                Note = "|| Data publicãrii cererii de cãtre O.E.B. | " + DateTime.Parse(match.Groups["date"].Value.Trim(),cultureInfo).ToString("yyyy.MM.dd").Replace(".","/").Trim(),
+                                Language = "RO",
+                                Translations = new List<NoteTranslation>
+                                {
+                                    new NoteTranslation
+                                    {
+                                        Language = "EN",
+                                        Tr = "|| Date of publication of EP application  | " + DateTime.Parse(match.Groups["date"].Value.Trim(),cultureInfo).ToString("yyyy.MM.dd").Replace(".","/").Trim(),
+                                        Type = "note"
+                                    }
+                                }
+                            };
                         }
                         else Console.WriteLine($"{inid} не разбился в 97");
                     }
@@ -767,10 +784,7 @@ namespace Diamond_RO_Maksim
                     }
                     else
                     if (inid.StartsWith(I84))
-                    {
-                        biblio.IntConvention = new();
-                        biblio.IntConvention.DesignatedStates = new();
-
+                    {                     
                         List<string> designatedStates = Regex.Split(inid.Replace(I84, "").Trim(), @",\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string item in designatedStates)
@@ -887,11 +901,10 @@ namespace Diamond_RO_Maksim
 
                         if (match.Success)
                         {
-                            biblio.IntConvention = new IntConvention
-                            {
-                                PctPublNumber = match.Groups["number"].Value.Trim(),
-                                PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
-                            };
+
+                            biblio.IntConvention.PctPublNumber = match.Groups["number"].Value.Trim();
+                            biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                            
                         }
                         else Console.WriteLine($"{inid} не разбился в 87");
                     }
@@ -909,10 +922,9 @@ namespace Diamond_RO_Maksim
                         }
                         else Console.WriteLine($"{inid} не разбился в 41");
                     }
-                    else Console.WriteLine($"{inid} Не обработан");
-
-                    legalStatus.Biblio = biblio;
+                    else Console.WriteLine($"{inid} Не обработан");               
                 }
+                legalStatus.Biblio = biblio;
             }
             else
             if(subCode == "17")
