@@ -6,7 +6,7 @@ namespace Diamond_SI_Maksim
     class Main_SI
     {
         private readonly static string path = @"C:\Work\SI\SI_20210129_01";
-        private readonly static string subcode = "20";
+        private readonly static string subcode = "";
         static void Main(string[] args)
         {
             Methods methods = new();

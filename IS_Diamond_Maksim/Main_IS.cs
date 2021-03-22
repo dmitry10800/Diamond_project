@@ -7,7 +7,7 @@ namespace IS_Diamond_Maksim
     {
 
         private static string path = @"C:\Work\IS\IS_20200515_05";
-        private static string subCode = "3";
+        private static string subCode = "";
         static void Main(string[] args)
         {
             Methods methods = new();

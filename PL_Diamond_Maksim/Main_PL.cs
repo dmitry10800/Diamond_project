@@ -6,7 +6,7 @@ namespace PL_Diamond_Maksim
     class Main_PL
     {
         private static string path = @"C:\Work\PL\PL_20200331_03W";
-        private static string subCode = "25";
+        private static string subCode = "10";
         private static string newOrOld = "new";  // new / old
         static void Main(string[] args)
         {
