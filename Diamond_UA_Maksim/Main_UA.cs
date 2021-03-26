@@ -7,7 +7,7 @@ namespace Diamond_UA_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\UA\UA_20210303_9(1)";
+            string path = @"C:\Work\UA\UA_20210324_12(1)";
             string subCode = "8";
 
             Methods methods = new Methods();
@@ -18,6 +18,8 @@ namespace Diamond_UA_Maksim
                 "8" => methods.Start(path, subCode),
                 _ => null           
             };
+
+            Console.WriteLine();
 
             if (patents != null) methods.SendToDiamond(patents);
             else Console.WriteLine("Wrong sub code");

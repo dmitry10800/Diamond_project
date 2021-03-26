@@ -45,7 +45,8 @@ namespace Diamond_UA_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на" + "\n" + "винахід у разі несплати річного збору"))
-                        .TakeWhile(val => !val.Value.StartsWith("Визнання прав на винахід недійсними в судовому порядку повністю"))
+                        .TakeWhile(val => !val.Value.StartsWith("Визнання прав на винахід недійсними в судовому порядку повністю") 
+                        && !val.Value.StartsWith("Заява володільця патенту про готовність надання будь-якій особі"))
                         .ToList();
 
                     foreach (string note in BuildNotes(xElements))
