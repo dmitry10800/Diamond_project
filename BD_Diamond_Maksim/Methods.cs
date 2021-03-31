@@ -130,7 +130,7 @@ namespace BD_Diamond_Maksim
                     List<string> codes = new();
                     List<string> applicants = new();
 
-                    List<string> temps = Regex.Split(match1.Groups["name"].Value.Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    List<string> temps = Regex.Split(match1.Groups["name"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (string temp in temps)
                     {
@@ -157,7 +157,7 @@ namespace BD_Diamond_Maksim
                         else codes.Add(applicant);
                     }
 
-                    for(int i = 0; i<codes.Count; i++)
+                    for (int i = 0; i < codes.Count; i++)
                     {
                         biblio.Applicants.Add(new PartyMember
                         {
@@ -166,8 +166,9 @@ namespace BD_Diamond_Maksim
                         });
                     }
                     legal.Biblio = biblio;
-                   
+
                 }
+                else Console.WriteLine($"{note.Replace("\r", "").Replace("\n", " ").Trim()}");
                 return legal;
             }
         }
