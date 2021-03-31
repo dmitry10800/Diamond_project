@@ -10,7 +10,7 @@ namespace Diamond_TR_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\TR\TR_20210121_01";
+            string path = @"C:\Work\TR\TR_20210322_03";
             string sub = "17";
 
             Methods methods = new Methods();
@@ -26,6 +26,8 @@ namespace Diamond_TR_Maksim
                 "39" => methods.Start(path, sub),
                 _ => null
             };
+
+            Console.WriteLine();
 
             if (convertedPatents != null)
             {
