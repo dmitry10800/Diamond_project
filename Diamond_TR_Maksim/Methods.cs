@@ -127,7 +127,7 @@ namespace Diamond_TR_Maksim
                 if (sub == "39")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
-                        .SkipWhile(e => !e.Value.StartsWith("6769 SAYILI SMK'NIN UYGULANMASINA DAİR YÖNETMENLİĞİN 117 NCİ MADDESİ 7"+"\n"+ "NCİ, VE 8 İNCİ FIKRALARI UYARINCA KULLANMAMA BEYANI VERİLEN BAŞVURU"))
+                        .SkipWhile(e => !e.Value.StartsWith("6769 SAYILI SMK'NIN UYGULANMASINA DAİR YÖNETMENLİĞİN 117 NCİ MADDESİ 7"+"\n"+ "NCİ, VE 8 İNCİ FIKRALARI UYARINCA KULLANMA/KULLANMAMA BEYANI"))
                         .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI SMK&apos;NIN UYGULANMASINA DAİR YÖNETMENLİĞİN 117 NCİ MADDESİ 7" + "\n" + "NCİ, VE 8 İNCİ FIKRALARI UYARINCA KULLANMA/KULLANMAMA BEYANI") && 
                         !e.Value.StartsWith("YILLIK ÜCRETLERİN ÖDENMEMESİ NEDENİYLE GEÇERSİZ SAYILAN BAŞVURULAR"))
                         .ToList();
