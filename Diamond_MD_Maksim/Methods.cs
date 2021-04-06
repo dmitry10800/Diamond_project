@@ -94,8 +94,11 @@ namespace Diamond_MD_Maksim
 
             Biblio biblio = new();
             biblio.Priorities = new();
-            Priority priority = new();
             biblio.EuropeanPatents = new();
+
+            List<string> priorityNumbers = new();
+            List<string> priorityDates = new();
+            List<string> priorityCountries = new();
 
             foreach (string inid in MakeInids(note))
             {
@@ -177,17 +180,20 @@ namespace Diamond_MD_Maksim
                 else
                 if (inid.StartsWith(I31))
                 {
-                    priority.Number = inid.Replace(I31, "").Trim();
+                    priorityNumbers = Regex.Split(inid.Replace(I31, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
                 }
                 else
                 if (inid.StartsWith(I32))
                 {
-                    priority.Date = inid.Replace(I32, "").Replace(".", "/").Trim();
+                    priorityDates = Regex.Split(inid.Replace(I32, "").Replace(".", "/").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
                 }
                 else
                 if (inid.StartsWith(I33))
                 {
-                    priority.Country = inid.Replace(I33, "").Trim();
+                    priorityCountries = Regex.Split(inid.Replace(I33, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
                 }
                 else
                 if (inid.StartsWith(I71))
@@ -286,7 +292,17 @@ namespace Diamond_MD_Maksim
                 }
                 else Console.WriteLine($"{inid} don't processed");
             }
-            biblio.Priorities.Add(priority);
+
+            for (int i = 0; i < priorityNumbers.Count; i++)
+            {
+                biblio.Priorities.Add(new Priority
+                {
+                    Number = priorityNumbers[i],
+                    Date = priorityDates[i],
+                    Country = priorityCountries[i]
+                });
+            }
+
             legalStatus.Biblio = biblio;
 
             return legalStatus;
