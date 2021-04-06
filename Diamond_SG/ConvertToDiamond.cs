@@ -74,7 +74,7 @@ namespace Diamond_SG
                         new PartyMember() { Name = record.OwnerName }
                     };
                     /*Notes*/
-                    legalEvent.LegalEvent = new LegalEvent { Date = dateFromName, Note = $"|| The year patents renewed for | {record.Year}" };
+                    legalEvent.LegalEvent = new LegalEvent { Date = dateFromName, Note = $"|| The year patents renewed for | {record.Year}", Language = "EN" };
                     /**********************/
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
