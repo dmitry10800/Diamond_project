@@ -258,7 +258,6 @@ namespace Diamond_TR_Maksim
             legalEvent.Biblio = biblio;
             return legalEvent;
         }
-
         public List<string> BuildNotes (List<XElement> xElements )
         {
             string fullText = null;
@@ -275,7 +274,6 @@ namespace Diamond_TR_Maksim
 
             return notes;
         }
-
         public void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
         {
             foreach (var rec in events)

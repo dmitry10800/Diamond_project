@@ -10,8 +10,8 @@ namespace Diamond_TR_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\TR\TR_20210322_03";
-            string sub = "17";
+            string path = @"C:\Work\TR\TR_20210322_03_2";
+            string sub = "39";
 
             Methods methods = new Methods();
 
