@@ -210,7 +210,7 @@ namespace Diamond_MD_Maksim
                         {
                             biblio.Applicants.Add(new PartyMember
                             {
-                                Name = match.Groups["name"].Value.Trim(),
+                                Name = match.Groups["name"].Value.Trim().TrimEnd(','),
                                 Country = match.Groups["country"].Value.Trim()
                             });
                         }
@@ -232,7 +232,7 @@ namespace Diamond_MD_Maksim
                         {
                             biblio.Inventors.Add(new PartyMember
                             {
-                                Name = match.Groups["name"].Value.Trim(),
+                                Name = match.Groups["name"].Value.Trim().TrimEnd(','),
                                 Country = match.Groups["country"].Value.Trim()
                             });
                         }
@@ -297,9 +297,9 @@ namespace Diamond_MD_Maksim
             {
                 biblio.Priorities.Add(new Priority
                 {
-                    Number = priorityNumbers[i],
-                    Date = priorityDates[i],
-                    Country = priorityCountries[i]
+                    Number = priorityNumbers[i].Trim(),
+                    Date = priorityDates[i].Trim(),
+                    Country = priorityCountries[i].Trim()
                 });
             }
 
