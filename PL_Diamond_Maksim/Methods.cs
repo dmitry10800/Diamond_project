@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -20,11 +21,11 @@ namespace PL_Diamond_Maksim
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode, string newOrOld)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = new();
 
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            DirectoryInfo directoryInfo = new(path);
 
-            List<string> files = new List<string>();
+            List<string> files = new();
 
             foreach (FileInfo file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
@@ -47,7 +48,7 @@ namespace PL_Diamond_Maksim
                     {
 
                     }
-
+                    else
                     if (subCode == "25")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -67,7 +68,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteNew(note, subCode, "BZ/RC"));
                         }
                     }
-
+                    else
                     if (subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -89,6 +90,22 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
                         }
                     }
+                    else
+                    if (subCode == "46")
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .SkipWhile(val => !val.Value.StartsWith("(T5) (97)") && !val.Value.StartsWith("(T3) (97)"))
+                            .TakeWhile(val => !val.Value.StartsWith("Wpisy i zmiany w rejestrze nieuwzględnione"))
+                            .ToList();
+
+                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z][0-9]\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string note in notes)
+                        {
+                            convertedPatents.Add(SplitNoteNew(note.Trim(), subCode, "BZ"));
+                        }
+
+                    }
                 }
             }
             else
@@ -100,8 +117,7 @@ namespace PL_Diamond_Maksim
 
                     tet = XElement.Load(tetml);
 
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-
+                    Diamond.Core.Models.LegalStatusEvent legalEvent = new();
 
                     if (subCode == "10")
                     {
@@ -122,7 +138,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note, subCode, "MK"));
                         }
                     }
-
+                    else
                     if(subCode == "25")
                     {
                         xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -142,7 +158,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note, subCode, "BZ/RC"));
                         }
                     }
-
+                    else
                     if(subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -161,6 +177,21 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note, subCode, "MZ"));
                         }
                     }
+                    else
+                    if(subCode == "46")
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .SkipWhile(val => !val.Value.StartsWith("T5 (97)") && !val.Value.StartsWith("T3 (97)"))
+                            .TakeWhile(val => !val.Value.StartsWith("DECYZJE O ODMOWIE UDZIELENIA PATENTU"))
+                            .ToList();
+
+                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=T[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string note in notes)
+                        {
+                            convertedPatents.Add(SplitNoteOld(note.Trim(), subCode, "BZ"));
+                        }
+                    }
 
                 }
             }
@@ -177,7 +208,7 @@ namespace PL_Diamond_Maksim
         {
             string text = note.Replace("\r", "").Replace("\n", " ").Trim();
 
-            Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent
+            Diamond.Core.Models.LegalStatusEvent legalEvent = new()
             {
                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
 
@@ -190,17 +221,19 @@ namespace PL_Diamond_Maksim
                 Id = Id++
             };
 
-            LegalEvent legal = new LegalEvent();
+            LegalEvent legal = new();
 
-            Biblio biblio = new Biblio
+            Biblio biblio = new()
             {
                 EuropeanPatents = new List<EuropeanPatent>(),
                 Assignees = new List<PartyMember>()
             };
 
-            EuropeanPatent europeanPatent = new EuropeanPatent();
+            EuropeanPatent europeanPatent = new();
 
-            NoteTranslation noteTranslation = new NoteTranslation();
+            NoteTranslation noteTranslation = new();
+
+            CultureInfo cultureInfo = new("RU-ru");
 
 
             if (subCode == "10")
@@ -226,7 +259,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-
+            else
             if(subCode == "25")
             {
                 Match match = Regex.Match(text, @"\((?<kind>[A-Z]+\d+)\)\s?(?<number>\d+)\s(?<date>\d{4}\s\d{2}\s\d{2})\s(?<info>.+)");
@@ -319,7 +352,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-
+            else
             if(subCode == "32")
             {
                 Match match = Regex.Match(text, @"\((?<kind>[A-Z]\d)\)\s?\(\d+\)\s?(?<number>\d+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+\.)");
@@ -344,6 +377,43 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
+            else
+            if(subCode == "46")
+            {
+                Match match = Regex.Match(note, @"(?<pubKind>[A-Z][0-9]).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
+
+                if (match.Success)
+                {
+                    biblio.Publication.Kind = match.Groups["pubKind"].Value.Trim();
+
+                    europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Replace(" ", ".").Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "-").Trim();
+
+                    legal.Note = "|| Rok wydania i numer Europejskiego Biuletynu Patentowego, w którym ogłoszono o udzieleniu lub zmianie patentu | " + match.Groups["note"].Value.Trim();
+                    legal.Language = "PL";
+
+                    noteTranslation.Language = "EN";
+                    noteTranslation.Tr = "|| Year of issue and number of the European Patent Bulletin in which grant or amendment of the patent was announced | " + match.Groups["note"].Value.Trim();
+                    noteTranslation.Type = "note";
+                    legal.Translations = new List<NoteTranslation> { noteTranslation };
+
+                    Match match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
+                    if (match1.Success)
+                    {
+                        biblio.Publication.Number = match1.Groups["number"].Value.Trim();
+
+                        europeanPatent.PubNumber = match1.Groups["kind"].Value.ToUpper() + match1.Groups["number"].Value.Trim();
+                        europeanPatent.PubKind = match1.Groups["code"].Value.Trim();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{note}");
+                }
+                biblio.EuropeanPatents.Add(europeanPatent);
+                legalEvent.LegalEvent = legal;
+                legalEvent.Biblio = biblio;
+            }
+
             return legalEvent;
         }
 
@@ -351,7 +421,7 @@ namespace PL_Diamond_Maksim
         {
             string text = note.Replace("\r", "").Replace("\n", " ").Trim();
 
-            Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent
+            Diamond.Core.Models.LegalStatusEvent legalEvent = new()
             {
                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
 
@@ -370,11 +440,15 @@ namespace PL_Diamond_Maksim
 
             NoteTranslation noteTranslation = new ();
 
+            biblio.EuropeanPatents = new();
+
+            CultureInfo cultureInfo = new("RU-ru");
+
             if(subCode == "10")
             {
 
             }
-
+            else
             if(subCode == "25")
             {
                 Match match = Regex.Match(text, @"\([0-9]{2}\)\s(?<number>\d+)\s?.+?:(?<grant1>.+)\sW.+:\s(?<grant2>.+)");
@@ -419,7 +493,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-
+            else
             if (subCode == "32")
             {
                 Match match = Regex.Match(text, @"\((?<kind>[A-Z]{1}\d+)\)(\s\([0-9]{2}\)\s)?(?<number>[0-9]+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+)");
@@ -445,7 +519,45 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
+            else
+            if(subCode == "46")
+            {
+                Match match = Regex.Match(note, @"\((?<pubKind>[A-Z][0-9])\).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
 
+                EuropeanPatent europeanPatent = new();
+
+                if (match.Success)
+                {
+                    biblio.Publication.Kind = match.Groups["pubKind"].Value.Trim();
+
+                    europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Replace(" ", ".").Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "-").Trim();
+
+                    legal.Note = "|| Rok wydania i numer Europejskiego Biuletynu Patentowego, w którym ogłoszono o udzieleniu lub zmianie patentu | " + match.Groups["note"].Value.Trim();
+                    legal.Language = "PL";
+
+                    noteTranslation.Language = "EN";
+                    noteTranslation.Tr = "|| Year of issue and number of the European Patent Bulletin in which grant or amendment of the patent was announced | " + match.Groups["note"].Value.Trim();
+                    noteTranslation.Type = "note";
+                    legal.Translations = new List<NoteTranslation> { noteTranslation };
+
+                    Match match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
+                    if (match1.Success)
+                    {
+                        biblio.Publication.Number = match1.Groups["number"].Value.Trim();
+
+                        europeanPatent.PubNumber = match1.Groups["kind"].Value.ToUpper() + match1.Groups["number"].Value.Trim();
+                        europeanPatent.PubKind = match1.Groups["code"].Value.Trim();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{note}");
+                }
+
+                biblio.EuropeanPatents.Add(europeanPatent);
+                legalEvent.LegalEvent = legal;
+                legalEvent.Biblio = biblio;
+            }
 
             return legalEvent;
         }
