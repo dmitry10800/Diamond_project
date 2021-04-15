@@ -91,7 +91,7 @@ namespace PL_Diamond_Maksim
                         }
                     }
                     else
-                    if (subCode == "46")
+                    if (subCode == "47")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("(T5) (97)") && !val.Value.StartsWith("(T3) (97)"))
@@ -102,7 +102,7 @@ namespace PL_Diamond_Maksim
 
                         foreach (string note in notes)
                         {
-                            convertedPatents.Add(SplitNoteNew(note.Trim(), subCode, "BZ"));
+                            convertedPatents.Add(SplitNoteNew(note.Trim(), subCode, "RH"));
                         }
 
                     }
@@ -189,7 +189,7 @@ namespace PL_Diamond_Maksim
 
                         foreach (string note in notes)
                         {
-                            convertedPatents.Add(SplitNoteOld(note.Trim(), subCode, "BZ"));
+                            convertedPatents.Add(SplitNoteOld(note.Trim(), subCode, "RH"));
                         }
                     }
 
@@ -409,6 +409,10 @@ namespace PL_Diamond_Maksim
                 {
                     Console.WriteLine($"{note}");
                 }
+
+                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                legal.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
+
                 biblio.EuropeanPatents.Add(europeanPatent);
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
@@ -520,7 +524,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.Biblio = biblio;
             }
             else
-            if(subCode == "46")
+            if(subCode == "47")
             {
                 Match match = Regex.Match(note, @"\((?<pubKind>[A-Z][0-9])\).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
 
@@ -553,6 +557,8 @@ namespace PL_Diamond_Maksim
                 {
                     Console.WriteLine($"{note}");
                 }
+                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                legal.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
 
                 biblio.EuropeanPatents.Add(europeanPatent);
                 legalEvent.LegalEvent = legal;
