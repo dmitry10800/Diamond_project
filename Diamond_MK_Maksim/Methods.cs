@@ -76,42 +76,31 @@ namespace Diamond_MK_Maksim
 
         Diamond.Core.Models.LegalStatusEvent SplitNote(string note, string sub, string sectionCode)
         {
-            string formatText = note.Replace("\r", "").Replace("\n", " ");
-
-            string field57 = formatText.Substring(formatText.IndexOf("(57) ")).Replace("(57) ","").Trim();
-
-            string textWithOutField57 = formatText.Remove(formatText.IndexOf("(57) "));
-
-            Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-
-            legalEvent.GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"));
-
-            legalEvent.SubCode = sub;
-
-            legalEvent.SectionCode = sectionCode;
-
-            legalEvent.CountryCode = "MK";
-
-            legalEvent.Id = id++;
-
-            Biblio biblioData = new Biblio();
-
-            Abstract abs = new Abstract()
+            Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent
             {
-                Text = field57,
-                Language = "MK"
+                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+
+                SubCode = sub,
+
+                SectionCode = sectionCode,
+
+                CountryCode = "MK",
+
+                Id = id++
             };
 
-            biblioData.Abstracts.Add(abs);
-
-            biblioData.EuropeanPatents = new List<EuropeanPatent>();
+            Biblio biblioData = new Biblio
+            {
+                Claims = new List<DiamondProjectClasses.Claim>(),
+                EuropeanPatents = new List<EuropeanPatent>()
+            };
 
             EuropeanPatent europeanPatent = new EuropeanPatent();
 
-            foreach (string record in SplitByInid(textWithOutField57))
+            foreach (string record in SplitByInid(note))
             {
                
-                if (record.Contains("(51)"))
+                if (record.StartsWith("(51)"))
                 {
                     string text = record.Replace("(51)", "").Trim();
 
@@ -138,28 +127,28 @@ namespace Diamond_MK_Maksim
                     }
                 }
                 else
-                if (record.Contains("(11)"))
+                if (record.StartsWith("(11)"))
                 {
                     string text = record.Replace("(11)", "").Trim();
 
                     biblioData.Publication.Number = text;
                 }
                 else
-                if (record.Contains("(13)"))
+                if (record.StartsWith("(13)"))
                 {
                     string text = record.Replace("(13)", "").Trim();
 
                     biblioData.Publication.Kind = text;
                 }
                 else
-                if (record.Contains("(21)"))
+                if (record.StartsWith("(21)"))
                 {
                     string text = record.Replace("(21)", "").Trim();
 
                     biblioData.Application.Number = text;
                 }
                 else
-                if (record.Contains("(22)"))
+                if (record.StartsWith("(22)"))
                 {
                     string text = record.Replace("(22)", "").Trim();
 
@@ -168,7 +157,7 @@ namespace Diamond_MK_Maksim
                     biblioData.Application.Date = DateTime.Parse(text, cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/");
                 }
                 else
-                if (record.Contains("(45"))
+                if (record.StartsWith("(45"))
                 {
                     string text = record.Replace("(45)", "").Trim();
 
@@ -180,7 +169,7 @@ namespace Diamond_MK_Maksim
                     };
                 }
                 else
-                if (record.Contains("(30)"))
+                if (record.StartsWith("(30)"))
                 {
                     string text = record.Replace("(30)", "").Trim();
 
@@ -229,7 +218,7 @@ namespace Diamond_MK_Maksim
                     }
                 }
                 else
-                if (record.Contains("(96)"))
+                if (record.StartsWith("(96)"))
                 {
                     string text = record.Replace("(96)", "").Trim();
                    
@@ -247,7 +236,7 @@ namespace Diamond_MK_Maksim
                     }
                 }
                 else
-                if (record.Contains("(97)"))
+                if (record.StartsWith("(97)"))
                 {
                     string text = record.Replace("(97)", "").Trim();
 
@@ -262,12 +251,10 @@ namespace Diamond_MK_Maksim
                         europeanPatent.PubNumber = match.Groups["number"].Value.Trim();
 
                         europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/");
-
-                        biblioData.EuropeanPatents.Add(europeanPatent);
                     }
                 }
                 else
-                if (record.Contains("(73)"))
+                if (record.StartsWith("(73)"))
                 {
                     string text = record.Replace("(73)", "").Trim();
 
@@ -296,7 +283,7 @@ namespace Diamond_MK_Maksim
                     }
                 }
                 else
-                if (record.Contains("(74)"))
+                if (record.StartsWith("(74)"))
                 {
                     string text = record.Replace("(74)", "").Trim();
 
@@ -350,7 +337,7 @@ namespace Diamond_MK_Maksim
                     }
                 }
                 else
-                if (record.Contains("(72)"))
+                if (record.StartsWith("(72)"))
                 {
                     string text = record.Replace("(72)", "").Trim();
 
@@ -369,37 +356,86 @@ namespace Diamond_MK_Maksim
                     }
                 }
                 else
-                if (record.Contains("(54)"))
+                if (record.StartsWith("(54)"))
                 {
-                    string text = record.Replace("(54)", "").Trim();
 
                     biblioData.Titles = new List<Title>
                     {
                         new Title
                         {
-                            Text = text,
+                            Text =  record.Replace("(54)", "").Replace("\r","").Replace("\n"," ").Trim(),
                             Language = "MK"
                         }
                     };
                 }
+                else
+                if (record.StartsWith("(57n)"))
+                {
+                    Match match = Regex.Match(record.Replace("(57n)", "").Trim(), @"има уште\s(?<num>\d+)\s");
+
+                    if (match.Success)
+                    {
+                        legalEvent.LegalEvent = new LegalEvent
+                        {
+                            Language = "MK",
+                            Note = "|| Патентни барања | има уште " + match.Groups["num"].Value.Trim() + " патентни барања",
+                            Translations = new List<NoteTranslation>
+                                {
+                                    new NoteTranslation
+                                    {
+                                        Language = "EN",
+                                        Tr = "|| Patent claims | there are " + match.Groups["num"].Value.Trim() +" more patent claims",
+                                        Type = "note"
+                                    }
+                                }
+                        };
+                    }
+                    else Console.WriteLine($"{record} - 57n");
+                }
+                else
+                if (record.StartsWith("(57)"))
+                {
+                    biblioData.Claims.Add(new DiamondProjectClasses.Claim
+                    {
+                        Language = "BG",
+                        Text = record.Replace("(57)","").Trim(),
+                        Number = "1"
+                    });
+                }
 
                 else Console.WriteLine($"Не обработан вот такой айнид {record}");
             }
-
+            biblioData.EuropeanPatents.Add(europeanPatent);
             legalEvent.Biblio = biblioData;
+
 
             return legalEvent;
         }
 
-        List<string> SplitByInid(string formateText)
+        List<string> SplitByInid(string note)
         {
+            string field57 = note.Substring(note.Replace("\r", "").Replace("\n", " ").IndexOf("(57) ")).Trim();
+
+            string textWithOutField57 = note.Substring(0, note.IndexOf("(57)"));
+
             Regex splitByInid = new Regex(@"(?=\(\d{2}\)\s)");
 
-            List<string> inids = splitByInid.Split(formateText).Where(val => !string.IsNullOrEmpty(val)).ToList();
+            List<string> inids = splitByInid.Split(textWithOutField57).Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+            Match match = Regex.Match(field57.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<f57>.+)\s(?<f57n>има.+)");
+
+            if (match.Success)
+            {
+                inids.Add(match.Groups["f57"].Value.Trim());
+                inids.Add("(57n) " + match.Groups["f57n"].Value.Trim());
+            }
+            else
+            {
+                inids.Add(field57);
+            }
 
             return inids;
         }
-
         public void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
         {
             foreach (var rec in events)
