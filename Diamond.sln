@@ -299,7 +299,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_IL_Maksim", "Diamon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DIamond_EA_Maksim", "DIamond_EA_Maksim\DIamond_EA_Maksim.csproj", "{A89DB39B-37EC-4170-8FEF-6F549A5201AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_BG_Maksim", "Diamond_BG_Maksim\Diamond_BG_Maksim.csproj", "{1CA5DE9F-63D6-4939-BCAB-884C51E7F082}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_BG_Maksim", "Diamond_BG_Maksim\Diamond_BG_Maksim.csproj", "{1CA5DE9F-63D6-4939-BCAB-884C51E7F082}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
