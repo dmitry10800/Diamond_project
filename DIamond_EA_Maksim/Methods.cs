@@ -343,6 +343,7 @@ namespace DIamond_EA_Maksim
                         + "\n" + "|| Country code where the patent is expired | " + match.Groups["leNote"].Value.Trim()
                     + "\n" + "|| Publication date of notice | " + match.Groups["leNoteDate"].Value.Trim();
 
+                    legalEvent.Translations.Add(noteTranslation);
                     biblio.Application.Number = match.Groups["appNum"].Value.Trim();
                     biblio.Application.Date = match.Groups["appDate"].Value.Replace(".", "/").Trim();
 
@@ -383,6 +384,7 @@ namespace DIamond_EA_Maksim
                     noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["noteNum"].Value.Replace("N o", "No.").Trim()
                         + "\n" + "|| Right to patent is restored for the following years of patent validity | " + match.Groups["leNoteNumber"].Value.Trim()
                     + "\n" + "|| Code of country in respect of which right to patent is restored | " + match.Groups["leNoteCountry"].Value.Trim();
+                    legalEvent.Translations.Add(noteTranslation);
                 }
                 else Console.WriteLine($"{note} - 14");
                 legal.LegalEvent = legalEvent;
