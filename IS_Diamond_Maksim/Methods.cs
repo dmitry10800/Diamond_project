@@ -312,6 +312,10 @@ namespace IS_Diamond_Maksim
                 "Austurríki" => "AT",
                 "Suður-Kóreu" => "KR",
                 "Suður Kóreu" => "KR",
+                "Víetnam" => "VN",
+                "Kanada" => "CA",
+                "Sameinudu arabísku furstadæmunum" => "AE",
+                "Sameinuðu arabísku furstadæmunum" => "AE",
 
                 _ => null
             };
@@ -324,8 +328,8 @@ namespace IS_Diamond_Maksim
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
