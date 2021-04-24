@@ -8,6 +8,8 @@
 
         public string Language { get; set; }
 
+        public string Tr { get; set; }
+
         public string TrAddress1 { get; set; }
     }
 }

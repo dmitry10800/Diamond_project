@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiamondProjectClasses;
+using System;
 using System.Collections.Generic;
 
 namespace Integration
@@ -47,6 +48,10 @@ namespace Integration
 
         public Spc Spc { get; set; }
 
+        public List<Claim> Claims { get; set; }
+
+        public List<ScreenShot> ScreenShots { get; set; }
+
         public List<AbstractImage> Images { get; set; }
 
         public Biblio()
@@ -56,6 +61,7 @@ namespace Integration
             //Priorities = new List<Priority>();
             Titles = new List<Title>();
             Abstracts = new List<Abstract>();
+            Claims = new List<Claim>();
             // Applicants = new List<PartyMember>();
             // Inventors = new List<PartyMember>();
             // Agents = new List<PartyMember>();
@@ -138,6 +144,13 @@ namespace Integration
     }
 
     public class AbstractImage
+    {
+        public string Id { get; set; }
+
+        public string Data { get; set; }
+    }
+
+    public class ScreenShot
     {
         public string Id { get; set; }
 
