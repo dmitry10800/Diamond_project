@@ -58,21 +58,21 @@ namespace Integration
         {
             Publication = new Publication();
             Application = new Application();
-            //Priorities = new List<Priority>();
+            Priorities = new List<Priority>();
             Titles = new List<Title>();
             Abstracts = new List<Abstract>();
             Claims = new List<Claim>();
-            // Applicants = new List<PartyMember>();
-            // Inventors = new List<PartyMember>();
-            // Agents = new List<PartyMember>();
-            // Ipcs = new List<Ipc>();
-            // Ipcrs = new List<Ipcr>();
-            // Cpcs = new List<Cpc>();
-            // IntConvention = new IntConvention();
-            // DesignatedStates = new List<string>();
-            // PatentCitations = new List<PatentCitation>();
-            // NonPatentCitations = new List<NonPatentCitation>();
-            // Related = new List<RelatedDocument>();
+            Applicants = new List<PartyMember>();
+            Inventors = new List<PartyMember>();
+            Agents = new List<PartyMember>();
+            Ipcs = new List<Ipc>();
+            Ipcrs = new List<Ipcr>();
+            Cpcs = new List<Cpc>();
+            IntConvention = new IntConvention();
+            //DesignatedStates = new List<string>();
+            PatentCitations = new List<PatentCitation>();
+            NonPatentCitations = new List<NonPatentCitation>();
+            Related = new List<RelatedDocument>();
         }
     }
 
