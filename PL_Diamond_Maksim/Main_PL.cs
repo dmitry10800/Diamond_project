@@ -5,8 +5,8 @@ namespace PL_Diamond_Maksim
 {
     class Main_PL
     {
-        private static readonly string path = @"C:\Work\PL\PL_20180330_03W";
-        private static readonly string subCode = "46";
+        private static readonly string path = @"C:\Work\PL\PL_20210419_08W";
+        private static readonly string subCode = "47";
         private static readonly string newOrOld = "old";  // new / old
         static void Main(string[] args)
         {

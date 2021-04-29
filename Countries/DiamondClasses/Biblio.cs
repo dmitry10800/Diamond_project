@@ -73,6 +73,7 @@ namespace Integration
             PatentCitations = new List<PatentCitation>();
             NonPatentCitations = new List<NonPatentCitation>();
             Related = new List<RelatedDocument>();
+            EuropeanPatents = new List<EuropeanPatent>();
         }
     }
 

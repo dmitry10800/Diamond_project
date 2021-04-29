@@ -95,7 +95,7 @@ namespace PL_Diamond_Maksim
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("(T5) (97)") && !val.Value.StartsWith("(T3) (97)"))
-                            .TakeWhile(val => !val.Value.StartsWith("Wpisy i zmiany w rejestrze nieuwzględnione"))
+                            .TakeWhile(val => !val.Value.StartsWith("Wygaśnięcie prawa"))
                             .ToList();
 
                         List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z][0-9]\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
