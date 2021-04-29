@@ -69,6 +69,7 @@ namespace Integration
             Ipcrs = new List<Ipcr>();
             Cpcs = new List<Cpc>();
             IntConvention = new IntConvention();
+            Assignees = new List<PartyMember>();
             //DesignatedStates = new List<string>();
             PatentCitations = new List<PatentCitation>();
             NonPatentCitations = new List<NonPatentCitation>();
