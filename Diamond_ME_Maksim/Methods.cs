@@ -184,7 +184,7 @@ namespace Diamond_ME_Maksim
                         if (match.Success)
                         {
                             intConvention.PctApplNumber = match.Groups["num"].Value.Trim();
-                            intConvention.PctApplKind = match.Groups["kind"].Value.Trim();
+                            intConvention.PctApplCountry = match.Groups["kind"].Value.Trim();
                             intConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
                         else
@@ -265,7 +265,7 @@ namespace Diamond_ME_Maksim
 
                         foreach (string assigny in assignees)
                         {
-                            Match match = Regex.Match(assigny.Trim(), @"(?<name>.+?)\n(?<adress>.+)\/\s(?<code>[A-Z]{2})");
+                            Match match = Regex.Match(assigny.Trim(), @"(?<name>.+?)\n(?<adress>.+)\/\s(?<code>[A-Z]{2})", RegexOptions.Singleline);
                             if (match.Success)
                             {
                                 statusEvent.Biblio.Assignees.Add(new PartyMember
@@ -285,7 +285,7 @@ namespace Diamond_ME_Maksim
 
                         foreach (string inventor in inventors)
                         {
-                            Match match = Regex.Match(inventor.Trim(), @"(?<name>.+?)\n(?<adress>.+)\/\s(?<code>[A-Z]{2})");
+                            Match match = Regex.Match(inventor.Trim(), @"(?<name>.+?)\n(?<adress>.+)\/\s(?<code>[A-Z]{2})", RegexOptions.Singleline);
                             if (match.Success)
                             {
                                 statusEvent.Biblio.Inventors.Add(new PartyMember
@@ -305,7 +305,7 @@ namespace Diamond_ME_Maksim
 
                         foreach (string agent in agents)
                         {
-                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?)\n(?<adress>.+)\/\s(?<code>[A-Z]{2})");
+                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?)\n(?<adress>.+)\/\s(?<code>[A-Z]{2})", RegexOptions.Singleline);
                             if (match.Success)
                             {
                                 statusEvent.Biblio.Agents.Add(new PartyMember
