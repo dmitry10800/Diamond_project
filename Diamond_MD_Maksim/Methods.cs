@@ -249,7 +249,7 @@ namespace Diamond_MD_Maksim
                     {
                         biblio.Titles.Add(new Title
                         {
-                            Language = "MD",
+                            Language = "RO",
                             Text = match.Groups["md"].Value.Trim()
                         });
                         biblio.Titles.Add(new Title
