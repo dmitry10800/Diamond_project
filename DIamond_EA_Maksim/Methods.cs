@@ -109,7 +109,7 @@ namespace DIamond_EA_Maksim
                 if (subCode == "31")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                             .SkipWhile(val => !val.Value.StartsWith("PC4A РЕГИСТРАЦИЯ ПЕРЕДАЧИ ПРАВА НА ЕВРАЗИЙСКИЙ ПАТЕНТ ПУТЕМ УСТУПКИ ПРАВА (53)"))
+                             .SkipWhile(val => !val.Value.StartsWith("PC4A РЕГИСТРАЦИЯ ПЕРЕДАЧИ ПРАВА НА ЕВРАЗИЙСКИЙ ПАТЕНТ ПУТЕМ УСТУПКИ ПРАВА (53)") && !val.Value.StartsWith("PC4A РЕГИСТРАЦИЯ ПЕРЕДАЧИ ПРАВА НА ЕВРАЗИЙСКИЙ ПАТЕНТ ПУТЕМ УСТУПКИ ПРАВА (86)"))
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
@@ -393,7 +393,7 @@ namespace DIamond_EA_Maksim
             else
             if (subCode == "31")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<pubNum>[0-9]+)\s?(?<pubKind>[A-Z][0-9]+)\s?(?<date45>[0-9]{4}.[0-9]{2}.[0-9]{2}).+(?<note1>[N|№]\s?\d+)\s?(?<name1>.+?)\((?<code1>[A-Z]{2})\)\s?(?<name2>.+)\((?<code2>[A-Z]{2})\)\s?(?<evDate>[0-9]{4}.[0-9]{2}.[0-9]{2})\s?(?<noteNum>.+)\s(?<noteDate>[0-9]{4}.[0-9]{2}.[0-9]{2})");
+                Match match = Regex.Match(note.Trim(), @"(?<pubNum>[0-9]+)\s?(?<pubKind>[A-Z][0-9]+)\s?(?<date45>[0-9]{4}.[0-9]{2}.[0-9]{2}).+(?<note1>[N|№]\s?o?\s?\d+)\s?(?<name1>.+?)\((?<code1>[A-Z]{2})\)\s?(?<name2>.+)\((?<code2>[A-Z]{2})\)\s?(?<evDate>[0-9]{4}.[0-9]{2}.[0-9]{2})\s?(?<noteNum>.+)\s(?<noteDate>[0-9]{4}.[0-9]{2}.[0-9]{2})");
 
                 if (match.Success)
                 {
@@ -417,14 +417,14 @@ namespace DIamond_EA_Maksim
                         Country = match.Groups["code2"].Value.Trim()
                     });
 
-                    legalEvent.Note = "|| № Бюллетеня, в котором был опубликован патент | " + match.Groups["note1"].Value.Replace("N", "№").Replace(" ", "").Trim() +
+                    legalEvent.Note = "|| № Бюллетеня, в котором был опубликован патент | " + match.Groups["note1"].Value.Replace("N", "№").Replace(" ", "").Replace("o","").Trim() +
                         " || Номер регистрации документа об уступке права | " + match.Groups["noteNum"].Value.Trim() +
                         " || Дата публикации извещения | " + match.Groups["noteDate"].Value.Trim();
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
                     noteTranslation.Type = "note";
-                    noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["note1"].Value.Replace("N", "№").Replace(" ", "").Trim() +
+                    noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["note1"].Value.Replace("N", "№").Replace(" ", "").Replace("o", "").Trim() +
                         " || Registration Number of the document of assignment of rights | " + match.Groups["noteNum"].Value.Trim() +
                         " || Publication date of notice | " + match.Groups["noteDate"].Value.Trim();
 
