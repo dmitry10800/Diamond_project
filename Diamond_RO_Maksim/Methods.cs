@@ -126,6 +126,51 @@ namespace Diamond_RO_Maksim
                         events.Add(MakeConvertedPatent(note, subCode, "BZ"));
                     }
                 }
+                else
+                if (subCode == "24")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("REPUBLICATĂ ÎN MONITORUL OFICIAL, PARTEA I, NR. 613/19.08.2014") && !val.Value.StartsWith("Nr. CBI"))
+                        .TakeWhile(val => !val.Value.StartsWith("DIVERSE"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?<=0\d{4}\n)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "MM"));
+                    }
+                }
+                else
+                if (subCode == "27")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie pentru care s-a luat o hotărâre de respingere conform art. 27, alin. 2,"))
+                        .TakeWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie pentru care s-a luat act de retragere conform art. 27, alin. 3, din"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=a\s\d{4})").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("a 2")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "FC"));
+                    }
+                }
+                else
+                if (subCode == "29")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie declarate ca fiind retrase conform art. 27, din Legea nr. 64/1991,"))
+                        .TakeWhile(val => !val.Value.StartsWith("CERERI DE BREVET DE INVENŢIE"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=a\s\d{4})").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("a 2")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "FA"));
+                    }
+                }
             }
 
             return events;
@@ -151,14 +196,18 @@ namespace Diamond_RO_Maksim
                 CountryCode = "RO",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = id++
+                Id = id++,
+                LegalEvent = new()
             };
 
-            Biblio biblio = new();
+            Biblio biblio = new()
+            {
+                DOfPublication = new ()
+            };
 
             CultureInfo cultureInfo = new("RU-ru");
 
-            if(subCode == "13") 
+            if (subCode == "13")
             {
                 biblio.IntConvention = new IntConvention();
 
@@ -193,14 +242,14 @@ namespace Diamond_RO_Maksim
                                     Date = match.Groups["version"].Value.Trim()
                                 });
                             }
-                            else 
+                            else
                             {
                                 biblio.Ipcs.Add(new Ipc
                                 {
                                     Class = ipc.Trim(),
                                     Date = "2006.01"
                                 });
-                            }                            
+                            }
                         }
                     }
                     else
@@ -247,7 +296,7 @@ namespace Diamond_RO_Maksim
                                 });
                             }
                             else Console.WriteLine($"{inid} не разбился 71");
-                        }                      
+                        }
                     }
                     else
                     if (inid.StartsWith(I72))
@@ -343,7 +392,7 @@ namespace Diamond_RO_Maksim
                         }
                     }
                     else
-                    if(inid.StartsWith(I86))
+                    if (inid.StartsWith(I86))
                     {
                         Match match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
 
@@ -351,12 +400,12 @@ namespace Diamond_RO_Maksim
                         {
                             biblio.IntConvention.PctApplNumber = match.Groups["number"].Value.Trim();
                             biblio.IntConvention.PctApplCountry = match.Groups["code"].Value.Trim();
-                            biblio.IntConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();                            
+                            biblio.IntConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
                         }
                         else Console.WriteLine($"{inid} не разбился в 86");
                     }
                     else
-                    if(inid.StartsWith(I87))
+                    if (inid.StartsWith(I87))
                     {
                         Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
 
@@ -393,8 +442,8 @@ namespace Diamond_RO_Maksim
                     if (inid.StartsWith(I74))
                     {
                         Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
-                        if (match.Success) 
-                        { 
+                        if (match.Success)
+                        {
                             biblio.Agents = new List<PartyMember>
                             {
                                 new PartyMember
@@ -402,7 +451,7 @@ namespace Diamond_RO_Maksim
                                 Name = match.Groups["name"].Value.Trim(),
                                 Address1 = match.Groups["adress"].Value.Trim(),
                                 Country = "RO"
-                                } 
+                                }
                             };
                         }
                         else Console.WriteLine($"{inid} не разбился 74");
@@ -414,7 +463,7 @@ namespace Diamond_RO_Maksim
 
             }
             else
-            if(subCode == "14")
+            if (subCode == "14")
             {
                 biblio.DOfPublication = new DOfPublication();
 
@@ -664,7 +713,7 @@ namespace Diamond_RO_Maksim
 
             }
             else
-            if(subCode == "16")
+            if (subCode == "16")
             {
                 biblio.EuropeanPatents = new();
                 EuropeanPatent europeanPatent = new();
@@ -699,7 +748,7 @@ namespace Diamond_RO_Maksim
                                     Date = "2006.01"
                                 });
                             }
-                            
+
                         }
                     }
                     else
@@ -737,7 +786,7 @@ namespace Diamond_RO_Maksim
 
                             legalStatus.LegalEvent = new LegalEvent
                             {
-                                Note = "|| Data publicãrii cererii de cãtre O.E.B. | " + DateTime.Parse(match.Groups["date"].Value.Trim(),cultureInfo).ToString("yyyy.MM.dd").Replace(".","/").Trim(),
+                                Note = "|| Data publicãrii cererii de cãtre O.E.B. | " + DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
                                 Language = "RO",
                                 Translations = new List<NoteTranslation>
                                 {
@@ -784,7 +833,7 @@ namespace Diamond_RO_Maksim
                     }
                     else
                     if (inid.StartsWith(I84))
-                    {                     
+                    {
                         List<string> designatedStates = Regex.Split(inid.Replace(I84, "").Trim(), @",\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string item in designatedStates)
@@ -820,7 +869,7 @@ namespace Diamond_RO_Maksim
                                         Console.WriteLine($"{item1}");
                                     }
                                 }
-                            }                           
+                            }
                         }
                     }
                     else
@@ -904,7 +953,7 @@ namespace Diamond_RO_Maksim
 
                             biblio.IntConvention.PctPublNumber = match.Groups["number"].Value.Trim();
                             biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
-                            
+
                         }
                         else Console.WriteLine($"{inid} не разбился в 87");
                     }
@@ -922,12 +971,12 @@ namespace Diamond_RO_Maksim
                         }
                         else Console.WriteLine($"{inid} не разбился в 41");
                     }
-                    else Console.WriteLine($"{inid} Не обработан");               
+                    else Console.WriteLine($"{inid} Не обработан");
                 }
                 legalStatus.Biblio = biblio;
             }
             else
-            if(subCode == "17")
+            if (subCode == "17")
             {
                 biblio.EuropeanPatents = new();
                 EuropeanPatent europeanPatent = new();
@@ -1005,7 +1054,7 @@ namespace Diamond_RO_Maksim
 
                         legalStatus.LegalEvent = new LegalEvent
                         {
-                            Note = "|| " + text[0] + " | " + text[1] + "\n" + "|| " + text[2] + " | " + text[3] + "\n" + "|| " + text[4] 
+                            Note = "|| " + text[0] + " | " + text[1] + "\n" + "|| " + text[2] + " | " + text[3] + "\n" + "|| " + text[4]
                             + "\n" + "|| " + match.Groups["note"].Value.Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"),
                             Language = "RO",
                             Translations = new List<NoteTranslation>
@@ -1182,6 +1231,81 @@ namespace Diamond_RO_Maksim
                     legalStatus.Biblio = biblio;
                 }
             }
+            else
+            if (subCode == "24")
+            {
+                Match match = Regex.Match(note.Trim(), @"(?<name>.+?)\s(?<pNum>\d+)\s(?<aNum>.+)", RegexOptions.Singleline);
+                if (match.Success)
+                {
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+                    biblio.Application.Number = match.Groups["aNum"].Value.Trim();
+
+                    List<string> owners = Regex.Split(match.Groups["name"].Value.Replace("\r","").Replace("\n"," ").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string owner in owners)
+                    {
+                        Match match1 = Regex.Match(owner, @"(?<name>.+?),\s(?<adress>.+),\s(?<code>[A-Z]{2})");
+
+                        if (match1.Success)
+                        {
+                            biblio.Assignees.Add(new PartyMember
+                            {
+                                Name = match1.Groups["name"].Value.Trim(),
+                                Address1 = match1.Groups["adress"].Value.Trim(),
+                                Country = match1.Groups["code"].Value.Trim()
+                            });
+                        }
+                    }
+
+                    Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    if (match2.Success)
+                    {
+                        legalStatus.LegalEvent.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
+                    }
+
+                }
+                legalStatus.Biblio = biblio;
+            }
+            else
+            if(subCode == "27" || subCode == "29")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+)\s.+\/(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<leNote>\d{1,2}\/\d{4})\/\/(?<date41>\d{2}\/\d{2}\/\d{4})");
+
+                if (match.Success)
+                {
+                    biblio.Application.Number = match.Groups["aNum"].Value.Trim();
+
+                    legalStatus.LegalEvent.Note = "|| Numărul BOPI în care este publicată cererea de brevet de inventive | " + match.Groups["leNote"].Value.Trim();
+                    legalStatus.LegalEvent.Language = "RO";
+                    legalStatus.LegalEvent.Translations = new()
+                    {
+                        new NoteTranslation
+                        {
+                            Language = "EN",
+                            Tr = "|| Number of the Official Bulletin of Industrial Property in which the patent application was published | " + match.Groups["leNote"].Value.Trim(),
+                            Type = "note"
+                        }
+                    };
+
+                    legalStatus.LegalEvent.Date = DateTime.Parse(match.Groups["leDate"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+
+                    biblio.DOfPublication.date_41 = DateTime.Parse(match.Groups["date41"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+
+                }
+                else
+                {
+                    Match match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+)\s.+\/(?<leDate>\d{2}\/\d{2}\/\d{4})");
+                    if (match1.Success)
+                    {
+                        biblio.Application.Number = match1.Groups["aNum"].Value.Trim();
+                        legalStatus.LegalEvent.Date = DateTime.Parse(match1.Groups["leDate"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                    }
+                    else Console.WriteLine($"{note}");
+                }
+
+                legalStatus.Biblio = biblio;
+            }
+
             return legalStatus;
         }
 
