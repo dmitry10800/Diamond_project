@@ -1260,7 +1260,7 @@ namespace Diamond_RO_Maksim
                     Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
                     if (match2.Success)
                     {
-                        legalStatus.LegalEvent.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
+                        legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
                     }
 
                 }
