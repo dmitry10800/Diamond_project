@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -39,7 +40,22 @@ namespace Diamond_PH_Maksim
                 CurrentFileName = tetml;
 
                 tet = XElement.Load(tetml);
+                if(subCode == "5")
+                {
+                    //xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                    //      .SkipWhile(val => !val.Value.StartsWith("LAPSED PATENTS"))
+                    //      //.TakeWhile(val => !val.Value.StartsWith("INTELLECTUAL PROPERTY PHILIPPINES"))
+                    //      .ToList();
 
+                    StreamReader streamReader = new(CurrentFileName.Replace(".tetml", ".txt"));
+
+                    foreach (string note in Regex.Split(streamReader.ReadToEnd().Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\d\/\d{4}\/\d+)")
+                        .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("1/")).ToList())
+                    {
+                        statusEvents.Add(SplitNote(note, subCode, "MM"));
+                    }
+                }
+                else
                 if(subCode == "22")
                 {
                     //xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -75,7 +91,53 @@ namespace Diamond_PH_Maksim
                 Biblio = new(),
                 LegalEvent = new()
             };
+            if(subCode == "5")
+            {
+                Match match = Regex.Match(note.Trim(), @"(?<aNum>\d+\/\d+\/\d+).+?(?<owner>[A-Z].+)\s(?<d43>\d{2}\/\d{2}\/\d{4})\s(?<title>([A-Z]|\d)\D+)");
 
+                CultureInfo culture = new("RU-ru");
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Application.Number = match.Groups["aNum"].Value.Trim();
+
+                    foreach (string owner in Regex.Split(match.Groups["owner"].Value.Trim(), @";|\sand\s").Where(val => !string.IsNullOrEmpty(val)).ToList())
+                    {
+                        Match match1 = Regex.Match(owner.Trim(), @"(?<name>\D+)\s\[(?<code>[A-Z]{2})");
+                        if (match1.Success)
+                        {
+                            statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
+                            {
+                                Name = match1.Groups["name"].Value.Trim(),
+                                Country = match1.Groups["code"].Value.Trim()
+                            });
+                        }
+                        else
+                        {
+                            statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
+                            {
+                                Name = owner.Trim()
+                            });
+                        }
+                    }
+
+                    statusEvent.Biblio.Titles.Add(new Integration.Title
+                    {
+                        Language = "EN",
+                        Text = match.Groups["title"].Value.Trim()
+                    });
+
+                    statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Groups["d43"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    Match match2 = Regex.Match(CurrentFileName.Replace(".txt", ""), @"\d{8}");
+
+                    if (match2.Success)
+                    {
+                        statusEvent.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
+                }
+                else Console.WriteLine($"{note}");
+            }
+            else
             if(subCode == "22")
             {
                 Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"(?<appNum>\d\/\d{4}\/\d{6,7})\s?(?<day>\d+)\s(?<month>.+)\s(?<year>\d{4})\s?(?<title>.+)\s?\[(?<code>\D{2})");
@@ -125,7 +187,18 @@ namespace Diamond_PH_Maksim
             "november" => "11",
             "december" => "12",
             _ => null
-        };       
+        }; 
+        internal string MakeText(List<XElement> xElements)
+        {
+            string text = null;
+
+            foreach (XElement xElement in xElements)
+            {
+                text += xElement.Value + " ";
+            }
+
+            return text;
+        }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)
