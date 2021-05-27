@@ -397,7 +397,7 @@ namespace Diamond_MK_Maksim
                 {
                     biblioData.Claims.Add(new DiamondProjectClasses.Claim
                     {
-                        Language = "BG",
+                        Language = "MK",
                         Text = record.Replace("(57)","").Trim(),
                         Number = "1"
                     });
