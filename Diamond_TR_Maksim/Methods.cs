@@ -86,6 +86,7 @@ namespace Diamond_TR_Maksim
 
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
                         .SkipWhile(e => !e.Value.StartsWith("GERİ ÇEKMİŞ SAYILAN PATENT / FAYDALI MODEL BAŞVURULARI"))
+                        .TakeWhile(e => !e.Value.StartsWith("REDDEDİLEN PATENT / FAYDALI MODEL BAŞVURULARI (6769 SMK)"))
                         .TakeWhile(e => !e.Value.StartsWith("MÜLGA 551 SAYILI KHK'NİN 133 ÜNCÜ MADDE HÜKMÜ UYARINCA KORUMA"))
                         .ToList();
 
