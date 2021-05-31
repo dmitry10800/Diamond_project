@@ -309,7 +309,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PA", "PA", "{B4456AB0-8C8F-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_PA_Maksim", "Diamond_PA_Maksim\Diamond_PA_Maksim.csproj", "{2C22E83A-18D8-44D6-8684-B4035D4EA478}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_ID_Maksim", "Diamond_ID_Maksim\Diamond_ID_Maksim.csproj", "{947CF2A8-EEE0-4E1E-B79E-71829D78C47C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_ID_Maksim", "Diamond_ID_Maksim\Diamond_ID_Maksim.csproj", "{947CF2A8-EEE0-4E1E-B79E-71829D78C47C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_IE_Maksim", "Diamond_IE_Maksim\Diamond_IE_Maksim.csproj", "{09AC8091-4F38-4CE8-BFF5-5D26F1863E59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -709,6 +711,10 @@ Global
 		{947CF2A8-EEE0-4E1E-B79E-71829D78C47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947CF2A8-EEE0-4E1E-B79E-71829D78C47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947CF2A8-EEE0-4E1E-B79E-71829D78C47C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09AC8091-4F38-4CE8-BFF5-5D26F1863E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09AC8091-4F38-4CE8-BFF5-5D26F1863E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09AC8091-4F38-4CE8-BFF5-5D26F1863E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09AC8091-4F38-4CE8-BFF5-5D26F1863E59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -867,6 +873,7 @@ Global
 		{B4456AB0-8C8F-44AC-A8C1-624B0D926B41} = {CD278762-9ACD-48B2-BD8A-424C2CD42A38}
 		{2C22E83A-18D8-44D6-8684-B4035D4EA478} = {B4456AB0-8C8F-44AC-A8C1-624B0D926B41}
 		{947CF2A8-EEE0-4E1E-B79E-71829D78C47C} = {FA789B5F-0C2D-4E0C-8D09-260ECF13BDA9}
+		{09AC8091-4F38-4CE8-BFF5-5D26F1863E59} = {45CDD342-2F02-446E-BE63-F30AEC9B6B94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D20EC653-9AB2-4390-80D0-3B8BEC2529F8}
