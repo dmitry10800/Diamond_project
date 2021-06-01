@@ -7,7 +7,7 @@ namespace Diamond_HU_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\HU\HU_20200928_18";
+            string path = @"C:\Work\HU";
             string subCode = @"3";
 
             Methods methods = new Methods();

@@ -7,7 +7,7 @@ namespace Diamond_MK_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\MK\MK_20210331_03";
+            string path = @"C:\Work\MK\MK_20210531_05";
             string subCode = "3";
 
             Methods methods = new Methods();

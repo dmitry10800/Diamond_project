@@ -262,7 +262,7 @@ namespace Diamond_MK_Maksim
 
                     List<string> elements = splitRegex.Split(text).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                    Regex regex = new Regex(@"(?<adress>.+)(?<code>\D{2})");
+                    Regex regex = new Regex(@"(?<adress>.+)(?<code>\D{2})", RegexOptions.Singleline);
 
                     biblioData.Assignees = new List<PartyMember>();
 
@@ -287,7 +287,7 @@ namespace Diamond_MK_Maksim
                 {
                     string text = record.Replace("(74)", "").Trim();
 
-                    Regex regex = new Regex(@"(?<name>.+)\s(?<adress>б?ул\..+)");
+                    Regex regex = new Regex(@"(?<name>.+)\s(?<adress>б?ул\..+)", RegexOptions.Singleline);
 
                     Match match = regex.Match(text);
 
