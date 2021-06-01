@@ -487,7 +487,7 @@ namespace IN
                 var a = datePat.Match(s);
                 if (a.Success)
                 {
-                    return a.Groups["year"].Value + "-" + GetMonthValue(a.Groups["month"].Value) + "-" + DateZeroAdd(a.Groups["day"].Value);
+                    return a.Groups["year"].Value + "/" + GetMonthValue(a.Groups["month"].Value) + "/" + DateZeroAdd(a.Groups["day"].Value);
                 }
                 else
                     Console.WriteLine($"Date pattern doesn't match\t {s}");

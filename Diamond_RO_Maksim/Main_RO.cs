@@ -5,9 +5,9 @@ namespace Diamond_RO_Maksim
 {
     class Main_RO
     {
-        private static readonly string path = @"C:\Work\RO\RO_20191030_10_E";
+        private static readonly string path = @"C:\Work\RO\RO_20210429_04";
 
-        private static readonly string subCode = "16";
+        private static readonly string subCode = "29";
 
         static void Main(string[] args)
         {
@@ -19,6 +19,9 @@ namespace Diamond_RO_Maksim
                 "14" => methods.Start(path, subCode),
                 "16" => methods.Start(path, subCode),
                 "17" => methods.Start(path, subCode),
+                "24" => methods.Start(path, subCode),
+                "27" => methods.Start(path, subCode),
+                "29" => methods.Start(path, subCode),
                 _ => null
             };
 
