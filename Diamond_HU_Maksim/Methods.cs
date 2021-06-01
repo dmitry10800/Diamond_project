@@ -56,6 +56,7 @@ namespace Diamond_HU_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Európai szabadalmak szövege fordításának benyújtása"))
+                        .TakeWhile(val => !val.Value.StartsWith("Felszólalási eljárásban módosított európai szabadalom szövege fordításának benyújtása"))
                         .TakeWhile(val => !val.Value.StartsWith("Európai szabadalom igénypontokon kívüli szövegének magyar nyelvű fordítása"))
                         .ToList();
 
