@@ -368,7 +368,7 @@ namespace PL_Diamond_Maksim
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "||Expiry range | Patent has expired in completely.";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired in completely.";
                     noteTranslation.Type = "note";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
@@ -514,7 +514,7 @@ namespace PL_Diamond_Maksim
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "||Expiry range | Patent has expired in completely.";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired in completely.";
                     noteTranslation.Type = "note";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
