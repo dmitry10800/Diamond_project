@@ -45,7 +45,7 @@ namespace DIamond_EA_Maksim
                 if(subCode == "5")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                             .SkipWhile(val => !val.Value.StartsWith("FA9A ОТЗЫВ ЗАЯВКИ (78)"))
+                             .SkipWhile(val => !val.Value.StartsWith("FA9A ОТЗЫВ ЗАЯВКИ (66)"))
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
@@ -143,7 +143,7 @@ namespace DIamond_EA_Maksim
                 SectionCode = sectionCode,
                 SubCode = subCode,
                 Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"))                
+                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"))              
             };
 
             Biblio biblio = new()
@@ -158,9 +158,10 @@ namespace DIamond_EA_Maksim
             };
             NoteTranslation noteTranslation = new();
 
-            legal.NewBiblio = new Biblio()
+            legal.NewBiblio= new Biblio()
             {
-                Applicants = new()
+                Applicants = new(),
+                Assignees = new()
             };
 
             if (subCode == "5")
@@ -411,7 +412,7 @@ namespace DIamond_EA_Maksim
                         Country = match.Groups["code1"].Value.Trim()
                     });
 
-                    biblio.Assignees.Add(new PartyMember
+                    legal.NewBiblio.Assignees.Add(new PartyMember
                     {
                         Name = match.Groups["name2"].Value.Trim(),
                         Country = match.Groups["code2"].Value.Trim()
