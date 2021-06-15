@@ -127,6 +127,21 @@ namespace Diamond_RO_Maksim
                     }
                 }
                 else
+                if(subCode == "23")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                       .SkipWhile(val => !val.Value.StartsWith("7. Decãderi ale titularilor din drepturile conferite\n"+"acestora de brevetul de invenþie european, publicate"))
+                       .TakeWhile(val => !val.Value.StartsWith("8. Brevete europene care nu au efecte de la început"))
+                       .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?<=EP\s\d{7})").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        events.Add(MakeConvertedPatent(note, subCode, "MZ"));
+                    }
+                }
+                else
                 if (subCode == "24")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -1230,6 +1245,73 @@ namespace Diamond_RO_Maksim
 
                     legalStatus.Biblio = biblio;
                 }
+            }
+            else
+            if (subCode == "23")
+            {
+                Match match = Regex.Match(note.Trim(), @"Brevet\s(?<owner>.+)\s(?<pNum>\D{2}\/\D{2}\s\d+)", RegexOptions.Singleline);
+                if (match.Success)
+                {
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+
+                    List<string> owners = Regex.Split(match.Groups["owner"].Value.Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string owner in owners)
+                    {
+                        Match match1 = Regex.Match(owner, @"(?<name>.+?),\s(?<adress>.+),\s(?<code>[A-Z]{2})");
+
+                        if (match1.Success)
+                        {
+                            biblio.Assignees.Add(new PartyMember
+                            {
+                                Name = match1.Groups["name"].Value.Trim(),
+                                Address1 = match1.Groups["adress"].Value.Trim(),
+                                Country = match1.Groups["code"].Value.Trim()
+                            });
+                        }
+                    }
+
+                    Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    if (match2.Success)
+                    {
+                        legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
+
+                }
+                else
+                {
+                    Match match1 = Regex.Match(note, @"(?<owner>.+)\s(?<pNum>\D{2}\/\D{2}\s\d+)", RegexOptions.Singleline);
+
+                    if (match1.Success)
+                    {
+                        biblio.Publication.Number = match1.Groups["pNum"].Value.Trim();
+
+                        List<string> owners = Regex.Split(match1.Groups["owner"].Value.Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string owner in owners)
+                        {
+                            Match match3 = Regex.Match(owner, @"(?<name>.+?),\s(?<adress>.+),\s(?<code>[A-Z]{2})");
+
+                            if (match3.Success)
+                            {
+                                biblio.Assignees.Add(new PartyMember
+                                {
+                                    Name = match3.Groups["name"].Value.Trim(),
+                                    Address1 = match3.Groups["adress"].Value.Trim(),
+                                    Country = match3.Groups["code"].Value.Trim()
+                                });
+                            }
+                        }
+
+                        Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                        if (match2.Success)
+                        {
+                            legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+                        }
+                    }
+                    else Console.WriteLine($"{note}");
+                }
+                legalStatus.Biblio = biblio;
             }
             else
             if (subCode == "24")
