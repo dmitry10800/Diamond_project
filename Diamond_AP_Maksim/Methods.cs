@@ -74,6 +74,13 @@ namespace Diamond_AP_Maksim
 
                 }
                 else
+                if(subCode == "3")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                      .SkipWhile(val => !val.Value.StartsWith("Patent\n" + "Applications\n" + "Filed"))
+                      .TakeWhile(val => !val.Value.StartsWith("■")).ToList();
+                }
+                else
                 if(subCode == "20")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
