@@ -70,7 +70,7 @@ namespace Diamond_ME_Maksim
                           .TakeWhile(val => !val.Value.StartsWith("OBJAVA UPISA PROMJENA"))
                           .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(11)")).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith(@"(11)")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -85,7 +85,7 @@ namespace Diamond_ME_Maksim
                          .TakeWhile(val => !val.Value.StartsWith("INDEKS BROJEVA ZAHTJEVA ZA PROŠIRENJE EVROPSKIH PRIJAVA PATENTA"))
                          .ToList();
 
-                    foreach (string note in Regex.Split(MakeText(xElements, subCode), @"(?=\(51\)\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(51)")).ToList())
+                    foreach (string note in Regex.Split(MakeText(xElements, subCode), @"(?=\(51\)\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(51)")).ToList())
                     {
                         statusEvents.Add(MakePatent(note, subCode, "AC"));
                     }
