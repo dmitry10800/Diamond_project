@@ -1316,13 +1316,14 @@ namespace Diamond_RO_Maksim
             else
             if (subCode == "24")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<name>.+?)\s(?<pNum>\d+)\s(?<aNum>.+)", RegexOptions.Singleline);
-                if (match.Success)
-                {
-                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
-                    biblio.Application.Number = match.Groups["aNum"].Value.Trim();
 
-                    List<string> owners = Regex.Split(match.Groups["name"].Value.Replace("\r","").Replace("\n"," ").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                Match match11 = Regex.Match(note.Trim(), @"Nr. CBI\s(?<name>.+?)\s(?<pNum>\d+)\s(?<aNum>.+)", RegexOptions.Singleline);
+                if (match11.Success)
+                {
+                    biblio.Publication.Number = match11.Groups["pNum"].Value.Trim();
+                    biblio.Application.Number = match11.Groups["aNum"].Value.Trim();
+
+                    List<string> owners = Regex.Split(match11.Groups["name"].Value.Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (string owner in owners)
                     {
@@ -1344,8 +1345,44 @@ namespace Diamond_RO_Maksim
                     {
                         legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
                     }
-
                 }
+                else
+                {
+                    Match match = Regex.Match(note.Trim(), @"(?<name>.+?)\s(?<pNum>\d+)\s(?<aNum>.+)", RegexOptions.Singleline);
+                    if (match.Success)
+                    {
+                        biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+                        biblio.Application.Number = match.Groups["aNum"].Value.Trim();
+
+                        List<string> owners = Regex.Split(match.Groups["name"].Value.Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string owner in owners)
+                        {
+                            Match match1 = Regex.Match(owner, @"(?<name>.+?),\s(?<adress>.+),\s(?<code>[A-Z]{2})");
+
+                            if (match1.Success)
+                            {
+                                biblio.Assignees.Add(new PartyMember
+                                {
+                                    Name = match1.Groups["name"].Value.Trim(),
+                                    Address1 = match1.Groups["adress"].Value.Trim(),
+                                    Country = match1.Groups["code"].Value.Trim()
+                                });
+                            }
+                        }
+
+                        Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                        if (match2.Success)
+                        {
+                            legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+                        }
+                    }
+                    else Console.WriteLine($"{note}");
+                }
+
+
+
+               
                 legalStatus.Biblio = biblio;
             }
             else
