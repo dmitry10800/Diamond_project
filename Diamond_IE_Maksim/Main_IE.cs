@@ -6,7 +6,7 @@ namespace Diamond_IE_Maksim
     class Main_IE
     {
 
-        private static readonly string Path = @"C:\Work\IE\IE_20210428_2436";
+        private static readonly string Path = @"C:\Work\IE\IE_20210623_2440";
         private static readonly string SubCode = "52";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
