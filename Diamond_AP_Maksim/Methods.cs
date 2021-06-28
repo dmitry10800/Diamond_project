@@ -61,8 +61,8 @@ namespace Diamond_AP_Maksim
                 if(subCode == "1")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                       .SkipWhile(val => !val.Value.StartsWith("Patent\n"+ "Applications\n" + "Filed"))
-                       .TakeWhile(val => !val.Value.StartsWith("■")).ToList();
+                       .SkipWhile(val => !val.Value.StartsWith("Patent\n"+ "Applications\n"))
+                       .TakeWhile(val => !val.Value.StartsWith("Pa ent Applications Renew d")).ToList();
 
 
                     List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=\(21\))").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(21)")).ToList();
