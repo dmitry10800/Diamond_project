@@ -69,6 +69,21 @@ namespace PL_Diamond_Maksim
                         }
                     }
                     else
+                    if(subCode == "31")
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                           .SkipWhile(val => !val.Value.StartsWith("WYGAŚNIĘCIE PRAWA"))
+                           .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
+                           .ToList();
+
+                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\(\D\d{1,2}\)").Match(val).Success).ToList();
+
+                        foreach (string note in notes)
+                        {
+                            convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
+                        }
+                    }
+                    else
                     if (subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -493,6 +508,30 @@ namespace PL_Diamond_Maksim
 
                 }
                 else Console.WriteLine($"Эта запись  не разбилась ---- {text}");
+
+                legalEvent.LegalEvent = legal;
+                legalEvent.Biblio = biblio;
+            }
+            else
+            if(subCode == "31")
+            {
+                Match match = Regex.Match(note.Trim().TrimEnd('.'), @"\((?<pKind>\D\d{1,2})\)\s.+?\s(?<pNum>.+?)\s(?<leDate>\d{4}\s?\d{2}\s?\d{2})\s(?<leNote>.+)");
+
+                if (match.Success)
+                {
+                    biblio.Publication.Kind = match.Groups["pKind"].Value.Trim();
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+
+                    legal.Date = match.Groups["leDate"].Value.Replace(" ", "/").Trim();
+                    legal.Note = "|| Zakres wygaśnięcia | " + match.Groups["leNote"].Value.Trim();
+                    legal.Language = "PL";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired completely";
+                    noteTranslation.Language = "EN";
+                    noteTranslation.Type = "note";
+
+                    legal.Translations = new(){noteTranslation};
+                }
+                else Console.WriteLine($"{note}");
 
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
