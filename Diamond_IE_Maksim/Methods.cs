@@ -44,6 +44,7 @@ namespace Diamond_IE_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Patents Expired"))
+                        .TakeWhile(val => !val.Value.StartsWith("Request for Grant of Supplementary Protection Certificate"))
                         .TakeWhile(val => !val.Value.StartsWith("Application for Restoration of Lapsed Patents – Section 37"))
                         .ToList();
 

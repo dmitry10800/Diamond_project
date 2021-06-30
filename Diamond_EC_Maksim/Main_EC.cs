@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Diamond_IE_Maksim
+namespace Diamond_EC_Maksim
 {
-    class Main_IE
+    class Main_EC
     {
-
-        private static readonly string Path = @"C:\Work\IE\IE_20210623_2440";
-        private static readonly string SubCode = "52";
+        private static readonly string Path = @"C:\Work\EC\EC_20210226_686";
+        private static readonly string SubCode = "3";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
@@ -16,7 +15,7 @@ namespace Diamond_IE_Maksim
 
             List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
             {
-                "52" => methods.Start(Path, SubCode),
+                "3" => methods.Start(Path, SubCode),
                 _ => null
             };
 
