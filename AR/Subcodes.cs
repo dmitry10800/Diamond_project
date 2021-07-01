@@ -320,7 +320,8 @@ namespace AR
                             biblioData.Claims.Add(new DiamondProjectClasses.Claim
                             {
                                 Text = text,
-                                Number = "1"
+                                Number = "1",
+                                Language ="ES"
                             });
                         }
                         else
