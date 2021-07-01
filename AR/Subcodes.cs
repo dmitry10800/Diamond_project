@@ -317,10 +317,10 @@ namespace AR
                         {
                             string text = ReplaceInid(element, I57);
 
-                            biblioData.Abstracts.Add(new Abstract
+                            biblioData.Claims.Add(new DiamondProjectClasses.Claim
                             {
                                 Text = text,
-                                Language = "ES"
+                                Number = "1"
                             });
                         }
                         else
