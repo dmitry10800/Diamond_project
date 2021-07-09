@@ -20,7 +20,7 @@ namespace Diamond_AP_Maksim
                 _ => null
             };
 
-            Console.WriteLine();
+                Console.WriteLine();
 
             if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
             else Console.WriteLine("Wrong sub code");
