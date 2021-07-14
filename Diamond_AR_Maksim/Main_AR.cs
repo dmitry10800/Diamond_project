@@ -6,8 +6,8 @@ namespace Diamond_AR_Maksim
     class Main_AR
     {
 
-        private static readonly string Path = @"C:\Work\AR\AR_20210707_1159";
-        private static readonly string SubCode = "1";
+        private static readonly string Path = @"C:\Work\AR\AR_20210625_201910";
+        private static readonly string SubCode = "3";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
 
@@ -24,7 +24,7 @@ namespace Diamond_AR_Maksim
                 _ => null
             };
 
-            Console.WriteLine();
+             Console.WriteLine();
 
             if (patents != null) methods.SendToDiamond(patents, SendToProd);
             else Console.WriteLine("Wrong subcode");

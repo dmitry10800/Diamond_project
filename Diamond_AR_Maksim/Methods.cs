@@ -62,7 +62,7 @@ namespace Diamond_AR_Maksim
                          .SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
                          .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements,subCode).Replace("--", "").Trim(), @"(?=\(10\)\sP)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements,subCode).Replace("--", "").Trim(), @"(?=\(10\)\sP)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) P")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -72,7 +72,16 @@ namespace Diamond_AR_Maksim
                 else
                 if(subCode == "3")
                 {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
+                        .ToList();
 
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sM)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) M")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FG"));
+                    }
                 }
                 else
                 if(subCode == "5")
@@ -338,7 +347,7 @@ namespace Diamond_AR_Maksim
                 statusEvent.Biblio.DOfPublication = dOfPublication;
             }
             else
-            if(subCode == "2")
+            if(subCode == "2" || subCode == "3")
             {
                 foreach (string inid in MakeInids(note,subCode))
                 {
@@ -641,7 +650,7 @@ namespace Diamond_AR_Maksim
                 inids.AddRange(tmp);
             }
             else
-            if (subCode == "2")
+            if (subCode == "2" || subCode == "3")
             {
                 string inidsBefore57 = note.Substring(0, note.IndexOf("(57)")).Trim();
                 string inidsAfter57 = note.Substring(note.IndexOf("(71) T")).Trim();
