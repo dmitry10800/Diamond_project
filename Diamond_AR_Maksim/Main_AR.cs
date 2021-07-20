@@ -6,8 +6,8 @@ namespace Diamond_AR_Maksim
     class Main_AR
     {
 
-        private static readonly string Path = @"C:\Work\AR\AR_20210625_201910";
-        private static readonly string SubCode = "3";
+        private static readonly string Path = @"C:\Work\AR\AR_20210714_1160";
+        private static readonly string SubCode = "5";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
 

@@ -86,7 +86,16 @@ namespace Diamond_AR_Maksim
                 else
                 if(subCode == "5")
                 {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("SOLICITUDES DE PATENTE"))
+                        .ToList();
+                    //   val.Contains("(21) M")
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sA)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"(?=\(10\)\s.+\s(A4|A5|A6))").Match(val).Success).ToList();
 
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "AZ"));
+                    }
                 }
             }
                 return statusEvents;
@@ -110,7 +119,7 @@ namespace Diamond_AR_Maksim
             NoteTranslation noteTranslation = new();
             DOfPublication dOfPublication = new();
 
-            if (subCode == "1")
+            if (subCode == "1" || subCode == "5")
             {
                 foreach (string inid in MakeInids(note, subCode))
                 {
