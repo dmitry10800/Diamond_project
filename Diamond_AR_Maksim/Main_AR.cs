@@ -7,7 +7,7 @@ namespace Diamond_AR_Maksim
     {
 
         private static readonly string Path = @"D:\Develop\Country\AR\AR_20210625_201910";
-        private static readonly string SubCode = "1";
+        private static readonly string SubCode = "2";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
 
