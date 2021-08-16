@@ -223,7 +223,7 @@ namespace Diamond_AP_Maksim
                             biblio.EuropeanPatents.Add(new EuropeanPatent
                             {
                                 AppDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
-                                AppNumber = match.Groups["num"].Value.Trim()
+                                AppNumber = match.Groups["num"].Value.Replace("·","").Trim()
                             });
                         }
                     }
