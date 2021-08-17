@@ -407,7 +407,7 @@ namespace Diamond_AR_Maksim
                             legal.Language = "ES";
 
                             noteTranslation.Language = "EN";
-                            noteTranslation.Tr = "(74) || Expiration date | " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim() + "\n";
+                            noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim() + "\n";
                             noteTranslation.Type = "note";
 
                         }
@@ -416,7 +416,8 @@ namespace Diamond_AR_Maksim
                     else
                     if (inid.StartsWith("(30)"))
                     {
-                        List<string> priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", "").Replace("(30) Prioridad Convenio de Paris ","").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        List<string> priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", "").Replace("(30) Prioridad Convenio de Paris ","")
+                            .Replace("(30) Prioridad convenio de Paris ", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string priority in priorities)
                         {
@@ -447,34 +448,40 @@ namespace Diamond_AR_Maksim
                     else
                     if (inid.StartsWith("(51)"))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51) Int. Cl.", "").Trim(), @"[,|;]").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        Match data = Regex.Match(inid.Replace("\r", "").Replace("\n", " "), @".+[:|\)|.](?<data>.+)");
 
-                        List<string> fpart = new();
-                        List<string> spart = new();
-
-                        foreach (string ipc in ipcs)
+                        if (data.Success)
                         {
-                            Match match = Regex.Match(ipc.TrimEnd(',').Trim(), @"(?<fpart>\D.+?\s?)(?<spart>\d+\/\d+)");
-                            if (match.Success)
+                            List<string> ipcs = Regex.Split(data.Groups["data"].Value.Trim(), @"[,|;]").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            List<string> fpart = new();
+                            List<string> spart = new();
+
+                            foreach (string ipc in ipcs)
                             {
-                                fpart.Add(match.Groups["fpart"].Value.Trim());
-                                spart.Add(match.Groups["spart"].Value.Trim());
+                                Match match = Regex.Match(ipc.TrimEnd(',').Trim(), @"(?<fpart>\D.+?\s?)(?<spart>\d+\/\d+)");
+                                if (match.Success)
+                                {
+                                    fpart.Add(match.Groups["fpart"].Value.Trim());
+                                    spart.Add(match.Groups["spart"].Value.Trim());
+                                }
+                                else
+                                {
+                                    string lastElem = fpart.Last();
+                                    fpart.Add(lastElem);
+                                    spart.Add(ipc.TrimEnd(',').Trim());
+                                }
                             }
-                            else
+
+                            for (int i = 0; i < fpart.Count; i++)
                             {
-                                string lastElem = fpart.Last();
-                                fpart.Add(lastElem);
-                                spart.Add(ipc.TrimEnd(',').Trim());
+                                statusEvent.Biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = fpart[i] + " " + spart[i]
+                                });
                             }
                         }
-
-                        for (int i = 0; i < fpart.Count; i++)
-                        {
-                            statusEvent.Biblio.Ipcs.Add(new Ipc
-                            {
-                                Class = fpart[i] + " " + spart[i]
-                            });
-                        }
+                        else Console.WriteLine($"{inid}");                   
                     }
                     else
                     if (inid.StartsWith("(54)"))
