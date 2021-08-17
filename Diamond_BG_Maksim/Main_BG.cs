@@ -7,7 +7,7 @@ namespace Diamond_BG_Maksim
     {
 
         private static readonly string Path = @"D:\My_WORK\Dev\Work\Diamond";
-        private static readonly string SubCode = "5";
+        private static readonly string SubCode = "7";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)

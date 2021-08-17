@@ -1060,13 +1060,13 @@ namespace Diamond_BG_Maksim
                                 statusEvent.LegalEvent = new LegalEvent
                                 {
                                     Language = "BG",
-                                    Note = "|| " + match.Groups["claim"].Value.Trim() + " | " + match.Groups["numClaims"].Value.Trim(),
+                                    Note = "|| " + match1.Groups["claim"].Value.Trim() + " | " + match1.Groups["numClaims"].Value.Trim(),
                                     Translations = new List<NoteTranslation>
                                 {
                                     new NoteTranslation
                                     {
                                         Language = "EN",
-                                        Tr = "|| claims | " +match.Groups["numClaims"].Value.Trim(),
+                                        Tr = "|| claims | " +match1.Groups["numClaims"].Value.Trim(),
                                         Type = "note"
                                     }
                                 }
