@@ -804,7 +804,7 @@ namespace Diamond_BG_Maksim
 
                         foreach (string agent in agents)
                         {
-                            Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
