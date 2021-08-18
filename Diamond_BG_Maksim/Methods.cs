@@ -316,19 +316,21 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     {
-                        if (inid.Replace(I74, "").Trim() != "") 
-                        { 
-                            Match match = Regex.Match(inid.Replace(I74,"").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=\s[0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string agent in agents)
+                        {
+                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
                                 biblio.Agents.Add(new PartyMember
                                 {
-                                Name = match.Groups["name"].Value.Trim(),
-                                Address1 = match.Groups["adress"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim()
                                 });
                             }
-                            else Console.WriteLine($"{inid} - 74");
+                            else Console.WriteLine($"{agent} - 74");
                         }
                     }
                     else
@@ -551,9 +553,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     {
-                        if (inid.Replace(I74, "").Trim() != "")
+                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=\s[0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string agent in agents)
                         {
-                            Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -563,7 +567,7 @@ namespace Diamond_BG_Maksim
                                     Address1 = match.Groups["adress"].Value.Trim()
                                 });
                             }
-                            else Console.WriteLine($"{inid} - 74");
+                            else Console.WriteLine($"{agent} - 74");
                         }
                     }
                     else
