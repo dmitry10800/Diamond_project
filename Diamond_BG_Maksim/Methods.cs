@@ -129,6 +129,7 @@ namespace Diamond_BG_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("> Прекратили действието си обекти на закрила > Прекратили действието си eвропейски"))
+                             .TakeWhile(val => !val.Value.StartsWith("Раздел: > Възстановили действието си обекти на закрила > Възстановени европейски патенти"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Прекратили действието си обекти на закрила > Европейски патенти - отказ от право"))
                              .ToList();
 
@@ -317,7 +318,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     {
-                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=\s[0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=[\s|\.][0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string agent in agents)
                         {
@@ -554,7 +555,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     {
-                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=\s[0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=[а-я]\.?[\s|\.][0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string agent in agents)
                         {
@@ -856,7 +857,7 @@ namespace Diamond_BG_Maksim
                             }
                             else
                             {
-                                Match match2 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
+                                Match match2 = Regex.Match(inid.Replace(I57n, "").Replace("Раздел: > Европейски патенти > Издадени европейски","").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
 
                                 if (match2.Success)
                                 {
@@ -869,7 +870,7 @@ namespace Diamond_BG_Maksim
                                     new NoteTranslation
                                     {
                                         Language = "EN",
-                                        Tr = "|| claims | " +match2.Groups["numClaims"].Value.Trim(),
+                                        Tr = "|| claims | " + match2.Groups["numClaims"].Value.Trim(),
                                         Type = "note"
                                     }
                                 }
