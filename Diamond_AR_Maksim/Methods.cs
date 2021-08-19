@@ -59,10 +59,10 @@ namespace Diamond_AR_Maksim
                 if(subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                         .SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
+                         //.SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
                          .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements,subCode).Replace("--", "").Trim(), @"(?=\(10\)\sP)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) P")).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements,subCode).Replace("--", "").Replace("<Primera>","").Trim(), @"(?=\(10\)\sP)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) P")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -142,7 +142,7 @@ namespace Diamond_AR_Maksim
                     else
                     if (inid.StartsWith("(22)"))
                     {
-                        statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("(22)", "").Trim(), culture).ToString(@"yyyy/MM/dd").Trim();
+                        statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("(22)", "").Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
                     }
                     else
                     if (inid.StartsWith("(30)"))
@@ -159,7 +159,7 @@ namespace Diamond_AR_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Number = match.Groups["num"].Value.Trim(),
-                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim()
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".","/").Trim()
                                 });
                             }
                             else Console.WriteLine($"{match} --- 30");
@@ -321,7 +321,7 @@ namespace Diamond_AR_Maksim
 
                         if (match.Success)
                         {
-                            dOfPublication.date_41 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim();
+                            dOfPublication.date_41 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
                             legal.Note = legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
 
@@ -391,7 +391,7 @@ namespace Diamond_AR_Maksim
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", "").Trim(), @"\d{2}\/\d{2}\/\d{4}");
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim();
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} --- 22");
                     }
@@ -401,13 +401,13 @@ namespace Diamond_AR_Maksim
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", "").Trim(), @"(?<d1>\d{2}\/\d{2}\/\d{4}).+(?<d2>\d{2}\/\d{2}\/\d{4})");
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Application.EffectiveDate = DateTime.Parse(match.Groups["d1"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim();
+                            statusEvent.Biblio.Application.EffectiveDate = DateTime.Parse(match.Groups["d1"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
-                            legal.Note = "|| Fecha de Vencimiento " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim() + "\n";
+                            legal.Note = "|| Fecha de Vencimiento " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
                             legal.Language = "ES";
 
                             noteTranslation.Language = "EN";
-                            noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim() + "\n";
+                            noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
                             noteTranslation.Type = "note";
 
                         }
@@ -429,7 +429,7 @@ namespace Diamond_AR_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Number = match.Groups["num"].Value.Trim(),
-                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim()
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim()
                                 });
                             }
                             else Console.WriteLine($"{priority}----30");
@@ -441,7 +441,7 @@ namespace Diamond_AR_Maksim
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", "").Trim(), @"\d{2}\/\d{2}\/\d{4}");
                         if (match.Success)
                         {
-                            dOfPublication.date_47 = DateTime.Parse(match.Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim();
+                            dOfPublication.date_47 = DateTime.Parse(match.Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} --- 47");
                     }
@@ -585,10 +585,10 @@ namespace Diamond_AR_Maksim
                             Name = inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim()
                         });
 
-                        legal.Note = legal.Note + "(74) || Agente/s Nro. | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
+                        legal.Note = legal.Note + "|| (74) Agente/s Nro. | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
 
 
-                        noteTranslation.Tr = noteTranslation.Tr + "(74) || Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
+                        noteTranslation.Tr = noteTranslation.Tr + "|| (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
                     }
                     else
                     if (inid.StartsWith("(45)"))
@@ -596,7 +596,7 @@ namespace Diamond_AR_Maksim
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", "").Trim(), @"\d{2}\/\d{2}\/\d{4}");
                         if (match.Success)
                         {
-                            dOfPublication.date_45 = DateTime.Parse(match.Value.Trim(), culture).ToString(@"yyyy/MM/dd").Trim();
+                            dOfPublication.date_45 = DateTime.Parse(match.Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} --- 45");
                     }
@@ -626,10 +626,6 @@ namespace Diamond_AR_Maksim
 
             return statusEvent;
         }
-
-
-
-
         internal List<string> MakeInids(string note, string subCode)
         {
             List<string> inids = new();
