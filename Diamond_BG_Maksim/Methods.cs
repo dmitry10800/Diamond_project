@@ -98,6 +98,7 @@ namespace Diamond_BG_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени европейски патенти"))
+                             .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Коригиран превод на описание към ЕП съгласно правило 140 от"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени ЕП след процедура по опозиция, съгласно чл. 103 от ЕПК"))
                              .ToList();
 
@@ -660,7 +661,7 @@ namespace Diamond_BG_Maksim
                 {
                     if (inid.StartsWith(I11))
                     {
-                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<num>.+)\s(?<kind>[A-Z]{1,2}.+)");
+                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<num>.+)\s(?<kind>\D{1,2}.+)");
 
                         if (match.Success)
                         {
@@ -698,7 +699,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I97))
                     {
-                        Match match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        Match match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<num>.+)[,|\.]\s?(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
 
                         if (match.Success)
                         {
@@ -710,7 +711,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I96))
                     {
-                        Match match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        Match match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<num>.+)[,|\.]\s?(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
 
                         if (match.Success)
                         {
