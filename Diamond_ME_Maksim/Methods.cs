@@ -66,7 +66,8 @@ namespace Diamond_ME_Maksim
                 if(subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                          .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATENATA"+"\n"+ "Publication of extended european patents"))
+                          .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATENATA"+"\n"+"Publication of extended european patents"))
+                          .TakeWhile(val => !val.Value.StartsWith("OBJAVA ZAHTJEVA ZA PROŠIRENJE EVROPSKIH PRIJAVA PATENATA"))
                           .TakeWhile(val => !val.Value.StartsWith("OBJAVA UPISA PROMJENA"))
                           .ToList();
 
@@ -74,7 +75,7 @@ namespace Diamond_ME_Maksim
 
                     foreach (string note in notes)
                     {
-                        statusEvents.Add(MakePatent(note, subCode, "FG"));
+                        statusEvents.Add(MakePatent(note.Replace("..", ""), subCode, "FG"));
                     }
                 }
                 else
@@ -529,16 +530,24 @@ namespace Diamond_ME_Maksim
 
             if(subcode == "2")
             {
-                inids = Regex.Split(note.Substring(0, note.IndexOf("(57) ")), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                Match match = Regex.Match(note.Substring(note.IndexOf("(57) ")), @"(?<inid57>.+)\s(?<note57>P.+)", RegexOptions.Singleline);
-
-                if (match.Success)
+                if (note.Contains("(57)"))
                 {
-                    inids.Add(match.Groups["inid57"].Value.Trim());
-                    inids.Add("(57n) " + match.Groups["note57"].Value.Trim());
+                    inids = Regex.Split(note.Substring(0, note.IndexOf("(57) ")), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    Match match = Regex.Match(note.Substring(note.IndexOf("(57) ")), @"(?<inid57>.+)\s(?<note57>P.+)", RegexOptions.Singleline);
+
+                    if (match.Success)
+                    {
+                        inids.Add(match.Groups["inid57"].Value.Trim());
+                        inids.Add("(57n) " + match.Groups["note57"].Value.Trim());
+                    }
+                    else Console.WriteLine($"{note.Substring(note.IndexOf("(57) "))} - match failed");
                 }
-                else Console.WriteLine($"{note.Substring(note.IndexOf("(57) "))} - match failed");
+                else
+                {
+                    inids = Regex.Split(note.Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                }
+               
             }
             else
             if(subcode == "3")
