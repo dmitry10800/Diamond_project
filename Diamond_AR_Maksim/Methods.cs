@@ -73,10 +73,10 @@ namespace Diamond_AR_Maksim
                 if(subCode == "3")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
+                     //  .SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sM)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) M")).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\s[A-Z])").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) M")).ToList();
 
                     foreach (string note in notes)
                     {
