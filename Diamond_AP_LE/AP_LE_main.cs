@@ -15,7 +15,7 @@ namespace Diamond_AP_LE
         static void Main(string[] args)
         {
             /*Folder with tetml files to process*/
-            var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AP\20200122\RenewAppPat10");
+            var dir = new DirectoryInfo(@"C:\1WORK\AP\AP_20210731_07");
             //var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AP\20191121\RenewAppPat10");
             /*list of tetml files*/
             var files = new List<string>();
@@ -47,11 +47,11 @@ namespace Diamond_AP_LE
 
                 if (sub10 != null && sub10.Count() > 0)
                 {
-                    Process.Sub10.Run(sub10);
+                   // Process.Sub10.Run(sub10);
                 }
                 if (sub7 != null && sub7.Count() > 0)
                 {
-                    //Process.Sub7.Run(sub7);
+                    Process.Sub7.Run(sub7);
                 }
             }
         }
