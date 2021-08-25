@@ -65,6 +65,7 @@ namespace Diamond_ME_Maksim
 
                 if(subCode == "2")
                 {
+
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                           .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATENATA"+"\n"+"Publication of extended european patents"))
                           .TakeWhile(val => !val.Value.StartsWith("OBJAVA ZAHTJEVA ZA PROŠIRENJE EVROPSKIH PRIJAVA PATENATA"))
