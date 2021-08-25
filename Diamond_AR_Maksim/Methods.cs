@@ -48,7 +48,7 @@ namespace Diamond_AR_Maksim
                         .SkipWhile(val => !val.Value.StartsWith("SOLICITUDES DE PATENTE"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sA)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(10) A")).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sA)").Where(val => !string.IsNullOrEmpty(val) && val.Contains("(21) P")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -90,7 +90,7 @@ namespace Diamond_AR_Maksim
                         .SkipWhile(val => !val.Value.StartsWith("SOLICITUDES DE PATENTE"))
                         .ToList();
                     //   val.Contains("(21) M")
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sA)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"(?=\(10\)\s.+\s(A4|A5|A6))").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Replace("--", "").Trim(), @"(?=\(10\)\sA)").Where(val => !string.IsNullOrEmpty(val) && val.Contains("(21) M")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -306,11 +306,11 @@ namespace Diamond_AR_Maksim
                             Name = inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim()
                         });
 
-                        legal.Note =legal.Note + "(74) || Agente/s Nro | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
+                        legal.Note =legal.Note + "||(74) Agente/s Nro | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
                         legal.Language = "ES";
 
                         noteTranslation.Language = "EN";
-                        noteTranslation.Tr = noteTranslation.Tr + "(74) || Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
+                        noteTranslation.Tr = noteTranslation.Tr + "||(74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
                         noteTranslation.Type = "note";
 
                     }
@@ -630,7 +630,7 @@ namespace Diamond_AR_Maksim
         {
             List<string> inids = new();
 
-            if (subCode == "1")
+            if (subCode == "1" || subCode == "5")
             {
                 string inidsBefore57 = note.Substring(0, note.IndexOf("(57)")).Trim();
 
