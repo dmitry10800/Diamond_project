@@ -81,7 +81,39 @@ namespace Diamond_AP_Maksim
                       .TakeWhile(val => !val.Value.StartsWith("■")).ToList();
                 }
                 else
-                if(subCode == "20")
+                if (subCode == "7")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                       .SkipWhile(val => !val.Value.StartsWith("I Patent No. Application No. Date"))
+                       .TakeWhile(val => !val.Value.StartsWith("UTILITY MODELS")).ToList();
+
+
+                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=AP\s?\d{4,5}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "ND"));
+                    }
+
+                }
+                else
+                if (subCode == "10")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                       .SkipWhile(val => !val.Value.StartsWith("Application No. Date Fee Paid Valid Until Anniversary"))
+                       .TakeWhile(val => !val.Value.StartsWith("Abandoned")).ToList();
+
+
+                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=AP\s?\/\s?P\s?\/)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "AD"));
+                    }
+
+                }
+                else
+                if (subCode == "20")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("PATENT APPLICATIONS LAPSED/WITHDRAWN"))
@@ -108,7 +140,15 @@ namespace Diamond_AP_Maksim
                 text += xElement.Value + " ";
             }
 
-            text = text.Replace("\r", "").Replace("\n", " ").Replace("●●", " ").Replace("Patent Applications Lapsed/Withdrawn (Contd.)", " ").Replace("Patent Applications Filed (Contd.)"," ").Trim();
+            text = text.Replace("\r", "").Replace("\n", " ").Replace("●●", " ")
+                .Replace("Patent Applications Lapsed/Withdrawn (Contd.)", " ")
+                .Replace("Patent Applications Filed (Contd.)"," ")
+                .Replace("Patents Renewed (Contd.)","")
+                .Replace("Application No. Date Fee Paid Valid Until Anniversary", "")
+                .Replace("Patent Applications Renewed (Contd.)", "")
+                .Replace("I Patent No. Application No. Date Fee Paid Valid Until Anniversary I","")
+                
+                .Trim();
 
             return text;
         }
@@ -124,6 +164,8 @@ namespace Diamond_AP_Maksim
             };
 
             Biblio biblio = new();
+
+            LegalEvent legalEvent = new();
 
             CultureInfo culture = new("RU-ru");
 
@@ -276,6 +318,46 @@ namespace Diamond_AP_Maksim
                 }
                 biblio.Priorities.Add(priority);
                 legal.Biblio = biblio;
+            }
+            else
+            if(subCode == "7")
+            {
+                Match match = Regex.Match(note.Trim(), @"(?<pNum>AP\s?\d{4,5})\s(?<aNum>.+)\s(?<eventDate>\d{2}\s?\.\s?\d{2}\s?\.\s?\d{4})\s(?<legalDate>\d{2}\s?\.\s?\d{2}\s?\.\s?\d{4})\s(?<note>.+)");
+
+                if (match.Success)
+                {
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+
+                    biblio.Application.Number = match.Groups["aNum"].Value.Replace(" ","").Trim();
+
+                    legalEvent.Date = DateTime.Parse(match.Groups["eventDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
+
+                    legalEvent.Note = "|| Valid Until | " + DateTime.Parse(match.Groups["legalDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                        + "|| Anniversary | " + match.Groups["note"].Value.Trim();
+
+                    legal.Biblio = biblio;
+                    legal.LegalEvent = legalEvent;
+                }
+                else Console.WriteLine($"{note}");
+            }
+            else
+            if(subCode == "10")
+            {
+                Match match = Regex.Match(note.Trim(), @"(?<aNum>.+)\s(?<eventDate>\d{2}\s?\.\s?\d{2}\s?\.\s?\d{4})\s(?<legalDate>\d{2}\s?\.\s?\d{2}\s?\.\s?\d{4})\s(?<note>.+yr)");
+
+                if (match.Success)
+                {
+                    biblio.Application.Number = match.Groups["aNum"].Value.Replace(" ", "").Trim();
+
+                    legalEvent.Date = DateTime.Parse(match.Groups["eventDate"].Value.Replace(" ", "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    legalEvent.Note = "|| Valid Until | " + DateTime.Parse(match.Groups["legalDate"].Value.Replace(" ", "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                        + "|| Anniversary | " + match.Groups["note"].Value.Trim();
+
+                    legal.Biblio = biblio;
+                    legal.LegalEvent = legalEvent;
+                }
+                else Console.WriteLine($"{note}");
             }
             else
             if(subCode == "20")
@@ -483,13 +565,20 @@ namespace Diamond_AP_Maksim
 
 
         internal List<string> MakeInids(string note) => Regex.Split(note.Trim(), @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                string url;
+                if (SendToProduction == true)
+                {
+                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
+                }
+                else
+                {
+                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
+                }
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

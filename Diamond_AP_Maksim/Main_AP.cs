@@ -5,8 +5,9 @@ namespace Diamond_AP_Maksim
 {
     class Main_AP
     {
-        private static readonly string path = @"C:\Work\AP\AP_20210531_05";
-        private static readonly string subCode = "1";
+        private static readonly string path = @"C:\Work\AP\AP_20210731_07";
+        private static readonly string subCode = "10";
+        private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
         {
@@ -16,13 +17,15 @@ namespace Diamond_AP_Maksim
             {
                 "1" => methods.Start(path, subCode),
                 "3" => methods.Start(path, subCode),
+                "7" => methods.Start(path, subCode),
+                "10" => methods.Start(path, subCode),
                 "20" => methods.Start(path, subCode),
                 _ => null
             };
 
                 Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
+            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
             else Console.WriteLine("Wrong sub code");
         }
     }

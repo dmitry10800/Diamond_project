@@ -6,7 +6,7 @@ namespace Diamond_BG_Maksim
     class Main_BG
     {
 
-        private static readonly string Path = @"C:\1WORK\BG\BG_20210615_06(1)";
+        private static readonly string Path = @"C:\Work\BG\BG_20210816_08(1)";
         private static readonly string SubCode = "21";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
