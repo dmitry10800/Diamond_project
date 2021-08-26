@@ -403,7 +403,7 @@ namespace Diamond_AR_Maksim
                         {
                             statusEvent.Biblio.Application.EffectiveDate = DateTime.Parse(match.Groups["d1"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
-                            legal.Note = "|| Fecha de Vencimiento " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
+                            legal.Note = "|| Fecha de Vencimiento | " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
                             legal.Language = "ES";
 
                             noteTranslation.Language = "EN";
