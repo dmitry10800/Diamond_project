@@ -67,6 +67,7 @@ namespace Diamond_BG_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("Раздел: > Изобретения > Публикувани заявки"))
+                             .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени ЕП след процедура по опозиция, съгласно чл. 103 от ЕПК"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Изобретения > Издадени патенти"))
                              .ToList();
 
@@ -98,6 +99,7 @@ namespace Diamond_BG_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени европейски патенти"))
+                             .TakeWhile(val => !val.Value.StartsWith("Раздел: > Прекратили действието си обекти на закрила > Прекратили действието си сортове и породи"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Коригиран превод на описание към ЕП съгласно правило 140 от"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени ЕП след процедура по опозиция, съгласно чл. 103 от ЕПК"))
                              .ToList();
@@ -129,6 +131,7 @@ namespace Diamond_BG_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("> Прекратили действието си обекти на закрила > Прекратили действието си eвропейски"))
+                             .TakeWhile(val => !val.Value.StartsWith("Раздел: > Сертификати за допълнителна закрила > Издадени сертификати за допълнителна закрила"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Възстановили действието си обекти на закрила > Възстановени европейски патенти"))
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Прекратили действието си обекти на закрила > Европейски патенти - отказ от право"))
                              .ToList();
