@@ -79,11 +79,20 @@ namespace Diamond_ZA_Maksim
                 else
                 if(subCode == "3")
                 {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                           .SkipWhile(val => !val.Value.StartsWith("COMPLETE SPECIFICATIONS ACCEPTED A ABRIDGEMENTS OR ABSTRACTS THEREOF"))
+                           .TakeWhile(val => !val.Value.StartsWith("No records available"))
+                           .ToList();
 
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=21:\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("21: ")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FZ"));
+                    }
                 }
             }
                 return statusEvents;
-
         }
 
 
@@ -271,7 +280,107 @@ namespace Diamond_ZA_Maksim
             else
             if(subCode == "3")
             {
+                List<string> inids = Regex.Split(note.Trim(), @"(?=\d{2}:\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
+                List<string> inid31 = new();
+                List<string> inid32 = new();
+                List<string> inid33 = new();
+
+                foreach (string inid in inids)
+                {
+                    if (inid.StartsWith("21:"))
+                    {
+                        statusEvent.Biblio.Application.Number = inid.Replace("21:", "").Trim().TrimEnd('.');
+                    }
+                    else
+                    if (inid.StartsWith("22:"))
+                    {
+                        statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("22:", "").TrimEnd('.').Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                    else
+                    if (inid.StartsWith("43:"))
+                    {
+                        statusEvent.Biblio.Publication.Date = DateTime.Parse(inid.Replace("43:", "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                    else
+                    if (inid.StartsWith("51:"))
+                    {
+                        List<string> ipcs = Regex.Split(inid.Replace("51:", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string ipc in ipcs)
+                        {
+                            statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
+                            {
+                                Class = ipc.Trim()
+                            });
+                        }
+                    }
+                    else
+                    if (inid.StartsWith("71:"))
+                    {
+                        statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                        {
+                            Name = inid.Replace("71:", "").Trim()
+                        });
+                    }
+                    else
+                    if (inid.StartsWith("72:"))
+                    {
+                        List<string> inventors = Regex.Split(inid.Replace("72:", "").Trim(), @"(?<=[a-z],\s)|(?<=\.,\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string inventor in inventors)
+                        {
+                            statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
+                            {
+                                Name = inventor.Trim().TrimEnd(',')
+                            });
+                        }
+                    }
+                    else
+                    if (inid.StartsWith("33:"))
+                    {
+                        inid33.Add(inid.Replace("33:", "").Trim());
+                    }
+                    else
+                    if (inid.StartsWith("31:"))
+                    {
+                        inid31.Add(inid.Replace("31:", "").Trim());
+                    }
+                    else
+                    if (inid.StartsWith("32:"))
+                    {
+                        inid32.Add(inid.Replace("32:", "").Replace("-", "/").Trim());
+                    }
+                    else
+                    if (inid.StartsWith("54:"))
+                    {
+                        statusEvent.Biblio.Titles.Add(new Integration.Title
+                        {
+                            Language = "EN",
+                            Text = inid.Replace("54:", "").Replace("\r", "").Replace("\n", " ").Trim()
+                        });
+                    }
+                    else
+                    if (inid.StartsWith("00:"))
+                    {
+                        statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
+                        {
+                            Language = "EN",
+                            Text = inid.Replace("00:", "").Replace("-\n","").Replace("\r","").Replace("\n"," ").Trim()
+                        });
+                    }
+                    else Console.WriteLine($"{inid} - not process");
+                }
+
+                for (int i = 0; i < inid31.Count; i++)
+                {
+                    statusEvent.Biblio.Priorities.Add(new Integration.Priority
+                    {
+                        Date = inid32[i],
+                        Country = inid33[i],
+                        Number = inid31[i]
+                    });
+                }
             }
             return statusEvent;
         }
@@ -537,6 +646,14 @@ namespace Diamond_ZA_Maksim
             string text = null;
 
             if(subCode == "1")
+            {
+                foreach (XElement xElement in xElements)
+                {
+                    text += xElement.Value + " ";
+                }
+            }
+            else
+            if(subCode == "3")
             {
                 foreach (XElement xElement in xElements)
                 {
