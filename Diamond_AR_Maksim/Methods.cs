@@ -183,8 +183,11 @@ namespace Diamond_AR_Maksim
                             }
                             else
                             {
-                                string lastElem = fpart.Last();
-                                fpart.Add(lastElem);
+                                if (fpart.Count != 0 && fpart.Last() != null)
+                                {
+                                    string lastElem = fpart.Last();
+                                    fpart.Add(lastElem);
+                                }
                                 spart.Add(ipc.TrimEnd(',').Trim());
                             }
                         }
@@ -306,11 +309,11 @@ namespace Diamond_AR_Maksim
                             Name = inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim()
                         });
 
-                        legal.Note =legal.Note + "||(74) Agente/s Nro | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
+                        legal.Note =legal.Note + "|| (74) Agente/s Nro | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
                         legal.Language = "ES";
 
                         noteTranslation.Language = "EN";
-                        noteTranslation.Tr = noteTranslation.Tr + "||(74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
+                        noteTranslation.Tr = noteTranslation.Tr + "|| (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
                         noteTranslation.Type = "note";
 
                     }
@@ -323,9 +326,9 @@ namespace Diamond_AR_Maksim
                         {
                             dOfPublication.date_41 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
-                            legal.Note = legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
+                            legal.Note = "|| Publicación de trámite normal " + legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
 
-                            noteTranslation.Tr = noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
+                            noteTranslation.Tr = "|| Ordinary processing publication " + noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
                         }
                     }
                     else
@@ -588,7 +591,7 @@ namespace Diamond_AR_Maksim
                         legal.Note = legal.Note + "|| (74) Agente/s Nro. | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
 
 
-                        noteTranslation.Tr = noteTranslation.Tr + "|| (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
+                        noteTranslation.Tr = noteTranslation.Tr + "|| Ordinary processing publication || (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
                     }
                     else
                     if (inid.StartsWith("(45)"))
