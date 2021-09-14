@@ -458,6 +458,8 @@ namespace DIamond_EA_Maksim
                         + "\n" + "|| Code of country on which territory the patent is valid | " + match.Groups["leNote2"].Value.Trim()
                     + "\n" + "|| Publication date of notice | " + match.Groups["leNoteDate"].Value.Replace(".", "/").Trim();
 
+                    legalEvent.Translations.Add(noteTranslation);
+
                     legalEvent.Date = match.Groups["leDate"].Value.Replace(".", "/").Trim();
 
                 }
@@ -487,6 +489,8 @@ namespace DIamond_EA_Maksim
                             + "\n" + "|| Code of country on which territory the patent is terminated | " + match1.Groups["leNote1"].Value.Trim()
                             + "\n" + "|| Code of country on which territory the patent is valid | " + match1.Groups["leNote2"].Value.Trim()
                         + "\n" + "|| Publication date of notice | " + match1.Groups["leNoteDate"].Value.Replace(".", "/").Trim();
+
+                        legalEvent.Translations.Add(noteTranslation);
 
                         legalEvent.Date = match1.Groups["leDate"].Value.Replace(".", "/").Trim();
                     }
