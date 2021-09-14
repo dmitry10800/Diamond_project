@@ -198,7 +198,7 @@ namespace Diamond_ZA_Maksim
                     Match date22 = Regex.Match(match.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}\/\d{2}\/\d{2})");
                     if (date22.Success)
                     {
-                        statusEvent.Biblio.Application.Date = date22.Value.Trim();
+                        statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
                     }
                     else Console.WriteLine($"{match.Groups["date22"].Value.Trim()} ----------- date22");
                 }
@@ -270,7 +270,7 @@ namespace Diamond_ZA_Maksim
                         Match date22 = Regex.Match(match1.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}\/\d{2}\/\d{2})");
                         if (date22.Success)
                         {
-                            statusEvent.Biblio.Application.Date = date22.Value.Trim();
+                            statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
                         }
                     }
                     else Console.WriteLine($"{note}");
