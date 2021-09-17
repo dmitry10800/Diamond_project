@@ -69,7 +69,7 @@ namespace Diamond_AP_Maksim
 
                     foreach (string note in notes)
                     {
-                        statusEvents.Add(MakePatent(note, subCode, "AF"));
+                        statusEvents.Add(MakePatent(note.Replace("■", "").Replace("PATENTS", "").Replace("·", "").Replace("►", ""), subCode, "AF"));
                     }
 
                 }
@@ -88,7 +88,7 @@ namespace Diamond_AP_Maksim
                        .TakeWhile(val => !val.Value.StartsWith("UTILITY MODELS")).ToList();
 
 
-                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=AP\s?\d{4,5}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=AP\s?\d{4,5}\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AP ")).ToList();
 
                     foreach (string note in notes)
                     {
