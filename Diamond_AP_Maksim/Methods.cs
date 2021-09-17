@@ -69,7 +69,7 @@ namespace Diamond_AP_Maksim
 
                     foreach (string note in notes)
                     {
-                        statusEvents.Add(MakePatent(note.Replace("■", "").Replace("PATENTS", "").Replace("·", "").Replace("►", ""), subCode, "AF"));
+                        statusEvents.Add(MakePatent(note.Replace("■", "").Replace("PATENTS", "").Replace("·", "").Replace("►", "").Replace("▶",""), subCode, "AF"));
                     }
 
                 }
