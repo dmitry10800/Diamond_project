@@ -73,6 +73,21 @@ namespace Diamond_PH_Maksim
                         statusEvents.Add(SplitNote(note, subCode, "FA"));
                     }
                 }
+                else
+                if (subCode == "35")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                          .SkipWhile(val => !val.Value.StartsWith("REGISTERED UTILITY MODELS"))
+                          .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\d\/\d{4}\/\d{6})")
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("2")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(SplitNote(note, subCode, "FG"));
+                    }
+                }
             }
 
 
@@ -95,7 +110,7 @@ namespace Diamond_PH_Maksim
             {
                 Match match = Regex.Match(note.Trim(), @"(?<aNum>\d+\/\d+\/\d+).+?(?<owner>[A-Z].+)\s(?<d43>\d{2}\/\d{2}\/\d{4})\s(?<title>([A-Z]|\d)\D+)");
 
-                CultureInfo culture = new("RU-ru");
+                CultureInfo culture = new("ru-Ru");
                 if (match.Success)
                 {
                     statusEvent.Biblio.Application.Number = match.Groups["aNum"].Value.Trim();
@@ -167,6 +182,38 @@ namespace Diamond_PH_Maksim
 
                 }
                 else Console.WriteLine($"{note} - wrong match");
+            }
+            else
+            if(subCode == "35")
+            {
+                CultureInfo cultureInfo = new("ru-RU");
+
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<num>.+?)\s(?<assigner>.+)]\s(?<title>.+)\s(?<appDate>\d{2}.\d{2}.\d{4})");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Application.Number = match.Groups["num"].Value.Trim();
+                    statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["appDate"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    statusEvent.Biblio.Titles.Add(new Integration.Title
+                    {
+                        Language = "EN",
+                        Text = match.Groups["title"].Value.Trim()
+                    });
+
+                    Match match1 = Regex.Match(match.Groups["assigner"].Value.Trim(), @"(?<name>.+)\s\[(?<code>[A-Z]{2})");
+
+                    if (match1.Success)
+                    {
+                        statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
+                        {
+                            Name = match1.Groups["name"].Value.Trim(),
+                            Country = match1.Groups["code"].Value.Trim()
+                        });
+                    }
+                    else Console.WriteLine($"{match.Groups["assigner"].Value.Trim()}");
+                }
+                else Console.WriteLine($"{note}");
             }
 
             return statusEvent;
