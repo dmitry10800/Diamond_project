@@ -53,6 +53,20 @@ namespace Diamond_ID_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
                 }
+                else
+                if (subCode == "2")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                             .SkipWhile(val => !val.Value.StartsWith ("(20) RI Permohonan Paten"))
+                             .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\s\D)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20) R")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "BZ"));
+                    }
+                }
             }
 
             return statusEvents;
@@ -298,13 +312,130 @@ namespace Diamond_ID_Maksim
                     //if(inid.StartsWith(""))
                 }
             }
+            else
+            if(subCode == "2")
+            {
+                foreach (string inid in MakeInids(note))
+                {
+                    if (inid.StartsWith("(20)"))
+                    {
+
+                    }
+                    else
+                    if (inid.StartsWith("(11)"))
+                    {
+                        statusEvent.Biblio.Publication.Number = inid.Replace("\r", "").Replace("\n", " ").Replace("(11) No Pengumuman :", "").Trim();
+                    }
+                    else
+                    if (inid.StartsWith("(13)"))
+                    {
+                        statusEvent.Biblio.Publication.Kind = inid.Replace("\r", "").Replace("\n", " ").Replace("(13)", "").Trim();
+                    }
+                    else
+                    if (inid.StartsWith("(21)"))
+                    {
+                        statusEvent.Biblio.Application.Number = inid.Replace("\r", "").Replace("\n", " ").Replace("(21)","").Replace("No. Permohonan Paten :", "").Trim();
+                    }
+                    else
+                    if (inid.StartsWith("(22)"))
+                    {
+                      statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("\r", "").Replace("\n", " ").Replace("(22)", "").Replace("Tanggal Penerimaan Permohonan Paten :", "").Replace("Data Prioritas :", "").Trim(), culture)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();                        
+                    }
+                    else
+                    if (inid.StartsWith("(43)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(43) Tanggal Pengumuman Paten :", ""), @"\d{2}.\d{2}.\d{4}");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
+                        else Console.WriteLine($"{inid} -- 43");
+
+                    }
+                    else
+                    if (inid.StartsWith("(54)"))
+                    {
+                        statusEvent.Biblio.Titles.Add(new Integration.Title
+                        {
+                            Language = "ID",
+                            Text = inid.Replace("\r", "").Replace("\n", " ").Replace("(54) Judul Invensi : ", "").Trim()
+                        });
+                    }
+                    else
+                    if (inid.StartsWith("(57)"))
+                    {
+                        statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
+                        {
+                            Language = "ID",
+                            Text = inid.Replace("\r", "").Replace("\n", " ").Replace("(57) Abstrak :", "").Trim()
+                        });
+                    }
+                    else
+                    if (inid.StartsWith("(74)"))
+                    {
+                        Match match = Regex.Match(inid, @"(?<i71>Nama dan Alamat yang.+)\n(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
+
+                        if (match.Success)
+                        {
+                            Match match71 = Regex.Match(match.Groups["i71"].Value.Replace("(74)", "").Replace("Nama dan Alamat yang mengajukan Permohonan Paten :", "").Trim(), @"(?<name>.+)\n(?<adress>.+),?\s(?<country>[A-Z].+)");
+                            if (match71.Success)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = match71.Groups["name"].Value.Trim(),
+                                    Address1 = match71.Groups["adress"].Value.Trim(),
+                                    Country = MakeCountry(match71.Groups["country"].Value.Trim())
+                                });
+                            }
+                            else Console.WriteLine($"{match.Groups["i71"].Value}");
+
+                            if (MakeCountry(match71.Groups["country"].Value.Trim()) == null) Console.WriteLine(" ======================================================== " + $"{match71.Groups["country"].Value.Trim()}");
+
+                            List<string> inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string inventor in inventors)
+                            {
+                                Match match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
+
+                                if (match72.Success)
+                                {
+                                    statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
+                                    {
+                                        Name = match72.Groups["name"].Value.Trim(),
+                                        Country = match72.Groups["country"].Value.Trim()
+                                    });
+                                }
+                                else Console.WriteLine($"{inventor} -- 72");
+                            }
+
+                            Match match74 = Regex.Match(match.Groups["i74"].Value.Replace("Nama dan Alamat Konsultan Paten :","").Trim(), @"(?<name>.+?)\n(?<adress>.+)");
+
+                            if (match74.Success)
+                            {
+                                statusEvent.Biblio.Agents.Add(new Integration.PartyMember
+                                {
+                                    Name = match74.Groups["name"].Value.Trim(),
+                                    Address1 = match74.Groups["adress"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{match.Groups["i74"].Value.Trim()} -- 74");
+                        }
+                    }
+                    else Console.WriteLine($"{inid}");
+
+
+
+                }
+            }
 
             return statusEvent;
         }
 
         internal List<string> MakeInids (string note)
         {
-            List<string> inids = Regex.Split(note.Substring(0, note.IndexOf("(57)")).Trim(), @"(?=\(\d{2}\)\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+            List<string> inids = Regex.Split(note.Substring(0, note.IndexOf("(57)")).Trim(), @"(?=\(\d{2}\)\s?)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
             inids.Add(note.Substring(note.IndexOf("(57)")).Trim());
 
@@ -380,6 +511,20 @@ namespace Diamond_ID_Maksim
             "Spain" => "ES",
             "Makassar" => "ID",
             "INDIA" => "IN",
+            "Mejayan" => "ID",
+            "Manis" => "ID",
+            "Surakarta" => "ID",
+            "Semarang 5" => "ID",
+            "MANADO" => "ID",
+            "Manado" => "ID",
+            "Malang" => "ID",
+            "Dayeuhkolot" => "ID",
+            "Sumedang" => "ID",
+            "Russia" => "RU",
+            "Timur" => "ID",
+            "Jatiwarna" => "ID",
+            "Jakarta" => "ID",
+            "Surabaya" => "ID",
             _ => null
         };
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
