@@ -316,6 +316,10 @@ namespace IS_Diamond_Maksim
                 "Kanada" => "CA",
                 "Sameinudu arabísku furstadæmunum" => "AE",
                 "Sameinuðu arabísku furstadæmunum" => "AE",
+                "Tékklandi" => "CZ",
+                "Ungverjalandi" => "HU",
+                "Grikklandi" => "GR",
+                "Tyrklandi" => "TR",
 
                 _ => null
             };
