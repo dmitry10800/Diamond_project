@@ -393,12 +393,12 @@ namespace Diamond_AP_Maksim
                     else
                     if (inid.StartsWith("(45)"))
                     {
-                        Match match = Regex.Match(inid.Replace(" ", "").Trim(), @":\s?(?<date>\d{2}.\d{2}.\d{4})");
+                        Match match = Regex.Match(inid.Replace(" ", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (match.Success)
                         {
                             dOfPublication.date_45 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                            biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            biblio.Application.EffectiveDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} --------------------- 45");
                     }
@@ -455,15 +455,9 @@ namespace Diamond_AP_Maksim
                     else
                     if (inid.StartsWith("(84)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @"[A-Z]{2}.+");
-
-                        if (match.Success)
-                        {
-                            List<string> designatedStates = Regex.Split(match.Value.ToUpper().Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            List<string> designatedStates = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(84) Designated States:", "").ToUpper().Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                             intConvention.DesignatedStates = designatedStates;
-
-                        }
                     }
                     else
                     if (inid.StartsWith("(74)"))
@@ -531,6 +525,16 @@ namespace Diamond_AP_Maksim
                         }
 
                         else Console.WriteLine($"{inid} ---------------- 51");
+                    }
+                    else
+                    if (inid.StartsWith("(56)"))
+                    {
+                        List<string> inids56 = Regex.Split(inid.Replace("(56) Documents Cited :", ""), @"(?=[A-Z]{2}\s?\d.+\s[A-Z].?)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string inid56 in inids56)
+                        {
+
+                        }
                     }
                     else Console.WriteLine($"{inid}  - don't process");
 
@@ -988,6 +992,7 @@ namespace Diamond_AP_Maksim
             "Saudi Arabia" => "SA",
             "Senegal" => "SN",
             "Serbia" => "RS",
+            "Сербия" => "RS",
             "Seychelles" => "SC",
             "Sierra Leone" => "SL",
             "Singapore" => "SG",
