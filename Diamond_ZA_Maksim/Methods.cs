@@ -91,6 +91,21 @@ namespace Diamond_ZA_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FZ"));
                     }
                 }
+                else
+                if (subCode == "5")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                           .SkipWhile(val => !val.Value.StartsWith("Application Number"))
+                           .TakeWhile(val => !val.Value.StartsWith("CHANGE OF NAME IN TERMS OF REGULATION 39"))
+                           .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\d{4}\/\d+\s.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("2")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "PC"));
+                    }
+                }
             }
                 return statusEvents;
         }
@@ -107,14 +122,17 @@ namespace Diamond_ZA_Maksim
                 Id = Id++,
                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new(),
-                LegalEvent = new()
+                LegalEvent = new(),
+                NewBiblio = new()
             };
 
             CultureInfo culture = new("ru-RU");
 
             if(subCode == "1")
             {
-                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71:.+)(?<inventors>72:.+?)(?<priority>33:.+)(?<date22>\.\s?-\s?APP.+)");
+                string formatedNote = Regex.Replace(note.Trim(), @"&#\d{3};", "");
+
+                Match match = Regex.Match(formatedNote.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71:.+)(?<inventors>72:.+?)(?<priority>33:.+)(?<date22>\.\s?-\s?APP.+)");
 
                 if (match.Success)
                 {
@@ -204,7 +222,7 @@ namespace Diamond_ZA_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71.+)(?<inventors>72.+)(?<date22>\.\s?-\s?APP.+)");
+                    Match match1 = Regex.Match(formatedNote.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71.+)(?<inventors>72.+)(?<date22>\.\s?-\s?APP.+)");
 
                     if (match1.Success)
                     {
@@ -380,6 +398,49 @@ namespace Diamond_ZA_Maksim
                         Country = inid33[i],
                         Number = inid31[i]
                     });
+                }
+            }
+            else
+            if(subCode == "5")
+            {
+                Match match = Regex.Match(note.Replace("Application Number Assignor Assignee", "").Replace("\r","").Replace("\n"," "),
+                    @"(?<appNum>\d{4}\/\d+)\s(?<assigner>.+(LTD\.?|INC\.?|PLC|LLC|LIMITED|LICENSING|CORPORARTION|CORPORATION))\s(?<assignerNew>.+)");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
+
+                    statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
+                    {
+                        Name = match.Groups["assigner"].Value.Trim()
+                    });
+
+                    statusEvent.NewBiblio.Assignees.Add(new Integration.PartyMember
+                    {
+                        Name = match.Groups["assignerNew"].Value.Trim()
+                    });
+                }
+                else
+                {
+                    Match match1 = Regex.Match(note.Replace("Application Number Assignor Assignee", "").Replace("\r", "").Replace("\n", " "), @"(?<appNum>\d{4}\/\d+)\s(?<assigner>.+)");
+
+                    if (match1.Success)
+                    {
+                        statusEvent.Biblio.Application.Number = match1.Groups["appNum"].Value.Trim();
+
+                        statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
+                        {
+                            Name = match1.Groups["assigner"].Value.Trim()
+                        });
+                    }
+                    else Console.WriteLine($"{note}");
+                }
+
+                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "").Replace("ZA_", "")), @"\d{8}");
+
+                if (match2.Success)
+                {
+                    statusEvent.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/"); 
                 }
             }
             return statusEvent;
@@ -653,7 +714,7 @@ namespace Diamond_ZA_Maksim
                 }
             }
             else
-            if(subCode == "3")
+            if(subCode == "3" || subCode == "5")
             {
                 foreach (XElement xElement in xElements)
                 {
