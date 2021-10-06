@@ -74,6 +74,22 @@ namespace Diamond_PH_Maksim
                     }
                 }
                 else
+                if(subCode == "29")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                         .SkipWhile(val => !val.Value.StartsWith("1.1 PUBLICATION OF INVENTION APPLICATIONS (PCT"))
+                         .TakeWhile(val => !val.Value.StartsWith("1.1 PUBLICATION OF DIVISIONAL INVENTION APPLICATIONS (PCT)"))
+                         .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=[0-9]{1,3}\sPCT\/.+)", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{1,3}\sPCT\/.+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(SplitNote(note, subCode, "BA"));
+                    }
+                }
+                else
                 if (subCode == "35")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -106,11 +122,13 @@ namespace Diamond_PH_Maksim
                 Biblio = new(),
                 LegalEvent = new()
             };
-            if(subCode == "5")
+
+            CultureInfo culture = new("ru-Ru");
+            if (subCode == "5")
             {
                 Match match = Regex.Match(note.Trim(), @"(?<aNum>\d+\/\d+\/\d+).+?(?<owner>[A-Z].+)\s(?<d43>\d{2}\/\d{2}\/\d{4})\s(?<title>([A-Z]|\d)\D+)");
 
-                CultureInfo culture = new("ru-Ru");
+             
                 if (match.Success)
                 {
                     statusEvent.Biblio.Application.Number = match.Groups["aNum"].Value.Trim();
@@ -184,6 +202,76 @@ namespace Diamond_PH_Maksim
                 else Console.WriteLine($"{note} - wrong match");
             }
             else
+            if(subCode == "29")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<PCTAppNum>PCT.+?)\s(?<appNum>.+)\s(?<PCTdate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+?)\s(?<ipcs>[A-Z]\d.+)");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.IntConvention.PctApplNumber = match.Groups["PCTAppNum"].Value.Trim();
+                    statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
+
+                    List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"[A-Z]\d{2}[A-Z]\s\d{1,2}\/\d+").Match(val).Success).ToList();
+
+                    foreach (string ipc in ipcs)
+                    {
+                        statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
+                        {
+                            Class = ipc.Trim()
+                        });
+                    }
+
+                    List<string> applicants = Regex.Split(match.Groups["title"].Value.Trim(), @"(?<=])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    for (int i = 0; i < applicants.Count; i++)
+                    {
+                        if(i == 0)
+                        {
+                            Match match1 = Regex.Match(applicants[i].Trim(), @"(?<title>.+)\s\[(?<code>\D{2})");
+
+                            if (match1.Success)
+                            {
+                                statusEvent.Biblio.Titles.Add(new Integration.Title
+                                {
+                                    Language = "EN",
+                                    Text = match1.Groups["title"].Value.Trim()
+                                });
+
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Country = match1.Groups["code"].Value.Trim()
+                                });
+                            }
+                            else 
+                            {
+                                statusEvent.Biblio.Titles.Add(new Integration.Title
+                                {
+                                    Language = "EN",
+                                    Text = applicants[i].Trim()
+                                });
+                            }                           
+                        }
+                        else
+                        {
+                            Match match1 = Regex.Match(applicants[i].Replace("and", "").Replace(";","").Replace(",","").Trim(), @"(?<name>.+)\s\[(?<code>\D{2})");
+
+                            if (match1.Success)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Country = match1.Groups["code"].Value.Trim(),
+                                    Name = match1.Groups["name"].Value.Trim()
+                                });
+                            }
+                        }
+
+                    }
+
+                }
+                else Console.WriteLine($"{note}");
+            }
+            else
             if(subCode == "35")
             {
                 CultureInfo cultureInfo = new("ru-RU");
@@ -238,12 +326,11 @@ namespace Diamond_PH_Maksim
         internal string MakeText(List<XElement> xElements)
         {
             string text = null;
-
-            foreach (XElement xElement in xElements)
-            {
-                text += xElement.Value + " ";
-            }
-
+            
+                foreach (XElement xElement in xElements)
+                {
+                    text += xElement.Value + " ";
+                }
             return text;
         }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
