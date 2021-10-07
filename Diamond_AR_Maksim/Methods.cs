@@ -326,7 +326,7 @@ namespace Diamond_AR_Maksim
                         {
                             dOfPublication.date_41 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
-                            legal.Note = "|| Publicación de trámite normal " + legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
+                            legal.Note = "|| Publicación adelantadas " + legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
 
                             noteTranslation.Tr = "|| Ordinary processing publication " + noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
                         }
@@ -359,7 +359,7 @@ namespace Diamond_AR_Maksim
                 statusEvent.Biblio.DOfPublication = dOfPublication;
             }
             else
-            if(subCode == "2" || subCode == "3")
+            if(subCode == "2" || subCode == "3")    
             {
                 foreach (string inid in MakeInids(note,subCode))
                 {
