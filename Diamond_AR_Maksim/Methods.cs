@@ -328,7 +328,7 @@ namespace Diamond_AR_Maksim
 
                             legal.Note = "|| Publicación adelantadas " + legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
 
-                            noteTranslation.Tr = "|| Ordinary processing publication " + noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
+                            noteTranslation.Tr = "|| Early publication " + noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
                         }
                     }
                     else
