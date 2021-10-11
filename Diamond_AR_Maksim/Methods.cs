@@ -326,9 +326,9 @@ namespace Diamond_AR_Maksim
                         {
                             dOfPublication.date_41 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
-                            legal.Note = "|| Publicación adelantadas " + legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
+                            legal.Note = legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
 
-                            noteTranslation.Tr = "|| Early publication " + noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
+                            noteTranslation.Tr = noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
                         }
                     }
                     else
