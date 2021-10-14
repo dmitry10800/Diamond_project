@@ -90,7 +90,7 @@ namespace DIamond_EA_Maksim
                     }
                 }
                 else
-                 if (subCode == "12")
+                 if (subCode  == "12")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("MM4A ДОСРОЧНОЕ ПРЕКРАЩЕНИЕ ДЕЙСТВИЯ ЕВРАЗИЙСКОГО ПАТЕНТА ИЗ-ЗА НЕУПЛАТЫ В УСТАНОВЛЕННЫЙ СРОК"))
