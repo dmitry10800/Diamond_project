@@ -6,7 +6,7 @@ namespace DIamond_EA_Maksim
     class Main_EA
     {
 
-        private static readonly string Path = @"C:\Work\EA\EA_20210831_08";
+        private static readonly string Path = @"C:\Work\EA\EA_20210930_09";
         private static readonly string SubCode = "12";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         static void Main(string[] args)

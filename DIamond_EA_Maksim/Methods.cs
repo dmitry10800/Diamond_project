@@ -94,6 +94,7 @@ namespace DIamond_EA_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("MM4A ДОСРОЧНОЕ ПРЕКРАЩЕНИЕ ДЕЙСТВИЯ ЕВРАЗИЙСКОГО ПАТЕНТА ИЗ-ЗА НЕУПЛАТЫ В УСТАНОВЛЕННЫЙ СРОК"))
+                            .TakeWhile(val => !val.Value.StartsWith("Период публикации сведений в бюллетене"))
                             .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                             .ToList();
 
@@ -433,7 +434,8 @@ namespace DIamond_EA_Maksim
             else
             if (subCode == "12")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNote1>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})\s(?<leNum>.+)");
+                Match match = Regex.Match(note.Trim(), 
+                    @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNote1>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})\s(?<leNum>.+)");
 
                 if (match.Success)
                 {
@@ -465,7 +467,8 @@ namespace DIamond_EA_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<leNum>.+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNote1>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})");
+                    Match match1 = Regex.Match(note.Trim(),
+                        @"(?<pubNum>\d+)\s(?<leNum>.+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNote1>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})");
 
                     if (match1.Success)
                     {
@@ -496,7 +499,8 @@ namespace DIamond_EA_Maksim
                     }
                     else
                     {
-                        Match match2 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>\D{1}\d{1,2})\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNum>.+?)\s(?<leNote1>[A-Z].+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})");
+                        Match match2 = Regex.Match(note.Trim(), 
+                            @"(?<pubNum>\d+)\s(?<pubKind>\D{1}\d{1,2})\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNum>.+?)\s(?<leNote1>[A-Z].+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})");
 
                         if (match2.Success)
                         {
@@ -520,6 +524,8 @@ namespace DIamond_EA_Maksim
                                 + "\n" + "|| Code of country on which territory the patent is terminated | " + match2.Groups["leNote1"].Value.Trim()
                                 + "\n" + "|| Code of country on which territory the patent is valid | " + match2.Groups["leNote2"].Value.Trim()
                             + "\n" + "|| Publication date of notice | " + match2.Groups["leNoteDate"].Value.Replace(".", "/").Trim();
+
+                            legalEvent.Translations.Add(noteTranslation);
 
                             legalEvent.Date = match2.Groups["leDate"].Value.Replace(".", "/").Trim();
                         }
@@ -549,6 +555,8 @@ namespace DIamond_EA_Maksim
                                     + "\n" + "|| Code of country on which territory the patent is terminated | " + match3.Groups["leNote1"].Value.Trim()
                                     + "\n" + "|| Code of country on which territory the patent is valid | " + match3.Groups["leNote2"].Value.Trim()
                                 + "\n" + "|| Publication date of notice | " + match3.Groups["leNoteDate"].Value.Replace(".", "/").Trim();
+
+                                legalEvent.Translations.Add(noteTranslation);
 
                                 legalEvent.Date = match3.Groups["leDate"].Value.Replace(".", "/").Trim();
                             }
