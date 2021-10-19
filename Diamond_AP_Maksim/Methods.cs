@@ -455,7 +455,7 @@ namespace Diamond_AP_Maksim
                     else
                     if (inid.StartsWith("(84)"))
                     {
-                            List<string> designatedStates = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(84) Designated States:", "").ToUpper().Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            List<string> designatedStates = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(84) Designated States:", "").Replace("(84) Designated States;","").ToUpper().Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                             intConvention.DesignatedStates = designatedStates;
                     }

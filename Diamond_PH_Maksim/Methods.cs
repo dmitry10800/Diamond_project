@@ -212,7 +212,7 @@ namespace Diamond_PH_Maksim
                     statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                     statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
 
-                    List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"[A-Z]\d{2}[A-Z]\s\d{1,2}\/\d+").Match(val).Success).ToList();
+                    List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"[A-Z]\d{2}[A-Z]\s\d{1,4}\/\d+").Match(val).Success).ToList();
 
                     foreach (string ipc in ipcs)
                     {
