@@ -115,7 +115,7 @@ namespace Diamond_RO_Maksim
                 if(subCode == "17")
                 {                   
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                       .SkipWhile(val => !val.Value.StartsWith("4. Brevete de invenþie europene cu efecte extinse"))
+                       .SkipWhile(val => !val.Value.StartsWith("4. Brevete de invenţie europene cu efecte extinse"))
                        .TakeWhile(val => !val.Value.StartsWith("5. Transmiteri de dreptu i înregistrate la Oficiul de Stat"))
                        .ToList();
 
@@ -1053,24 +1053,24 @@ namespace Diamond_RO_Maksim
                         if (match.Success)
                         {
                             europeanPatent.PubNumber = match.Groups["number"].Value.Trim();
-                            text.Add(DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"));
+                            text.Add(DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim());
                         }
                         else Console.WriteLine($"{inid} не разбился в 97");
                     }
                     else
                     if (inid.StartsWith(I80))
                     {
-                        Match match = Regex.Match(inid.Replace(I80, "").Trim(), @"(?<s>.+?:)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4});(?<note>.+:)\s(?<date1>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        Match match = Regex.Match(inid.Replace(I80, "").Trim(), @"(?<s>.+?:)\s(?<date>[0-9]{2}\.[0-9]{2}\.[0-9]{4});(?<note>.+:)\s?(?<date1>[0-9]{2}\.[0-9]{2}\.[0-9]{4})");
                         if (match.Success)
                         {
-                            europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
+                            europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} не разбился 80");
 
                         legalStatus.LegalEvent = new LegalEvent
                         {
                             Note = "|| " + text[0] + " | " + text[1] + "\n" + "|| " + text[2] + " | " + text[3] + "\n" + "|| " + text[4]
-                            + "\n" + "|| " + match.Groups["note"].Value.Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"),
+                            + "\n" + "|| " + match.Groups["note"].Value.Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".","/").Trim(),
                             Language = "RO",
                             Translations = new List<NoteTranslation>
                                 {
@@ -1080,7 +1080,7 @@ namespace Diamond_RO_Maksim
                                         Tr = "|| (45) Date of publication of the translation of the European patent dossier maintained in modified form | " + text[1] + "\n" +
                                         "|| Date of publication of the translation of the European patent dossier | " + text[3] + "\n" +
                                         "|| Date of publication of EP application | " + text[4] + "\n" +
-                                        "|| Date of publication by the European patent office of the mention of maintaining the European patent in modified form | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"),
+                                        "|| Date of publication by the European patent office of the mention of maintaining the European patent in modified form | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".","/").Trim(),
                                         Type = "note"
                                     }
                                 }
@@ -1097,9 +1097,9 @@ namespace Diamond_RO_Maksim
                         if (match.Success)
                         {
                             text.Add(match.Groups["s"].Value.Trim());
-                            text.Add(DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"));
+                            text.Add(DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim());
                             text.Add(match.Groups["note"].Value.Trim());
-                            text.Add(DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd"));
+                            text.Add(DateTime.Parse(match.Groups["date1"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim());
                         }
                         else Console.WriteLine($"{inid} не разбилось 45");
                     }
