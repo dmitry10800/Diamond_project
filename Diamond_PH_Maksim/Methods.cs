@@ -210,7 +210,7 @@ namespace Diamond_PH_Maksim
                 {
                     statusEvent.Biblio.IntConvention.PctApplNumber = match.Groups["PCTAppNum"].Value.Trim();
                     statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
+                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Replace(" ","").Trim();
 
                     List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"[A-Z]\d{2}[A-Z]\s\d{1,4}\/\d+").Match(val).Success).ToList();
 
@@ -275,7 +275,7 @@ namespace Diamond_PH_Maksim
                     {
                         statusEvent.Biblio.IntConvention.PctApplNumber = match1.Groups["PCTAppNum"].Value.Trim();
                         statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match1.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                        statusEvent.Biblio.Application.Number = match1.Groups["appNum"].Value.Trim();
+                        statusEvent.Biblio.Application.Number = match1.Groups["appNum"].Value.Replace(" ", "").Trim();
 
                         List<string> applicants = Regex.Split(match1.Groups["title"].Value.Trim(), @"(?<=])").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
