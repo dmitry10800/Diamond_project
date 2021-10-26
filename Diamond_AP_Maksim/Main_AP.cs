@@ -5,7 +5,7 @@ namespace Diamond_AP_Maksim
 {
     class Main_AP
     {
-        private static readonly string path = @"C:\Work\AP\AP_20210831_08\3";
+        private static readonly string path = @"C:\Work\AP\AP_20210930_09";
         private static readonly string subCode = "3";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 

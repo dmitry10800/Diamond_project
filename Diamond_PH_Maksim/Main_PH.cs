@@ -6,7 +6,7 @@ namespace Diamond_PH_Maksim
     class Main_PH
     {
 
-        private static readonly string Path = @"C:\Work\PH\PH_20211004_113";
+        private static readonly string Path = @"C:\Work\PH\PH_20211025_122";
         private static readonly string SubCode = "29";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 

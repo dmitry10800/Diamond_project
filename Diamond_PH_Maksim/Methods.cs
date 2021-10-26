@@ -226,7 +226,7 @@ namespace Diamond_PH_Maksim
 
                     for (int i = 0; i < applicants.Count; i++)
                     {
-                        if(i == 0)
+                        if (i == 0)
                         {
                             Match match1 = Regex.Match(applicants[i].Trim(), @"(?<title>.+)\s\[(?<code>\D{2})");
 
@@ -243,18 +243,18 @@ namespace Diamond_PH_Maksim
                                     Country = match1.Groups["code"].Value.Trim()
                                 });
                             }
-                            else 
+                            else
                             {
                                 statusEvent.Biblio.Titles.Add(new Integration.Title
                                 {
                                     Language = "EN",
                                     Text = applicants[i].Trim()
                                 });
-                            }                           
+                            }
                         }
                         else
                         {
-                            Match match1 = Regex.Match(applicants[i].Replace("and", "").Replace(";","").Replace(",","").Trim(), @"(?<name>.+)\s\[(?<code>\D{2})");
+                            Match match1 = Regex.Match(applicants[i].Replace("and", "").Replace(";", "").Replace(",", "").Trim(), @"(?<name>.+)\s\[(?<code>\D{2})");
 
                             if (match1.Success)
                             {
@@ -269,7 +269,62 @@ namespace Diamond_PH_Maksim
                     }
 
                 }
-                else Console.WriteLine($"{note}");
+                else {
+                    Match match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<PCTAppNum>PCT.+?)\s(?<appNum>.+)\s(?<PCTdate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+)");
+                    if (match1.Success)
+                    {
+                        statusEvent.Biblio.IntConvention.PctApplNumber = match1.Groups["PCTAppNum"].Value.Trim();
+                        statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match1.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        statusEvent.Biblio.Application.Number = match1.Groups["appNum"].Value.Trim();
+
+                        List<string> applicants = Regex.Split(match1.Groups["title"].Value.Trim(), @"(?<=])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        for (int i = 0; i < applicants.Count; i++)
+                        {
+                            if (i == 0)
+                            {
+                                Match match2 = Regex.Match(applicants[i].Trim(), @"(?<title>.+)\s\[(?<code>\D{2})");
+
+                                if (match2.Success)
+                                {
+                                    statusEvent.Biblio.Titles.Add(new Integration.Title
+                                    {
+                                        Language = "EN",
+                                        Text = match2.Groups["title"].Value.Trim()
+                                    });
+
+                                    statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                    {
+                                        Country = match2.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else
+                                {
+                                    statusEvent.Biblio.Titles.Add(new Integration.Title
+                                    {
+                                        Language = "EN",
+                                        Text = applicants[i].Trim()
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                Match match2 = Regex.Match(applicants[i].Replace("and", "").Replace(";", "").Replace(",", "").Trim(), @"(?<name>.+)\s\[(?<code>\D{2})");
+
+                                if (match2.Success)
+                                {
+                                    statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                    {
+                                        Country = match2.Groups["code"].Value.Trim(),
+                                        Name = match2.Groups["name"].Value.Trim()
+                                    });
+                                }
+                            }
+
+                        }
+                    }
+                    else Console.WriteLine($"{note}");
+                }
             }
             else
             if(subCode == "35")

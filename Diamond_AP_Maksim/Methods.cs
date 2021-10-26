@@ -80,7 +80,7 @@ namespace Diamond_AP_Maksim
                       .SkipWhile(val => !val.Value.StartsWith("FORM "))
                       .TakeWhile(val => !val.Value.StartsWith("Classification Index of Granted Patents")).ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=FORM\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("FORM ")).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=FORM\s\d)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("FORM ")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -351,7 +351,7 @@ namespace Diamond_AP_Maksim
                         else Console.WriteLine($"{inid} --------------------- 11");
                     }
                     else
-                    if (inid.StartsWith("(73)"))
+                    if (inid.StartsWith("(73)") || inid.StartsWith("( 73)"))
                     {
                         Match match = Regex.Match(inid.Replace("(73)","").Trim(), @"\)\s(?<name>.+?),\s?(?<adress>.+),\s?(?<country>.+)");
 
@@ -369,7 +369,7 @@ namespace Diamond_AP_Maksim
                         else Console.WriteLine($"{inid} --------------------- 73");
                     }
                     else
-                    if (inid.StartsWith("(21)"))
+                    if (inid.StartsWith("(21)") || inid.StartsWith("( 21)"))
                     {
                         Match match = Regex.Match(inid.Trim(), @":\s?(?<num>[A-Z].+\d)");
 
@@ -380,7 +380,7 @@ namespace Diamond_AP_Maksim
                         else Console.WriteLine($"{inid} --------------------- 21");
                     }
                     else
-                    if (inid.StartsWith("(22)"))
+                    if (inid.StartsWith("(22)") || inid.StartsWith("( 22)"))
                     {
                         Match match = Regex.Match(inid.Replace(" ","").Trim(), @":\s?(?<date>\d{2}.\d{2}.\d{4})");
 
@@ -460,7 +460,7 @@ namespace Diamond_AP_Maksim
                             intConvention.DesignatedStates = designatedStates;
                     }
                     else
-                    if (inid.StartsWith("(74)"))
+                    if (inid.StartsWith("(74)") || inid.StartsWith("( 74)"))
                     {
                         Match match = Regex.Match(inid.Replace("(74) Representative", "").Trim(), @"(?<name>.+?),\s(?<country>.+)");
 
