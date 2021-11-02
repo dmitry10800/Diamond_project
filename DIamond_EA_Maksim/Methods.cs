@@ -46,6 +46,7 @@ namespace DIamond_EA_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("FA9A ОТЗЫВ ЗАЯВКИ "))
+                             .TakeWhile(val => !val.Value.StartsWith("Период публикации сведений в бюллетене"))
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
@@ -61,7 +62,8 @@ namespace DIamond_EA_Maksim
                 if (subCode == "9")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                             .SkipWhile(val => !val.Value.StartsWith("PC1A РЕГИСТРАЦИЯ ПЕРЕДАЧИ ПРАВА НА ЕВРАЗИЙСКУЮ ЗАЯВКУ ПУТЕМ УСТУПКИ ПРАВА (79)"))
+                             .SkipWhile(val => !val.Value.StartsWith("PC1A РЕГИСТРАЦИЯ ПЕРЕДАЧИ ПРАВА НА ЕВРАЗИЙСКУЮ ЗАЯВКУ ПУТЕМ УСТУПКИ ПРАВА"))
+                             .TakeWhile(val => !val.Value.StartsWith("Период публикации сведений в бюллетене"))
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
