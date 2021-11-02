@@ -311,10 +311,11 @@ namespace Diamond_AR_Maksim
 
                         legal.Note =legal.Note + "|| (74) Agente/s Nro | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
                         legal.Language = "ES";
+                        
 
                         noteTranslation.Language = "EN";
                         noteTranslation.Tr = noteTranslation.Tr + "|| (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74)", "").Trim() + "\n";
-                        noteTranslation.Type = "note";
+                        noteTranslation.Type = "INID";
 
                     }
                     else
@@ -327,8 +328,11 @@ namespace Diamond_AR_Maksim
                             dOfPublication.date_41 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim();
 
                             legal.Note = legal.Note + "|| Bol. Nro | " + match.Groups["num"].Value.Trim() + "\n";
+                            legal.Language = "ES";
 
+                            noteTranslation.Language = "EN";
                             noteTranslation.Tr = noteTranslation.Tr + "|| Bulletin number | " + match.Groups["num"].Value.Trim() + "\n";
+                            noteTranslation.Type = "INID";
                         }
                     }
                     else
@@ -411,7 +415,7 @@ namespace Diamond_AR_Maksim
 
                             noteTranslation.Language = "EN";
                             noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["d2"].Value.Trim(), culture).ToString(@"yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
-                            noteTranslation.Type = "note";
+                            noteTranslation.Type = "INID";
 
                         }
                         else Console.WriteLine($"{inid}---24");
