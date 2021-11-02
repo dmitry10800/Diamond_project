@@ -189,7 +189,7 @@ namespace AR
                                 legal.Language = "ES";
                                 noteTranslation.Language = "EN";
                                 noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
-                                noteTranslation.Type = "note";
+                                noteTranslation.Type = "INID";
                             }
                             else Console.WriteLine($"В -- поле не был найден LegalEvent.Date - [{text}]");
                         }

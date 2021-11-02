@@ -792,7 +792,7 @@ namespace Diamond_BG_Maksim
                             legal.Language = "BG";
 
                             noteTranslation.Language = "EN";
-                            noteTranslation.Type = "note";
+                            noteTranslation.Type = "INID";
                             noteTranslation.Tr = "|| Claims | " + match.Groups["note"].Value.Trim();
 
                           

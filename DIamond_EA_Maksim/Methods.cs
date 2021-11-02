@@ -197,7 +197,7 @@ namespace DIamond_EA_Maksim
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     noteTranslation.Tr = "|| Application publication Bulletin No. | " + match.Groups["note"].Value.Replace("N o", "No.").Trim() 
                         + "\n" + "|| Publication date of notice | " + match.Groups["noteDate"].Value.Replace(".", "/").Trim();
 
@@ -221,7 +221,7 @@ namespace DIamond_EA_Maksim
                         legalEvent.Language = "RU";
 
                         noteTranslation.Language = "EN";
-                        noteTranslation.Type = "note";
+                        noteTranslation.Type = "INID";
                         noteTranslation.Tr = "|| Application publication Bulletin No. | " + match1.Groups["note"].Value.Replace("N o", "No.").Trim()
                             + "\n" + "|| Publication date of notice | " + match1.Groups["noteDate"].Value.Replace(".", "/").Trim();
 
@@ -252,7 +252,7 @@ namespace DIamond_EA_Maksim
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     noteTranslation.Tr = "|| Application publication Bulletin No. | " + match.Groups["note"].Value.Replace("N o", "No.").Trim()
                         + "\n" + "|| Publication date of notice | " + match.Groups["noteDate"].Value.Replace(".", "/").Trim();
 
@@ -381,7 +381,7 @@ namespace DIamond_EA_Maksim
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["noteNum"].Value.Replace("N o", "No.").Trim()
                         + "\n" + "|| Country code where the patent is expired | " + match.Groups["leNote"].Value.Trim()
                     + "\n" + "|| Publication date of notice | " + match.Groups["leNoteDate"].Value.Replace(".", "/").Trim();
@@ -413,7 +413,7 @@ namespace DIamond_EA_Maksim
                         legalEvent.Language = "RU";
 
                         noteTranslation.Language = "EN";
-                        noteTranslation.Type = "note";
+                        noteTranslation.Type = "INID";
                         noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match1.Groups["noteNum"].Value.Replace("N o", "No.").Trim()
                             + "\n" + "|| Country code where the patent is expired | " + match1.Groups["leNote"].Value.Trim()
                         + "\n" + "|| Publication date of notice | " + match1.Groups["leNoteDate"].Value.Replace(".", "/").Trim();
@@ -454,7 +454,7 @@ namespace DIamond_EA_Maksim
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["leNum"].Value.Replace("N o", "No.").Trim()
                         + "\n" + "|| Code of country on which territory the patent is terminated | " + match.Groups["leNote1"].Value.Trim()
                         + "\n" + "|| Code of country on which territory the patent is valid | " + match.Groups["leNote2"].Value.Trim()
@@ -487,7 +487,7 @@ namespace DIamond_EA_Maksim
                         legalEvent.Language = "RU";
 
                         noteTranslation.Language = "EN";
-                        noteTranslation.Type = "note";
+                        noteTranslation.Type = "INID";
                         noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match1.Groups["leNum"].Value.Replace("N o", "No.").Trim()
                             + "\n" + "|| Code of country on which territory the patent is terminated | " + match1.Groups["leNote1"].Value.Trim()
                             + "\n" + "|| Code of country on which territory the patent is valid | " + match1.Groups["leNote2"].Value.Trim()
@@ -519,7 +519,7 @@ namespace DIamond_EA_Maksim
                             legalEvent.Language = "RU";
 
                             noteTranslation.Language = "EN";
-                            noteTranslation.Type = "note";
+                            noteTranslation.Type = "INID";
                             noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match2.Groups["leNum"].Value.Replace("N o", "No.").Trim()
                                 + "\n" + "|| Code of country on which territory the patent is terminated | " + match2.Groups["leNote1"].Value.Trim()
                                 + "\n" + "|| Code of country on which territory the patent is valid | " + match2.Groups["leNote2"].Value.Trim()
@@ -550,7 +550,7 @@ namespace DIamond_EA_Maksim
                                 legalEvent.Language = "RU";
 
                                 noteTranslation.Language = "EN";
-                                noteTranslation.Type = "note";
+                                noteTranslation.Type = "INID";
                                 noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " 
                                     + "\n" + "|| Code of country on which territory the patent is terminated | " + match3.Groups["leNote1"].Value.Trim()
                                     + "\n" + "|| Code of country on which territory the patent is valid | " + match3.Groups["leNote2"].Value.Trim()
@@ -597,7 +597,7 @@ namespace DIamond_EA_Maksim
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["noteNum"].Value.Replace("N o", "No.").Trim()
                         + "\n" + "|| Right to patent is restored for the following years of patent validity | " + match.Groups["leNoteNumber"].Value.Trim()
                     + "\n" + "|| Code of country in respect of which right to patent is restored | " + match.Groups["leNoteCountry"].Value.Trim();
@@ -640,7 +640,7 @@ namespace DIamond_EA_Maksim
                     legalEvent.Language = "RU";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     noteTranslation.Tr = "|| Eurasian patent publication Bulletin No. | " + match.Groups["note1"].Value.Replace("N", "№").Replace(" ", "").Replace("o", "").Trim() +
                         " || Registration Number of the document of assignment of rights | " + match.Groups["noteNum"].Value.Trim() +
                         " || Publication date of notice | " + match.Groups["noteDate"].Value.Trim();
