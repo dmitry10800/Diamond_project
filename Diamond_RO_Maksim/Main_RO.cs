@@ -5,9 +5,9 @@ namespace Diamond_RO_Maksim
 {
     class Main_RO
     {
-        private static readonly string path = @"C:\Work\RO\RO_20210930_09_E";
-
-        private static readonly string subCode = "17";
+        private static readonly string path = @"C:\Work\RO\RO_20211029_10";
+        private static readonly string subCode = "20";
+        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {
@@ -19,6 +19,8 @@ namespace Diamond_RO_Maksim
                 "14" => methods.Start(path, subCode),
                 "16" => methods.Start(path, subCode),
                 "17" => methods.Start(path, subCode),
+                "20" => methods.Start(path, subCode),
+                "22" => methods.Start(path, subCode),
                 "23" => methods.Start(path, subCode),
                 "24" => methods.Start(path, subCode),
                 "27" => methods.Start(path, subCode),
@@ -28,7 +30,7 @@ namespace Diamond_RO_Maksim
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
+            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
             else Console.WriteLine("Wrong sub");
         }
     }
