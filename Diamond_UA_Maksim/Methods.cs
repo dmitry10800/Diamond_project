@@ -44,7 +44,7 @@ namespace Diamond_UA_Maksim
                 if(subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на" + "\n" + "винахід у разі несплати річного збору"))
+                        .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на винахід" + "\n" + "у разі несплати річного збору"))
                         .TakeWhile(val => !val.Value.StartsWith("Визнання прав на винахід недійсними в судовому порядку повністю") 
                         && !val.Value.StartsWith("Заява володільця патенту про готовність надання будь-якій особі"))
                         .ToList();
@@ -122,7 +122,7 @@ namespace Diamond_UA_Maksim
 
                     legalStatus.LegalEvent = new LegalEvent
                     {
-                        Date = DateTime.Parse(text, cultureInfo).ToString("yyyy/MM/dd")
+                        Date = DateTime.Parse(text, cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim()
                     };
                 }
             }
