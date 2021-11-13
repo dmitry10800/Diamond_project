@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29503.13
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Countries", "Countries", "{CD278762-9ACD-48B2-BD8A-424C2CD42A38}"
 EndProject
@@ -339,7 +339,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_VN_Maksim", "Diamon
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UZ", "UZ", "{F091BF7C-1D21-40F7-93C2-2A346400DDBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_UZ_Maksim", "Diamond_UZ_Maksim\Diamond_UZ_Maksim.csproj", "{5D45FBFB-D703-44D9-9F60-B5C12B5375E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_UZ_Maksim", "Diamond_UZ_Maksim\Diamond_UZ_Maksim.csproj", "{5D45FBFB-D703-44D9-9F60-B5C12B5375E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_TR_Maksim_Excel", "Diamond_TR_Maksim_Excel\Diamond_TR_Maksim_Excel.csproj", "{20E6137D-925E-4E51-8388-78876347C953}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -783,6 +785,10 @@ Global
 		{5D45FBFB-D703-44D9-9F60-B5C12B5375E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D45FBFB-D703-44D9-9F60-B5C12B5375E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D45FBFB-D703-44D9-9F60-B5C12B5375E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20E6137D-925E-4E51-8388-78876347C953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20E6137D-925E-4E51-8388-78876347C953}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20E6137D-925E-4E51-8388-78876347C953}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20E6137D-925E-4E51-8388-78876347C953}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -956,6 +962,7 @@ Global
 		{668E9B74-7692-4333-B4C7-8D0DA92D19A2} = {9EAC3929-F5CE-4E5D-98BE-F6F444CA5EF1}
 		{F091BF7C-1D21-40F7-93C2-2A346400DDBF} = {CD278762-9ACD-48B2-BD8A-424C2CD42A38}
 		{5D45FBFB-D703-44D9-9F60-B5C12B5375E6} = {F091BF7C-1D21-40F7-93C2-2A346400DDBF}
+		{20E6137D-925E-4E51-8388-78876347C953} = {D96318A9-E52F-41FB-9C29-24E89BB315D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D20EC653-9AB2-4390-80D0-3B8BEC2529F8}

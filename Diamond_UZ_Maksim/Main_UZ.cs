@@ -7,7 +7,7 @@ namespace Diamond_UZ_Maksim
     {
         private static readonly string Path = @"C:\Work\UZ\UZ_20211029_10";
         private static readonly string SubCode = "4";
-        private static readonly bool SendToProd = true;   // true - send to Prod ; false - send to Stag
+        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
         {
             Methods methods = new();
