@@ -58,7 +58,7 @@ namespace Diamond_TR_Maksim_Excel
                             };
 
                             statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
-
+                            
                             statusEvent.Biblio.Titles.Add(new Integration.Title
                             {
                                 Language = "TR",
@@ -416,22 +416,22 @@ namespace Diamond_TR_Maksim_Excel
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                    string tmpValue = JsonConvert.SerializeObject(rec);
+                    string url;
+                    if (SendToProduction == true)
+                    {
+                        url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
+                    }
+                    else
+                    {
+                        url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
+                    }
+                    HttpClient httpClient = new();
+                    httpClient.BaseAddress = new Uri(url);
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                    HttpResponseMessage result = httpClient.PostAsync("", content).Result;
+                    string answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }
