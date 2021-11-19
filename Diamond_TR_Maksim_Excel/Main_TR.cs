@@ -2,7 +2,7 @@
 {
     class Main_TR
     {
-        private static readonly string Path = @"C:\Work\TR\TR_20211021_10 excel files\39";
+        private static readonly string Path = @"C:\Work\TR\TR_20210921_09 excel files\39";
         private static readonly string SubCode = "39";
         private static readonly bool SendToProd = true;   // true - send to Prod ; false - send to Stag
 

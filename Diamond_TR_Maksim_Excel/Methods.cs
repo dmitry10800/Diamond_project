@@ -65,10 +65,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
@@ -112,10 +116,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
@@ -159,10 +167,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
@@ -206,10 +218,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
@@ -255,10 +271,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             statusEvent.LegalEvent.Date = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
 
@@ -297,10 +317,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
@@ -344,10 +368,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
@@ -391,10 +419,14 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
                             {
-                                Name = sheet.GetRow(row).GetCell(2).ToString()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
 
                             Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
