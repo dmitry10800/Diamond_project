@@ -115,8 +115,7 @@ namespace Diamond_MY_Maksim
                     {
                         statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
                         {
-                            Class = ipc.Trim(),
-                            Date = "2006/01/01"
+                            Class = ipc.Trim()
                         });
                     }
                 }
