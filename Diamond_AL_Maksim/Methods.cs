@@ -148,7 +148,7 @@ namespace Diamond_AL_Maksim
 
                         if (match.Success)
                         {
-                            biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            biblio.Application.EffectiveDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
                             biblio.Titles.Add(new Title
                             {
