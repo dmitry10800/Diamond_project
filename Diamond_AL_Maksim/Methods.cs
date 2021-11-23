@@ -53,7 +53,7 @@ namespace Diamond_AL_Maksim
 
                     foreach (string note in notes)
                     {
-                        statusEvents.Add(MakePatent(note, subCode, "FG"));
+                        statusEvents.Add(MakePatent(note.Replace("Buletini i Pronësisë Industriale", ""), subCode, "FG"));
                     }
                 }
                 else if (subCode == "19")
@@ -148,7 +148,7 @@ namespace Diamond_AL_Maksim
 
                         if (match.Success)
                         {
-                            biblio.DOfPublication.date_45 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
                             biblio.Titles.Add(new Title
                             {
@@ -250,6 +250,12 @@ namespace Diamond_AL_Maksim
                         }
                     }
                     else Console.WriteLine($"{inid} - not process");
+                }
+                Match match11 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+
+                if (match11.Success)
+                {
+                    biblio.DOfPublication.date_45 = match11.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
                 }
 
                 biblio.EuropeanPatents.Add(europeanPatent);
