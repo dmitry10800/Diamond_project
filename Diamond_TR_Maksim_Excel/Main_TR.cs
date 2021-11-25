@@ -2,8 +2,8 @@
 {
     class Main_TR
     {
-        private static readonly string Path = @"C:\Work\TR\TR_20211122_11\41";
-        private static readonly string SubCode = "41";
+        private static readonly string Path = @"C:\Work\TR\TR_20211122_11\47";
+        private static readonly string SubCode = "47";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)

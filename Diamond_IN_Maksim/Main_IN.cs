@@ -6,8 +6,8 @@ namespace Diamond_IN_Maksim
     class Main_IN
     {
 
-        private static readonly string path = @"C:\Work\IN\IN_20210820_34(1)";
-        private static readonly string subCode = "10";
+        private static readonly string path = @"C:\Work\IN\IN_20211119_47";
+        private static readonly string subCode = "1";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
@@ -16,6 +16,7 @@ namespace Diamond_IN_Maksim
 
             List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
             {
+                "1" => methods.Start(path, subCode),
                 "10" => methods.Start(path, subCode),
                 _ => null
             };
