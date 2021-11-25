@@ -2,9 +2,9 @@
 {
     class Main_TR
     {
-        private static readonly string Path = @"C:\Work\TR\TR_20210921_09 excel files\39";
-        private static readonly string SubCode = "39";
-        private static readonly bool SendToProd = true;   // true - send to Prod ; false - send to Stag
+        private static readonly string Path = @"C:\Work\TR\TR_20211122_11\41";
+        private static readonly string SubCode = "41";
+        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {           
@@ -20,6 +20,8 @@
                 "30" => methods.Start(Path, SubCode),
                 "31" => methods.Start(Path, SubCode),
                 "39" => methods.Start(Path, SubCode),
+                "41" => methods.Start(Path, SubCode),
+                "47" => methods.Start(Path, SubCode),
                 _ => null
             };
 

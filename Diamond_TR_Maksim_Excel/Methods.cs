@@ -439,6 +439,108 @@ namespace Diamond_TR_Maksim_Excel
                         }
                     }
                 }
+                else if (sub == "41")
+                {
+                    XSSFWorkbook OpenedDocument;
+
+                    OpenedDocument = new(xlsFiles);
+
+                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+
+                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    {
+                        if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
+                        {
+                            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                            {
+                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                CountryCode = "TR",
+                                SubCode = sub,
+                                SectionCode = "NB",
+                                Id = Id++,
+                                LegalEvent = new(),
+                                Biblio = new()
+                            };
+
+                            statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+                            statusEvent.Biblio.Titles.Add(new Integration.Title
+                            {
+                                Language = "TR",
+                                Text = sheet.GetRow(row).GetCell(1).ToString()
+                            });
+
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
+
+                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+
+                            if (match.Success)
+                            {
+                                statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                            }
+
+                            statusEvents.Add(statusEvent);
+                        }
+                    }
+                }
+                else if (sub == "47")
+                {
+                    XSSFWorkbook OpenedDocument;
+
+                    OpenedDocument = new(xlsFiles);
+
+                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+
+                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    {
+                        if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
+                        {
+                            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                            {
+                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                CountryCode = "TR",
+                                SubCode = sub,
+                                SectionCode = "MA",
+                                Id = Id++,
+                                LegalEvent = new(),
+                                Biblio = new()
+                            };
+
+                            statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+                            statusEvent.Biblio.Titles.Add(new Integration.Title
+                            {
+                                Language = "TR",
+                                Text = sheet.GetRow(row).GetCell(1).ToString()
+                            });
+
+                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (string applicant in applicants)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                {
+                                    Name = applicant.Trim()
+                                });
+                            }
+
+                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+
+                            if (match.Success)
+                            {
+                                statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                            }
+
+                            statusEvents.Add(statusEvent);
+                        }
+                    }
+                }
             }
 
             return statusEvents;
