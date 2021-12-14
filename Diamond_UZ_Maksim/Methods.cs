@@ -121,6 +121,12 @@ namespace Diamond_UZ_Maksim
                 {
                     if (inid.StartsWith("(13)"))
                     {
+                        var tmpKind = inid.Replace("(13)", "")
+                            .Replace("В", "B")
+                            .Replace("А", "A")
+                            .Replace("С", "C")
+                            .Trim();
+                        
                         statusEvent.Biblio.Publication.Kind = inid.Replace("(13)", "").Trim();
                     }
                     else if (inid.StartsWith("(21)"))
@@ -179,6 +185,7 @@ namespace Diamond_UZ_Maksim
                                                     {
                                                         new Integration.Translation
                                                         {
+                                                            Type = "71",
                                                             Language = "RU",
                                                             TrAddress1 = match2.Groups["country"].Value.Trim(),
                                                             TrName = match2.Groups["names"].Value.Trim()
@@ -505,6 +512,7 @@ namespace Diamond_UZ_Maksim
                                     {
                                        new Integration.Translation
                                        {
+                                           Type = "57",
                                            Language = "RU",
                                            Tr = claimsRu[i]
                                        }
@@ -918,6 +926,7 @@ namespace Diamond_UZ_Maksim
                                                     {
                                                         new Integration.Translation
                                                         {
+                                                            Type = "71",
                                                             Language = "RU",
                                                             TrAddress1 = match2.Groups["country"].Value.Trim(),
                                                             TrName = match2.Groups["names"].Value.Trim()
@@ -934,6 +943,7 @@ namespace Diamond_UZ_Maksim
                                                     {
                                                         new Integration.Translation
                                                         {
+                                                            Type = "73",
                                                             Language = "RU",
                                                             TrAddress1 = match2.Groups["country"].Value.Trim(),
                                                             TrName = match2.Groups["names"].Value.Trim()
