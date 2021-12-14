@@ -7,8 +7,8 @@ namespace Diamond_UA_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\UA\UA_20210324_12(1)";
-            string subCode = "8";
+            string path = @"C:\Work\UA\UA_20211110_45(1)";
+            string subCode = "2";
 
             Methods methods = new Methods();
 

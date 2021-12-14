@@ -21,7 +21,7 @@ namespace Diamond_AR
                 splitDate = tmpDate.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splitDate.Count() == 3)
                 {
-                    return swapDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+                    return swapDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
                 }
             }
             return tmpDate;

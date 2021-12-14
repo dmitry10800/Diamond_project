@@ -43,7 +43,7 @@ namespace Diamond_AP_LE
             var a = datePat.Match(v);
             if (a.Success)
             {
-                return a.Groups["year"].Value + "-" + DateMonthToDigit(a.Groups["month"].Value) + "-" + DateZeroAdd(a.Groups["day"].Value);
+                return a.Groups["year"].Value + "/" + DateMonthToDigit(a.Groups["month"].Value) + "/" + DateZeroAdd(a.Groups["day"].Value);
             }
             else
                 Console.WriteLine($"Date pattern doesn't match\t {v}");
@@ -80,7 +80,7 @@ namespace Diamond_AP_LE
             var a = patternDate.Match(tmpDate);
             if (a.Success)
             {
-                return a.Groups["year"].Value + "-" + a.Groups["month"].Value + "-" + a.Groups["day"].Value;
+                return a.Groups["year"].Value + "/" + a.Groups["month"].Value + "/" + a.Groups["day"].Value;
             }
             else return tmpDate;
         }
@@ -94,7 +94,7 @@ namespace Diamond_AP_LE
             var _ = date.Match(v);
             if (_.Success)
             {
-                return _.Groups["year"].Value + "-" + _.Groups["month"].Value + "-" + _.Groups["day"].Value;
+                return _.Groups["year"].Value + "/" + _.Groups["month"].Value + "/" + _.Groups["day"].Value;
             }
             else return null;
         }
@@ -103,8 +103,8 @@ namespace Diamond_AP_LE
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
+                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

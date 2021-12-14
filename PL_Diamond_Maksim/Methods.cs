@@ -69,6 +69,21 @@ namespace PL_Diamond_Maksim
                         }
                     }
                     else
+                    if(subCode == "31")
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                           .SkipWhile(val => !val.Value.StartsWith("WYGAŚNIĘCIE PRAWA"))
+                           .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
+                           .ToList();
+
+                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\(\D\d{1,2}\)").Match(val).Success).ToList();
+
+                        foreach (string note in notes)
+                        {
+                            convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
+                        }
+                    }
+                    else
                     if (subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -280,7 +295,7 @@ namespace PL_Diamond_Maksim
 
                     noteTranslation.Language = "EN";
                     noteTranslation.Tr = "|| Date of entry | " + date;
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
                     string leDate = Path.GetFileName(CurrentFileName.Replace(".tetml", ""));
@@ -368,8 +383,8 @@ namespace PL_Diamond_Maksim
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "||Expiry range | Patent has expired in completely.";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired in completely.";
+                    noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
                 else Console.WriteLine($"Данная запись не разбилась -- {text}");
@@ -393,7 +408,7 @@ namespace PL_Diamond_Maksim
 
                     noteTranslation.Language = "EN";
                     noteTranslation.Tr = "|| Year of issue and number of the European Patent Bulletin in which grant or amendment of the patent was announced | " + match.Groups["note"].Value.Trim();
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
                     Match match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
@@ -498,6 +513,30 @@ namespace PL_Diamond_Maksim
                 legalEvent.Biblio = biblio;
             }
             else
+            if(subCode == "31")
+            {
+                Match match = Regex.Match(note.Trim().TrimEnd('.'), @"\((?<pKind>\D\d{1,2})\)\s.+?\s(?<pNum>.+?)\s(?<leDate>\d{4}\s?\d{2}\s?\d{2})\s(?<leNote>.+)");
+
+                if (match.Success)
+                {
+                    biblio.Publication.Kind = match.Groups["pKind"].Value.Trim();
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+
+                    legal.Date = match.Groups["leDate"].Value.Replace(" ", "/").Trim();
+                    legal.Note = "|| Zakres wygaśnięcia | " + match.Groups["leNote"].Value.Trim();
+                    legal.Language = "PL";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired completely";
+                    noteTranslation.Language = "EN";
+                    noteTranslation.Type = "INID";
+
+                    legal.Translations = new(){noteTranslation};
+                }
+                else Console.WriteLine($"{note}");
+
+                legalEvent.LegalEvent = legal;
+                legalEvent.Biblio = biblio;
+            }
+            else
             if (subCode == "32")
             {
                 Match match = Regex.Match(text, @"\((?<kind>[A-Z]{1}\d+)\)(\s\([0-9]{2}\)\s)?(?<number>[0-9]+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+)");
@@ -514,8 +553,8 @@ namespace PL_Diamond_Maksim
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "||Expiry range | Patent has expired in completely.";
-                    noteTranslation.Type = "note";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired in completely.";
+                    noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
                 else Console.WriteLine($"Данная нота не разбилась {text}");
@@ -541,7 +580,7 @@ namespace PL_Diamond_Maksim
 
                     noteTranslation.Language = "EN";
                     noteTranslation.Tr = "|| Year of issue and number of the European Patent Bulletin in which grant or amendment of the patent was announced | " + match.Groups["note"].Value.Trim();
-                    noteTranslation.Type = "note";
+                    noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
                     Match match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");

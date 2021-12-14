@@ -11,7 +11,7 @@ namespace IN
 {
     class Diamond_IN
     {
-        public const string _pathToFiles = @"C:\Work\IN\IN_20210212_07";
+        public const string _pathToFiles = @"C:\Work\IN\IN_20210827_35(1)";
         public static string sub = "10";
         public static bool _isStaging = true;
         public static FileInfo _currentFileInProcess;

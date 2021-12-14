@@ -158,12 +158,13 @@ namespace BA
                                 tmpAbstract = tmpAbstract.Remove(tmpAbstract.IndexOf(I99)).Trim();
                             }
 
-                            biblioData.Abstracts.Add(new Abstract 
+                            biblioData.Claims.Add(new DiamondProjectClasses.Claim 
                             {
                                 Language = "HR",
-                                Text = tmpAbstract
+                                Text = tmpAbstract,
+                                Number ="1"
                             });
-                            if (biblioData.Abstracts == null || biblioData.Abstracts.Count == 0)
+                            if (biblioData.Claims == null || biblioData.Claims.Count == 0)
                             {
                                 Console.WriteLine($"Patent: {biblioData.Publication.Number}. Inid {I57} data is missing in {rec}");
                             }

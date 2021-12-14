@@ -189,7 +189,7 @@ namespace AR
                                 legal.Language = "ES";
                                 noteTranslation.Language = "EN";
                                 noteTranslation.Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
-                                noteTranslation.Type = "note";
+                                noteTranslation.Type = "INID";
                             }
                             else Console.WriteLine($"В -- поле не был найден LegalEvent.Date - [{text}]");
                         }
@@ -317,10 +317,11 @@ namespace AR
                         {
                             string text = ReplaceInid(element, I57);
 
-                            biblioData.Abstracts.Add(new Abstract
+                            biblioData.Claims.Add(new DiamondProjectClasses.Claim
                             {
                                 Text = text,
-                                Language = "ES"
+                                Number = "1",
+                                Language ="ES"
                             });
                         }
                         else
