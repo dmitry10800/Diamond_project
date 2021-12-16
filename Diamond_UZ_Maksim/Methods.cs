@@ -127,7 +127,7 @@ namespace Diamond_UZ_Maksim
                             .Replace("С", "C")
                             .Trim();
                         
-                        statusEvent.Biblio.Publication.Kind = inid.Replace("(13)", "").Trim();
+                        statusEvent.Biblio.Publication.Kind = tmpKind;
                     }
                     else if (inid.StartsWith("(21)"))
                     {
@@ -187,7 +187,6 @@ namespace Diamond_UZ_Maksim
                                                         {
                                                             Type = "71",
                                                             Language = "RU",
-                                                            TrAddress1 = match2.Groups["country"].Value.Trim(),
                                                             TrName = match2.Groups["names"].Value.Trim()
                                                         }
                                                     }
@@ -912,46 +911,53 @@ namespace Diamond_UZ_Maksim
                             {
                                 for (int i = 0; i < applicants.Count; i++)
                                 {
-                                    Match match1 = Regex.Match(applicants[i].Trim(), @"(?<names>.+),\s(?<country>[A-Z]{2})");
-                                    Match match2 = Regex.Match(applicants[++i].Trim(), @"(?<names>.+),\s(?<country>[A-Z]{2})");
-
-                                    if (match1.Success && match2.Success)
+                                    try
                                     {
-                                        statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                        Match match1 = Regex.Match(applicants[i].Trim(), @"(?<names>.+),\s(?<country>[A-Z]{2})");
+                                        Match match2 = Regex.Match(applicants[++i].Trim(), @"(?<names>.+),\s(?<country>[A-Z]{2})");
+
+                                        if (match1.Success && match2.Success)
                                         {
-                                            Name = match1.Groups["names"].Value.Trim(),
-                                            Language = "UZ",
-                                            Country = match1.Groups["country"].Value.Trim(),
-                                            Translations = new List<Integration.Translation>
+                                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                            {
+                                                Name = match1.Groups["names"].Value.Trim(),
+                                                Language = "UZ",
+                                                Country = match1.Groups["country"].Value.Trim(),
+                                                Translations = new List<Integration.Translation>
                                                     {
                                                         new Integration.Translation
                                                         {
                                                             Type = "71",
                                                             Language = "RU",
-                                                            TrAddress1 = match2.Groups["country"].Value.Trim(),
                                                             TrName = match2.Groups["names"].Value.Trim()
                                                         }
                                                     }
-                                        });
+                                            });
 
-                                        statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
-                                        {
-                                            Name = match1.Groups["names"].Value.Trim(),
-                                            Language = "UZ",
-                                            Country = match1.Groups["country"].Value.Trim(),
-                                            Translations = new List<Integration.Translation>
+                                            statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
+                                            {
+                                                Name = match1.Groups["names"].Value.Trim(),
+                                                Language = "UZ",
+                                                Country = match1.Groups["country"].Value.Trim(),
+                                                Translations = new List<Integration.Translation>
                                                     {
                                                         new Integration.Translation
                                                         {
                                                             Type = "73",
                                                             Language = "RU",
-                                                            TrAddress1 = match2.Groups["country"].Value.Trim(),
                                                             TrName = match2.Groups["names"].Value.Trim()
                                                         }
                                                     }
-                                        });
+                                            });
+                                        }
+                                        else
+                                            Console.WriteLine($"{applicants[i]}");
                                     }
-                                    else Console.WriteLine($"{applicants[i]}");
+                                    catch (Exception e)
+                                    {
+                                        //todo : fix the issue with Exception and create a proper handler
+                                        Console.WriteLine($"EXCEPTION: {applicants[i]}");
+                                    }
                                 }
                             }
                         }
