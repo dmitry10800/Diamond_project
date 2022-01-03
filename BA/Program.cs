@@ -18,7 +18,7 @@ namespace BA
         private static readonly string ProductionLensLink = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
         private static readonly string Sub4Key = @"OBJAVA PROŠIRENIH EVROPSKIH PATENATA UPISANIH U REGISTAR PATENATA";
 
-
+        public static object JsonConvert { get; private set; }
 
         static void Main(string[] args)
         {
