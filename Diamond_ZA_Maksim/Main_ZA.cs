@@ -5,8 +5,8 @@ namespace Diamond_ZA_Maksim
 {
     class Main_ZA
     {
-        private static readonly string path = @"C:\Work\ZA\ZA_20210929_09(2)";
-        private static readonly string subCode = "5";
+        private static readonly string path = @"C:\Work\ZA\ZA_20211222_12(2)";
+        private static readonly string subCode = "6";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
@@ -18,6 +18,7 @@ namespace Diamond_ZA_Maksim
                 "1" => methods.Start(path, subCode),
                 "3" => methods.Start(path, subCode),
                 "5" => methods.Start(path, subCode),
+                "6" => methods.Start(path, subCode),
                 _ => null
             };
 
