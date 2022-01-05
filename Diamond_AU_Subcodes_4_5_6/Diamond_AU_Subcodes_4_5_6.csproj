@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Diamond_AU_Subcodes_4_5_6</RootNamespace>
     <AssemblyName>Diamond_AU_Subcodes_4_5_6</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
