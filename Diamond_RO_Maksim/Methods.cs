@@ -188,6 +188,7 @@ namespace Diamond_RO_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie pentru care s-a luat o hotărâre de respingere conform art. 27, alin. 2,"))
+                        .TakeWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie declarate ca fiind retrase conform art. 27, din Legea nr. 64/1991"))
                         .TakeWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie pentru care s-a luat act de retragere conform art. 27, alin. 3, din"))
                         .ToList();
 
@@ -201,7 +202,7 @@ namespace Diamond_RO_Maksim
                 else if (subCode == "29")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie declarate ca fiind retrase conform art. 27, din Legea nr. 64/1991,"))
+                        .SkipWhile(val => !val.Value.StartsWith("Cereri de brevet de invenţie declarate ca fiind retrase conform art. 27, din Legea nr. 64/1991"))
                         .TakeWhile(val => !val.Value.StartsWith("CERERI DE BREVET DE INVENŢIE"))
                         .ToList();
 
