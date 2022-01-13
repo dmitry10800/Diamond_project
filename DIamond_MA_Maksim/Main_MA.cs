@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Diamond_ZA_Maksim
+namespace Diamond_MA_Maksim
 {
-    class Main_ZA
+    class Main_MA
     {
-        private static readonly string path = @"C:\!Work\ZA\ZA_20211222_12(2)";
-        private static readonly string subCode = "6";
+        private static readonly string path = @"C:\!Work\MA\MA_20211231_12";
+        private static readonly string subCode = "2";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
+            List <Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
             {
                 "1" => methods.Start(path, subCode),
-                "3" => methods.Start(path, subCode),
-                "5" => methods.Start(path, subCode),
-                "6" => methods.Start(path, subCode),
+                "2" => methods.Start(path, subCode),
                 _ => null
             };
 

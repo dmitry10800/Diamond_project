@@ -121,9 +121,6 @@ namespace Diamond_ZA_Maksim
             }
                 return statusEvents;
         }
-
-
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatent (string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -493,7 +490,6 @@ namespace Diamond_ZA_Maksim
             }
             return statusEvent;
         }
-
         internal string MakeCountryCode(string code) => code switch
         {
             "Afghanistan" => "AF",
