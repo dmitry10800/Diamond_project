@@ -206,19 +206,26 @@ namespace Diamond_MA_Maksim
                     }
                     else if (inid.StartsWith("(71)"))
                     {
-                        Match match = Regex.Match(inid.Trim(),
-                            @".+:\s?(?<name>.+?),\s?(?<adress>.+)\s?\((?<country>\D{2})");
+                        List<string> applicants = Regex
+                            .Split(inid.Replace("(71) Demandeur(s) :", "").Trim(), @"(?=•)")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        if (match.Success)
+                        foreach (string applicant in applicants)
                         {
-                            statusEvent.Biblio.Applicants.Add(new PartyMember()
+                            Match match = Regex.Match(applicant.Trim(),
+                                @"(?<name>.+?),\s?(?<adress>.+)\s?\((?<country>[A-Z]{2})");
+
+                            if (match.Success)
                             {
-                                Name = match.Groups["name"].Value.Trim(),
-                                Address1 = match.Groups["adress"].Value.Trim(),
-                                Country = match.Groups["country"].Value.Trim()
-                            });
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = match.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{inid}");
                         }
-                        else Console.WriteLine($"{inid}");
                     }
                     else if (inid.StartsWith("(72)"))
                     {
