@@ -212,7 +212,7 @@ namespace Diamond_MA_Maksim
 
                         foreach (string applicant in applicants)
                         {
-                            Match match = Regex.Match(applicant.Trim(),
+                            Match match = Regex.Match(applicant.Replace("•","").Trim(),
                                 @"(?<name>.+?),\s?(?<adress>.+)\s?\((?<country>[A-Z]{2})");
 
                             if (match.Success)

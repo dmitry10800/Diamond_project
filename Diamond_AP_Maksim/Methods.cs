@@ -73,6 +73,19 @@ namespace Diamond_AP_Maksim
                     }
 
                 }
+                else if (subCode == "2")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Patent\n" + "Applications\n" + "Pending Grant"))
+                        .TakeWhile(val => !val.Value.StartsWith("Patents Granted")).ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=\(21\))").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(21)")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "AZ"));
+                    }
+                }
                 else
                 if(subCode == "3")
                 {
@@ -147,13 +160,15 @@ namespace Diamond_AP_Maksim
                 text += xElement.Value + " ";
             }
 
-            text = text.Replace("\r", "").Replace("\n", " ").Replace("●●", " ")
+            text = text.Replace("\r", "").Replace("\n", " ").Replace("●●", "")
                 .Replace("Patent Applications Lapsed/Withdrawn (Contd.)", " ")
                 .Replace("Patent Applications Filed (Contd.)"," ")
                 .Replace("Patents Renewed (Contd.)","")
                 .Replace("Application No. Date Fee Paid Valid Until Anniversary", "")
                 .Replace("Patent Applications Renewed (Contd.)", "")
                 .Replace("I Patent No. Application No. Date Fee Paid Valid Until Anniversary I","")
+                .Replace("Patent Applications Pending Grant (Contd.)","")
+                .Replace("▶","").Replace("■","")
                 
                 .Trim();
 
@@ -325,6 +340,16 @@ namespace Diamond_AP_Maksim
                 }
                 biblio.Priorities.Add(priority);
                 legal.Biblio = biblio;
+            }
+            else if (subCode == "2")
+            {
+                foreach (string inid in MakeInids(note))
+                {
+                    if (inid.StartsWith(I21))
+                    {
+
+                    }
+                }
             }
             else
             if(subCode == "3")

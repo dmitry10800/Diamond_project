@@ -5,9 +5,9 @@ namespace Diamond_AP_Maksim
 {
     class Main_AP
     {
-        private static readonly string path = @"C:\Work\AP\AP_20210930_09";
-        private static readonly string subCode = "3";
-        private static readonly bool SendToProd = true; //true - send to prod; false - send to stag
+        private static readonly string path = @"C:\!Work\AP\AP_20211231_12";
+        private static readonly string subCode = "2";
+        private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
         {
@@ -16,6 +16,7 @@ namespace Diamond_AP_Maksim
             List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
             {
                 "1" => methods.Start(path, subCode),
+                "2" => methods.Start(path, subCode),
                 "3" => methods.Start(path, subCode),
                 "7" => methods.Start(path, subCode),
                 "10" => methods.Start(path, subCode),
