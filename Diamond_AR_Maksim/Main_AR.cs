@@ -6,8 +6,8 @@ namespace Diamond_AR_Maksim
     class Main_AR
     {
 
-        private static readonly string Path = @"C:\Work\AR\AR_20211027_1180";
-        private static readonly string SubCode = "1";
+        private static readonly string Path = @"C:\!Work\AR\AR_20211222_1190";
+        private static readonly string SubCode = "7";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
 
@@ -21,6 +21,9 @@ namespace Diamond_AR_Maksim
                 "2" => methods.Start(Path, SubCode),
                 "3" => methods.Start(Path, SubCode),
                 "5" => methods.Start(Path, SubCode),
+                "6" => methods.Start(Path, SubCode),
+                "7" => methods.Start(Path, SubCode),
+                "8" => methods.Start(Path, SubCode),
                 _ => null
             };
 
