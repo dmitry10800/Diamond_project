@@ -55,12 +55,16 @@ namespace Diamond_VN
                 //var splittedRecord = SplitRecordsByInids(Methods.ConvertText(record)); //Old Text format
                 if (splittedRecord.Count > 0)
                 {
-                    _patentRecord = new Diamond.Core.Models.LegalStatusEvent();
-                    _patentRecord.GazetteName = gazetteName;
-                    _patentRecord.Biblio = new Integration.Biblio();
+                    _patentRecord = new Diamond.Core.Models.LegalStatusEvent
+                    {
+                        GazetteName = gazetteName,
+                        Biblio = new Integration.Biblio()
+                    };
                     _patentRecord.Biblio.IntConvention = new Integration.IntConvention();
-                    _patentRecord.LegalEvent = new Integration.LegalEvent();
-                    _patentRecord.LegalEvent.Translations = new List<Integration.NoteTranslation>();
+                    _patentRecord.LegalEvent = new Integration.LegalEvent
+                    {
+                        Translations = new List<Integration.NoteTranslation>()
+                    };
                     _patentRecord.SubCode = subcode;
                     _patentRecord.SectionCode = sectionCode;
                     _patentRecord.CountryCode = "VN";
@@ -279,15 +283,15 @@ namespace Diamond_VN
                     Name = match.Groups["Name"].Value,
                     Language = "VI",
                     Country = "VN",
-                    //Translations = new List<Integration.Translation>
-                    //{
-                    //    new Integration.Translation
-                    //    {
-                    //        Language = "EN",
-                    //        TrName = match.Groups["VN_Name"].Value.Trim(),
-                    //        Type = type
-                    //    }
-                    //}
+                    Translations = new List<Integration.Translation>
+                    {
+                        new Integration.Translation
+                        {
+                            Language = "EN",
+                            TrName = match.Groups["VN_Name"].Value.Trim(),
+                            Type = type
+                        }
+                    }
                 });
             }
             else
@@ -351,15 +355,15 @@ namespace Diamond_VN
                     if (tmpInv.Country == "VN")
                     {
                         tmpInv.Language = "VI";
-                        //tmpInv.Translations = new List<Integration.Translation>
-                        //{
-                        //    new Integration.Translation
-                        //    {
-                        //        TrName = ConvertViToEn(tmpInv.Name),
-                        //        Language = "EN",
-                        //        Type = type
-                        //    }
-                        //};
+                        tmpInv.Translations = new List<Integration.Translation>
+                        {
+                            new Integration.Translation
+                            {
+                                TrName = ConvertViToEn(tmpInv.Name),
+                                Language = "EN",
+                                Type = type
+                            }
+                        };
                     }
                     else
                         tmpInv.Language = "EN";
@@ -394,15 +398,15 @@ namespace Diamond_VN
                     if (tmpApp.Country == "VN")
                     {
                         tmpApp.Language = "VI";
-                        //tmpApp.Translations = new List<Integration.Translation>
-                        //{
-                        //    new Integration.Translation
-                        //    {
-                        //        TrName = ConvertViToEn(tmpApp.Name),
-                        //        Language = "EN",
-                        //        Type = type
-                        //    }
-                        //};
+                        tmpApp.Translations = new List<Integration.Translation>
+                        {
+                            new Integration.Translation
+                            {
+                                TrName = ConvertViToEn(tmpApp.Name),
+                                Language = "EN",
+                                Type = type
+                            }
+                        };
                     }
                     else
                         tmpApp.Language = "EN";
@@ -426,13 +430,15 @@ namespace Diamond_VN
             if (match.Success)
             {
                 classificationInfo = match.Groups["Value"].Value;
-                tmpEdition = Int32.Parse(match.Groups["Edition"].Value);
+                tmpEdition = int.Parse(match.Groups["Edition"].Value);
             }
             var splittedIps = classificationInfo?.Split(';').Select(x => x.Trim()).ToList();
             foreach (var item in splittedIps)
             {
-                var tmpIps = new Integration.Ipc();
-                tmpIps.Class = item;
+                var tmpIps = new Integration.Ipc
+                {
+                    Class = item
+                };
                 if (tmpEdition != 0)
                     tmpIps.Edition = tmpEdition;
                 ips.Add(tmpIps);
@@ -452,7 +458,7 @@ namespace Diamond_VN
             {
                 classificationInfo = match.Groups["Value"].Value.Replace(",", "");
                 if (match.Groups["Edition"].Value != "")
-                    tmpEdition = Int32.Parse(match.Groups["Edition"].Value);
+                    tmpEdition = int.Parse(match.Groups["Edition"].Value);
                 var splittedIps = classificationInfo?.Split(' ').Select(x => x.Trim()).ToList();
                 var tmpIps = new Integration.Ipc();
                 foreach (var item in splittedIps)
@@ -476,7 +482,7 @@ namespace Diamond_VN
             }
             else
             {
-
+                Console.WriteLine("Classification pattern doesn't match");
             }
             return ips;
         }

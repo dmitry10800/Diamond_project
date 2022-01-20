@@ -18,8 +18,6 @@ namespace BA
         private static readonly string ProductionLensLink = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
         private static readonly string Sub4Key = @"OBJAVA PROŠIRENIH EVROPSKIH PATENATA UPISANIH U REGISTAR PATENATA";
 
-
-
         static void Main(string[] args)
         {
             List<XElement> sub4elements;
@@ -31,7 +29,7 @@ namespace BA
                 {
                     sub4elements = elements.Descendants().Where(x => x.Name.LocalName == "Text" && !x.Value.Contains(Sub4Key) && !string.IsNullOrEmpty(x.Value)).ToList();
                     var patents = Subcodes.ProcessSubcode4(sub4elements, file.Name.Replace(".tetml", ".pdf"));
-        //            SendToDiamond(patents);
+                    if (patents != null) SendToDiamond(patents);
                 }
             }
         }

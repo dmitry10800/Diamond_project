@@ -76,8 +76,7 @@ namespace Diamond_ZA_Maksim
                     }
 
                 }
-                else
-                if(subCode == "3")
+                else if(subCode == "3")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                            .SkipWhile(val => !val.Value.StartsWith("COMPLETE SPECIFICATIONS ACCEPTED A ABRIDGEMENTS OR ABSTRACTS THEREOF"))
@@ -91,8 +90,7 @@ namespace Diamond_ZA_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FZ"));
                     }
                 }
-                else
-                if (subCode == "5")
+                else if (subCode == "5")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                            .SkipWhile(val => !val.Value.StartsWith("Application Number"))
@@ -106,12 +104,23 @@ namespace Diamond_ZA_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "PC"));
                     }
                 }
+                else if (subCode == "6")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                           .SkipWhile(val => !val.Value.StartsWith("CHANGE OF NAME IN TERMS OF REGULATION 391"))
+                           .TakeWhile(val => !val.Value.StartsWith("PATENT LICENSES IN TERMS OF SECTION 53 (7)-REGULATIONS 62 AND 63"))
+                           .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\d{4}\/\d+\s.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("2")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "HC"));
+                    }
+                }
             }
                 return statusEvents;
         }
-
-
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatent (string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -295,8 +304,7 @@ namespace Diamond_ZA_Maksim
                 }
                   
             }
-            else
-            if(subCode == "3")
+            else if(subCode == "3")
             {
                 List<string> inids = Regex.Split(note.Trim(), @"(?=\d{2}:\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -400,8 +408,7 @@ namespace Diamond_ZA_Maksim
                     });
                 }
             }
-            else
-            if(subCode == "5")
+            else if(subCode == "5")
             {
                 Match match = Regex.Match(note.Replace("Application Number Assignor Assignee", "").Replace("\r","").Replace("\n"," "),
                     @"(?<appNum>\d{4}\/\d+)\s(?<assigner>.+(LTD\.?|INC\.?|PLC|LLC|LIMITED|LICENSING|CORPORARTION|CORPORATION))\s(?<assignerNew>.+)");
@@ -443,9 +450,46 @@ namespace Diamond_ZA_Maksim
                     statusEvent.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/"); 
                 }
             }
+            else if(subCode == "6")
+            {
+                Match match = Regex.Match(note, @"(?<appNum>\d{4}\/\d+)\s(?<old71>.+?\s(LLC\.?\.?|INC\.?|llc\.?|inc\.?|AG\.?\s|GMBH))\s(?<new71>.+)");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
+                    statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                    {
+                        Name = match.Groups["old71"].Value.Trim()
+                    });
+                    statusEvent.NewBiblio.Applicants.Add(new Integration.PartyMember
+                    {
+                        Name = match.Groups["new71"].Value.Trim()
+                    });
+                }
+                else
+                {
+                    Match match3 = Regex.Match(note, @"(?<appNum>\d{4}\/\d+)\s(?<new71>.+)");
+                    if (match3.Success)
+                    {
+                        statusEvent.Biblio.Application.Number = match3.Groups["appNum"].Value.Trim();
+                        statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                        {
+                            Name = match3.Groups["new71"].Value.Trim()
+                        });
+                    }
+                    else Console.WriteLine($"{note}");
+                }
+                
+
+                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "").Replace("ZA_", "")), @"\d{8}");
+
+                if (match2.Success)
+                {
+                    statusEvent.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/");
+                }
+            }
             return statusEvent;
         }
-
         internal string MakeCountryCode(string code) => code switch
         {
             "Afghanistan" => "AF",
@@ -714,7 +758,7 @@ namespace Diamond_ZA_Maksim
                 }
             }
             else
-            if(subCode == "3" || subCode == "5")
+            if(subCode == "3" || subCode == "5" || subCode == "6")
             {
                 foreach (XElement xElement in xElements)
                 {
