@@ -75,7 +75,7 @@ namespace Diamond_JE_Maksim
             if (subCode == "1")
             {
                 Match match = Regex.Match(note,
-                    @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>\d+)\s?(?<firstReg>\d{2}\/\d{2}\/\d{4})\s?(?<field45>\d{2}\/\d{2}\/\d{4})\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates");
+                    @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\d+[A-Z]?\d+)\s?(?<firstReg>\d{2}\/\d{2}\/\d{4})\s?(?<field45>\d{2}\/\d{2}\/\d{4})\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates\s?(?<update>.+)");
 
                 if (match.Success)
                 {
@@ -95,23 +95,45 @@ namespace Diamond_JE_Maksim
                         Name = match.Groups["field74"].Value.Trim()
                     });
 
-                    legal.Biblio.Assignees.Add(new PartyMember()
+                    List<string> assigness = Regex.Split(match.Groups["field73"].Value.Trim(), @"(?<=[A-Z]{2}\/)")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string assigner in assigness)
                     {
-                        Name = match.Groups["field73"].Value.Trim()
-                    });
+                        legal.Biblio.Assignees.Add(new PartyMember()
+                        {
+                            Name = assigner.TrimEnd('/')
+                        });
+                    }
 
                     legal.LegalEvent.Note = "|| UK Registration | " + match.Groups["UkReg"].Value.Trim() +
                                             " || First Registration Date | "
                                             + DateTime.Parse(match.Groups["firstReg"].Value.Trim(), culture)
                                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
                                             + " || Remarks | " + match.Groups["note"].Value.Trim();
-                                            ;
+                        
                     legal.LegalEvent.Language = "EN";
+                    
+
+                    Match update = Regex.Match(match.Groups["update"].Value.Trim(),
+                        @".+(?<leNote>\d{2}\/\d{2}\/\d{4})\s?(?<leDate>\d{2}\/\d{2}\/\d{4})");
+
+                    if (update.Success)
+                    {
+                        legal.LegalEvent.Language = "EN";
+                        legal.LegalEvent.Note = "|| Update Reg | " + DateTime
+                            .Parse(update.Groups["leNote"].Value.Trim(), culture).ToString("yyyy.MM.dd")
+                            .Replace(".", "/").Trim();
+
+                        legal.LegalEvent.Date = DateTime
+                            .Parse(update.Groups["leDate"].Value.Trim(), culture).ToString("yyyy.MM.dd")
+                            .Replace(".", "/").Trim();
+                    }
                 }
                 else
                 {
                     Match match2 = Regex.Match(note,
-                        @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>\d+)\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates");
+                        @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\d+[A-Z]?\d+)\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates");
 
                     if (match2.Success)
                     {
@@ -128,14 +150,35 @@ namespace Diamond_JE_Maksim
                             Name = match2.Groups["field74"].Value.Trim()
                         });
 
-                        legal.Biblio.Assignees.Add(new PartyMember()
-                        {
-                            Name = match2.Groups["field73"].Value.Trim()
-                        });
+                        List<string> assigness = Regex.Split(match.Groups["field73"].Value.Trim(), @"(?<=[A-Z]{2}\/)")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        legal.LegalEvent.Note = "|| UK Registration | " + match2.Groups["UkReg"].Value.Trim()
-                                                                        + " || Remarks | " + match2.Groups["note"].Value.Trim();
-                        ;
+                        foreach (string assigner in assigness)
+                        {
+                            legal.Biblio.Assignees.Add(new PartyMember()
+                            {
+                                Name = assigner.TrimEnd('/')
+                            });
+                        }
+
+                        Match update = Regex.Match(match.Groups["update"].Value.Trim(),
+                            @".+(?<leNote>\d{2}\/\d{2}\/\d{4})\s?(?<leDate>\d{2}\/\d{2}\/\d{4})");
+
+                        if (update.Success)
+                        {
+                            legal.LegalEvent.Language = "EN";
+                            legal.LegalEvent.Note = "|| Update Reg | " + DateTime
+                                .Parse(update.Groups["leNote"].Value.Trim(), culture).ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim();
+
+                            legal.LegalEvent.Date = DateTime
+                                .Parse(update.Groups["leDate"].Value.Trim(), culture).ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim();
+                        }
+
+                        legal.LegalEvent.Note = "|| UK Registration | " + match2.Groups["UkReg"].Value.Trim() 
+                                                + " || Remarks | " + match2.Groups["note"].Value.Trim();
+
                         legal.LegalEvent.Language = "EN";
                     }
                     else Console.WriteLine(note);
