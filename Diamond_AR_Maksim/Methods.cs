@@ -55,8 +55,7 @@ namespace Diamond_AR_Maksim
                          statusEvents.Add(MakePatent(note, subCode, "AZ"));
                     }
                 }
-                else
-                if(subCode == "2")
+                else if(subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                          //.SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
@@ -69,8 +68,7 @@ namespace Diamond_AR_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
                 }
-                else
-                if(subCode == "3")
+                else if(subCode == "3")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                      //  .SkipWhile(val => !val.Value.StartsWith("(10) Patente de Invención"))
@@ -83,8 +81,7 @@ namespace Diamond_AR_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
                 }
-                else
-                if(subCode == "5")
+                else if(subCode == "5")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("SOLICITUDES DE PATENTE"))
@@ -97,8 +94,131 @@ namespace Diamond_AR_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "AZ"));
                     }
                 }
+                else if (subCode == "6")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("ANEXO"))
+                        .TakeWhile(val => !val.Value.StartsWith("República Argentina - Poder Ejecutivo Nacional"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AR") && new Regex(@"AR\d{5,7}[A-Z][1,2,3]").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "MM"));
+                    }
+                }
+                else if (subCode == "7")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("ANEXO"))
+                        .TakeWhile(val => !val.Value.StartsWith("República Argentina - Poder Ejecutivo Nacional"))
+                        .ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AR") && new Regex(@"AR\d{5,7}[A-Z]4").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "MM"));
+                    }
+                }
+                else if (subCode == "8")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº de Orden Acta Fecha de Presentación Agente Fecha de Vista"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d{1,2}\s\d{11}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d.+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "GB/PC"));
+                    }
+                }
+                else if (subCode == "9")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Desistida [F|f]orzosa\s?\d+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FB/MZ"));
+                    }
+                }
+                else if (subCode == "10")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
+                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Desistida [V|v]oluntaria\s?\d+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FA/MA"));
+                    }
+                }
+                else if (subCode == "11")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
+                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Abandonada\s?\d+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FA/MA"));
+                    }
+                }
+                else if (subCode == "12")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
+                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Denegada\s?\d+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FC"));
+                    }
+                }
+                else if (subCode == "13")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
+                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Examen de [F|f]ondo\s?\d+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "EZ"));
+                    }
+                }
+                else if (subCode == "14")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
+                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Revoca [D|d]isposici.n\s?\d+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FB/MG"));
+                    }
+                }
             }
-                return statusEvents;
+            return statusEvents;
         }
         internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
         {
@@ -109,8 +229,7 @@ namespace Diamond_AR_Maksim
                 CountryCode = "AR",
                 Id = Id++,
                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
-                Biblio = new()
-                
+                Biblio = new(),
             };
 
             CultureInfo culture = new("ru-RU");
@@ -362,8 +481,7 @@ namespace Diamond_AR_Maksim
                 statusEvent.LegalEvent = legal;
                 statusEvent.Biblio.DOfPublication = dOfPublication;
             }
-            else
-            if(subCode == "2" || subCode == "3")    
+            else if(subCode == "2" || subCode == "3")    
             {
                 foreach (string inid in MakeInids(note,subCode))
                 {
@@ -630,6 +748,111 @@ namespace Diamond_AR_Maksim
                 statusEvent.LegalEvent = legal;
                 statusEvent.Biblio.DOfPublication = dOfPublication;
             }
+            else if (subCode == "6" || subCode == "7")
+            {
+                Match match = Regex.Match(note.Trim(), @"(?<num>.+)(?<kind>[A-Z]\d)");
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
+                    statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+
+                    Match date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    if (date.Success)
+                    {
+                        legal.Date = date.Value.Insert(4,"/").Insert(7,"/").Trim();
+                    }
+                    statusEvent.LegalEvent = legal;
+                }
+            }
+            else if (subCode == "8")
+            {
+                Match match = Regex.Match(note.Trim(),
+                    @"\s(?<appnum>\d+)\s(?<leNote>\d{2}\/\d{2}\/\d{4})\s(?<agent>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Application.Number = match.Groups["appnum"].Value.Trim();
+                    if (match.Groups["agent"].Value.Trim() != "0")
+                    {
+                        statusEvent.Biblio.Agents.Add(new PartyMember()
+                        {
+                            Name = match.Groups["agent"].Value.Trim()
+                        });
+                    }
+
+                    legal.Date = DateTime.Parse(match.Groups["leDate"].Value.Trim()).ToString("yyyy.MM.dd")
+                        .Replace(".", "/").Trim();
+
+                    legal.Language = "ES";
+                    if (match.Groups["agent"].Value.Trim() != "0")
+                    {
+                        legal.Note = "|| Fecha de Presentación | " + DateTime.Parse(match.Groups["leNote"].Value.Trim())
+                            .ToString("yyyy.MM.dd")
+                            .Replace(".", "/").Trim() + " || Agente/s Nro. | " + match.Groups["agent"].Value.Trim();
+
+                        legal.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Tr = "|| Application date | " + DateTime.Parse(match.Groups["leNote"].Value.Trim())
+                                .ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim() + " || Agent/s number | " + match.Groups["agent"].Value.Trim(),
+                            Type = "INID"
+                    });
+                    }
+                    else
+                    {
+                        legal.Note = "|| Fecha de Presentación | " + DateTime.Parse(match.Groups["leNote"].Value.Trim())
+                            .ToString("yyyy.MM.dd")
+                            .Replace(".", "/").Trim();
+
+                        legal.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Tr = "|| Application date | " + DateTime.Parse(match.Groups["leNote"].Value.Trim())
+                                .ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim(),
+                            Type = "INID"
+                        });
+                    }
+
+                    statusEvent.LegalEvent = legal;
+                }
+            }
+            else if (subCode is "9" or "10" or "11" or "12" or "13" or "14")
+            {
+                Match match = Regex.Match(note, @"(?<appNum>\d{11})\s?.+?(?<agent>\d+)");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
+
+                    if (match.Groups["agent"].Value.Trim() != "0")
+                    {
+                        statusEvent.Biblio.Agents.Add(new PartyMember()
+                        {
+                            Name = match.Groups["agent"].Value.Trim()
+                        });
+
+                        legal.Note = "|| Agente/s Nro. | " + match.Groups["agent"].Value.Trim();
+                        legal.Language = "ES";
+
+                        legal.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Tr = "|| Agent/s number | " + match.Groups["agent"].Value.Trim(),
+                            Type = "INID"
+                        });
+                    }
+
+                    Match date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    if (date.Success)
+                    {
+                        legal.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
+
+                    statusEvent.LegalEvent = legal;
+                }
+            }
 
             return statusEvent;
         }
@@ -702,7 +925,7 @@ namespace Diamond_AR_Maksim
                     text += xElement.Value + "\n";
                 }
 
-            return text;
+            return subCode is "6" or "7" or "9" or "10" or "11" or "12" or "13" or "14" ? text.Replace("\r", "").Replace("\n", " ").Trim() : text;
         }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
