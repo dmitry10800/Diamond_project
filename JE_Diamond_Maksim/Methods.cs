@@ -105,29 +105,33 @@ namespace Diamond_JE_Maksim
                             Name = assigner.TrimEnd('/')
                         });
                     }
-
-                    legal.LegalEvent.Note = "|| UK Registration | " + match.Groups["UkReg"].Value.Trim() +
-                                            " || First Registration Date | "
-                                            + DateTime.Parse(match.Groups["firstReg"].Value.Trim(), culture)
-                                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
-                                            + " || Remarks | " + match.Groups["note"].Value.Trim();
-                        
-                    legal.LegalEvent.Language = "EN";
-                    
-
                     Match update = Regex.Match(match.Groups["update"].Value.Trim(),
                         @".+(?<leNote>\d{2}\/\d{2}\/\d{4})\s?(?<leDate>\d{2}\/\d{2}\/\d{4})");
 
                     if (update.Success)
                     {
                         legal.LegalEvent.Language = "EN";
-                        legal.LegalEvent.Note = "|| Update Reg | " + DateTime
+                        legal.LegalEvent.Note = "|| UK Registration | " + match.Groups["UkReg"].Value.Trim() +
+                                                " || First Registration Date | "
+                                                + DateTime.Parse(match.Groups["firstReg"].Value.Trim(), culture)
+                                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                                                + " || Remarks | " + match.Groups["note"].Value.Trim() + " || Update Reg | " + DateTime
                             .Parse(update.Groups["leNote"].Value.Trim(), culture).ToString("yyyy.MM.dd")
                             .Replace(".", "/").Trim();
 
                         legal.LegalEvent.Date = DateTime
                             .Parse(update.Groups["leDate"].Value.Trim(), culture).ToString("yyyy.MM.dd")
                             .Replace(".", "/").Trim();
+                    }
+                    else
+                    {
+                        legal.LegalEvent.Note = "|| UK Registration | " + match.Groups["UkReg"].Value.Trim() +
+                                                " || First Registration Date | "
+                                                + DateTime.Parse(match.Groups["firstReg"].Value.Trim(), culture)
+                                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                                                + " || Remarks | " + match.Groups["note"].Value.Trim();
+
+                        legal.LegalEvent.Language = "EN";
                     }
                 }
                 else
@@ -167,7 +171,8 @@ namespace Diamond_JE_Maksim
                         if (update.Success)
                         {
                             legal.LegalEvent.Language = "EN";
-                            legal.LegalEvent.Note = "|| Update Reg | " + DateTime
+                            legal.LegalEvent.Note = "|| UK Registration | " + match2.Groups["UkReg"].Value.Trim()
+                                                                            + " || Remarks | " + match2.Groups["note"].Value.Trim() + " || Update Reg | " + DateTime
                                 .Parse(update.Groups["leNote"].Value.Trim(), culture).ToString("yyyy.MM.dd")
                                 .Replace(".", "/").Trim();
 
@@ -175,11 +180,13 @@ namespace Diamond_JE_Maksim
                                 .Parse(update.Groups["leDate"].Value.Trim(), culture).ToString("yyyy.MM.dd")
                                 .Replace(".", "/").Trim();
                         }
+                        else
+                        {
+                            legal.LegalEvent.Note = "|| UK Registration | " + match2.Groups["UkReg"].Value.Trim()
+                                                                            + " || Remarks | " + match2.Groups["note"].Value.Trim();
 
-                        legal.LegalEvent.Note = "|| UK Registration | " + match2.Groups["UkReg"].Value.Trim() 
-                                                + " || Remarks | " + match2.Groups["note"].Value.Trim();
-
-                        legal.LegalEvent.Language = "EN";
+                            legal.LegalEvent.Language = "EN";
+                        }
                     }
                     else Console.WriteLine(note);
                 }
