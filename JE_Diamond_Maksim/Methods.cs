@@ -75,7 +75,7 @@ namespace Diamond_JE_Maksim
             if (subCode == "1")
             {
                 Match match = Regex.Match(note,
-                    @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\d+[A-Z]?\d+)\s?(?<firstReg>\d{2}\/\d{2}\/\d{4})\s?(?<field45>\d{2}\/\d{2}\/\d{4})\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates\s?(?<update>.+)");
+                    @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\s?\d+\s?[A-Z]?\d+)\s?(?<firstReg>\d{2}\/\d{2}\/\d{4})\s?(?<field45>\d{2}\/\d{2}\/\d{4})\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates\s?(?<update>.+)");
 
                 if (match.Success)
                 {
@@ -137,7 +137,7 @@ namespace Diamond_JE_Maksim
                 else
                 {
                     Match match2 = Regex.Match(note,
-                        @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\d+[A-Z]?\d+)\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates");
+                        @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\s?\d+\s?[A-Z]?\d+)\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates");
 
                     if (match2.Success)
                     {
