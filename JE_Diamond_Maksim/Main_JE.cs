@@ -5,7 +5,7 @@ namespace Diamond_JE_Maksim
 {
     class Main_JE
     {
-        private static readonly string Path = @"C:\!Work\JE\JE_20211231_(12)";
+        private static readonly string Path = @"C:\!Work\JE\JE_20211231_(11)";
         private static readonly string SubCode = "1";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
