@@ -6,8 +6,8 @@ namespace Diamond_PA_Maksim
     class Main_PA
     {
 
-        private static readonly string Path = @"C:\Work\PA\PA_20210422_383";
-        private static readonly string SubCode = "2";
+        private static readonly string Path = @"C:\!Work\PA\PA_20220125_390";
+        private static readonly string SubCode = "1";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
