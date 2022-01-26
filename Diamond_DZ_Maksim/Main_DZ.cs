@@ -5,7 +5,7 @@ namespace Diamond_DZ_Maksim
 {
     class Main_DZ
     {
-        private static readonly string Path = @"C:\Work\DZ\DZ_20210630_01";
+        private static readonly string Path = @"C:\!Work\DZ\DZ_20211231_02(1)";
         private static readonly string SubCode = "1";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
