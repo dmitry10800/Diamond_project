@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Integration;
 
 namespace Diamond_DZ_Maksim
 {
@@ -21,11 +22,14 @@ namespace Diamond_DZ_Maksim
         private readonly string I11 = "(11)";
         private readonly string I21 = "(21)";
         private readonly string I22 = "(22)";
+        private readonly string I24 = "(24)";
         private readonly string I30 = "(30)";   
+        private readonly string I51 = "(51)";
         private readonly string I54 = "(54)";
         private readonly string I73 = "(73)";
         private readonly string I74 = "(74)";
         private readonly string I57 = "(57)";
+        private readonly string I86 = "(86)";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -65,10 +69,8 @@ namespace Diamond_DZ_Maksim
                     }
                 }
             }
-
             return statusEvents;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -92,8 +94,7 @@ namespace Diamond_DZ_Maksim
                     {
                         statusEvent.Biblio.Publication.Number = inid.Replace("\r", "").Replace("\n", " ").Replace(I11, "").Trim();
                     }
-                    else
-                    if (inid.StartsWith(I22))
+                    else if (inid.StartsWith(I22))
                     {
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace(I22, "").Trim(), @"(?<day>\d{2})\s(?<month>.+)\s(?<year>\d{4})");
 
@@ -108,14 +109,12 @@ namespace Diamond_DZ_Maksim
                         }
                         else Console.WriteLine($"{inid}  --- 22");
                     }
-                    else
-                    if (inid.StartsWith(I21))
+                    else if (inid.StartsWith(I21))
                     {
                         statusEvent.Biblio.Application.Number = inid.Replace("\r", "").Replace("\n", " ").Replace(I21, "").Trim();
                         statusEvent.Biblio.IntConvention.PctApplNumber = inid.Replace("\r", "").Replace("\n", " ").Replace(I21, "").Trim();
                     }
-                    else
-                    if (inid.StartsWith(I30))
+                    else if (inid.StartsWith(I30))
                     {
                         List<string> priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace(I30, "").Trim(), @"(?<=\d{2}\.\d{2}\.\d{4})").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -150,16 +149,14 @@ namespace Diamond_DZ_Maksim
                           
                         }
                     }
-                    else
-                    if (inid.StartsWith(I74))
+                    else if (inid.StartsWith(I74))
                     {
                         statusEvent.Biblio.Agents.Add(new Integration.PartyMember
                         {
                             Name = inid.Replace("\r", "").Replace("\n", " ").Replace(I74, "").Trim()
                         });
                     }
-                    else
-                    if (inid.StartsWith(I73))
+                    else if (inid.StartsWith(I73))
                     {
                         List<string> assignees = Regex.Split(inid.Replace(I73, "").Trim(), @"(?=\d{1,4}-\s)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -172,7 +169,7 @@ namespace Diamond_DZ_Maksim
                                 statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
                                 {
                                     Country = MakeCountry(match.Groups["country"].Value.TrimEnd('.').Trim()),
-                                    Name = match.Groups["name"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
+                                    Name = match.Groups["name"].Value.Replace("\r", "").Replace("\n", " ").TrimEnd('.').Trim(),
                                     Address1 = match.Groups["adress"].Value.Replace("\r", "").Replace("\n", " ").Trim()
                                 });
 
@@ -184,8 +181,7 @@ namespace Diamond_DZ_Maksim
                             else Console.WriteLine($"{assigny}  ---- 73");
                         }
                     }
-                    else
-                    if (inid.StartsWith(I54))
+                    else if (inid.StartsWith(I54))
                     {
                         statusEvent.Biblio.Titles.Add(new Integration.Title
                         {
@@ -193,22 +189,73 @@ namespace Diamond_DZ_Maksim
                             Text = inid.Replace("\r", "").Replace("\n", " ").Replace(I54, "").Trim()
                         });
                     }
-                    else
-                    if (inid.StartsWith(I57))
+                    else if (inid.StartsWith(I57))
                     {
                         statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
                         {
                             Language = "FR",
-                            Text = inid.Replace("\r", "").Replace("\n", " ").Replace(I57, "").Trim()
+                            Text = inid.Replace("\r", "").Replace("\n", " ").Replace(I57, "").Replace("_","").Trim()
                         });
+                    }
+                    else if (inid.StartsWith(I86))
+                    {
+                        Match match = Regex.Match(inid.Replace(I86, "").Trim(),
+                            @"(?<day>\d{2})\s?(?<month>\D+)\s(?<year>\d{4})");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.IntConvention.PctApplDate = match.Groups["year"].Value.Trim() + "/" +
+                                                                           MakeMonth(match.Groups["month"].Value
+                                                                               .Trim()) + "/" +
+                                                                           match.Groups["day"].Value.Trim();
+
+                            if (MakeMonth(match.Groups["month"].Value.Trim()) == null)
+                            {
+                                Console.WriteLine(match.Groups["month"].Value.Trim());
+                            }
+                        }
+
+                        Match match1 = Regex.Match(inid.Replace(I86, "").Trim(), @"\D+\/.+");
+
+                        if (match1.Success)
+                        {
+                            statusEvent.Biblio.Application.Number = match1.Value.Trim();
+                            statusEvent.Biblio.IntConvention.PctApplNumber = match1.Value.Trim();
+                        }
+                    }
+                    else if (inid.StartsWith(I24))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace(I24, "").Trim(), @"(?<day>\d{2})\s(?<month>.+)\s(?<year>\d{4})");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Application.EffectiveDate = match.Groups["year"].Value.Trim() + "/" + MakeMonth(match.Groups["month"].Value.Trim()) + "/" + match.Groups["day"].Value.Trim();
+
+                            if (MakeMonth(match.Groups["month"].Value.Trim()) == null)
+                            {
+                                Console.WriteLine(match.Groups["month"].Value.Trim());
+                            }
+                        }
+                        else Console.WriteLine($"{inid}  --- 24");
+                    }
+                    else if (inid.StartsWith(I51))
+                    {
+                        List<string> ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @"(?<=\d{1,3}\/\d{1,3}\s)", RegexOptions.Multiline)
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string ipc in ipcs)
+                        {
+                            statusEvent.Biblio.Ipcs.Add(new Ipc()
+                            {
+                                Class = ipc.Trim()
+                            });
+                        }
                     }
                     else Console.WriteLine($"{inid} - don't process");
                 }
             }
-
             return statusEvent;
         }
-
         internal string MakeCountry(string country) => country switch
         {
             "ETATS-UNIS D'AMERIQUE" => "US",
@@ -240,7 +287,11 @@ namespace Diamond_DZ_Maksim
             "CANADA" => "CA",
             "BELGIQUE" => "BE",
             "ILES VIERGES BRITANIQUES" => "VG",
+            "ILE VIERGE BRITANIQUE" => "VG",
             "ÎLES VIERGES BRITANIQUES" => "VG",
+            "ILES VIERGES BRITANNIQUES" => "VG",
+            "ÎLE VIERGE BRITANIQUE" => "VG",
+            "ÎLES VIÈRGES BRITANNIQUES" => "VG",
             "ARABIE SAOUDITE" => "SA",
             "FINLANDE" => "FI",
             "HONGRIE" => "HU",
@@ -257,9 +308,25 @@ namespace Diamond_DZ_Maksim
             "EMIRATS ARABES UNIS" => "AE",
             "ETATS-UNIS-D'AMERIQUE" => "US",
             "ÉTATS-UNIS-D’AMÉRIQUE" => "US",
+            "ÉTAT-UNIS D’AMÉRIQUE" => "US",
             "GRECE" => "GR",
             "GRÈCE" => "GR",
             "CHANNEL ISLANDS" => "GB",
+            "THAILANDE" => "TH",
+            "CROATIE" => "HR",
+            "CORÉE" => "KR",
+            "SERBIE" => "RS",
+            "Alger" => "DZ",
+            "DANMARK" => "DK",
+            "FINLAND" => "FI",
+            "IRELAND" => "IE",
+            "BERMUDES" => "BM",
+            "SINGAPOUR" => "SG",
+            "Luxembourg" => "LU",
+            "AFRIQUE DU SUD" => "ZA",
+            "RÉPUBLIQUE DE MOLDOVA" => "MD",
+            "ÉTAT-UNIS D'AMÉRIQUE" => "US",
+            "SAINT-VINCENT ET LES GRENADINES" => "VC",
             _ => null,
         };
         internal string MakeMonth(string month) => month switch
@@ -311,14 +378,7 @@ namespace Diamond_DZ_Maksim
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
