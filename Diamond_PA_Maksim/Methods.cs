@@ -193,19 +193,45 @@ namespace Diamond_PA_Maksim
                     }
                     else if (inid.StartsWith(I54))
                     {
-                        statusEvent.Biblio.Titles.Add(new Integration.Title
+                        Match match = Regex.Match(inid.Trim(), @"(?<field54>.+)\sMINISTERIO", RegexOptions.Singleline);
+
+                        if (match.Success)
                         {
-                            Language = "ES",
-                            Text = inid.Replace("(54) Titulo: ", "").Trim()
-                        });
+                            statusEvent.Biblio.Titles.Add(new Integration.Title
+                            {
+                                Language = "ES",
+                                Text = match.Groups["field54"].Value.Replace("(54) Titulo: ", "").Trim()
+                            });
+                        }
+                        else
+                        {
+                            statusEvent.Biblio.Titles.Add(new Integration.Title
+                            {
+                                Language = "ES",
+                                Text = inid.Replace("(54) Titulo: ", "").Trim()
+                            });
+                        }
                     }
                     else if (inid.StartsWith(I57))
                     {
-                        statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
+                        Match match = Regex.Match(inid.Trim(), @"(?<field57>.+)\sMINISTERIO", RegexOptions.Singleline);
+
+                        if (match.Success)
                         {
-                            Language = "ES",
-                            Text = inid.Replace("(57) Resumen", "").Replace("\r", "").Replace("\n", " ").Trim()
-                        });
+                            statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
+                            {
+                                Language = "ES",
+                                Text = match.Groups["field57"].Value.Replace("(57) Resumen", "").Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+                        }
+                        else
+                        {
+                            statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
+                            {
+                                Language = "ES",
+                                Text = inid.Replace("(57) Resumen", "").Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+                        }
                     }
                     else if (inid.StartsWith(I51))
                     {
