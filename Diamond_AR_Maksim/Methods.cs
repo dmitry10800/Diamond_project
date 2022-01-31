@@ -101,7 +101,7 @@ namespace Diamond_AR_Maksim
                         .TakeWhile(val => !val.Value.StartsWith("República Argentina - Poder Ejecutivo Nacional"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AR") && new Regex(@"AR\d{5,7}[A-Z][1,2,3]").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AR") && new Regex(@"AR\d{5,7}B[1,2,3]").Match(val).Success).ToList();
 
                     foreach (string note in notes)
                     {
