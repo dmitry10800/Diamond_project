@@ -275,8 +275,24 @@ namespace Diamond_VN_Maksim
                             statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["appdate"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim() + " | " +
-                                                          match.Groups["noteDate"].Value.Trim();
+                            Match matchTmp = Regex.Match(
+                                match.Groups["note"].Value,
+                                @"(?<note1>.+)\s(?<date1>\d{2}\/\d{2}\/\d{4})\s(?<note2>.+)");
+
+                            if (matchTmp.Success)
+                            {
+                                statusEvent.LegalEvent.Note =
+                                    "|| " + matchTmp.Groups["note1"].Value.TrimEnd(':').Trim() + " | " +
+                                    matchTmp.Groups["date1"].Value.Trim() + "\n" +
+                                    "|| " + matchTmp.Groups["note2"].Value.TrimEnd(':').Trim() + " | " +
+                                    match.Groups["noteDate"].Value.Trim() + "\n";
+                            }
+                            else
+                            {
+                                statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " +
+                                                              match.Groups["noteDate"].Value.Trim() + "\n";
+                            }
+                            
                         }
                         else
                         {
@@ -287,42 +303,115 @@ namespace Diamond_VN_Maksim
                     else if (inid.StartsWith("(86)"))
                     {
                         Match match = Regex.Match(inid.Replace("(86)", "").Trim(),
-                            @"(?<num>.+)\s?(?<date>\d{2}\/\d{2}\/\d{4})");
+                          @"(?<num>.+)\s?(?<kind>[A-Z]\d{1,2})\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<note>.+)\s(?<date1>\d{2}\/\d{2}\/\d{4})");
 
                         if (match.Success)
                         {
                             statusEvent.Biblio.IntConvention.PctApplNumber = match.Groups["num"].Value.Trim();
+                            statusEvent.Biblio.IntConvention.PctApplKind = match.Groups["kind"].Value.Trim();
                             statusEvent.Biblio.IntConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                        }
-                        else Console.WriteLine($"{inid} --- 86");
-                    }
-                    else if (inid.StartsWith("(87)"))
-                    {
-                        Match match = Regex.Match(inid.Replace("(87)", "").Trim(),
-                            @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<note>.+)\s(?<date1>\d{2}\/\d{2}\/\d{4})");
 
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.IntConvention.PctPublNumber = match.Groups["num"].Value.Trim();
-                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
-                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-
-                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
+                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
                         }
                         else
                         {
-                            Match match1 = Regex.Match(inid.Replace("(87)", "").Trim(),
-                                @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
+                            Match matchKind = Regex.Match(inid.Replace("(86)", "").Trim(),
+                                @"(?<num>.+)\s?(?<kind>[A-Z]\d{1,2})\s(?<date>\d{2}\/\d{2}\/\d{4})");
 
-                            if (match1.Success)
+                            if (matchKind.Success)
                             {
-                                statusEvent.Biblio.IntConvention.PctPublNumber = match1.Groups["num"].Value.Trim();
-                                statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match1.Groups["date"].Value.Trim(), culture)
+                                statusEvent.Biblio.IntConvention.PctApplNumber = matchKind.Groups["num"].Value.Trim();
+                                statusEvent.Biblio.IntConvention.PctApplKind = matchKind.Groups["kind"].Value.Trim();
+                                statusEvent.Biblio.IntConvention.PctApplDate = DateTime.Parse(matchKind.Groups["date"].Value.Trim(), culture)
                                     .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                             }
-                            else Console.WriteLine($"{inid} --- 87");
+                            else
+                            {
+                                Match match1 = Regex.Match(inid.Replace("(86)", "").Trim(),
+                                    @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<note>.+)\s(?<date1>\d{2}\/\d{2}\/\d{4})");
+
+                                if (match1.Success)
+                                {
+                                    statusEvent.Biblio.IntConvention.PctApplNumber = match1.Groups["num"].Value.Trim();
+                                    statusEvent.Biblio.IntConvention.PctApplDate = DateTime.Parse(match1.Groups["date"].Value.Trim(), culture)
+                                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                                    statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture)
+                                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+                                }
+                                else
+                                {
+                                    Match match2 = Regex.Match(inid.Replace("(86)", "").Trim(),
+                                        @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
+
+                                    if (match2.Success)
+                                    {
+                                        statusEvent.Biblio.IntConvention.PctApplNumber = match2.Groups["num"].Value.Trim();
+                                        statusEvent.Biblio.IntConvention.PctApplDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
+                                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                                    }
+                                    else Console.WriteLine($"{inid} --- 86");
+                                }
+                            }
+                        }
+                    }
+                    else if (inid.StartsWith("(87)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("(87)", "").Trim(),
+                            @"(?<num>.+)\s?(?<kind>[A-Z]\d{1,2})\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<note>.+)\s(?<date1>\d{2}\/\d{2}\/\d{4})");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.IntConvention.PctPublNumber = match.Groups["num"].Value.Trim();
+                            statusEvent.Biblio.IntConvention.PctPublKind = match.Groups["kind"].Value.Trim();
+                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+                        }
+                        else
+                        {
+                            Match matchKind = Regex.Match(inid.Replace("(87)", "").Trim(),
+                                @"(?<num>.+)\s?(?<kind>[A-Z]\d{1,2})\s(?<date>\d{2}\/\d{2}\/\d{4})");
+
+                            if (matchKind.Success)
+                            {
+                                statusEvent.Biblio.IntConvention.PctPublNumber = matchKind.Groups["num"].Value.Trim();
+                                statusEvent.Biblio.IntConvention.PctPublKind = matchKind.Groups["kind"].Value.Trim();
+                                statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(matchKind.Groups["date"].Value.Trim(), culture)
+                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            }
+                            else
+                            {
+                                Match match1 = Regex.Match(inid.Replace("(87)", "").Trim(),
+                                    @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<note>.+)\s(?<date1>\d{2}\/\d{2}\/\d{4})");
+
+                                if (match1.Success)
+                                {
+                                    statusEvent.Biblio.IntConvention.PctPublNumber = match1.Groups["num"].Value.Trim();
+                                    statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match1.Groups["date"].Value.Trim(), culture)
+                                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                                    statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture)
+                                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+                                }
+                                else
+                                {
+                                    Match match2 = Regex.Match(inid.Replace("(87)", "").Trim(),
+                                        @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
+
+                                    if (match2.Success)
+                                    {
+                                        statusEvent.Biblio.IntConvention.PctPublNumber = match2.Groups["num"].Value.Trim();
+                                        statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
+                                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                                    }
+                                    else Console.WriteLine($"{inid} --- 87");
+                                }
+                            }
                         }
                     }
                     else if (inid.StartsWith("(51)"))
@@ -346,7 +435,7 @@ namespace Diamond_VN_Maksim
                         foreach (string applicant in applicants)
                         {
                             Match match = Regex.Match(applicant.Trim(),
-                                @"(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
+                                @"(\d{1,3}\.\s)?(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -459,12 +548,34 @@ namespace Diamond_VN_Maksim
                                     else Console.WriteLine($"{priority} --- 30");}
                             }
                         }
+                        else
+                        {
+                            List<string> priorities = Regex.Split(inid.Replace("(30)","").Trim(), @"(?<=\s[A-Z]{2}\s)")
+                                .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string priority in priorities)
+                            {
+                                Match prior = Regex.Match(priority,
+                                    @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<code>\D{2})");
+
+                                if (prior.Success)
+                                {
+                                    statusEvent.Biblio.Priorities.Add(new Priority()
+                                    {
+                                        Country = prior.Groups["code"].Value.Trim(),
+                                        Number = prior.Groups["num"].Value.Trim(),
+                                        Date = DateTime.Parse(prior.Groups["date"].Value.Trim(), culture)
+                                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                                    });
+                                }
+                            }
+                        }
                     }
                     else if (inid.StartsWith("(62)"))
                     {
                         statusEvent.Biblio.Related.Add(new RelatedDocument()
                         {
-                            Inid = "62",
+                            Source = "62",
                             Number = inid.Replace("(62)","").Trim()
                         });
                     }
@@ -476,7 +587,7 @@ namespace Diamond_VN_Maksim
                         foreach (string invOrApp in invOrApps)
                         {
                             Match match = Regex.Match(invOrApp.Trim(),
-                                @"(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
+                                @"(\d{1,3}\.\s)?(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -719,7 +830,7 @@ namespace Diamond_VN_Maksim
                     {
                         statusEvent.Biblio.Related.Add(new RelatedDocument()
                         {
-                            Inid = "62",
+                            Source = "62",
                             Number = inid.Replace("(62)", "").Trim()
                         });
                     }
@@ -727,7 +838,7 @@ namespace Diamond_VN_Maksim
                     {
                         statusEvent.Biblio.Related.Add(new RelatedDocument()
                         {
-                            Inid = "67",
+                            Source = "67",
                             Number = inid.Replace("(67)", "").Trim()
                         });
                     }
@@ -739,7 +850,7 @@ namespace Diamond_VN_Maksim
                         foreach (string assignee in assignees)
                         {
                             Match match = Regex.Match(assignee.Trim(),
-                                @"(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
+                                @"(\d{1,3}\.\s)?(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -761,7 +872,7 @@ namespace Diamond_VN_Maksim
                         foreach (string inv in invAppGrants)
                         {
                             Match match = Regex.Match(inv.Trim(),
-                                @"(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
+                                @"(\d{1,3}\.\s)?(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
 
                             if (match.Success)
                             {
