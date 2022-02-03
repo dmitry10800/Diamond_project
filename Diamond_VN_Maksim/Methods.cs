@@ -126,6 +126,20 @@ namespace Diamond_VN_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "NZ"));
                     }
                 }
+                else if (subCode == "17")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("b - Duy trì hiệu lực Bằng độc quyền gi¶i ph¸p h÷u Ých"))
+                        .TakeWhile(val => !val.Value.StartsWith("3 - CẤP LẠI VĂN BẰNG BẢO HỘ"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Th.ng\s?b.o\s?s.:\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Thông")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "NZ"));
+                    }
+                }
                 else if(subCode == "23")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -890,7 +904,7 @@ namespace Diamond_VN_Maksim
                     else Console.WriteLine($"{inid}");
                 }
             }
-            else if(subCode == "16")
+            else if(subCode is "16" or "17")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @".+ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+đ.n\s(?<pubNum>\d+)\s?(?<noteDate>\d{2}\/\d{2}\/\d{4})\s.+(?<noteDate2>\d{2}\/\d{2}\/\d{4})\s.+?\)(?<name>.+)\((?<code>[A-Z]{2})\)\s?(?<adress>.+)");
@@ -956,7 +970,7 @@ namespace Diamond_VN_Maksim
         {
             string text = null;
 
-            if (subCode is "6" or "23" or "16" or "12" or "13" or "14" or "15")
+            if (subCode is "6" or "23" or "16" or "12" or "13" or "14" or "15" or "17")
             {
                 foreach (XElement xElement in xElements)
                 {

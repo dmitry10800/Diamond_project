@@ -6,8 +6,8 @@ namespace Diamond_VN_Maksim
     class Main_VN
     {
 
-        private static readonly string Path = @"C:\!Work\VN\VN_20220125_406A";
-        private static readonly string SubCode = "23";
+        private static readonly string Path = @"C:\!Work\VN\VN_20220125_406B";
+        private static readonly string SubCode = "17";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
@@ -22,6 +22,7 @@ namespace Diamond_VN_Maksim
                 "14" => methods.Start(Path, SubCode),
                 "15" => methods.Start(Path, SubCode),
                 "16" => methods.Start(Path, SubCode),
+                "17" => methods.Start(Path, SubCode),
                 "23" => methods.Start(Path, SubCode),
                 _ => null
             };
