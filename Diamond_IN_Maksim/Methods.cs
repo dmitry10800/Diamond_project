@@ -55,7 +55,6 @@ namespace Diamond_IN_Maksim
                     {
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
-
                 }
                 else if(subCode == "10")
                 {
@@ -81,7 +80,7 @@ namespace Diamond_IN_Maksim
                 }
             }
 
-                return statusEvents;
+            return statusEvents;
         }
 
         internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
@@ -329,6 +328,7 @@ namespace Diamond_IN_Maksim
             "Amroha(U.P)" => "IN",
             "Maharashtra" => "IN",
             "Thiruvallur" => "IN",
+            "Mathura" => "IN",
             "Jharkhand" => "IN",
             "TAMILNADU" => "IN",
             "Tuljapur" => "IN",

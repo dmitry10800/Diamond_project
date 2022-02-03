@@ -6,7 +6,7 @@ namespace Diamond_IN_Maksim
     class Main_IN
     {
 
-        private static readonly string path = @"C:\Work\IN\IN_20211119_47";
+        private static readonly string path = @"C:\!Work\IN\IN_20220128_04";
         private static readonly string subCode = "1";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
