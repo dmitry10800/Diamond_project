@@ -893,45 +893,44 @@ namespace Diamond_VN_Maksim
             else if(subCode == "16")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                    @"Ng.y\sn.p:\s?(?<dateNote>\d{2}\/\d{2}\/\d{4}).+tr.\s..n\s(?<pubNum>\d+).+(?<noteDate>\d{2}\/\d{2}\/\d{4}).+.ng\sb.o\sh.:\s?(?<field73>.+)");
+                    @".+ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+đ.n\s(?<pubNum>\d+)\s?(?<noteDate>\d{2}\/\d{2}\/\d{4})\s.+(?<noteDate2>\d{2}\/\d{2}\/\d{4})\s.+?\)(?<name>.+)\((?<code>[A-Z]{2})\)\s?(?<adress>.+)");
 
                 if (match.Success)
                 {
+                    statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
                     statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
-                    statusEvent.LegalEvent.Note = "|| Hiệu lực Bằng độc quyền sáng chế số " + match.Groups["pubNum"].Value.Trim() + " được duy trì đến " +
-                         DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n" +
-                         "|| Ngày nộp | " + DateTime.Parse(match.Groups["dateNote"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
-                    statusEvent.LegalEvent.Language = "VI";
 
-                    statusEvent.LegalEvent.Translations.Add(new Integration.NoteTranslation
+                    statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
-                        Language = "EN",
-                        Type = "note",
-                        Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n" +
-                        "|| Extension filing date | " + DateTime.Parse(match.Groups["dateNote"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim()
+                        Name = match.Groups["name"].Value.Trim(),
+                        Country = match.Groups["code"].Value.Trim(),
+                        Address1 = match.Groups["adress"].Value.Trim()
                     });
 
-                        Match match1 = Regex.Match(match.Groups["field73"].Value.Trim(), @"(?<name>.+)\s\((?<code>\D{2})\)\s(?<adress>.+)");
+                    statusEvent.LegalEvent.Language = "VI";
+                    statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime
+                                                      .Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                                                      .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                                                  + "|| Hiệu lực được duy trì đến | " +
+                                                  DateTime.Parse(match.Groups["noteDate2"].Value.Trim(), culture)
+                                                      .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
 
-                        if (match1.Success)
-                        {
-                            statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
-                            {
-                                Country = match1.Groups["code"].Value.Trim(),
-                                Name = match1.Groups["name"].Value.Trim(),
-                                Address1 = match1.Groups["adress"].Value.Trim(),
-                            });
-                        }
-                        else Console.WriteLine($"{match.Groups["field73"].Value.Trim()}");
-                    
-
+                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                    {
+                        Language = "EN",
+                        Type = "INID",
+                        Tr = "|| (15) Grant date | " + DateTime
+                                 .Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                                 .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                             + "|| Valid until | " +
+                             DateTime.Parse(match.Groups["noteDate2"].Value.Trim(), culture)
+                                 .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                    });
                 }
                 else Console.WriteLine($"{note.Replace("\r", "").Replace("\n", " ").Trim()}");
             }
             else if(subCode == "23")
             {
-                
-
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+)\s");
 
