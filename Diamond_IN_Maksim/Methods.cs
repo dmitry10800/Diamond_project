@@ -122,7 +122,7 @@ namespace Diamond_IN_Maksim
 
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} --- 22");
                     }
@@ -132,7 +132,7 @@ namespace Diamond_IN_Maksim
 
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Groups["date"].Value.Trim()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
                         else Console.WriteLine($"{inid} --- 43");
                     }
