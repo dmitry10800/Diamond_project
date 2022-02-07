@@ -126,6 +126,20 @@ namespace Diamond_VN_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "NZ"));
                     }
                 }
+                else if (subCode == "17")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("b - Duy trì hiệu lực Bằng độc quyền gi¶i ph¸p h÷u Ých"))
+                        .TakeWhile(val => !val.Value.StartsWith("3 - CẤP LẠI VĂN BẰNG BẢO HỘ"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Th.ng\s?b.o\s?s.:\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Thông")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "NZ"));
+                    }
+                }
                 else if(subCode == "23")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -890,48 +904,47 @@ namespace Diamond_VN_Maksim
                     else Console.WriteLine($"{inid}");
                 }
             }
-            else if(subCode == "16")
+            else if(subCode is "16" or "17")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                    @"Ng.y\sn.p:\s?(?<dateNote>\d{2}\/\d{2}\/\d{4}).+tr.\s..n\s(?<pubNum>\d+).+(?<noteDate>\d{2}\/\d{2}\/\d{4}).+.ng\sb.o\sh.:\s?(?<field73>.+)");
+                    @".+ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+đ.n\s(?<pubNum>\d+)\s?(?<noteDate>\d{2}\/\d{2}\/\d{4})\s.+(?<noteDate2>\d{2}\/\d{2}\/\d{4})\s.+?\)(?<name>.+)\((?<code>[A-Z]{2})\)\s?(?<adress>.+)");
 
                 if (match.Success)
                 {
+                    statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
                     statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
-                    statusEvent.LegalEvent.Note = "|| Hiệu lực Bằng độc quyền sáng chế số " + match.Groups["pubNum"].Value.Trim() + " được duy trì đến " +
-                         DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n" +
-                         "|| Ngày nộp | " + DateTime.Parse(match.Groups["dateNote"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
-                    statusEvent.LegalEvent.Language = "VI";
 
-                    statusEvent.LegalEvent.Translations.Add(new Integration.NoteTranslation
+                    statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
-                        Language = "EN",
-                        Type = "note",
-                        Tr = "|| Expiration date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n" +
-                        "|| Extension filing date | " + DateTime.Parse(match.Groups["dateNote"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim()
+                        Name = match.Groups["name"].Value.Trim(),
+                        Country = match.Groups["code"].Value.Trim(),
+                        Address1 = match.Groups["adress"].Value.Trim()
                     });
 
-                        Match match1 = Regex.Match(match.Groups["field73"].Value.Trim(), @"(?<name>.+)\s\((?<code>\D{2})\)\s(?<adress>.+)");
+                    statusEvent.LegalEvent.Language = "VI";
+                    statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime
+                                                      .Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                                                      .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                                                  + "|| Hiệu lực được duy trì đến | " +
+                                                  DateTime.Parse(match.Groups["noteDate2"].Value.Trim(), culture)
+                                                      .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
 
-                        if (match1.Success)
-                        {
-                            statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
-                            {
-                                Country = match1.Groups["code"].Value.Trim(),
-                                Name = match1.Groups["name"].Value.Trim(),
-                                Address1 = match1.Groups["adress"].Value.Trim(),
-                            });
-                        }
-                        else Console.WriteLine($"{match.Groups["field73"].Value.Trim()}");
-                    
-
+                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                    {
+                        Language = "EN",
+                        Type = "INID",
+                        Tr = "|| (15) Grant date | " + DateTime
+                                 .Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                                 .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                             + "|| Valid until | " +
+                             DateTime.Parse(match.Groups["noteDate2"].Value.Trim(), culture)
+                                 .ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                    });
                 }
                 else Console.WriteLine($"{note.Replace("\r", "").Replace("\n", " ").Trim()}");
             }
             else if(subCode == "23")
             {
-                
-
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+)\s");
 
@@ -957,7 +970,7 @@ namespace Diamond_VN_Maksim
         {
             string text = null;
 
-            if (subCode is "6" or "23" or "16" or "12" or "13" or "14" or "15")
+            if (subCode is "6" or "23" or "16" or "12" or "13" or "14" or "15" or "17")
             {
                 foreach (XElement xElement in xElements)
                 {
