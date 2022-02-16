@@ -38,7 +38,41 @@ namespace Diamond_VN_Maksim
 
                 tet = XElement.Load(tetml);
 
-                if(subCode == "6")
+                if (subCode == "3")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("a - Chuyển nhượng quyền sở hữu Bằng độc quyền sáng chế"))
+                        .TakeWhile(val => !val.Value.StartsWith("b - Chuyển nhượng quyền sở hữu Bằng độc quyền gi¶i ph¸p h÷u Ých"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s?..nh\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        foreach (var patent in MakeListPatent(note, subCode, "PC"))
+                        {
+                            statusEvents.Add(patent);
+                        }
+                    }
+                }
+                else if (subCode == "4")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("b - Chuyển nhượng quyền sở hữu Bằng độc quyền gi¶i ph¸p h÷u Ých"))
+                        .TakeWhile(val => !val.Value.StartsWith("2- CHUYÓN GIAO QUYÒN Sö DôNG ®èI TƯîNG Së H÷U C«NG NGHIÖP"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s?..nh\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        foreach (var patent in MakeListPatent(note, subCode, "PC"))
+                        {
+                            statusEvents.Add(patent);
+                        }
+                    }
+                }
+                else if (subCode == "6")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("thay ®æi chñ ®¬n"))
@@ -50,6 +84,23 @@ namespace Diamond_VN_Maksim
                     foreach (string note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "GB"));
+                    }
+                }
+                else if (subCode == "7")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("b- Ghi nhËn thay ®æi chñ ®¬n yªu cÇu cÊp B»ng ®éc quyÒn Gi¶i ph¸p h÷u Ých"))
+                       // .TakeWhile(val => !val.Value.StartsWith(""))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Th.ng\s?b.o\s?s.:\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Thông")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        foreach (var patent in MakeListPatent(note, subCode, "GB"))
+                        {
+                            statusEvents.Add(patent);
+                        }
                     }
                 }
                 else if (subCode == "12")
@@ -112,7 +163,7 @@ namespace Diamond_VN_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
                 }
-                else if(subCode == "16")
+                else if (subCode == "16")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("2 - DUY TRÌ HIỆU LỰC VĂN BẰNG BẢO HỘ"))
@@ -140,18 +191,102 @@ namespace Diamond_VN_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "NZ"));
                     }
                 }
-                else if(subCode == "23")
+                else if (subCode == "18")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("3 - CẤP LẠI VĂN BẰNG BẢO HỘ"))
+                        .TakeWhile(val => !val.Value.StartsWith("PHÇN iV"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s..nh\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "NB"));
+                    }
+                }
+                else if (subCode is "19")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("b - Cấp lại Bằng độc quyền Giải pháp hữu ích"))
+                        .TakeWhile(val => !val.Value.StartsWith("PHẨN IV"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s..nh.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "NB"));
+                    }
+                }
+                else if (subCode is "20")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("4 - G H I NHẬN Đ Ạ I D IỆ N SỞ HỬU CÔNG NGHIỆP"))
+                        .TakeWhile(val => !val.Value.StartsWith("5 - KHIẾU NẠI"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s..nh.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "PC"));
+                    }
+                }
+                else if (subCode is "22")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("4 - Cấp phó bản Bằng độc quyền Sáng chế"))
+                        .TakeWhile(val => !val.Value.StartsWith("5 - KhiÕu n¹i"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s..nh\s\d.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "SC"));
+                    }
+                }
+                else if (subCode == "23")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("Do ng−êi nép ®¬n yªu cÇu"))
                             .TakeWhile(val => !val.Value.StartsWith("Söa ®æi ®¬n"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d+-\d{4}.+").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"1-\d{4}.+").Match(val).Success).ToList();
 
                     foreach (string note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "EE"));
+                    }
+                }
+                else if (subCode == "24")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Y£U CÇU thÈm ®Þnh NéI DUNG"))
+                        .TakeWhile(val => !val.Value.StartsWith("PhÇn iV"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"2-\d{4}.+").Match(val).Success).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "EE"));
+                    }
+                }
+                else if (subCode == "29")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("b- cấp phó bản Bằng độc quyền Giải pháp hữu ích"))
+                        .TakeWhile(val => !val.Value.StartsWith("PHẨN IV"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "SC"));
                     }
                 }
             }
@@ -182,7 +317,7 @@ namespace Diamond_VN_Maksim
 
             CultureInfo culture = new("ru-RU");
 
-            if(subCode == "6")
+            if (subCode is "6")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @"nộp\sđơn\s(?<application>.+)\sBên\s?chuyển\s?nhượng:(?<applicants>.+)\sBên\s?được\s?chuyển\s?nhượng:(?<applicantsNew>.+)");
@@ -229,7 +364,7 @@ namespace Diamond_VN_Maksim
                 }
                 else Console.WriteLine($"{note}");
             }
-            else if(subCode is "12" or "13")
+            else if (subCode is "12" or "13")
             {
                 List<string> inids = new();
                 Match splitTextAndField57 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
@@ -904,7 +1039,7 @@ namespace Diamond_VN_Maksim
                     else Console.WriteLine($"{inid}");
                 }
             }
-            else if(subCode is "16" or "17")
+            else if (subCode is "16" or "17")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @".+ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+đ.n\s(?<pubNum>\d+)\s?(?<noteDate>\d{2}\/\d{2}\/\d{4})\s.+(?<noteDate2>\d{2}\/\d{2}\/\d{4})\s.+?\)(?<name>.+)\((?<code>[A-Z]{2})\)\s?(?<adress>.+)");
@@ -943,7 +1078,123 @@ namespace Diamond_VN_Maksim
                 }
                 else Console.WriteLine($"{note.Replace("\r", "").Replace("\n", " ").Trim()}");
             }
-            else if(subCode == "23")
+            else if (subCode is "18" or "19")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @".+ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+th.\s(?<pubNum>\d+)\s(?<noteDate>\d{1,2}\/\d{1,2}\/\d{4})\s(?<note>\d+)");
+
+                if (match.Success)
+                {
+                    statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
+
+                    Match date = Regex.Match(match.Groups["noteDate"].Value.Trim(),
+                        @"(?<day>\d+)\/(?<month>\d)\/(?<year>\d+)");
+
+                    if (date.Success)
+                    {
+                        statusEvent.LegalEvent.Note =
+                                "|| (15) Ngày bằng | " + date.Groups["year"].Value.Trim() + "/0" +
+                                date.Groups["month"].Value.Trim() + "/" + date.Groups["day"].Value.Trim() + "\n"
+                                + "|| Cấp lại lần thứ | " + match.Groups["note"].Value.Trim();
+                            statusEvent.LegalEvent.Language = "VI";
+
+                            statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                            {
+                                Language = "EN",
+                                Type = "INID",
+                                Tr = "|| (15) Grant date | " + date.Groups["year"].Value.Trim() + "/0" +
+                                     date.Groups["month"].Value.Trim() + "/" + date.Groups["day"].Value.Trim() + "\n"
+                                     + "|| Reissue № | " + match.Groups["note"].Value.Trim()
+                            });
+                    }
+                    else
+                    {
+                        statusEvent.LegalEvent.Note =
+                            "|| (15) Ngày bằng | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim() + "\n"
+                            + "|| Cấp lại lần thứ | " + match.Groups["note"].Value.Trim();
+
+                        statusEvent.LegalEvent.Language = "VI";
+
+                        statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Type = "INID",
+                            Tr = "|| (15) Grant date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                                 + "|| Reissue № | " + match.Groups["note"].Value.Trim()
+                        });
+                    }
+                }
+                else Console.WriteLine($"{note}");
+            }
+            else if (subCode is "20")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @".+ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+:\s(?<pubNum>\d.+)\s(?<noteDate>\d{2}\/\d{2}\/\d{4}).+?:(?<name>.+)Đ.a.+:(?<adress>.+)");
+
+                if (match.Success)
+                {
+                    statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
+
+                    statusEvent.NewBiblio.Agents.Add(new PartyMember()
+                    {
+                        Name = match.Groups["name"].Value.Trim(),
+                        Address1 =match.Groups["adress"].Value.Trim(),
+                        Country = "VN",
+                        Language = "VI"
+                    });
+
+                    statusEvent.LegalEvent.Language = "VI";
+                    statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                    {
+                        Language = "EN",
+                        Type = "INID",
+                        Tr = "|| (15) Grant date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                    });
+                }
+            }
+            else if (subCode is "22")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @".y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+c.p:\s?(?<noteDate>\d{2}\/\d{2}\/\d{4}).+s.:\s?(?<pubNum>\d+).+chung:(?<name>\D+)\(?(?<adress>.+)");
+
+                if (match.Success)
+                {
+                    statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
+
+                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                    {
+                        Name = match.Groups["name"].Value.Trim(),
+                        Address1 = match.Groups["adress"].Value.Trim()
+                    });
+
+                    statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n';
+
+                    statusEvent.LegalEvent.Language = "VI";
+                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                    {
+                        Language = "EN",
+                        Tr = "|| (15) Grant date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n',
+                        Type = "INID"
+                    });
+                }
+                else Console.WriteLine($"{note}");
+            }
+            else if (subCode is "23" or "24")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+)\s");
@@ -963,6 +1214,57 @@ namespace Diamond_VN_Maksim
                 }
                 else Console.WriteLine($"{note}");
             }
+            else if (subCode is "29")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @"ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+?s.\s(?<pubNum>\d+)\s(?<noteDate>\d{2}\/\d+\/\d{4})\s(?<noteInf>\d+).+:(?<f73name>.+)\((?<f73Code>[A-Z]{2})\)(?<f73Adress>.+)");
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
+
+                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                    {
+                        Name = match.Groups["f73name"].Value.Trim(),
+                        Address1 = match.Groups["f73Adress"].Value.Trim(),
+                        Country = match.Groups["f73Code"].Value.Trim()
+                    });
+
+                    statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim())
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                    Match noteMatch = Regex.Match(match.Groups["noteDate"].Value.Trim(), @"(?<day>\d{2})\/(?<month>\d)\/(?<year>\d{4})");
+
+                    if (noteMatch.Success)
+                    {
+                        statusEvent.LegalEvent.Language = "VI";
+                        statusEvent.LegalEvent.Note = "|| (15) Ngày cấp bằng | " + noteMatch.Groups["year"].Value.Trim() + "/0" + noteMatch.Groups["month"].Value.Trim() + "/" + noteMatch.Groups["day"].Value.Trim() + "\n"
+                                                      + "|| Cấp phó bản số | " + match.Groups["noteInf"].Value.Trim();
+
+                        statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Type = "INID",
+                            Tr = "|| (15) Grant date | " + noteMatch.Groups["year"].Value.Trim() + "/0" + noteMatch.Groups["month"].Value.Trim() + "/" + noteMatch.Groups["day"].Value.Trim() + "\n"
+                            + "|| Digital copy number | " + match.Groups["noteInf"].Value.Trim()
+                        });
+                    }
+                    else
+                    {
+                        statusEvent.LegalEvent.Language = "VI";
+                        statusEvent.LegalEvent.Note = "|| (15) Ngày cấp bằng | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim()).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                                                      + "|| Cấp phó bản số | " + match.Groups["noteInf"].Value.Trim();
+
+                        statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Type = "INID",
+                            Tr = "|| (15) Grant date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim()).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                                 + "|| Digital copy number | " + match.Groups["noteInf"].Value.Trim()
+                        });
+                    }
+                }
+            }
 
             return statusEvent;
         }
@@ -970,17 +1272,253 @@ namespace Diamond_VN_Maksim
         {
             string text = null;
 
-            if (subCode is "6" or "23" or "16" or "12" or "13" or "14" or "15" or "17")
-            {
                 foreach (XElement xElement in xElements)
                 {
                     text += xElement.Value + " ";
                 }
 
-                return text.Trim();
-            }
+            return text.Trim();
+        }
 
-            else return text.Trim();
+        internal List<Diamond.Core.Models.LegalStatusEvent> MakeListPatent(string note, string subCode, string sectionCode)
+        {
+            List<Diamond.Core.Models.LegalStatusEvent> legal = new();
+
+            CultureInfo culture = new("ru-RU");
+
+            if (subCode is "3" or "4")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @"ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+ch.\s..n:(?<f74>.+)N.i.+?\schuy.n\snh..ng:(?<f73>.+)B.n\s...c.+?:(?<f73new>.+?)\s..i\s.+?\s(?<f54>1.+)\sGi.");
+
+                if (match.Success)
+                {
+                    List<string> information = Regex.Split(match.Groups["f54"].Value.Trim(), @"(?=\d\s\D.+)")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string inf in information)
+                    {
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
+                            CountryCode = "VN",
+                            SubCode = subCode,
+                            SectionCode = sectionCode,
+                            Id = Id++,
+                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                            Biblio = new()
+                            {
+                                InvOrApps = new(),
+                                DOfPublication = new(),
+                                InvAppGrants = new()
+                            },
+                            NewBiblio = new(),
+                            LegalEvent = new()
+                            {
+                                Translations = new()
+                            }
+                        };
+
+                        statusEvent.Biblio.Agents.Add(new PartyMember()
+                        {
+                            Name = match.Groups["f74"].Value.Trim(),
+                            Language = "VI"
+                        });
+
+                        statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                        Match assignes = Regex.Match(match.Groups["f73"].Value.Trim(),
+                            @"(?<name>.+)\((?<code>[A-Z]{2})\)(?<adress>.+)");
+
+                        if (assignes.Success)
+                        {
+                            if (assignes.Groups["code"].Value.Trim() is "VN")
+                            {
+                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = assignes.Groups["name"].Value.Trim(),
+                                    Country = assignes.Groups["code"].Value.Trim(),
+                                    Address1 = assignes.Groups["adress"].Value.Trim(),
+                                    Language = "VI"
+                                });
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = assignes.Groups["name"].Value.Trim(),
+                                    Country = assignes.Groups["code"].Value.Trim(),
+                                    Address1 = assignes.Groups["adress"].Value.Trim(),
+                                    Language = "EN"
+                                });
+                            }
+                        }
+                        else Console.WriteLine($"{match.Groups["f73"].Value.Trim()} ---- 73");
+
+                        Match assignesNew = Regex.Match(match.Groups["f73new"].Value.Trim(),
+                            @"(?<name>.+)\((?<code>[A-Z]{2})\)(?<adress>.+)");
+
+                        if (assignesNew.Success)
+                        {
+                            if (assignesNew.Groups["code"].Value.Trim() is "VN")
+                            {
+                                statusEvent.NewBiblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = assignesNew.Groups["name"].Value.Trim(),
+                                    Country = assignesNew.Groups["code"].Value.Trim(),
+                                    Address1 = assignesNew.Groups["adress"].Value.Trim(),
+                                    Language = "VI"
+                                });
+                            }
+                            else
+                            {
+                                statusEvent.NewBiblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = assignesNew.Groups["name"].Value.Trim(),
+                                    Country = assignesNew.Groups["code"].Value.Trim(),
+                                    Address1 = assignesNew.Groups["adress"].Value.Trim(),
+                                    Language = "EN"
+                                });
+                            }
+                        }
+                        else Console.WriteLine($"{match.Groups["f73new"].Value.Trim()} ---- 73new");
+
+                        Match info = Regex.Match(inf.Trim(),
+                            @"\d\s(?<f54>.+?)\s(?<f11>\d+)\s(?<note>\d{2}\/\d{2}\/\d{4})");
+
+                        if (info.Success)
+                        {
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "VI",
+                                Text = info.Groups["f54"].Value.Trim()
+                            });
+
+                            statusEvent.Biblio.Publication.Number = info.Groups["f11"].Value.Trim();
+
+                            statusEvent.LegalEvent.Note = "|| Ngày cấp | " + DateTime.Parse(info.Groups["note"].Value.Trim(), culture)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            statusEvent.LegalEvent.Language = "VI";
+
+                            statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                            {
+                                Language = "EN",
+                                Tr = "|| Grant date | " + DateTime.Parse(info.Groups["note"].Value.Trim(), culture)
+                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
+                                Type = "INID"
+                            });
+                        }
+                        else Console.WriteLine($"{info} ---- note field");
+
+                        legal.Add(statusEvent);
+                    }
+                }
+            }
+            else if (subCode is "7")
+            {
+                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @"ng.y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+đ.n(?<info>.+?)B.n.+?:(?<f71>.+)B.n.+?:(?<f71n>.+)");
+
+                if (match.Success)
+                {
+                    List<string> infoList = Regex.Split(match.Groups["info"].Value.Trim(), @"(?<=\d{2}\/\d{2}\/\d{4})")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (string inf in infoList)
+                    {
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
+                            CountryCode = "VN",
+                            SubCode = subCode,
+                            SectionCode = sectionCode,
+                            Id = Id++,
+                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                            Biblio = new()
+                            {
+                                InvOrApps = new(),
+                                DOfPublication = new(),
+                                InvAppGrants = new()
+                            },
+                            NewBiblio = new(),
+                            LegalEvent = new()
+                            {
+                                Translations = new()
+                            }
+                        };
+
+                        statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                        Match applicants = Regex.Match(match.Groups["f71"].Value.Trim(),
+                            @"(?<name>.+)\((?<code>[A-Z]{2})\)(?<adress>.+)");
+
+                        if (applicants.Success)
+                        {
+                            if (applicants.Groups["code"].Value.Trim() is "VN")
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = applicants.Groups["name"].Value.Trim(),
+                                    Country = applicants.Groups["code"].Value.Trim(),
+                                    Address1 = applicants.Groups["adress"].Value.Trim(),
+                                    Language = "VI"
+                                });
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = applicants.Groups["name"].Value.Trim(),
+                                    Country = applicants.Groups["code"].Value.Trim(),
+                                    Address1 = applicants.Groups["adress"].Value.Trim(),
+                                    Language = "EN"
+                                });
+                            }
+                        }
+                        else Console.WriteLine($"{match.Groups["f71"].Value.Trim()} ---- 71");
+
+                        Match applicantsNew = Regex.Match(match.Groups["f71n"].Value.Trim(),
+                            @"(?<name>.+)\((?<code>[A-Z]{2})\)(?<adress>.+)");
+
+                        if (applicantsNew.Success)
+                        {
+                            if (applicantsNew.Groups["code"].Value.Trim() is "VN")
+                            {
+                                statusEvent.NewBiblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = applicantsNew.Groups["name"].Value.Trim(),
+                                    Country = applicantsNew.Groups["code"].Value.Trim(),
+                                    Address1 = applicantsNew.Groups["adress"].Value.Trim(),
+                                    Language = "VI"
+                                });
+                            }
+                            else
+                            {
+                                statusEvent.NewBiblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = applicantsNew.Groups["name"].Value.Trim(),
+                                    Country = applicantsNew.Groups["code"].Value.Trim(),
+                                    Address1 = applicantsNew.Groups["adress"].Value.Trim(),
+                                    Language = "EN"
+                                });
+                            }
+                        }
+                        else Console.WriteLine($"{match.Groups["f71n"].Value.Trim()} ---- 71new");
+
+                        Match matchInf = Regex.Match(inf.Trim(), @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
+
+                        if (matchInf.Success)
+                        {
+                            statusEvent.Biblio.Application.Number = matchInf.Groups["num"].Value.Trim();
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(matchInf.Groups["date"].Value.Trim(), culture)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
+
+                        legal.Add(statusEvent);
+                    }
+                }
+            }
+            return legal;
         }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {

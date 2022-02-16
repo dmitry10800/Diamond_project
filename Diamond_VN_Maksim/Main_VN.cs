@@ -6,8 +6,8 @@ namespace Diamond_VN_Maksim
     class Main_VN
     {
 
-        private static readonly string Path = @"C:\!Work\VN\VN_20220125_406B";
-        private static readonly string SubCode = "17";
+        private static readonly string Path = @"C:\!Work\VN\VN_20210625_399B";
+        private static readonly string SubCode = "20";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
@@ -16,14 +16,23 @@ namespace Diamond_VN_Maksim
 
             List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
             {
+                "3" => methods.Start(Path, SubCode),
+                "4" => methods.Start(Path, SubCode),
                 "6" => methods.Start(Path, SubCode),
+                "7" => methods.Start(Path, SubCode),
                 "12" => methods.Start(Path, SubCode),
                 "13" => methods.Start(Path, SubCode),
                 "14" => methods.Start(Path, SubCode),
                 "15" => methods.Start(Path, SubCode),
                 "16" => methods.Start(Path, SubCode),
                 "17" => methods.Start(Path, SubCode),
+                "18" => methods.Start(Path, SubCode),
+                "19" => methods.Start(Path, SubCode),
+                "20" => methods.Start(Path, SubCode),
+                "22" => methods.Start(Path, SubCode),
                 "23" => methods.Start(Path, SubCode),
+                "24" => methods.Start(Path, SubCode),
+                "29" => methods.Start(Path, SubCode),
                 _ => null
             };
 
