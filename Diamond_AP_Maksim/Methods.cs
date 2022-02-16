@@ -347,9 +347,64 @@ namespace Diamond_AP_Maksim
                 {
                     if (inid.StartsWith(I21))
                     {
-
+                        biblio.Application.Number = inid.Replace(I21, "").Trim();
                     }
+                    else if (inid.StartsWith(I22))
+                    {
+                        biblio.Application.Date = DateTime.Parse(inid.Replace(I22, "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                    else if (inid.StartsWith(I23))
+                    {
+                        biblio.Application.OtherDate = DateTime.Parse(inid.Replace(I23, "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                    else if (inid.StartsWith(I51))
+                    {
+                        List<string> ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+
+                        foreach (string ipc in ipcs)
+                        {
+                            Match match = Regex.Match(ipc.Trim(), @"(?<num>.+)\s\((?<date>.+)\)");
+
+                            if (match.Success)
+                            {
+                                biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = match.Groups["num"].Value.Trim(),
+                                    Date = match.Groups["date"].Value.Trim()
+                                });
+                            }
+                        }
+                    }
+                    else if (inid.StartsWith(I54))
+                    {
+                        biblio.Titles.Add(new Title
+                        {
+                            Language = "EN",
+                            Text = inid.Replace(I54, "").Trim()
+                        });
+                    }
+                    else if (inid.StartsWith(I74))
+                    {
+                        biblio.Agents.Add(new PartyMember
+                        {
+                            Name = inid.Replace(I74, "").Trim()
+                        });
+                    }
+                    else if (inid.StartsWith(I84))
+                    {
+                        List<string> conventions = Regex.Split(inid.Replace(I84, ""), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        biblio.IntConvention.DesignatedStates = new();
+
+                        foreach (string convention in conventions)
+                        {
+                            biblio.IntConvention.DesignatedStates.Add(convention.Trim());
+                        }
+                    }
+                    else Console.WriteLine($"{inid}");
                 }
+                legal.Biblio = biblio;
             }
             else
             if(subCode == "3")
