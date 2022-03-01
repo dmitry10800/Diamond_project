@@ -254,7 +254,7 @@ namespace Diamond_VN_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("Söa ®æi ®¬n"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"1-\d{4}.+").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"1-2\d{3}.+").Match(val).Success).ToList();
 
                     foreach (string note in notes)
                     {
@@ -268,7 +268,7 @@ namespace Diamond_VN_Maksim
                         .TakeWhile(val => !val.Value.StartsWith("PhÇn iV"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"2-\d{4}.+").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"2-2\d{3}.+").Match(val).Success).ToList();
 
                     foreach (string note in notes)
                     {
