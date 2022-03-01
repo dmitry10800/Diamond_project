@@ -292,7 +292,6 @@ namespace Diamond_VN_Maksim
             }
             return statusEvents;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -1051,7 +1050,7 @@ namespace Diamond_VN_Maksim
 
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
-                        Name = match.Groups["name"].Value.Trim(),
+                        Name = match.Groups["name"].Value.Replace("Chủ văn bằng bảo hộ:","").Trim(),
                         Country = match.Groups["code"].Value.Trim(),
                         Address1 = match.Groups["adress"].Value.Trim()
                     });
