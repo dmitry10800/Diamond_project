@@ -61,6 +61,7 @@ namespace Diamond_UZ_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                        .SkipWhile(val => !val.Value.StartsWith("1.2. 4A"))
+                       .TakeWhile(val => !val.Value.StartsWith("FG A"))
                        .TakeWhile(val => !val.Value.StartsWith("FG4A"))
                        .ToList();
 
@@ -89,7 +90,6 @@ namespace Diamond_UZ_Maksim
             }
             return statusEvents;
         }
-
         internal string MakeText (List<XElement> xElement)
         {
             string text = "";
@@ -1316,7 +1316,7 @@ namespace Diamond_UZ_Maksim
                     }
                     else if (inid.StartsWith("(86)"))
                     {
-                        Match match = Regex.Match(inid.Replace("(86)", "").Trim(), @"(?<num>.+),\s(?<date>.+)");
+                        Match match = Regex.Match(inid.Replace("(86)", "").Trim(), @"(?<num>.+),?\s(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (match.Success)
                         {
@@ -1325,11 +1325,23 @@ namespace Diamond_UZ_Maksim
 
                             legalStatus.Biblio.IntConvention.PctApplNumber = match.Groups["num"].Value.Trim();
                         }
-                        else Console.WriteLine($"{inid} -- 86");
+                        else
+                        {
+                            Match match2 = Regex.Match(inid.Replace("(86)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4}),?\s(?<num>.+)");
+
+                            if (match2.Success)
+                            {
+                                legalStatus.Biblio.IntConvention.PctApplDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
+                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                                legalStatus.Biblio.IntConvention.PctApplNumber = match2.Groups["num"].Value.Trim();
+                            }
+                            else Console.WriteLine($"{inid} -- 86");
+                        }
                     }
                     else if (inid.StartsWith("(87)"))
                     {
-                        Match match = Regex.Match(inid.Replace("(87)", "").Trim(), @"(?<num>.+),\s(?<date>.+)");
+                        Match match = Regex.Match(inid.Replace("(87)", "").Trim(), @"(?<num>.+),?\s(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (match.Success)
                         {
@@ -1338,7 +1350,19 @@ namespace Diamond_UZ_Maksim
 
                             legalStatus.Biblio.IntConvention.PctPublNumber = match.Groups["num"].Value.Trim();
                         }
-                        else Console.WriteLine($"{inid} -- 87");
+                        else
+                        {
+                            Match match2 = Regex.Match(inid.Replace("(86)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4}),?\s(?<num>.+)");
+
+                            if (match2.Success)
+                            {
+                                legalStatus.Biblio.IntConvention.PctApplDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
+                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                                legalStatus.Biblio.IntConvention.PctApplNumber = match2.Groups["num"].Value.Trim();
+                            }
+                            else Console.WriteLine($"{inid} -- 87");
+                        }
                     }
                     else if (inid.StartsWith("(31)(32)(33)"))
                     {
@@ -1526,8 +1550,12 @@ namespace Diamond_UZ_Maksim
                     }
                     else if (inid.StartsWith("(22)"))
                     {
-                        legalStatus.Biblio.Application.Date = DateTime.Parse(inid.Replace("(22)", "").Trim(), culture)
-                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        Match match = Regex.Match(inid.Replace("(22)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                        if (match.Success)
+                        {
+                            legalStatus.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
                     }
                     else if (inid.StartsWith("(72)"))
                     {
