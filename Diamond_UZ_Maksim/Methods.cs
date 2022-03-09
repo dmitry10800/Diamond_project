@@ -1356,10 +1356,10 @@ namespace Diamond_UZ_Maksim
 
                             if (match2.Success)
                             {
-                                legalStatus.Biblio.IntConvention.PctApplDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
+                                legalStatus.Biblio.IntConvention.PctPublDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
                                     .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                                legalStatus.Biblio.IntConvention.PctApplNumber = match2.Groups["num"].Value.TrimEnd(',').Trim();
+                                legalStatus.Biblio.IntConvention.PctPublNumber = match2.Groups["num"].Value.TrimEnd(',').Trim();
                             }
                             else Console.WriteLine($"{inid} -- 87");
                         }
@@ -2245,10 +2245,10 @@ namespace Diamond_UZ_Maksim
 
                             if (match2.Success)
                             {
-                                legalStatus.Biblio.IntConvention.PctApplDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
+                                legalStatus.Biblio.IntConvention.PctPublDate = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture)
                                     .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                                legalStatus.Biblio.IntConvention.PctApplNumber = match2.Groups["num"].Value.TrimEnd(',').Trim();
+                                legalStatus.Biblio.IntConvention.PctPublNumber = match2.Groups["num"].Value.TrimEnd(',').Trim();
                             }
                             else Console.WriteLine($"{inid} -- 87");
                         }
