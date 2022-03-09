@@ -254,7 +254,7 @@ namespace Diamond_VN_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("Söa ®æi ®¬n"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"1-\d{4}.+").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"1-2\d{3}.+").Match(val).Success).ToList();
 
                     foreach (string note in notes)
                     {
@@ -268,7 +268,7 @@ namespace Diamond_VN_Maksim
                         .TakeWhile(val => !val.Value.StartsWith("PhÇn iV"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"2-\d{4}.+").Match(val).Success).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\d+-2\d{3}.+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"2-2\d{3}.+").Match(val).Success).ToList();
 
                     foreach (string note in notes)
                     {
@@ -292,7 +292,6 @@ namespace Diamond_VN_Maksim
             }
             return statusEvents;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -1051,7 +1050,7 @@ namespace Diamond_VN_Maksim
 
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
-                        Name = match.Groups["name"].Value.Trim(),
+                        Name = match.Groups["name"].Value.Replace("Chủ văn bằng bảo hộ:","").Trim(),
                         Country = match.Groups["code"].Value.Trim(),
                         Address1 = match.Groups["adress"].Value.Trim()
                     });
@@ -1177,7 +1176,7 @@ namespace Diamond_VN_Maksim
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
                         Name = match.Groups["name"].Value.Trim(),
-                        Address1 = match.Groups["adress"].Value.Trim()
+                        Address1 = match.Groups["adress"].Value.Replace("_", "").Trim()
                     });
 
                     statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
@@ -1460,7 +1459,7 @@ namespace Diamond_VN_Maksim
                                 {
                                     Name = applicants.Groups["name"].Value.Trim(),
                                     Country = applicants.Groups["code"].Value.Trim(),
-                                    Address1 = applicants.Groups["adress"].Value.Trim(),
+                                    Address1 = applicants.Groups["adress"].Value.Replace("_","").Trim(),
                                     Language = "VI"
                                 });
                             }
@@ -1470,7 +1469,7 @@ namespace Diamond_VN_Maksim
                                 {
                                     Name = applicants.Groups["name"].Value.Trim(),
                                     Country = applicants.Groups["code"].Value.Trim(),
-                                    Address1 = applicants.Groups["adress"].Value.Trim(),
+                                    Address1 = applicants.Groups["adress"].Value.Replace("_", "").Trim(),
                                     Language = "EN"
                                 });
                             }
@@ -1488,7 +1487,7 @@ namespace Diamond_VN_Maksim
                                 {
                                     Name = applicantsNew.Groups["name"].Value.Trim(),
                                     Country = applicantsNew.Groups["code"].Value.Trim(),
-                                    Address1 = applicantsNew.Groups["adress"].Value.Trim(),
+                                    Address1 = applicantsNew.Groups["adress"].Value.Replace("_", "").Trim(),
                                     Language = "VI"
                                 });
                             }
@@ -1498,7 +1497,7 @@ namespace Diamond_VN_Maksim
                                 {
                                     Name = applicantsNew.Groups["name"].Value.Trim(),
                                     Country = applicantsNew.Groups["code"].Value.Trim(),
-                                    Address1 = applicantsNew.Groups["adress"].Value.Trim(),
+                                    Address1 = applicantsNew.Groups["adress"].Value.Replace("_", "").Trim(),
                                     Language = "EN"
                                 });
                             }
