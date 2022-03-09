@@ -591,7 +591,8 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
-                                    Name = match.Groups["name"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Language = "VI"
                                 });
                             }
                             else Console.WriteLine($"{applicant} --- 71");
@@ -611,7 +612,8 @@ namespace Diamond_VN_Maksim
                                 statusEvent.Biblio.Inventors.Add(new PartyMember()
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
-                                    Name = match.Groups["name"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Language = "VI"
                                 });
                             }
                             else Console.WriteLine($"{inventor} --- 72");
@@ -743,7 +745,8 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
-                                    Name = match.Groups["name"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Language = "VI"
                                 });
                             }
                             else Console.WriteLine($"{invOrApp} --- 71");
@@ -942,7 +945,8 @@ namespace Diamond_VN_Maksim
                                 statusEvent.Biblio.Inventors.Add(new PartyMember()
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
-                                    Name = match.Groups["name"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Language = "VI"
                                 });
                             }
                             else Console.WriteLine($"{inventor} --- 72");
@@ -1006,7 +1010,8 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
-                                    Name = match.Groups["name"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Language = "VI"
                                 });
                             }
                             else Console.WriteLine($"{assignee} --- 73");
@@ -1028,7 +1033,8 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
-                                    Name = match.Groups["name"].Value.Trim()
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Language = "VI"
                                 });
                             }
                             else Console.WriteLine($"{inv} --- 76");
@@ -1278,7 +1284,6 @@ namespace Diamond_VN_Maksim
 
             return text.Trim();
         }
-
         internal List<Diamond.Core.Models.LegalStatusEvent> MakeListPatent(string note, string subCode, string sectionCode)
         {
             List<Diamond.Core.Models.LegalStatusEvent> legal = new();
