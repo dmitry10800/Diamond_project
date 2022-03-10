@@ -401,8 +401,14 @@ namespace Diamond_VN_Maksim
                     }
                     else if (inid.StartsWith("(43)"))
                     {
-                        statusEvent.Biblio.Publication.Date = DateTime.Parse(inid.Replace("(43)", "").Trim(), culture)
+                        Match match = Regex.Match(inid.Replace("(43)", "").Trim(), @"(?<date>\d{2}.\d{2}\d{4})");
+
+                        if (match.Success)
+                        {
+
+                            statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
                     }
                     else if (inid.StartsWith("(21)"))
                     {
@@ -729,6 +735,14 @@ namespace Diamond_VN_Maksim
                             Number = inid.Replace("(62)","").Trim()
                         });
                     }
+                    else if (inid.StartsWith("(67)"))
+                    {
+                        statusEvent.Biblio.Related.Add(new RelatedDocument()
+                        {
+                            Source = "67",
+                            Number = inid.Replace("(67)", "").Trim()
+                        });
+                    }
                     else if (inid.StartsWith("(75)"))
                     {
                         List<string> invOrApps = Regex.Split(inid.Replace("(75)", "").Trim(), @"(?=\d{1,3}\..+)")
@@ -839,9 +853,18 @@ namespace Diamond_VN_Maksim
 
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Publication.Date =match.Groups["date"].Value.Trim().Replace("-", "/").Trim();
+                            statusEvent.Biblio.Publication.Date = match.Groups["date"].Value.Trim().Replace("-", "/").Trim();
                         }
-                        else Console.WriteLine($"{inid} -- 43");
+                        else
+                        {
+                            Match match2 = Regex.Match(inid.Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+
+                            if (match2.Success)
+                            {
+                                statusEvent.Biblio.Publication.Date = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
+                            }
+                            else Console.WriteLine($"{inid} -- 43");
+                        }
                     }
                     else if (inid.StartsWith("(54)"))
                     {
