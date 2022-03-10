@@ -1225,7 +1225,7 @@ namespace Diamond_VN_Maksim
             else if (subCode is "23" or "24")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                    @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+)\s");
+                    @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+\/\d+)\s?");
 
                 if (match.Success)
                 {
