@@ -401,14 +401,14 @@ namespace Diamond_VN_Maksim
                     }
                     else if (inid.StartsWith("(43)"))
                     {
-                        Match match = Regex.Match(inid.Replace("(43)", "").Trim(), @"(?<date>\d{2}.\d{2}\d{4})");
+                        Match match = Regex.Match(inid.Replace("(43)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (match.Success)
                         {
-
                             statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
+                        else Console.WriteLine($"{inid}");
                     }
                     else if (inid.StartsWith("(21)"))
                     {
@@ -436,15 +436,29 @@ namespace Diamond_VN_Maksim
                             if (matchTmp.Success)
                             {
                                 statusEvent.LegalEvent.Note =
-                                    "|| " + matchTmp.Groups["note1"].Value.TrimEnd(':').Trim() + " | " +
-                                    matchTmp.Groups["date1"].Value.Trim() + "\n" +
-                                    "|| " + matchTmp.Groups["note2"].Value.TrimEnd(':').Trim() + " | " +
-                                    match.Groups["noteDate"].Value.Trim() + "\n";
+                                    "|| " + matchTmp.Groups["note1"].Value.Trim().TrimEnd(':').Trim() + " | " +
+                                    DateTime.Parse(matchTmp.Groups["date1"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".","/").ToString() + "\n" +
+                                    "|| " + matchTmp.Groups["note2"].Value.Trim().TrimEnd(':').Trim() + " | " +
+                                    DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").ToString() + "\n";
+                                statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                                {
+                                    Language = "EN",
+                                    Type = "INID",
+                                    Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").ToString() + "\n"
+                                });
+
                             }
                             else
                             {
-                                statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " +
-                                                              match.Groups["noteDate"].Value.Trim() + "\n";
+                                statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
+                                                              DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").ToString() + "\n"; 
+
+                                statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                                {
+                                    Language = "EN",
+                                    Type = "INID",
+                                    Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").ToString() + "\n"
+                                });
                             }
                             
                         }
@@ -598,7 +612,7 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = "EN"
                                 });
                             }
                             else Console.WriteLine($"{applicant} --- 71");
@@ -817,7 +831,7 @@ namespace Diamond_VN_Maksim
                             {
                                 Language = "EN",
                                 Type = "INID",
-                                Tr = "(15) || Date of grant | " + match.Groups["date"].Value.Trim() + "\n"
+                                Tr = "|| (15) Date of grant | " + match.Groups["date"].Value.Trim() + "\n"
                         });
                         }
                         else Console.WriteLine($"{inid} ---- 15");
@@ -969,7 +983,7 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = "EN"
                                 });
                             }
                             else Console.WriteLine($"{inventor} --- 72");
@@ -1034,7 +1048,7 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = "EN"
                                 });
                             }
                             else Console.WriteLine($"{assignee} --- 73");
@@ -1057,13 +1071,12 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = "EN"
                                 });
                             }
                             else Console.WriteLine($"{inv} --- 76");
                         }
                     }
-
                     else Console.WriteLine($"{inid}");
                 }
             }
