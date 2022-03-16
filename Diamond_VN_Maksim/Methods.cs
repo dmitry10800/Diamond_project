@@ -401,8 +401,14 @@ namespace Diamond_VN_Maksim
                     }
                     else if (inid.StartsWith("(43)"))
                     {
-                        statusEvent.Biblio.Publication.Date = DateTime.Parse(inid.Replace("(43)", "").Trim(), culture)
+                        Match match = Regex.Match(inid.Replace("(43)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Publication.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
+                        else Console.WriteLine($"{inid}");
                     }
                     else if (inid.StartsWith("(21)"))
                     {
@@ -430,17 +436,30 @@ namespace Diamond_VN_Maksim
                             if (matchTmp.Success)
                             {
                                 statusEvent.LegalEvent.Note =
-                                    "|| " + matchTmp.Groups["note1"].Value.TrimEnd(':').Trim() + " | " +
-                                    matchTmp.Groups["date1"].Value.Trim() + "\n" +
-                                    "|| " + matchTmp.Groups["note2"].Value.TrimEnd(':').Trim() + " | " +
-                                    match.Groups["noteDate"].Value.Trim() + "\n";
+                                    "|| " + matchTmp.Groups["note1"].Value.Trim().TrimEnd(':').Trim() + " | " +
+                                    DateTime.Parse(matchTmp.Groups["date1"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".","/").Trim() + "\n" +
+                                    "|| " + matchTmp.Groups["note2"].Value.Trim().TrimEnd(':').Trim() + " | " +
+                                    DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
+                                statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                                {
+                                    Language = "EN",
+                                    Type = "INID",
+                                    Tr = "|| Date of request for substantive examination | " + DateTime.Parse(matchTmp.Groups["date1"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n" +
+                                    "|| Date of request for early publication | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                                });
                             }
                             else
                             {
-                                statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " +
-                                                              match.Groups["noteDate"].Value.Trim() + "\n";
+                                statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
+                                                              DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"; 
+
+                                statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                                {
+                                    Language = "EN",
+                                    Type = "INID",
+                                    Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"
+                                });
                             }
-                            
                         }
                         else
                         {
@@ -460,8 +479,15 @@ namespace Diamond_VN_Maksim
                             statusEvent.Biblio.IntConvention.PctApplDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
+                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+
+                            statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                            {
+                                Language = "EN",
+                                Type = "INID",
+                                Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                            });
                         }
                         else
                         {
@@ -486,8 +512,15 @@ namespace Diamond_VN_Maksim
                                     statusEvent.Biblio.IntConvention.PctApplDate = DateTime.Parse(match1.Groups["date"].Value.Trim(), culture)
                                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                                    statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture)
+                                    statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture)
                                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+
+                                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                                    {
+                                        Language = "EN",
+                                        Type = "INID",
+                                        Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                                    });
                                 }
                                 else
                                 {
@@ -517,8 +550,15 @@ namespace Diamond_VN_Maksim
                             statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
+                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+
+                            statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                            {
+                                Language = "EN",
+                                Type = "INID",
+                                Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match.Groups["date1"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                            });
                         }
                         else
                         {
@@ -543,8 +583,14 @@ namespace Diamond_VN_Maksim
                                     statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match1.Groups["date"].Value.Trim(), culture)
                                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                                    statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.TrimEnd(':').Trim() + " | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture)
+                                    statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture)
                                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n";
+                                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                                    {
+                                        Language = "EN",
+                                        Type = "INID",
+                                        Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match1.Groups["date1"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                                    });
                                 }
                                 else
                                 {
@@ -592,8 +638,12 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
-                                });
+                                    Language = match.Groups["code"].Value.Trim() switch
+                                    {
+                                        "VN" => "VI",
+                                        _ => "EN"
+                                    }
+                            });
                             }
                             else Console.WriteLine($"{applicant} --- 71");
                         }
@@ -613,7 +663,11 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = match.Groups["code"].Value.Trim() switch
+                                    {
+                                        "VN" => "VI",
+                                        _ => "EN"
+                                    }
                                 });
                             }
                             else Console.WriteLine($"{inventor} --- 72");
@@ -665,8 +719,16 @@ namespace Diamond_VN_Maksim
 
                         if (match.Success)
                         {
-                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim() + " | " +
+                            statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
                                                           match.Groups["noteDate"].Value.Trim();
+                            statusEvent.LegalEvent.Language = "VI";
+                            statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                            {
+                                Language = "EN",
+                                Type = "INID",
+                                Tr = "|| Date of request for substantive examination | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
+                            });
+
 
                             List <string> priorities = Regex.Split(match.Groups["inid30"].Value.Trim(), @"(?<=\s[A-Z]{2}\s)")
                                 .Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -692,7 +754,7 @@ namespace Diamond_VN_Maksim
                                         @"(?<note>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
                                     if (match1.Success)
                                     {
-                                        statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim() + " | " +
+                                        statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
                                                                       match1.Groups["date"].Value.Trim();
                                     }
                                     else Console.WriteLine($"{priority} --- 30");}
@@ -729,6 +791,14 @@ namespace Diamond_VN_Maksim
                             Number = inid.Replace("(62)","").Trim()
                         });
                     }
+                    else if (inid.StartsWith("(67)"))
+                    {
+                        statusEvent.Biblio.Related.Add(new RelatedDocument()
+                        {
+                            Source = "67",
+                            Number = inid.Replace("(67)", "").Trim()
+                        });
+                    }
                     else if (inid.StartsWith("(75)"))
                     {
                         List<string> invOrApps = Regex.Split(inid.Replace("(75)", "").Trim(), @"(?=\d{1,3}\..+)")
@@ -746,7 +816,11 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = match.Groups["code"].Value.Trim() switch
+                                    {
+                                        "VN" => "VI",
+                                        _ => "EN"
+                                    }
                                 });
                             }
                             else Console.WriteLine($"{invOrApp} --- 71");
@@ -803,7 +877,7 @@ namespace Diamond_VN_Maksim
                             {
                                 Language = "EN",
                                 Type = "INID",
-                                Tr = "(15) || Date of grant | " + match.Groups["date"].Value.Trim() + "\n"
+                                Tr = "|| (15) Date of grant | " + match.Groups["date"].Value.Trim() + "\n"
                         });
                         }
                         else Console.WriteLine($"{inid} ---- 15");
@@ -839,9 +913,18 @@ namespace Diamond_VN_Maksim
 
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Publication.Date =match.Groups["date"].Value.Trim().Replace("-", "/").Trim();
+                            statusEvent.Biblio.Publication.Date = match.Groups["date"].Value.Trim().Replace("-", "/").Trim();
                         }
-                        else Console.WriteLine($"{inid} -- 43");
+                        else
+                        {
+                            Match match2 = Regex.Match(inid.Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+
+                            if (match2.Success)
+                            {
+                                statusEvent.Biblio.Publication.Date = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
+                            }
+                            else Console.WriteLine($"{inid} -- 43");
+                        }
                     }
                     else if (inid.StartsWith("(54)"))
                     {
@@ -946,7 +1029,11 @@ namespace Diamond_VN_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = match.Groups["code"].Value.Trim() switch
+                                    {
+                                        "VN" => "VI",
+                                        _ => "EN"
+                                    }
                                 });
                             }
                             else Console.WriteLine($"{inventor} --- 72");
@@ -1011,7 +1098,11 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = match.Groups["code"].Value.Trim() switch
+                                    {
+                                        "VN" => "VI",
+                                        _ => "EN"
+                                    }
                                 });
                             }
                             else Console.WriteLine($"{assignee} --- 73");
@@ -1034,13 +1125,16 @@ namespace Diamond_VN_Maksim
                                     Country = match.Groups["code"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Name = match.Groups["name"].Value.Trim(),
-                                    Language = "VI"
+                                    Language = match.Groups["code"].Value.Trim() switch
+                                    {
+                                        "VN" => "VI",
+                                        _ => "EN"
+                                    }
                                 });
                             }
                             else Console.WriteLine($"{inv} --- 76");
                         }
                     }
-
                     else Console.WriteLine($"{inid}");
                 }
             }
@@ -1202,7 +1296,7 @@ namespace Diamond_VN_Maksim
             else if (subCode is "23" or "24")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                    @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+)\s");
+                    @"(?<appNum>.+?)\s(?<pubNum>.+)\s(?<pubDate>\d{2}\/\d{2}\/\d{4})\s(?<evDate>\d{2}\/\d{2}\/\d{4})\s(?<ipcs>.+\/\d+)\s?");
 
                 if (match.Success)
                 {
