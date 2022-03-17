@@ -641,6 +641,8 @@ namespace Diamond_AP_Maksim
                     legalEvent.Note = "|| Valid Until | " + DateTime.Parse(match.Groups["legalDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
                         + "|| Anniversary | " + match.Groups["note"].Value.Trim();
 
+                    legalEvent.Language = "EN";
+
                     legal.Biblio = biblio;
                     legal.LegalEvent = legalEvent;
                 }
@@ -659,6 +661,8 @@ namespace Diamond_AP_Maksim
 
                     legalEvent.Note = "|| Valid Until | " + DateTime.Parse(match.Groups["legalDate"].Value.Replace(" ", "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
                         + "|| Anniversary | " + match.Groups["note"].Value.Trim();
+
+                    legalEvent.Language = "EN";
 
                     legal.Biblio = biblio;
                     legal.LegalEvent = legalEvent;
