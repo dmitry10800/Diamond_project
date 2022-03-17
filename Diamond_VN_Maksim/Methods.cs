@@ -1264,7 +1264,7 @@ namespace Diamond_VN_Maksim
             else if (subCode is "22")
             {
                 Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                    @".y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+c.p:\s?(?<noteDate>\d{2}\/\d{2}\/\d{4}).+s.:\s?(?<pubNum>\d+).+chung:(?<name>\D+)\(?(?<adress>.+)");
+                    @".y\s(?<evDate>\d{2}\/\d{2}\/\d{4}).+c.p:\s?(?<noteDate>\d{2}\/\d{2}\/\d{4}).+b.n\ss.\s(?<noteNum>\d+).+s.:\s?(?<pubNum>\d+).+chung:(?<name>\D+)\(?(?<adress>.+),(?<country>.+)\s");
 
                 if (match.Success)
                 {
@@ -1276,18 +1276,28 @@ namespace Diamond_VN_Maksim
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
                         Name = match.Groups["name"].Value.Trim(),
-                        Address1 = match.Groups["adress"].Value.Replace("_", "").Trim()
+                        Address1 = match.Groups["adress"].Value.Replace("_", "").Trim(),
+                        Language = MakeCountryCode(match.Groups["country"].Value.Trim()) switch
+                        {
+                            "VN" => "VI",
+                            _ => "EN"
+                        },
+                        Country = MakeCountryCode(match.Groups["country"].Value.Trim())
                     });
 
+                    if(MakeCountryCode(match.Groups["country"].Value.Trim()) is null) Console.WriteLine(match.Groups["country"].Value.Trim());
+
                     statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
-                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n';
+                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n'
+                        + "|| Cấp phó bản số | " + match.Groups["noteNum"].Value.Trim();
 
                     statusEvent.LegalEvent.Language = "VI";
                     statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
                     {
                         Language = "EN",
                         Tr = "|| (15) Grant date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
-                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n',
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n' 
+                        + "|| Digital copy number | " + match.Groups["noteNum"].Value.Trim(),
                         Type = "INID"
                     });
                 }
@@ -1378,6 +1388,11 @@ namespace Diamond_VN_Maksim
 
             return text.Trim();
         }
+        internal string MakeCountryCode(string country) => country switch
+        {
+            "Japan" => "JP",
+            _ => null
+        };
         internal List<Diamond.Core.Models.LegalStatusEvent> MakeListPatent(string note, string subCode, string sectionCode)
         {
             List<Diamond.Core.Models.LegalStatusEvent> legal = new();
