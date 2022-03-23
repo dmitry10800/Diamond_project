@@ -5,8 +5,8 @@ namespace Diamond_AP_Maksim
 {
     class Main_AP
     {
-        private static readonly string path = @"C:\!Work\AP\AP_20220131_01";
-        private static readonly string subCode = "2";
+        private static readonly string path = @"C:\!Work\AP\AP_20220228_02";
+        private static readonly string subCode = "7";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)

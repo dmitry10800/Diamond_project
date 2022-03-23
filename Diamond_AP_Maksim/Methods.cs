@@ -104,11 +104,11 @@ namespace Diamond_AP_Maksim
                 if (subCode == "7")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                       .SkipWhile(val => !val.Value.StartsWith("I Patent No. Application No. Date"))
+                       .SkipWhile(val => !val.Value.StartsWith("Patent No. Application No. Date Fee Paid Valid Until Anniversary"))
                        .TakeWhile(val => !val.Value.StartsWith("UTILITY MODELS")).ToList();
 
 
-                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=AP\s?\d{4,5}\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AP ")).ToList();
+                    List<string> notes = Regex.Split(MakeText(xElements).Trim(), @"(?=AP\s?\d{4}\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("AP ")).ToList();
 
                     foreach (string note in notes)
                     {
@@ -172,7 +172,7 @@ namespace Diamond_AP_Maksim
                 
                 .Trim();
 
-            return text;
+            return text.Replace("АР", "AP").Replace("Р","P").Replace("г","r").Replace("у", "y");
         }
         internal Diamond.Core.Models.LegalStatusEvent MakePatent (string note, string subCode, string sectionCode)
         {
