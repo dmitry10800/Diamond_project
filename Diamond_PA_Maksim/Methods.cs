@@ -443,7 +443,11 @@ namespace Diamond_PA_Maksim
             "China" => "CN",
             "Los Países Bajos" => "NL",
             "Reino Unido de Gran Bretaña" => "GB",
-            
+            "UNIÓN EUROPEA" => "EU",
+            "República de Corea" => "KR",
+            "Corea" => "KR",
+            "La Federación Rusa" => "RU",
+
             _ => null,
         };
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
