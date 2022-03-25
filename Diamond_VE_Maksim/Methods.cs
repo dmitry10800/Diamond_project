@@ -45,7 +45,7 @@ namespace Diamond_VE_Maksim
                 if (subCode is "12")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("SOLICITUDES EXTRANJERAS DE PATENTE DE INVENCIÓN PUBLICADAS A EFECTO DE OPOSICIONES"))
+                        .SkipWhile(val => !val.Value.StartsWith("12_LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"))
                         .TakeWhile(val => !val.Value.StartsWith("Publiquese,"))
                         .ToList();
 
@@ -66,7 +66,7 @@ namespace Diamond_VE_Maksim
                             Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
                             break;
                         }
-                        ResolutionDate = match.Groups["year"].Value.Trim() + "/" + month + match.Groups["day"].Value.Trim();
+                        ResolutionDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
                     }
                     else Console.WriteLine("Bad resolution date");
 
@@ -78,11 +78,30 @@ namespace Diamond_VE_Maksim
                 else if (subCode is "19")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("PATENTES EXTRANJERAS DE INVENCIÓN CONCEDIDAS"))
+                        .SkipWhile(val => !val.Value.StartsWith("19_LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"))
                         .TakeWhile(val => !val.Value.StartsWith("Publiquese,"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(21\)\s\d)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(21)")).ToList();
+
+                    Match match = Regex.Match(MakeText(xElements, subCode).Trim(), @"Caracas,\s(?<day>\d{2})(?<month>.+)(?<year>\d{4})");
+
+                    if (match.Success)
+                    {
+                        string month = match.Groups["month"].Value.Trim() switch
+                        {
+                            "de febrero de" => "02",
+                            _ => null
+                        };
+
+                        if (month is null)
+                        {
+                            Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
+                            break;
+                        }
+                        ResolutionDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
+                    }
+                    else Console.WriteLine("Bad resolution date");
 
                     foreach (string note in notes)
                     {
@@ -549,6 +568,8 @@ namespace Diamond_VE_Maksim
                     }
                     else Console.WriteLine($"{inid} --- not process");
                 }
+
+                statusEvent.Biblio.Application.EffectiveDate = ResolutionDate;
             }
             return statusEvent;
         }
