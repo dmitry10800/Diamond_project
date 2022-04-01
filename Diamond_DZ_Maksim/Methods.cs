@@ -120,7 +120,7 @@ namespace Diamond_DZ_Maksim
 
                         foreach (string priority in priorities)
                         {
-                            Match match = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s?(?<num>.+)du\s?(?<date>\d{2}.\d{2}.\d{4})");
+                            Match match = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s?(?<num>.+)du\s?(?<date>\d{2}\.\d{2}\.\d{4})");
 
                             if (match.Success)
                             {
@@ -128,12 +128,12 @@ namespace Diamond_DZ_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Number = match.Groups["num"].Value.Trim(),
-                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim()).ToString(@"yyyy/MM/dd").Trim()
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString(@"yyyy.MM.dd").Replace(".", "/").Trim()
                                 });
                             }
                             else 
                             {
-                                Match match1 = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s?(?<num>.+)\s(?<date>\d{2}.\d{2}.\d{4})");
+                                Match match1 = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s?(?<num>.+)\s(?<date>\d{2}\.\d{2}\.\d{4})");
 
                                 if (match1.Success)
                                 {
@@ -141,7 +141,7 @@ namespace Diamond_DZ_Maksim
                                     {
                                         Country = match1.Groups["code"].Value.Trim(),
                                         Number = match1.Groups["num"].Value.Trim(),
-                                        Date = DateTime.Parse(match1.Groups["date"].Value.Trim()).ToString(@"yyyy/MM/dd").Trim()
+                                        Date = DateTime.Parse(match1.Groups["date"].Value.Trim(), cultureInfo).ToString(@"yyyy.MM.dd").Replace(".", "/").Trim()
                                     });
                                 }
                                 else   Console.WriteLine($"{priority} ---  {statusEvent.Biblio.Publication.Number}  ------  30");
@@ -247,7 +247,7 @@ namespace Diamond_DZ_Maksim
                         {
                             statusEvent.Biblio.Ipcs.Add(new Ipc()
                             {
-                                Class = ipc.Trim()
+                                Class = ipc.Trim().TrimStart('-').Trim()
                             });
                         }
                     }
