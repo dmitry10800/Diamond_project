@@ -54,7 +54,7 @@ namespace Diamond_ZA_Maksim
 
                     foreach (string note in firstNotes)
                     {
-                        Match match = Regex.Match(note.Trim(), @"(?<date>.+)\s?-\s?(?<all>\d{4}\/.+)", RegexOptions.Singleline);
+                        Match match = Regex.Match(note.Trim(), @"(?<date>.+)\s?-\s?(?<all>\d{4}\/\d.+)", RegexOptions.Singleline);
 
                         if (match.Success)
                         {
@@ -69,12 +69,10 @@ namespace Diamond_ZA_Maksim
                         }
                         else Console.WriteLine($"{note}");
                     }
-
                     foreach (string note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "AZ"));
                     }
-
                 }
                 else if(subCode == "3")
                 {
@@ -119,7 +117,7 @@ namespace Diamond_ZA_Maksim
                     }
                 }
             }
-                return statusEvents;
+            return statusEvents;
         }
         internal Diamond.Core.Models.LegalStatusEvent MakePatent (string note, string subCode, string sectionCode)
         {
@@ -208,7 +206,7 @@ namespace Diamond_ZA_Maksim
 
                     foreach (string priority in priorities)
                     {
-                        Match prior = Regex.Match(priority.Trim(), @"33:(?<code>\D{2})\s?~?31:(?<num>.+)\s?~32:(?<date>\d{2}\/\d{2}\/\d{4})");
+                        Match prior = Regex.Match(priority.Trim(), @"33:(?<code>\D{2})\s?~?31:(?<num>.+)\s?~32:(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (prior.Success)
                         {
@@ -222,7 +220,7 @@ namespace Diamond_ZA_Maksim
                         else Console.WriteLine($"{priority}   ------------- 30");
                     }
 
-                    Match date22 = Regex.Match(match.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}\/\d{2}\/\d{2})");
+                    Match date22 = Regex.Match(match.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}.\d{2}.\d{2})");
                     if (date22.Success)
                     {
                         statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
@@ -294,7 +292,7 @@ namespace Diamond_ZA_Maksim
                             }
                         }
 
-                        Match date22 = Regex.Match(match1.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}\/\d{2}\/\d{2})");
+                        Match date22 = Regex.Match(match1.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}.\d{2}.\d{2})");
                         if (date22.Success)
                         {
                             statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
