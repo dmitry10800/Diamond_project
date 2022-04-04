@@ -529,24 +529,32 @@ namespace Diamond_VE_Maksim
                     }
                     else if (inid.StartsWith("(74)"))
                     {
-                        statusEvent.Biblio.Agents.Add(new PartyMember()
+                        List<string> agentsList = Regex
+                            .Split(
+                                inid.Replace("(74)", "").Replace("\r", "").Replace("\n", " ").Trim().TrimEnd(',')
+                                    .TrimEnd(';'), @"-").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string agent in agentsList)
                         {
-                            Name = inid.Replace("(74)","").Trim().TrimEnd(',').TrimEnd(';')
-                        });
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = agent.Trim()
+                            });
+                        }
                     }
                     else if (inid.StartsWith("(51)"))
                     {
-                        if (inid.Replace("(51)", "").Trim() is not "")
+                        if (inid.Replace("(51)", "").Replace("\r","").Replace("\n", " ").Trim() is not "")
                         {
                             statusEvent.LegalEvent.Note = "|| (51) | " + inid.Replace("(51)", "").Trim().TrimEnd(';').Trim();
                             statusEvent.LegalEvent.Language = "EN";
                         }
 
-                        List<string> ipcs = Regex.Split(inid.Replace("(51)", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        List<string> ipcs = Regex.Split(inid.Replace("(51)", "").Replace("\r", "").Replace("\n", " ").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string ipc in ipcs)
                         {
-                            Match match = Regex.Match(ipc.Trim(), @".+=(?<ipc>.+)");
+                            Match match = Regex.Match(ipc.Trim(), @".+=\s?(?<ipc>.+)");
 
                             if (match.Success)
                             {
@@ -560,11 +568,18 @@ namespace Diamond_VE_Maksim
                     }
                     else if (inid.StartsWith("(54)"))
                     {
-                        statusEvent.Biblio.Titles.Add(new Title()
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n"," ").Trim(), @"54\)\s(?<text>.+?)_");
+
+                        if (match.Success)
                         {
-                            Language = "ES",
-                            Text = inid.Replace("(54)", "").Trim()
-                        });
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "ES",
+                                Text = match.Groups["text"].Value.Replace("_","").Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{inid}  --- 54");
+                        
                     }
                     else Console.WriteLine($"{inid} --- not process");
                 }
@@ -619,7 +634,6 @@ namespace Diamond_VE_Maksim
                     text += xElement.Value + " ";
                 }
             }
-
             return text;
         }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
