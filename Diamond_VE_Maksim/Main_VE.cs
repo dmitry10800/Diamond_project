@@ -31,7 +31,7 @@ namespace Diamond_VE_Maksim
             };
 
             Console.WriteLine();
-
+            //test
             if (patents != null) methods.SendToDiamond(patents, SendToProd);
             else Console.WriteLine("Wrong subcode");
         }
