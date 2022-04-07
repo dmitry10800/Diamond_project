@@ -490,6 +490,7 @@ namespace Diamond_PH_Maksim
                     }
                     else
                     {
+
                         Console.WriteLine("-------------");
                         Console.WriteLine($"{note}");
                     }
