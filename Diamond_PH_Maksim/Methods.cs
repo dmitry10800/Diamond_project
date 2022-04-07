@@ -437,7 +437,7 @@ namespace Diamond_PH_Maksim
                 else
                 {
                     Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                        @"(?<appNum>\d\/\d{4}.+)\s?(?<natDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<PCTpubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)\s(?<leNote>\d+th.+)\s");
+                        @"(?<appNum>\d\/\d{4}.+)\s?(?<natDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<PCTpubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)");
 
                     if (match.Success)
                     {
@@ -478,7 +478,6 @@ namespace Diamond_PH_Maksim
                             Text = match.Groups["title"].Value.Trim()
                         });
 
-                        statusEvent.LegalEvent.Note = "|| ANNUITY DUE | " + match.Groups["leNote"].Value.Trim();
                         statusEvent.LegalEvent.Language = "EN";
 
                         Match leDate = Regex.Match(CurrentFileName.Replace(".txt", ""), @"\d{8}");
