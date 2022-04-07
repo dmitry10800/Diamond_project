@@ -5,8 +5,13 @@ namespace Diamond_UZ_Maksim
 {
     class Main_UZ
     {
+<<<<<<< HEAD
         private static readonly string Path = @"C:\!Work\UZ\UZ_20220228_02";
         private static readonly string SubCode = "4";
+=======
+        private static readonly string Path = @"C:\!Work\UZ\er";
+        private static readonly string SubCode = "1";
+>>>>>>> origin/UZ_test
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
         {

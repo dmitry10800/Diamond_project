@@ -505,7 +505,12 @@ namespace Diamond_VE_Maksim
                     }
                     else if (inid.StartsWith("(22)"))
                     {
-                        statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("(22)","").Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
+                        Match match = Regex.Match(inid.Replace("(22)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
                     }
                     else if (inid.StartsWith("(11)"))
                     {
@@ -513,7 +518,12 @@ namespace Diamond_VE_Maksim
                     }
                     else if (inid.StartsWith("(45)"))
                     {
-                        statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(inid.Replace("(45)", "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        Match match = Regex.Match(inid.Replace("(45)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
                     }
                     else if (inid.StartsWith("(73)"))
                     {
