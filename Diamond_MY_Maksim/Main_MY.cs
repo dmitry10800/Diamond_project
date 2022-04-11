@@ -21,7 +21,5 @@
             if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
             else Console.WriteLine("wrong subcode");
         }
-
-
     }
 }

@@ -399,7 +399,20 @@ namespace Diamond_MY_Maksim
                                 Language = "EN"
                             });
                         }
-                        else Console.WriteLine($"{inid} --- 57");
+                        else
+                        {
+                            Match match1 = Regex.Match(inid.Trim(), @".+ract\s:\s[A-Z]", RegexOptions.Singleline);
+                            if (match1.Success)
+                            {
+                                string text = Regex.Replace(inid.Trim(), @"\(57\)\s?Abstract\s?:", "");
+
+                                statusEvent.Biblio.Abstracts.Add(new Abstract()
+                                {
+                                    Text = text.Replace("\r", "").Replace("\n", " ").Trim(),
+                                    Language = "EN"
+                                });
+                            }
+                        }
                     }
                    // else Console.WriteLine($"{inid} --- not process");
                 }
@@ -415,6 +428,7 @@ namespace Diamond_MY_Maksim
             if (subCode is "1")
             {
                 Match matchFirst = Regex.Match(note.Trim(), @"\(57\)\s?Abstract\s?:\n\(11");
+
                 if (matchFirst.Success)
                 {
                     string text = Regex.Replace(note.Trim(), @"\(57\)\s?Abstract\s?:\n", "");
