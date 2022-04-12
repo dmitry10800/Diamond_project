@@ -377,7 +377,7 @@ namespace Diamond_PH_Maksim
                 if (checkMatch.Groups["code"].Value.Trim() is "PH")
                 {
                     Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                        @"(?<appNum>\d\/\d{4}.+)\s?(?<appDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<pubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)\s(?<leNote>\d+th.+)\s");
+                        @"(?<appNum>\d\/\d{4}.+)\s?(?<appDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<pubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)\s(?<leNote>\d+th.+)\s\d");
 
                     if (match.Success)
                     {
@@ -437,7 +437,7 @@ namespace Diamond_PH_Maksim
                 else
                 {
                     Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
-                        @"(?<appNum>\d\/\d{4}.+)\s?(?<natDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<PCTpubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)");
+                        @"(?<appNum>\d\/\d{4}.+)\s?(?<natDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<PCTpubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)\s(?<leNote>\d+th.+)\s\d");
 
                     if (match.Success)
                     {
@@ -478,6 +478,7 @@ namespace Diamond_PH_Maksim
                             Text = match.Groups["title"].Value.Trim()
                         });
 
+                        statusEvent.LegalEvent.Note = "|| ANNUITY DUE | " + match.Groups["leNote"].Value.Trim();
                         statusEvent.LegalEvent.Language = "EN";
 
                         Match leDate = Regex.Match(CurrentFileName.Replace(".txt", ""), @"\d{8}");
@@ -489,9 +490,62 @@ namespace Diamond_PH_Maksim
                     }
                     else
                     {
+                        Match match2 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                            @"(?<appNum>\d\/\d{4}.+)\s?(?<natDate>\d{2}.\d{2}.\d{4})\s?(?<applicant>.+)\s?(?<PCTpubDate>\d{2}.\d{2}.\d{4})\s?(?<inid45>\d{2}.\d{2}.\d{4})\s?(?<title>.+)\d");
 
-                        Console.WriteLine("-------------");
-                        Console.WriteLine($"{note}");
+                        if (match2.Success)
+                        {
+                            statusEvent.Biblio.Application.Number = match2.Groups["appNum"].Value.Trim();
+
+                            statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match2.Groups["natDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                            List<string> applicantsList = Regex.Split(match2.Groups["applicant"].Value.Trim(), @";|\]\sAND").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string applicant in applicantsList)
+                            {
+                                Match appl = Regex.Match(applicant.Trim(), @"(?<name>.+)\s\[(?<code>[A-Z]{2})");
+
+                                if (appl.Success)
+                                {
+                                    statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                    {
+                                        Name = appl.Groups["name"].Value.Trim(),
+                                        Country = appl.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else
+                                {
+                                    statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                    {
+                                        Name = applicant.Trim()
+                                    });
+                                }
+                            }
+
+                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(match2.Groups["PCTpubDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                            statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(match2.Groups["inid45"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "EN",
+                                Text = match2.Groups["title"].Value.Trim()
+                            });
+
+                            statusEvent.LegalEvent.Language = "EN";
+
+                            Match leDate = Regex.Match(CurrentFileName.Replace(".txt", ""), @"\d{8}");
+
+                            if (leDate.Success)
+                            {
+                                statusEvent.LegalEvent.Date = leDate.Value.Insert(4, "/").Insert(7, "/").Trim();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("-------------");
+                            Console.WriteLine($"{note}");
+                        }
                     }
                 }
             }
