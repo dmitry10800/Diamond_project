@@ -48,8 +48,7 @@ namespace PL_Diamond_Maksim
                     {
 
                     }
-                    else
-                    if (subCode == "25")
+                    else if (subCode == "25")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("Poniższe zestawienie zawiera kolejno: numer patentu europejskiego,"))
@@ -68,8 +67,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteNew(note, subCode, "BZ/RC"));
                         }
                     }
-                    else
-                    if(subCode == "31")
+                    else if(subCode == "31")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                            .SkipWhile(val => !val.Value.StartsWith("WYGAŚNIĘCIE PRAWA"))
@@ -83,8 +81,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
                         }
                     }
-                    else
-                    if (subCode == "32")
+                    else if (subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("europejskiego, datę wygaśnięcia oraz zakres wygaśnięcia."))
@@ -105,8 +102,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
                         }
                     }
-                    else
-                    if (subCode == "47")
+                    else if (subCode == "47")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("(T5) (97)") && !val.Value.StartsWith("(T3) (97)"))
@@ -121,10 +117,23 @@ namespace PL_Diamond_Maksim
                         }
 
                     }
+                    else if (subCode is "51")
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .SkipWhile(val => !val.Value.StartsWith("UNIEWAŻNIENIE PRAWA"))
+                            .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
+                            .ToList();
+
+                        List<string> notesList = Regex.Split(BuildText(xElements), @"(?=\(T\d\)\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(T")).ToList();
+
+                        foreach (string note in notesList)
+                        {
+                            convertedPatents.Add(SplitNoteNew(note.Trim(), subCode, "MF"));
+                        }
+                    }
                 }
             }
-            else
-            if (newOrOld == "old")
+            else if (newOrOld == "old")
             {
                 foreach (string tetml in files)
                 {
@@ -153,8 +162,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note, subCode, "MK"));
                         }
                     }
-                    else
-                    if(subCode == "25")
+                    else if(subCode == "25")
                     {
                         xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
                        .SkipWhile(e => !e.Value.StartsWith("WPISY I ZMIANY W WYODRĘBNIONEJ" + "\n" + "CZĘŚCI REJESTRU PATENTOWEGO" +"\n" + "(nieuwzględnione w innych samodzielnych ogłoszeniach)"))
@@ -173,8 +181,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note, subCode, "BZ/RC"));
                         }
                     }
-                    else
-                    if(subCode == "32")
+                    else if(subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("Poniższe zestawienie zawiera kolejno: numer wygasłego patentu,") && !val.Value.StartsWith("datę wygaśnięcia oraz zakres wygaśnięcia."))
@@ -192,8 +199,7 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note, subCode, "MZ"));
                         }
                     }
-                    else
-                    if(subCode == "46")
+                    else if(subCode == "46")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("T5 (97)") && !val.Value.StartsWith("T3 (97)"))
@@ -207,10 +213,8 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteOld(note.Trim(), subCode, "RH"));
                         }
                     }
-
                 }
             }
-
             else
             {
                 Console.WriteLine("Wrong style");
@@ -218,7 +222,6 @@ namespace PL_Diamond_Maksim
 
             return convertedPatents;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent SplitNoteOld(string note, string subCode, string sectionCode)
         {
             string text = note.Replace("\r", "").Replace("\n", " ").Trim();
@@ -435,7 +438,6 @@ namespace PL_Diamond_Maksim
 
             return legalEvent;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent SplitNoteNew(string note, string subCode, string sectionCode)
         {
             string text = note.Replace("\r", "").Replace("\n", " ").Trim();
@@ -467,8 +469,7 @@ namespace PL_Diamond_Maksim
             {
 
             }
-            else
-            if(subCode == "25")
+            else if(subCode == "25")
             {
                 Match match = Regex.Match(text, @"\([0-9]{2}\)\s(?<number>\d+)\s?.+?:(?<grant1>.+)\sW.+:\s(?<grant2>.+)");
 
@@ -512,8 +513,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-            else
-            if(subCode == "31")
+            else if(subCode == "31")
             {
                 Match match = Regex.Match(note.Trim().TrimEnd('.'), @"\((?<pKind>\D\d{1,2})\)\s.+?\s(?<pNum>.+?)\s(?<leDate>\d{4}\s?\d{2}\s?\d{2})\s(?<leNote>.+)");
 
@@ -536,8 +536,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-            else
-            if (subCode == "32")
+            else if (subCode == "32")
             {
                 Match match = Regex.Match(text, @"\((?<kind>[A-Z]{1}\d+)\)(\s\([0-9]{2}\)\s)?(?<number>[0-9]+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+)");
 
@@ -562,8 +561,7 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-            else
-            if(subCode == "47")
+            else if(subCode == "47")
             {
                 Match match = Regex.Match(note, @"\((?<pubKind>[A-Z][0-9])\).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
 
@@ -603,10 +601,34 @@ namespace PL_Diamond_Maksim
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
+            else if (subCode is "51")
+            {
+                Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>.+)\.");
+
+                if (match.Success)
+                {
+                    biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                    biblio.Publication.Number = match.Groups["num"].Value.Trim();
+
+                    legal.Note = "|| Zakres uniewaznienia | " + match.Groups["leNote"].Value.Trim();
+                    legal.Language = "PL";
+
+                    noteTranslation.Language = "EN";
+                    noteTranslation.Tr = "|| Range of revocation | Annulled entirety by the European Patent Office";
+                    noteTranslation.Type = "INID";
+                    legal.Translations = new List<NoteTranslation> { noteTranslation };
+                }
+                else  Console.WriteLine($"{note}");
+
+                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                legal.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+
+                legalEvent.LegalEvent = legal;
+                legalEvent.Biblio = biblio;
+            }
 
             return legalEvent;
         }
-
         internal string BuildText(List<XElement> xElements)
         {
             string fullText = null;
@@ -617,7 +639,6 @@ namespace PL_Diamond_Maksim
             }
             return fullText;
         }
-
         internal string MakeCountryCode(string code)
         {
             string countryCode = code switch
@@ -663,20 +684,19 @@ namespace PL_Diamond_Maksim
 
              return countryCode;
         }
-        
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                string url;
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
+                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
+                string answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }
