@@ -128,7 +128,11 @@ namespace Diamond_DZ_Maksim
                                 {
                                     Country = match.Groups["code"].Value.Trim(),
                                     Number = match.Groups["num"].Value.Trim(),
+<<<<<<< HEAD
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString(@"yyyy.MM.dd").Replace(".", "/").Trim()
+=======
                                     Date = DateTime.Parse(match.Groups["date"].Value.Trim(),cultureInfo).ToString(@"yyyy.MM.dd").Replace(".","/").Trim()
+>>>>>>> 05ca7b9c3dd55e7052441bc0b616be309a3c35e2
                                 });
                             }
                             else 

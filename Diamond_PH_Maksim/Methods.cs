@@ -552,6 +552,7 @@ namespace Diamond_PH_Maksim
 
             return statusEvent;
         }
+
         internal string MakeMonth(string month) => month switch
         {
             "january" => "01",

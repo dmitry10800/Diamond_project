@@ -51,7 +51,7 @@ namespace Diamond_MY_Maksim
 
                     foreach (string note in notes)
                     {
-                       statusEvents.Add(MakePatentNewStyle(note, subCode, "FG"));
+                       statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
                 }
             }
@@ -71,6 +71,7 @@ namespace Diamond_MY_Maksim
 
                 return text;
             }
+
             return null;
         }
 
@@ -162,6 +163,9 @@ namespace Diamond_MY_Maksim
                             });
                         }
                     }
+
+
+
                 }
                 else
                 {
@@ -467,6 +471,7 @@ namespace Diamond_MY_Maksim
             "December" => 12.ToString(),
             _ => null
         };
+
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)

@@ -247,7 +247,7 @@ namespace Diamond_DZ_Maksim
                         {
                             statusEvent.Biblio.Ipcs.Add(new Ipc()
                             {
-                                Class = ipc.Trim().TrimStart('-').Trim()
+                                Class = ipc.Trim()
                             });
                         }
                     }

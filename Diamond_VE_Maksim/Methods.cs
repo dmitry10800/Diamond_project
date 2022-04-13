@@ -91,6 +91,7 @@ namespace Diamond_VE_Maksim
                         string month = match.Groups["month"].Value.Trim() switch
                         {
                             "de febrero de" => "02",
+                            "de marzo de" => "03",
                             _ => null
                         };
 
@@ -510,7 +511,7 @@ namespace Diamond_VE_Maksim
                         if (match.Success)
                         {
                             statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                        }
+                        }                  
                     }
                     else if (inid.StartsWith("(11)"))
                     {

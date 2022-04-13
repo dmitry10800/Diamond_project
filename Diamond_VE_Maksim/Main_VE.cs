@@ -5,7 +5,7 @@ namespace Diamond_VE_Maksim
 {
     class Main_VE
     {
-        private static readonly string Path = @"C:\!Work\VE\VE_20220217_614";
+        private static readonly string Path = @"D:\Develop\Country\VE\VE_20220329_615";
         private static readonly string SubCode = "19";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         /*
@@ -31,7 +31,7 @@ namespace Diamond_VE_Maksim
             };
 
             Console.WriteLine();
-
+            //test
             if (patents != null) methods.SendToDiamond(patents, SendToProd);
             else Console.WriteLine("Wrong subcode");
         }

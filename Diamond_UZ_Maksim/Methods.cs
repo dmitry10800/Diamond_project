@@ -957,7 +957,7 @@ namespace Diamond_UZ_Maksim
         //                            }
         //                            catch (Exception e)
         //                            {
-        //
+        //                                //todo : fix the issue with Exception and create a proper handler
         //                                Console.WriteLine($"EXCEPTION: {applicants[i]}");
         //                            }
         //                        }
@@ -1107,20 +1107,12 @@ namespace Diamond_UZ_Maksim
                 {
                     if (inid.StartsWith("(13)"))
                     {
-<<<<<<< HEAD
                         legalStatus.Biblio.Publication.Kind = inid.Replace("(13)", "").Trim() switch
                         {
                             "А" => "A",
                             "В" => "B",
                             "С" => "C"
                         };
-=======
-                        string kind = inid.Replace("(13)", "").Trim() switch
-                        {
-                            "В" => "B"
-                        };
-                        legalStatus.Biblio.Publication.Kind = kind;
->>>>>>> origin/UZ_test
                     }
                     else if (inid.StartsWith("(21)"))
                     {
@@ -1192,12 +1184,7 @@ namespace Diamond_UZ_Maksim
                                         {
                                             TrName = match1.Groups["name"].Value.Trim(),
                                             Language = "EN",
-<<<<<<< HEAD
                                             Type = "71"
-=======
-                                            Type = "INID",
-                                           // TrAddress1 = match1.Groups["code"].Value.Trim()
->>>>>>> origin/UZ_test
                                         }
                                     }
                                 });
@@ -1255,10 +1242,6 @@ namespace Diamond_UZ_Maksim
                                                 new()
                                                 {
                                                     TrName = inventorsNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "72"
                                                 }
@@ -1287,11 +1270,7 @@ namespace Diamond_UZ_Maksim
                                                 {
                                                     TrName = inventorsNamesEn[j].Trim().TrimStart(',').Trim(),
                                                     Language = "EN",
-<<<<<<< HEAD
                                                     Type = "72"
-=======
-                                                    //Type = "INID"
->>>>>>> origin/UZ_test
                                                 }
                                             }
                                         });
@@ -1460,10 +1439,6 @@ namespace Diamond_UZ_Maksim
                                                 new()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "72"
                                                 }
@@ -1480,10 +1455,6 @@ namespace Diamond_UZ_Maksim
                                                 new ()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    // TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "71"
                                                 }
@@ -1511,10 +1482,6 @@ namespace Diamond_UZ_Maksim
                                                 new ()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    // TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "72"
                                                 }
@@ -1531,10 +1498,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    // TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "71"
                                                 }
@@ -1642,10 +1605,6 @@ namespace Diamond_UZ_Maksim
                                                 new()
                                                 {
                                                     TrName = inventorsNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    // TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "72"
                                                 }
@@ -1673,7 +1632,7 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = inventorsNamesEn[j],
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
+                                                    TrAddress1 = matchEn.Groups["code"].Value.Trim(),
                                                     Language = "EN",
                                                     Type = "INID"
                                                 }
@@ -1726,10 +1685,6 @@ namespace Diamond_UZ_Maksim
                                                 new ()
                                                 {
                                                     TrName = assignesNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "73"
                                                 }
@@ -1757,10 +1712,6 @@ namespace Diamond_UZ_Maksim
                                                 new ()
                                                 {
                                                     TrName = assignesNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "73"
                                                 }
@@ -1832,10 +1783,6 @@ namespace Diamond_UZ_Maksim
                                                 new ()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    // TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "73"
                                                 }
@@ -1852,10 +1799,6 @@ namespace Diamond_UZ_Maksim
                                                 new ()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "71"
                                                 }
@@ -1883,10 +1826,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "73"
                                                 }
@@ -1903,10 +1842,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "71"
                                                 }
@@ -1944,15 +1879,12 @@ namespace Diamond_UZ_Maksim
                                         Number = number.ToString(),
                                         Text = matchCl.Groups["text"].Value.Trim().Replace("_",""),
                                         Language = "UZ",
-                                        Translations = new()
+                                        Translations = new(){new Translation()
                                         {
-                                            new Translation()
-                                            {
-                                                Type = "INID",
-                                                Language = "RU",
-                                                Tr = matchClRu.Groups["text"].Value.Trim().Replace("_", "")
-                                            }
-                                        }
+                                            Type = "INID",
+                                            Language = "RU",
+                                            Tr = matchClRu.Groups["text"].Value.Trim().Replace("_", "")
+                                        }}
                                     });
                                 }
                             }
@@ -2016,10 +1948,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "72"
                                                 }
@@ -2036,10 +1964,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "71"
                                                 }
@@ -2067,10 +1991,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "72"
                                                 }
@@ -2087,10 +2007,6 @@ namespace Diamond_UZ_Maksim
                                                 new Translation()
                                                 {
                                                     TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                    //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                     Language = "EN",
                                                     Type = "71"
                                                 }
@@ -2168,10 +2084,6 @@ namespace Diamond_UZ_Maksim
                                                     new Translation()
                                                     {
                                                         TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                        //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                         Language = "EN",
                                                         Type = "72"
                                                     }
@@ -2188,10 +2100,6 @@ namespace Diamond_UZ_Maksim
                                                     new Translation()
                                                     {
                                                         TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                        //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                         Language = "EN",
                                                         Type = "71"
                                                     }
@@ -2208,10 +2116,6 @@ namespace Diamond_UZ_Maksim
                                                     new Translation()
                                                     {
                                                         TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                        //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                         Language = "EN",
                                                         Type = "73"
                                                     }
@@ -2239,10 +2143,6 @@ namespace Diamond_UZ_Maksim
                                                     new Translation()
                                                     {
                                                         TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                        //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                         Language = "EN",
                                                         Type = "72"
                                                     }
@@ -2259,14 +2159,8 @@ namespace Diamond_UZ_Maksim
                                                     new Translation()
                                                     {
                                                         TrName = peopleNamesEn[j],
-<<<<<<< HEAD
                                                         Language = "EN",
                                                         Type = "71"
-=======
-                                                        //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
-                                                        Language = "EN",
-                                                         Type = "INID"
->>>>>>> origin/UZ_test
                                                     }
                                                 }
                                             });
@@ -2281,10 +2175,6 @@ namespace Diamond_UZ_Maksim
                                                     new Translation()
                                                     {
                                                         TrName = peopleNamesEn[j],
-<<<<<<< HEAD
-=======
-                                                        //TrAddress1 = matchEn.Groups["code"].Value.Trim(),
->>>>>>> origin/UZ_test
                                                         Language = "EN",
                                                         Type = "73"
                                                     }
