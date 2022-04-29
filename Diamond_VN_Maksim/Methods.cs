@@ -152,7 +152,7 @@ namespace Diamond_VN_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Gi¶i ph¸p h÷u Ých ®−îc cÊp B»NG ®éC QUYÒN"))
-                        .TakeWhile(val => !val.Value.StartsWith("söa ®æi, duy tr×, cÊp l¹i, chÊm døt, huû bá v¨n b»ng b¶o hé,"))
+                        .TakeWhile(val => !val.Value.StartsWith("PhÇn iII"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
@@ -222,8 +222,8 @@ namespace Diamond_VN_Maksim
                 else if (subCode is "20")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("4 - G H I NHẬN Đ Ạ I D IỆ N SỞ HỬU CÔNG NGHIỆP"))
-                        .TakeWhile(val => !val.Value.StartsWith("5 - KHIẾU NẠI"))
+                        .SkipWhile(val => !val.Value.StartsWith("5- Ghi nhËn ®¹i diÖn së h÷u c«ng nghiÖp"))
+                        .TakeWhile(val => !val.Value.StartsWith("581"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s..nh.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();
@@ -236,8 +236,8 @@ namespace Diamond_VN_Maksim
                 else if (subCode is "22")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("4 - Cấp phó bản Bằng độc quyền Sáng chế"))
-                        .TakeWhile(val => !val.Value.StartsWith("5 - KhiÕu n¹i"))
+                        .SkipWhile(val => !val.Value.StartsWith("4 – CẤP PHÓ BẢN BẰNG ĐỘC QUYỀN SÁNG CHẾ"))
+                        .TakeWhile(val => !val.Value.StartsWith("5- Ghi nhËn ®¹i"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Quy.t\s..nh\s\d.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Quy")).ToList();

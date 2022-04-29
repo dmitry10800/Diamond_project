@@ -6,7 +6,7 @@ namespace Diamond_VN_Maksim
     class Main_VN
     {
 
-        private static readonly string Path = @"C:\!Work\VN\VN_20220125_406B";
+        private static readonly string Path = @"C:\!Work\VN\VN_20220425_409B";
         private static readonly string SubCode = "22";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
