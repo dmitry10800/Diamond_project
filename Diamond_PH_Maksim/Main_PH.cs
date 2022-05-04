@@ -17,6 +17,7 @@ namespace Diamond_PH_Maksim
             List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
             {
                 "5" => methods.Start(Path,SubCode),
+                "12" => methods.Start(Path, SubCode),
                 "22" => methods.Start(Path, SubCode),               
                 "29" => methods.Start(Path, SubCode),               
                 "35" => methods.Start(Path, SubCode),                
