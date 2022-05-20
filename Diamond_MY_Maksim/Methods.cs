@@ -43,7 +43,7 @@ namespace Diamond_MY_Maksim
                 if (subCode == "1")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                       .SkipWhile(val => !val.Value.StartsWith("GRANTED"))
+                       .SkipWhile(val => !val.Value.StartsWith("(12)"))
                        .TakeWhile(val => !val.Value.StartsWith("LAPSED"))
                        .ToList();
 

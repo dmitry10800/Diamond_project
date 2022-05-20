@@ -603,7 +603,7 @@ namespace PL_Diamond_Maksim
             }
             else if (subCode is "51")
             {
-                Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>.+)\.");
+                Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>.+)\.?");
 
                 if (match.Success)
                 {

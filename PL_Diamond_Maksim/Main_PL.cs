@@ -5,7 +5,7 @@ namespace PL_Diamond_Maksim
 {
     class Main_PL
     {
-        private static readonly string Path = @"C:\!Work\PL\PL_20220411_15W";
+        private static readonly string Path = @"C:\!Work\PL\PL_20220509_19W";
         private static readonly string SubCode = "51";
         private static readonly string NewOrOld = "new";  // new / old
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag

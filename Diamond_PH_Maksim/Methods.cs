@@ -117,6 +117,21 @@ namespace Diamond_PH_Maksim
                         statusEvents.Add(SplitNote(note, subCode, "FG"));
                     }
                 }
+                else if (subCode is "7")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("1.1 EXPIRED UTILITY MODELS ORDER NO. 2022-2 Under RA 8293"))
+                       // .TakeWhile(val => !val.Value.StartsWith("1.1 PUBLICATION OF DIVISIONAL INVENTION APPLICATIONS (PCT)"))
+                        .ToList();
+
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\d\/\d{4}\/\d{6,7})", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("2/")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(SplitNote(note, subCode, "MK"));
+                    }
+                }
             }
             return statusEvents;
         }
@@ -549,6 +564,10 @@ namespace Diamond_PH_Maksim
                     }
                 }
             }
+            else if (subCode is "7")
+            {
+
+            }
 
             return statusEvent;
         }
@@ -585,14 +604,7 @@ namespace Diamond_PH_Maksim
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

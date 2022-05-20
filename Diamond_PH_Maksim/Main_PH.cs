@@ -7,7 +7,7 @@ namespace Diamond_PH_Maksim
     {
 
         private static readonly string Path = @"C:\Work\PH\PH_20211129_136";
-        private static readonly string SubCode = "29";
+        private static readonly string SubCode = "7";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
@@ -17,6 +17,7 @@ namespace Diamond_PH_Maksim
             List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
             {
                 "5" => methods.Start(Path,SubCode),
+                "7" => methods.Start(Path,SubCode),
                 "22" => methods.Start(Path, SubCode),               
                 "29" => methods.Start(Path, SubCode),               
                 "35" => methods.Start(Path, SubCode),                
