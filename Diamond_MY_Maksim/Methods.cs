@@ -51,160 +51,11 @@ namespace Diamond_MY_Maksim
 
                     foreach (string note in notes)
                     {
-                       statusEvents.Add(MakePatent(note, subCode, "FG"));
+                       statusEvents.Add(MakePatentNewStyle(note, subCode, "FG"));
                     }
                 }
             }
             return statusEvents;
-        }
-
-        internal string MakeText(List<XElement> xElement, string subCode)
-        {
-            string text = "";
-
-            if (subCode == "1")
-            {
-                foreach (XElement element in xElement)
-                {
-                    text += element.Value + "\n";
-                }
-
-                return text;
-            }
-
-            return null;
-        }
-
-        internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
-        {
-            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
-            {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
-                CountryCode = "MY",
-                SubCode = subCode,
-                SectionCode = sectionCode,
-                Id = Id++,
-                LegalEvent = new(),
-                Biblio = new()
-                {
-                    DOfPublication = new()
-                }
-            };
-
-            CultureInfo culture = new("ru-RU");
-
-            if(subCode == "1")
-            {
-                Match inid1113 = Regex.Match(note.Trim(), @"-(?<inid11>\d+)-(?<inid13>[A-Z])", RegexOptions.Singleline);
-
-                if (inid1113.Success)
-                {
-                    statusEvent.Biblio.Publication.Number = inid1113.Groups["inid11"].Value.Trim();
-                    statusEvent.Biblio.Publication.Kind = inid1113.Groups["inid13"].Value.Trim();
-                }
-                else
-                {
-                    Console.WriteLine($"11 Wrong ------ {note.Trim()}");
-                }
-
-                Match inid51 = Regex.Match(note.Trim(), @"(?<inid51>Classification.+?)\(", RegexOptions.Singleline);
-
-                if (inid51.Success)
-                {
-                    List<string> ipcs = Regex.Split(inid51.Groups["inid51"].Value.Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\D\d{2}\D\s\d+\/\d+").Match(val).Success).ToList();
-
-                    foreach (string ipc in ipcs)
-                    {
-                        statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
-                        {
-                            Class = ipc.Trim()
-                        });
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"51 Wrong ------ {note.Trim()}");
-                }
-
-                Match inid47 = Regex.Match(note.Trim(), @"(?<inid47>Date\s?of\s?Pub.+?\d+\s\D+\s\d{4})", RegexOptions.Singleline);
-
-                if (inid47.Success)
-                {
-                    Match match = Regex.Match(inid47.Groups["inid47"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
-
-                    if (match.Success)
-                    {
-                        statusEvent.Biblio.DOfPublication.date_47 = match.Groups["year"].Value.Trim() + "/" + MakeMonth(match.Groups["month"].Value.Trim()) + "/" + match.Groups["day"].Value.Trim();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"47 ----- {note.Trim()}");
-                }
-
-                Match inid56 = Regex.Match(note.Trim(), @"(?<inid56>Prior\sArt.+?)\(57", RegexOptions.Singleline);
-
-                if (inid56.Success)
-                {
-                    List<string> patentCitations = Regex.Split(inid56.Groups["inid56"].Value.Trim(), @"\n")
-                        .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"[A-Z]{2}\s?\d+.\d+.?\d+\s?[A-Z]\d?").Match(val).Success).ToList();
-
-                    foreach (string patentCitation in patentCitations)
-                    {
-                        Match match = Regex.Match(patentCitation.Trim(), @"(?<code>[A-Z]{2})\s?(?<num>\d+.\d+.?\d+)\s?(?<kind>[A-Z]\d?)");
-
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.PatentCitations.Add(new Integration.PatentCitation
-                            {
-                                Kind = match.Groups["kind"].Value.Trim(),
-                                Number = match.Groups["num"].Value.Trim(),
-                                Applicant = match.Groups["code"].Value.Trim()
-                            });
-                        }
-                    }
-
-
-
-                }
-                else
-                {
-                    Console.WriteLine($"56 Wrong ----- {note.Trim()}");
-                }
-
-                Match inid54 = Regex.Match(note.Trim(), @"(?<inid54>Title.+)\(57", RegexOptions.Singleline);
-
-                if (inid54.Success)
-                {
-                    statusEvent.Biblio.Titles.Add(new Integration.Title
-                    {
-                        Language = "EN",
-                        Text = inid54.Groups["inid54"].Value.Replace("\r", "").Replace("\n", " ").Replace("Title", "").Replace(":", "").Trim()
-                    });
-                }
-                else
-                {
-                    Console.WriteLine($"54 Wrong ----- {note.Trim()}");
-                }
-
-                Match inid57 = Regex.Match(note.Trim(), @"(?<inid57>Abstract\s:.+)", RegexOptions.Singleline);
-
-                if (inid57.Success)
-                {
-                    statusEvent.Biblio.Abstracts.Add(new Integration.Abstract
-                    {
-                        Language = "EN",
-                        Text = inid57.Groups["inid57"].Value.Replace("\r", "").Replace("\n", " ").Replace("Abstract", "").Replace(":", "").Trim()
-                    });
-                }
-                else
-                {
-                    Console.WriteLine($"57 Wrong ---- {note.Trim()}");
-                }
-
-            }
-
-            return statusEvent;
         }
 
         internal Diamond.Core.Models.LegalStatusEvent MakePatentNewStyle(string note, string subCode, string sectionCode)
@@ -227,235 +78,121 @@ namespace Diamond_MY_Maksim
 
             if (subCode is "1")
             {
-                foreach (string inid in MakeInids(note, subCode))
+                Match match = Regex.Match(note.Trim(),
+                    @".+\(47.+:\s(?<inid47>.+)\(30.+\(51.+:(?<inid51>.+)\s\(54.+:\s(?<title>.+?)\(57.+?\(11\).+?(?<pub>\d+.[A-Z]{1})\s\(56\).+:(?<inid56>.+)\(72.+:.+?\n(?<abstract>.+)",
+                    RegexOptions.Singleline);
+
+                if (match.Success)
                 {
-                    if (inid.StartsWith("(21)"))
+                    statusEvent = PatentFor1subs(match.Groups["inid47"].Value.Trim(),
+                        match.Groups["inid51"].Value.Trim(),
+                        match.Groups["title"].Value.Trim(),
+                        match.Groups["pub"].Value.Trim(),
+                        match.Groups["inid56"].Value.Trim(),
+                        match.Groups["abstract"].Value.Trim());
+                }
+                else
+                { 
+                    Match match2 = Regex.Match(note.Trim(),
+                        @".+\(47.+:\s(?<inid47>.+)\(30.+\(51.+:(?<inid51>.+)\s\(11\).+?(?<pub>\d+.[A-Z]{1})\s\(56\).+:(?<inid56>.+)\(72.+\n(?<title>.+\n\(54\).+)\(57.+?:(?<abstract>.+)",
+                        RegexOptions.Singleline);
+
+                    if (match2.Success)
                     {
-                        Match match = Regex.Match(inid.Trim(), @"o\.\s?:(?<appNum>.+)", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
-                        }
-                        else Console.WriteLine($"{inid} --- 21");
+                        statusEvent = PatentFor1subs(match2.Groups["inid47"].Value.Trim(),
+                            match2.Groups["inid51"].Value.Trim(),
+                            match2.Groups["title"].Value.Replace("(54)","").Replace("Title","").Replace(":","").Trim(),
+                            match2.Groups["pub"].Value.Trim(),
+                            match2.Groups["inid56"].Value.Trim(),
+                            match2.Groups["abstract"].Value.Trim());
                     }
-                    else if (inid.StartsWith("(22)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @"\s?:\s?(?<day>\d{2})(?<month>.+)(?<year>\d{4})", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            string month = MakeMonth(match.Groups["month"].Value.Trim());
-
-                            if (month is not null)
-                            {
-                                statusEvent.Biblio.Application.Date = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
-                            }
-                            else Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
-                        }
-                        else Console.WriteLine($"{inid} --- 22");
-                    }
-                    else if (inid.StartsWith("(47)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @"\s?:\s?(?<day>\d{2})(?<month>.+)(?<year>\d{4})", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            string month = MakeMonth(match.Groups["month"].Value.Trim());
-
-                            if (month is not null)
-                            {
-                                statusEvent.Biblio.DOfPublication.date_47 = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
-                            }
-                            else Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
-                        }
-                        else Console.WriteLine($"{inid} --- 47");
-                    }
-                    else if (inid.StartsWith("(30)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @"\s?:\s?(?<priority>.+)", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            List<string> priorityList = Regex.Split(match.Groups["priority"].Value.Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                            foreach (string priority in priorityList)
-                            {
-                                Match prio = Regex.Match(priority.Trim(), @"(?<num>.+);\s?(?<day>\d+)\/(?<month>\d+)\/(?<year>\d+);\s(?<code>[A-Z]{2})");
-
-                                if (prio.Success)
-                                {
-                                    if (prio.Groups["month"].Value.Trim().Length is 1)
-                                    {
-                                        statusEvent.Biblio.Priorities.Add(new Priority()
-                                        {
-                                            Number = prio.Groups["num"].Value.Trim(),
-                                            Country = prio.Groups["code"].Value.Trim(),
-                                            Date = prio.Groups["year"].Value.Trim() + "/0" + prio.Groups["month"].Value.Trim() + "/" + prio.Groups["day"].Value.Trim()
-                                        });
-                                    }
-                                    else
-                                    {
-                                        statusEvent.Biblio.Priorities.Add(new Priority()
-                                        {
-                                            Number = prio.Groups["num"].Value.Trim(),
-                                            Country = prio.Groups["code"].Value.Trim(),
-                                            Date = prio.Groups["year"].Value.Trim() + "/" + prio.Groups["month"].Value.Trim() + "/" + prio.Groups["day"].Value.Trim()
-                                        });
-                                    }
-                                }else Console.WriteLine($"{priority} --- not split 30");
-                            }
-                        }
-                    }
-                    else if (inid.StartsWith("(51)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @".:\s(?<inid51>.+)", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            List<string> ipcsList = Regex.Split(match.Groups["inid51"].Value.Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                            foreach (string ipc in ipcsList)
-                            {
-                                statusEvent.Biblio.Ipcs.Add(new Ipc()
-                                {
-                                    Class = ipc.Trim()
-                                });
-                            }
-                        }
-                        else Console.WriteLine($"{inid} --- 51");  
-                    }
-                    else if (inid.StartsWith("(11)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @"(?<num>\d+)\s?-\s?(?<kind>[A-Z])", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
-                            statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
-                        }
-                        else Console.WriteLine($"{inid} --- 11");
-                    }
-                    else if (inid.StartsWith("(56)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @"\s:\s(?<all>.+)", RegexOptions.Singleline);
-
-                        if (match.Success)
-                        {
-                            List<string> inids56List = Regex.Split(match.Groups["all"].Value.Trim(), @"(?<=\s\d{4}\n)").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                            foreach (string inid56 in inids56List)
-                            {
-                                Match match1 = Regex.Match(inid56.Trim(), @"(?<code>[A-Z]{2})\s(?<num>\d+.\d+)\s(?<kind>[A-Z]\d)");
-
-                                if (match1.Success)
-                                {
-                                    statusEvent.Biblio.PatentCitations.Add(new PatentCitation()
-                                    {
-                                        Number = match1.Groups["num"].Value.Trim(),
-                                        Kind = match1.Groups["kind"].Value.Trim(),
-                                        Authority = match1.Groups["code"].Value.Trim()
-                                    });
-                                }
-                                else
-                                {
-                                    Match match2 = Regex.Match(inid56.Trim(), @"(?<code>[A-Z]{2})\s(?<num>\d+.\d+)\s\(");
-
-                                    if (match2.Success)
-                                    {
-                                        statusEvent.Biblio.PatentCitations.Add(new PatentCitation()
-                                        {
-                                            Number = match2.Groups["num"].Value.Trim(),
-                                            Authority = match2.Groups["code"].Value.Trim()
-                                        });
-                                    }
-                                    else Console.WriteLine($"{inid56} --- not match in 56List");
-                                }
-                            }
-                        }
-                        else Console.WriteLine($"{inid} --- 56");
-                    }
-                    else if (inid.StartsWith("(54)"))
-                    {
-                        Match match = Regex.Match(inid.Replace("\r","").Replace("\n"," ").Trim(), @"\s:\s(?<text>.+)");
-
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.Titles.Add(new Title()
-                            {
-                                Language = "EN",
-                                Text = match.Groups["text"].Value.Trim()
-                            });
-                        }
-                        else Console.WriteLine($"{inid} --- 54");
-                    }
-                    else if (inid.StartsWith("(57)"))
-                    {
-                        Match match = Regex.Match(inid.Trim(), @".+:\n.+Bhd.\n[A-Z].+");
-
-                        if (match.Success)
-                        {
-                            string text = Regex.Replace(inid.Trim(), @".+:\n.+Bhd.\n", "");
-
-                            statusEvent.Biblio.Abstracts.Add(new Abstract()
-                            {
-                                Text = text.Replace("\r","").Replace("\n"," ").Trim(),
-                                Language = "EN"
-                            });
-                        }
-                        else
-                        {
-                            Match match1 = Regex.Match(inid.Trim(), @".+ract\s:\s[A-Z]", RegexOptions.Singleline);
-                            if (match1.Success)
-                            {
-                                string text = Regex.Replace(inid.Trim(), @"\(57\)\s?Abstract\s?:", "");
-
-                                statusEvent.Biblio.Abstracts.Add(new Abstract()
-                                {
-                                    Text = text.Replace("\r", "").Replace("\n", " ").Trim(),
-                                    Language = "EN"
-                                });
-                            }
-                        }
-                    }
-                   // else Console.WriteLine($"{inid} --- not process");
+                    else Console.WriteLine($"{note}");
                 }
             }
 
             return statusEvent;
         }
-
-        internal List<string> MakeInids(string note, string subCode)
+        internal Diamond.Core.Models.LegalStatusEvent PatentFor1subs(string inid47, string inid51,
+            string inid54, string inidPub, string inid56, string inidAbstr)
         {
-            List<string> inids = new();
-
-            if (subCode is "1")
+            Diamond.Core.Models.LegalStatusEvent status = new()
             {
-                Match matchFirst = Regex.Match(note.Trim(), @"\(57\)\s?Abstract\s?:\n\(11");
-
-                if (matchFirst.Success)
+                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                CountryCode = "MY",
+                SubCode = "1",
+                SectionCode = "FG",
+                Id = Id++,
+                LegalEvent = new(),
+                Biblio = new()
                 {
-                    string text = Regex.Replace(note.Trim(), @"\(57\)\s?Abstract\s?:\n", "");
-
-                    inids = Regex.Split(text.Trim(), @"(?=\(\d{2}\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    DOfPublication = new()
                 }
-                else
+            };
+
+            Match matchDate = Regex.Match(inid47.Trim(), @"(?<day47>\d+)\s(?<month47>\D+)\s(?<year47>\d{4})");
+            if (matchDate.Success)
+            {
+                status.Biblio.DOfPublication.date_47 = matchDate.Groups["year47"].Value.Trim() + "/" + 
+                                                       MakeMonth(matchDate.Groups["month47"].Value.Trim()) + "/" + 
+                                                       matchDate.Groups["day47"].Value.Trim();
+
+                if(MakeMonth(matchDate.Groups["month47"].Value.Trim()) is null) Console.WriteLine($"{matchDate.Groups["month47"].Value.Trim()}");
+            }
+            else Console.WriteLine($"<==== PatentFor1subs --- {inid47}");
+
+            status.Biblio.Titles.Add(new Title()
+            {
+                Language = "EN",
+                Text = inid54.Replace("\r", "").Replace("\n", " ").Trim()
+            });
+
+            List<string> ipcs = Regex.Split(inid51.Replace("\r","").Replace("\n"," ").Trim(), @"(?=[A-Z]\d{2}[A-Z].+)")
+                .Where(val => !String.IsNullOrEmpty(val)).ToList();
+
+            foreach (string ipc in ipcs)
+            {
+                status.Biblio.Ipcs.Add(new Ipc()
                 {
-                    Match match = Regex.Match(note.Trim(), @"(?<all>.+)\s(?<inid>\(57\).+)", RegexOptions.Singleline);
-
-                    if (match.Success)
-                    {
-                        inids = Regex.Split(match.Groups["all"].Value.Trim(), @"(?=\(\d{2}\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        inids.Add(match.Groups["inid"].Value.Trim());
-                    }
-                    else Console.WriteLine($"{note} --- not split");
-                }
+                    Class = ipc.Trim()
+                });
             }
 
-            return inids;
+            Match matchPub = Regex.Match(inidPub.Replace("\r", "").Replace("\n", " ").Trim(),
+                @"(?<pubNum>\d+).(?<pubKind>[A-Z]{1})");
+
+            if (matchPub.Success)
+            {
+                status.Biblio.Publication.Number = matchPub.Groups["pubNum"].Value.Trim();
+                status.Biblio.Publication.Kind = matchPub.Groups["pubKind"].Value.Trim();
+            }
+            else Console.WriteLine($"<==== PatentFor1subs --- {inidPub}");
+
+            status.Biblio.Abstracts.Add(new Abstract()
+            {
+                Language = "EN",
+                Text = inidAbstr.Replace("\r", "").Replace("\n", " ").Trim()
+            });
+
+            List<string> priorArtList = Regex.Split(inid56.Replace("\r", "").Replace("\n", " ").Trim(),
+                @"([A-Z]{2}\s.+\s[A-Z]\d)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+            foreach (string prioArt in priorArtList)
+            {
+                Match matchPr = Regex.Match(prioArt.Trim(), @"(?<code>[A-Z]{2})\s(?<num>.+)\s(?<kind>[A-Z]\d)");
+
+                if (matchPr.Success)
+                {
+                    status.Biblio.PatentCitations.Add(new PatentCitation()
+                    {
+                        Kind = matchPr.Groups["kind"].Value.Trim(),
+                        Number = matchPr.Groups["num"].Value.Trim(),
+                        Authority = matchPr.Groups["code"].Value.Trim()
+                    });
+                }
+            }
+            return status;
         }
-        internal string ? MakeMonth(string month) => month  switch
+        internal string? MakeMonth(string month) => month switch
         {
             "January" => 01.ToString(),
             "February" => 02.ToString(),
@@ -471,7 +208,20 @@ namespace Diamond_MY_Maksim
             "December" => 12.ToString(),
             _ => null
         };
+        internal string MakeText(List<XElement> xElement, string subCode)
+        {
+            string text = "";
 
+            if (subCode == "1")
+            {
+                foreach (XElement element in xElement)
+                {
+                    text += element.Value + "\n";
+                }
+                return text;
+            }
+            return null;
+        }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)

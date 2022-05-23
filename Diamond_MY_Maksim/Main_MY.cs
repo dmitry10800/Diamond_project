@@ -2,7 +2,7 @@
 {
     class Main_PK
     {
-        private static readonly string Path = @"C:\!Work\MY\MY_20220406_02";
+        private static readonly string Path = @"C:\!Work\MY\MY_20220511_04";
         private static readonly string SubCode = "1";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
