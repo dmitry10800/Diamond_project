@@ -121,7 +121,7 @@ namespace PL_Diamond_Maksim
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("UNIEWAŻNIENIE PRAWA"))
-                            .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
+                            .TakeWhile(val => !val.Value.StartsWith("WYGAŚNIĘCIE PRAWA"))
                             .ToList();
 
                         List<string> notesList = Regex.Split(BuildText(xElements), @"(?=\(T\d\)\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(T")).ToList();
@@ -445,13 +445,9 @@ namespace PL_Diamond_Maksim
             Diamond.Core.Models.LegalStatusEvent legalEvent = new()
             {
                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
-
                 SubCode = subCode,
-
                 SectionCode = sectionCode,
-
                 CountryCode = "PL",
-
                 Id = Id++
             };
 
@@ -603,7 +599,7 @@ namespace PL_Diamond_Maksim
             }
             else if (subCode is "51")
             {
-                Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>.+)\.?");
+                Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>\D.+)\.?");
 
                 if (match.Success)
                 {
@@ -617,11 +613,34 @@ namespace PL_Diamond_Maksim
                     noteTranslation.Tr = "|| Range of revocation | Annulled entirety by the European Patent Office";
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
-                }
-                else  Console.WriteLine($"{note}");
 
-                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
-                legal.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+                    Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                    legal.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
+                }
+                else
+                {
+                    Match matchNew = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                        @"\((?<kind>\D\d).+?(?<num>\d+)\s(?<ledate>.+?)\s(?<note>\D+)\.?");
+
+                    if (matchNew.Success)
+                    {
+                        biblio.Publication.Kind = matchNew.Groups["kind"].Value.Trim();
+                        biblio.Publication.Number = matchNew.Groups["num"].Value.Trim();
+
+                        legal.Note = "|| Zakres uniewaznienia | " + matchNew.Groups["note"].Value.Trim();
+                        legal.Language = "PL";
+
+                        noteTranslation.Language = "EN";
+                        noteTranslation.Tr = "|| Range of revocation | Annulled entirety by the European Patent Office";
+                        noteTranslation.Type = "INID";
+                        legal.Translations = new List<NoteTranslation> { noteTranslation };
+
+                        legal.Date = matchNew.Groups["ledate"].Value.Replace(" ","/").Trim();
+                    }
+                    else Console.WriteLine($"{note}");
+                }
+
+              
 
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;

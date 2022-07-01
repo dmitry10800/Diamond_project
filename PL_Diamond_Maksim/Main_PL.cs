@@ -5,10 +5,10 @@ namespace PL_Diamond_Maksim
 {
     class Main_PL
     {
-        private static readonly string Path = @"C:\!Work\PL\PL_20220509_19W";
+        private static readonly string Path = @"D:\_work\TET\PL\PL_20220606_23W";
         private static readonly string SubCode = "51";
         private static readonly string NewOrOld = "new";  // new / old
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private static readonly bool SendToProd = true;   // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
         {
             Methods methods = new();
