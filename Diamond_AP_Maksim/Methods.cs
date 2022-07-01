@@ -473,7 +473,7 @@ namespace Diamond_AP_Maksim
                     else
                     if (inid.StartsWith("(45)"))
                     {
-                        Match match = Regex.Match(inid.Replace(" ", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                        Match match = Regex.Match(inid.Replace(" ", "").Trim(), @"(?<date>\d{2}\/\d{2}\/\d{4})");
 
                         if (match.Success)
                         {
@@ -489,7 +489,7 @@ namespace Diamond_AP_Maksim
 
                         foreach (string item in priorities)
                         {
-                            Match match = Regex.Match(item.Trim(), @"(?<code>[A-Z]{2})\s(?<num>.+)\s(?<date>\d{2}.\d{2}.\d{4})");
+                            Match match = Regex.Match(item.Trim(), @"(?<code>[A-Z]{2})\s(?<num>.+)\s(?<date>\d{2}\.\d{2}\.\d{4})");
 
                             if (match.Success)
                             {
