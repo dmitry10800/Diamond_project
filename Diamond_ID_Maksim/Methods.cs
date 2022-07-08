@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Integration;
 
 namespace Diamond_ID_Maksim
 {
@@ -53,8 +54,7 @@ namespace Diamond_ID_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
                 }
-                else
-                if (subCode == "2")
+                else if (subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith ("(20) RI Permohonan Paten"))
@@ -67,14 +67,23 @@ namespace Diamond_ID_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
                 }
-            }
+                else if (subCode is "3")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.Contains("(74) : Nama dan Alamat Konsultan Paten"))
+                        .ToList();
 
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\nR.+)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20)")).ToList();
+
+                    foreach (string note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "AB"));
+                    }
+                }
+            }
             return statusEvents;
         }
 
-
-
-        
         internal string MakeText (List <XElement> xElements)
         {
             string text = null;
@@ -312,8 +321,7 @@ namespace Diamond_ID_Maksim
                     //if(inid.StartsWith(""))
                 }
             }
-            else
-            if(subCode == "2")
+            else if(subCode == "2")
             {
                 foreach (string inid in MakeInids(note))
                 {
@@ -429,10 +437,231 @@ namespace Diamond_ID_Maksim
 
                 }
             }
+            else if (subCode is "3")
+            {
+                foreach (string inid in MakeInids(note.Trim()))
+                {
+                    if (inid.StartsWith("(11)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<num>.+)");
 
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
+                        }
+                        else Console.WriteLine($"11 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(13)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"\)(?<kind>.+)");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                        }
+                        else Console.WriteLine($"13 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(51)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<ipcs>.+)");
+
+                        if (match.Success)
+                        {
+                            List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string ipc in ipcs)
+                            {
+                                Match ipcMatch = Regex.Match(ipc.Trim(), @"(?<class>.+)\s(?<num>\d+\/\d+)");
+
+                                if (ipcMatch.Success)
+                                {
+                                    statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                    {
+                                        Class = ipcMatch.Groups["class"].Value.Replace(" ","") + " " + ipcMatch.Groups["num"].Value.Trim()
+                                    });
+                                }
+                                else Console.WriteLine($"ipc --- {ipc}");
+                            }
+                        }
+                        else Console.WriteLine($"51 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(21)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<num>.+)");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Application.Number = match.Groups["num"].Value.Trim();
+                        }
+                        else Console.WriteLine($"21 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(22)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<date>.+)");
+
+                        if (match.Success)
+                        {
+                            Match dateMatch = Regex.Match(match.Groups["date"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+
+                            if (dateMatch.Success)
+                            {
+                                string month = MakeMonth(dateMatch.Groups["month"].Value.Trim());
+                                if (month is not null)
+                                {
+                                    statusEvent.Biblio.Application.Date = dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + dateMatch.Groups["day"].Value.Trim();
+                                }
+                                else Console.WriteLine($"====== {dateMatch.Groups["month"].Value.Trim()}");
+                            }
+                            else Console.WriteLine($"date --- {match.Groups["date"].Value.Trim()}");
+                        }
+                        else Console.WriteLine($"22 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(33)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"Negara(?<prio>.+)");
+
+                        if (match.Success)
+                        {
+                            List<string> priorities = Regex.Split(match.Groups["prio"].Value.Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string priority in priorities)
+                            {
+                                Match prioMatch = Regex.Match(priority.Trim(), @"(?<num>.+)\s(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})\s(?<code>\D{2})");
+
+                                if (prioMatch.Success)
+                                {
+                                    string month = MakeMonth(prioMatch.Groups["month"].Value.Trim());
+
+                                    if (month is not null)
+                                    {
+                                        statusEvent.Biblio.Priorities.Add(new Priority()
+                                        {
+                                            Number = prioMatch.Groups["num"].Value.Trim(),
+                                            Country = prioMatch.Groups["code"].Value.Trim(),
+                                            Date = prioMatch.Groups["year"].Value.Trim() + "/" + month + "/" + prioMatch.Groups["day"].Value.Trim()
+                                    });
+                                    }
+                                    else Console.WriteLine($"===== {prioMatch.Groups["month"].Value.Trim()}");
+
+                                }
+                                else Console.WriteLine($" priority ---- {priority}");
+                            }
+                        }
+                        else Console.WriteLine($"33 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(43)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<date>.+)");
+
+                        if (match.Success)
+                        {
+                            Match dateMatch = Regex.Match(match.Groups["date"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+
+                            if (dateMatch.Success)
+                            {
+                                string month = MakeMonth(dateMatch.Groups["month"].Value.Trim());
+                                if (month is not null)
+                                {
+                                    statusEvent.Biblio.Publication.Date = dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + dateMatch.Groups["day"].Value.Trim();
+                                }
+                                else Console.WriteLine($"====== {dateMatch.Groups["month"].Value.Trim()}");
+                            }
+                            else Console.WriteLine($"date --- {match.Groups["date"].Value.Trim()}");
+                        }
+                        else Console.WriteLine($"43 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(71)"))
+                    {
+                        Match match = Regex.Match(inid.Trim(), @":\n(?<name>.+)\n(?<adress>.+\n?.+\s)(?<country>.+)");
+
+                        if (match.Success)
+                        {
+                            string country = MakeCountry(match.Groups["country"].Value.Trim());
+
+                            if (country is not null)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = country
+                                });
+                            }
+                            else Console.WriteLine($"===== {match.Groups["country"].Value.Trim()}");
+                        }
+                        else Console.WriteLine($"71 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(72)"))
+                    {
+                        Match match = Regex.Match(inid.Trim(), @":(?<inventors>.+)", RegexOptions.Singleline);
+
+                        if (match.Success)
+                        {
+                            List <string> inventors = Regex.Split(match.Groups["inventors"].Value.Trim(), "\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string inventor in inventors)
+                            {
+                                Match inventorMatch = Regex.Match(inventor.Trim(), @"(?<name>.+),(?<code>[A-Z]{2})");
+
+                                if (inventorMatch.Success)
+                                {
+                                    statusEvent.Biblio.Inventors.Add(new PartyMember()
+                                    {
+                                        Name = inventorMatch.Groups["name"].Value.Trim(),
+                                        Country = inventorMatch.Groups["code"].Value.Trim()
+                                    });
+                                }
+                            }
+                        }
+                        else Console.WriteLine($"72 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(74)"))
+                    {
+                        Match match = Regex.Match(inid.Trim(), @":\n(?<name>.+?)\n(?<adress>.+)", RegexOptions.Singleline);
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = match.Groups["name"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Country = "ID"
+                            });
+                        }
+                        else Console.WriteLine($"74 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(54)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<title>.+)");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "ID",
+                                Text = match.Groups["title"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"54 --- {inid}");
+                    }
+                    else if (inid.StartsWith("(57)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<abstract>.+)");
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Abstracts.Add(new Abstract()
+                            {
+                                Language = "ID",
+                                Text = match.Groups["abstract"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"57 --- {inid}");
+                    }
+                }
+            }
             return statusEvent;
         }
-
         internal List<string> MakeInids (string note)
         {
             List<string> inids = Regex.Split(note.Substring(0, note.IndexOf("(57)")).Trim(), @"(?=\(\d{2}\)\s?)").Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -444,22 +673,35 @@ namespace Diamond_ID_Maksim
         internal string MakeMonth(string month) => month switch
         {
             "JAN" => "01",
+            "Januari" => "01",
             "FEB" => "02",
+            "Februari" => "02",
             "MAR" => "03",
+            "Maret" => "03",
             "APR" => "04",
+            "April" => "04",
             "MAY" => "05",
+            "Mei" => "05",
             "JUN" => "06",
+            "Juni" => "06",
             "JUL" => "07",
+            "Juli" => "07",
             "AUG" => "08",
+            "Agustus" => "08",
             "SEP" => "09",
+            "September" => "09",
             "OCT" => "10",
+            "Oktober" => "10",
             "NOV" => "11",
+            "November" => "11",
             "DEC" => "12",
+            "Desember" => "12",
             _ => null
         };
         internal string MakeCountry(string country) => country switch
         {
             "France" => "FR",
+            "Finland" => "FI",
             "Cimahi" => "ID",
             "Guangdong" => "CN",
             "Japan" => "JP",
@@ -473,8 +715,11 @@ namespace Diamond_ID_Maksim
             "Padang" => "ID",
             "JAPAN" => "JP",
             "Cirebon" => "ID",
+            "Indonesia" => "ID",
             "Australia" => "AU",
             "Germany" => "DE",
+            "Zealand" => "NZ",
+            "Denmark" => "DK",
             "China" => "CN",
             "States of America" => "US",
             "MAKASSAR" => "ID",
@@ -504,6 +749,7 @@ namespace Diamond_ID_Maksim
             "Colombia" => "CO",
             "Slovenia" => "SI",
             "Zurich" => "CH",
+            "Switzerland" => "CH",
             "Canada" => "CA",
             "United Kingdom" => "UK",
             "Zhejiang" => "CN",
@@ -533,14 +779,7 @@ namespace Diamond_ID_Maksim
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
