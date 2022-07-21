@@ -9,5 +9,11 @@ namespace DiamondProjectClasses
     {
         public List<PartyMember> LicensorInformation { get; set; }
         public List<LicenseeInformation> LicenseeInformation { get; set; }
+
+        public LicenseInformation()
+        {
+            LicenseeInformation = new List<LicenseeInformation>();
+            LicensorInformation = new List<PartyMember>();
+        }
     }
 }

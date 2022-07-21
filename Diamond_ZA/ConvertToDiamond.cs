@@ -135,12 +135,12 @@ namespace Diamond_ZA
                     /*43 date of publication*/
                     if (record.I43 != null)
                     {
-                        //biblioData.DOfPublication = new DOfPublication() { date_43 = record.I43 };
+                        //biblioData.DOfPublication = new DOfPublication() { date = record.I43 };
                         if (record.I43 != null)
                         {
                             biblioData.Publication.Date = record.I43;
                         }
-                        //biblioData.DOfPublication.date_43 = record.I43;
+                        //biblioData.DOfPublication.date = record.I43;
                     }
                     /*---------------------*/
                     /*51*/

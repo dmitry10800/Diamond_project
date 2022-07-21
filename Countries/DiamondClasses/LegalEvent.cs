@@ -17,6 +17,11 @@ namespace Integration
         public string Language { get; set; }
 
         public List<NoteTranslation> Translations { get; set; }
+
+        public LegalEvent()
+        {
+            Translations = new List<NoteTranslation>();
+        }
     }
 
     public class NoteTranslation

@@ -21,5 +21,10 @@ namespace Integration
         public string Country { get; set; }
 
         public List<Translation> Translations { get; set; }
+
+        public PartyMember()
+        {
+            Translations = new List<Translation>();
+        }
     }
 }

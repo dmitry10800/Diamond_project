@@ -53,7 +53,7 @@ namespace Diamond_BA
                     }
                     /*---------------------*/
                     /*43*/
-                    if (record.I43 != null) biblioData.DOfPublication = new DOfPublication() { date_43 = record.I43 };
+                    if (record.I43 != null) biblioData.DOfPublication = new DOfPublication() { date = record.I43 };
                     /*---------------------*/
                     /*51 classification*/
                     if (record.I51Class != null)

@@ -17,5 +17,10 @@ namespace Integration
         public string PctSearchDate { get; set; }
 
         public List<string> DesignatedStates { get; set; }
+
+        public IntConvention()
+        {
+            DesignatedStates = new List<string>();
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace EE
                     biblioData.Application.Number = record.AppNumber;
                     biblioData.Publication.Kind = record.PubKind;
                     biblioData.Publication.Date = record.Date43;
-                    //biblioData.DOfPublication = new DOfPublication { date_43 = record.Date43 };
+                    //biblioData.DOfPublication = new DOfPublication { date = record.Date43 };
                     legalEvent.LegalEvent = new LegalEvent
                     {
                         Language = "RU",

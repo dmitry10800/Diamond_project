@@ -298,7 +298,7 @@ namespace Diamond_ID_patent_application
                         /*45 date of publication*/
                         biblioData.DOfPublication = new DOfPublication()
                         {
-                            date_43 = record.I43
+                            date = record.I43
                         };
                         /*---------------------*/
                         /*54 Title*/

@@ -267,7 +267,7 @@ namespace Diamond_ZA_complete_specifications_accepted
                         /*45 date of publication*/
                         biblioData.DOfPublication = new DOfPublication()
                         {
-                            date_43 = record.I43
+                            date = record.I43
                         };
                         /*---------------------*/
                         /*54 Title*/

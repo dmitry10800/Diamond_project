@@ -132,7 +132,7 @@ namespace Integration
 
         public string date_42 { get; set; }
 
-        public string date_43 { get; set; }
+        public string date { get; set; }
 
         public string date_44 { get; set; }
 

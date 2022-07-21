@@ -12,5 +12,11 @@ namespace DiamondProjectClasses
         public string Text { get; set; }
         public List<Translation> Translations { get; set; }
         public List<ScreenShot> ScreenShots { get; set; }
+
+        public Claim()
+        {
+            Translations = new List<Translation>();
+            ScreenShots = new List<ScreenShot>();
+        }
     }
 }
