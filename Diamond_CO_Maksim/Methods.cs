@@ -148,17 +148,27 @@ namespace Diamond_CO_Maksim
 
                             if (subCode is "6" or "7")
                             {
-                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(8).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string member in memberList)
                                 {
-                                    Name = sheet.GetRow(row).GetCell(8).ToString()
-                                });
+                                    statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                    {
+                                        Name =member.Trim()
+                                    });
+                                }                             
                             }
                             else
                             {
-                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(11).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string member in memberList)
                                 {
-                                    Name = sheet.GetRow(row).GetCell(11).ToString()
-                                });
+                                    statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                    {
+                                        Name = member.Trim()
+                                    });
+                                }
                             }
 
                             if (subCode is "6" or "7" or "8")
@@ -167,7 +177,7 @@ namespace Diamond_CO_Maksim
                                 if (subCode is "6" or "7") n = 9;
                                 else n = 12;
 
-                                List<string> inventorsList = Regex.Split(sheet.GetRow(row).GetCell(n).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                List<string> inventorsList = Regex.Split(sheet.GetRow(row).GetCell(n).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                                 foreach (string inventor in inventorsList)
                                 {
@@ -180,17 +190,27 @@ namespace Diamond_CO_Maksim
 
                             if (subCode is "6" or "7")
                             {
-                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(10).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string member in memberList)
                                 {
-                                    Name = sheet.GetRow(row).GetCell(10).ToString()
-                                });
+                                    statusEvent.Biblio.Agents.Add(new PartyMember()
+                                    {
+                                        Name = member.Trim()
+                                    });
+                                }
                             }
                             else
                             {
-                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(13).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string member in memberList)
                                 {
-                                    Name = sheet.GetRow(row).GetCell(13).ToString()
-                                });
+                                    statusEvent.Biblio.Agents.Add(new PartyMember()
+                                    {
+                                        Name = member.Trim()
+                                    });
+                                }
                             }
 
                             if (subCode is "6" or "7" or "8")
