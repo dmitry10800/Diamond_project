@@ -135,7 +135,6 @@ namespace Diamond_PH_Maksim
             }
             return statusEvents;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent SplitNote(string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -571,7 +570,6 @@ namespace Diamond_PH_Maksim
 
             return statusEvent;
         }
-
         internal string MakeMonth(string month) => month switch
         {
             "january" => "01",

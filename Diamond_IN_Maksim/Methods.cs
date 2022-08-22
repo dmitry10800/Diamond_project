@@ -306,7 +306,6 @@ namespace Diamond_IN_Maksim
             return statusEvent;
         }
 
-
         internal string MakeCountryCode(string code) => code switch
         {
             "Tamilnadu" => "IN",
