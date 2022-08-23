@@ -153,6 +153,18 @@ namespace Diamond_AW_Maksim
             "окт." => "10",
             "нояб." => "11",
             "дек." => "12",
+            "Mar" => "03",
+            "Feb" => "02",
+            "Aug" => "08",
+            "Nov" => "11",
+            "Jul" => "07",
+            "Apr" => "04",
+            "Jun" => "06",
+            "May" => "05",
+            "Jan" => "01",
+            "Sep" => "09",
+            "Oct" => "10",
+            "Dec" => "12",
             _ => null
         };
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)

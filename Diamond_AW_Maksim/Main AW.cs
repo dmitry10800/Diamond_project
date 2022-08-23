@@ -2,7 +2,7 @@
 {
     internal class Main_AW
     {
-        private static readonly string Path = @"C:\!Work\AW";
+        private static readonly string Path = @"D:\_work\TET\AW";
         private static readonly string SubCode = "1";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
