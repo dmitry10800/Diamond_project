@@ -3,6 +3,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -45,6 +46,8 @@ namespace Diamond_PH_Maksim_Excel
                     }
 
                     sheet = OpenedDocument.GetSheet("Sheet1");
+
+                    CultureInfo culture = new("ru-RU");
 
                     for (int row = 1; row <= sheet.LastRowNum; row++)
                     {
@@ -90,10 +93,10 @@ namespace Diamond_PH_Maksim_Excel
                             {
                                 statusEvent.Biblio.Application.Number = applicationData.Groups["num"].Value.Trim();
 
-                                statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(applicationData.Groups["date"].Value.Trim()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                                statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(applicationData.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                             }
 
-                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(sheet.GetRow(row).GetCell(2).ToString()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime.Parse(sheet.GetRow(row).GetCell(2).ToString(),culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
                         else
                         {
@@ -103,13 +106,13 @@ namespace Diamond_PH_Maksim_Excel
                             {
                                 statusEvent.Biblio.Application.Number = applicationData.Groups["num"].Value.Trim();
 
-                                statusEvent.Biblio.Application.Date = DateTime.Parse(applicationData.Groups["date"].Value.Trim()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                                statusEvent.Biblio.Application.Date = DateTime.Parse(applicationData.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                             }
 
-                            statusEvent.Biblio.Publication.Date = DateTime.Parse(sheet.GetRow(row).GetCell(2).ToString()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            statusEvent.Biblio.Publication.Date = DateTime.Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
 
-                        statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString()).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
                         statusEvent.Biblio.Titles.Add(new Integration.Title
                         {
