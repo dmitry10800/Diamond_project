@@ -60,7 +60,7 @@ namespace Diamond_SG_Maksim
                             LegalEvent = new()
                         };
 
-                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString().Trim();
 
                         List<string> applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -68,17 +68,75 @@ namespace Diamond_SG_Maksim
                         {
                             statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                             {
-                                Name = applicant
+                                Name = applicant.Trim()
                             });
                         }
 
-                        statusEvent.LegalEvent.Note = "|| The year patents renewed for | " + sheet.GetRow(row).GetCell(2).ToString();
+                        statusEvent.LegalEvent.Note = "|| The year patents renewed for | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
 
                         Match match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
 
                         if (match.Success)
                         {
                             statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4,"/").Insert(7,"/").Trim();
+                        }
+
+                        legalStatusEvents.Add(statusEvent);
+                    }
+                }
+            }
+            else if (subCode is "7")
+            {
+                foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
+                {
+                    files.Add(file.FullName);
+                }
+
+                foreach (string xlsxFile in files)
+                {
+                    CurrentFileName = xlsxFile;
+
+                    ISheet sheet;
+
+                    XSSFWorkbook OpenedDocument;
+
+                    using (FileStream file = new(xlsxFile, FileMode.Open, FileAccess.Read))
+                    {
+                        OpenedDocument = new XSSFWorkbook(file);
+                    }
+
+                    sheet = OpenedDocument.GetSheet("Sheet1");
+
+                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    {
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
+                            CountryCode = "SG",
+                            SectionCode = "MK",
+                            SubCode = subCode,
+                            Id = Id++,
+                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                            Biblio = new(),
+                            LegalEvent = new()
+                        };
+
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString().Trim();
+
+                        List<string> applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string applicant in applicantsList)
+                        {
+                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                            {
+                                Name = applicant.Trim()
+                            });
+                        }
+
+                        Match match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+
+                        if (match.Success)
+                        {
+                            statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
                         }
 
                         legalStatusEvents.Add(statusEvent);
