@@ -164,7 +164,7 @@ namespace Diamond_BA_Maksim
 
                             if (agentMatch.Success)
                             {
-                                legalStatus.Biblio.Inventors.Add(new Integration.PartyMember
+                                legalStatus.Biblio.Agents.Add(new Integration.PartyMember
                                 {
                                     Name = agentMatch.Groups["name"].Value.Trim(),
                                     Address1 = agentMatch.Groups["adress"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
@@ -216,7 +216,7 @@ namespace Diamond_BA_Maksim
 
                         if (match.Success)
                         {
-                            legalStatus.LegalEvent.Note = inid.Replace("(57n)", "").Replace("\r", "").Replace("\n", " ").Trim();
+                            legalStatus.LegalEvent.Note = "|| " + match.Groups["text"].Value.Trim() + " | " + match.Groups["num"].Value.Trim();
                             legalStatus.LegalEvent.Language = "HR";
 
                             legalStatus.LegalEvent.Translations.Add(new Integration.NoteTranslation
