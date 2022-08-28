@@ -112,11 +112,13 @@ namespace Diamond_TR_Maksim
                 if (sub == "27")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
-                        .SkipWhile(e => !e.Value.StartsWith("Düzeltilmiş Yayın Sayfası"))
-                        .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI SMK’NIN 97 İNCİ"))
+                        .SkipWhile(e => !e.Value.StartsWith("SUBCODE 27"))
+                        .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI SMK"))
                         .ToList();
 
-                    foreach (string note in Regex.Split(MakeText(xElements), @"(?=\(11\)\s[A-Z])").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList())
+                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(12\)\s[A-Z])").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(12)")).ToList();
+
+                    foreach (string note in notes)
                     {
                         convertedPatents.Add(MakePatent(note, sub, "HH/TH"));
                     }
@@ -299,7 +301,7 @@ namespace Diamond_TR_Maksim
                 LegalEvent = new LegalEvent()
             };
 
-            CultureInfo cultureInfo = new CultureInfo("RU-ru");
+            CultureInfo cultureInfo = new CultureInfo("ru-Ru");
 
             if(subCode == "19")
             {
@@ -327,7 +329,6 @@ namespace Diamond_TR_Maksim
             else
             if(subCode == "27")
             {
-
                 EuropeanPatent europeanPatent = new EuropeanPatent();
 
                 foreach (string inid in MakeInids(note))
@@ -363,17 +364,62 @@ namespace Diamond_TR_Maksim
                         {
                             statusEvent.Biblio.Ipcs.Add(new Ipc
                             {
-                                Class = ipc.TrimStart('/').TrimStart('/').Trim()
+                                Class = ipc.TrimStart('/').TrimStart('/').Insert(4," ").Trim()
                             });
                         }
                     }
                     else
-                    if (inid.StartsWith("(86)"))
+                    if (inid.StartsWith("(86)") || inid.StartsWith("(96) EP Başvuru No"))
                     {
-                        europeanPatent.AppNumber = inid.Replace("\r", "").Replace("\n", " ").Replace("(86) EP Başvuru No", "").Trim();
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(86) EP Başvuru No", "").Replace("(96) EP Başvuru No", "").Replace("//"," ").Trim(),
+                            @"(?<num>.+\.\d)\s(?<ipcs>.+?)\s[A-Z]{2}?");
+                        if (match.Success)
+                        {
+                            europeanPatent.AppNumber = match.Groups["num"].Value.Trim();
+
+                            List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string ipc in ipcs)
+                            {
+                                statusEvent.Biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = ipc.Insert(4, " ").Trim()
+                                });
+                            }
+                        }
+                        else 
+                        {
+                            Match match11 = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(86) EP Başvuru No", "").Replace("(96) EP Başvuru No", "").Replace("//", " ").Trim(),
+                            @"(?<num>.+\.\d)\s(\s)?(?<ipcs>.+)");
+                            if (match11.Success)
+                            {
+                                europeanPatent.AppNumber = match11.Groups["num"].Value.Trim();
+
+                                List<string> ipcs = Regex.Split(match11.Groups["ipcs"].Value.Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string ipc in ipcs)
+                                {
+                                    statusEvent.Biblio.Ipcs.Add(new Ipc
+                                    {
+                                        Class = ipc.Insert(4, " ").Trim()
+                                    });
+                                }
+                            }
+                            else europeanPatent.AppNumber = inid.Replace("\r", "").Replace("\n", " ").Replace("(86) EP Başvuru No", "").Replace("(96) EP Başvuru No", "").Trim();
+                        }                      
                     }
                     else
-                    if (inid.StartsWith("(73)"))
+                    if (inid.StartsWith("(96) Başvuru Tarihi"))
+                    {
+                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @".+(?<date>\d{4}\/\d{2}\/\d{2})");
+                        if (match.Success)
+                        {
+                            europeanPatent.AppDate = match.Groups["date"].Value.Trim();
+                        }
+                        else Console.WriteLine($"{inid} --- 96");
+
+                    }
+                    else if (inid.StartsWith("(73)"))
                     {
                         Match match = Regex.Match(inid.Replace("(73) Patent Sahibi", "").Trim(), @"(?<name>.+?)\n(?<adress>.+)\s(?<country>.+)", RegexOptions.Singleline);
 
@@ -386,7 +432,13 @@ namespace Diamond_TR_Maksim
                                 Country = MakeCountry(match.Groups["country"].Value.Trim())
                             });
                         }
-                        else Console.WriteLine($"{inid} -- 73");
+                        else
+                        {
+                            statusEvent.Biblio.Assignees.Add(new PartyMember
+                            {
+                                Name = inid.Replace("(73) Patent Sahibi", "").Trim()
+                            });
+                        } 
 
                         if (MakeCountry(match.Groups["country"].Value.Trim()) == null)
                         {
@@ -459,6 +511,51 @@ namespace Diamond_TR_Maksim
                             });
                         }
                     }
+                    else if (inid.StartsWith("(31)"))
+                    {
+                        List<string> priorities = Regex.Split(inid.Replace("(31)", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (string priority in priorities)
+                        {
+                            Match match = Regex.Match(priority.Trim(), @"(?<date>\d{4}\/\d{2}\/\d{2})\s(?<code>[A-Z]{2})\s(?<num>.+)");
+
+                            if (match.Success)
+                            {
+                                statusEvent.Biblio.Priorities.Add(new Priority
+                                {
+                                    Date = match.Groups["date"].Value.Trim(),
+                                    Country = match.Groups["code"].Value.Trim(),
+                                    Number = match.Groups["num"].Value.Replace(" ", "").Trim()
+                                });
+                            }
+                        }
+                    }
+                    else if (inid.StartsWith("(74)"))
+                    {
+                        Match match = Regex.Match(inid.Replace("(74) Vekil", "").Trim(), @"(?<inid74>.+\))\s(?<inid72>.+)", RegexOptions.Singleline);
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Agents.Add(new PartyMember
+                            {
+                                Name = match.Groups["inid74"].Value.Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+
+                            List<string> inventors = Regex.Split(match.Groups["inid72"].Value.Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string inventor in inventors)
+                            {
+                                statusEvent.Biblio.Inventors.Add(new PartyMember
+                                {
+                                    Name = inventor.Trim()
+                                });
+                            }
+                        }
+                    }
+                    else if (inid.StartsWith("(12)"))
+                    {
+                        statusEvent.Biblio.Publication.LanguageDesignation = inid.Replace("(12)", "").Replace("\r","").Replace("\n"," ").Trim();
+                    }
                     else Console.WriteLine($"{inid}");
                 }
 
@@ -509,6 +606,36 @@ namespace Diamond_TR_Maksim
             "ÇİN" => "CN",
             "AVUSTURYA" => "AT",
             "CUMHURİYETİ" => "CZ",
+            "İTALYA" => "IT",
+            "HOLLANDA" => "NL",
+            "NORVEÇ" => "NO",
+            "İSRAİL" => "IL",
+            "KRALLIK" => "GB",
+            "ALMANYA" => "DE",
+            "KANADA" => "CA",
+            "FRANSA" => "FR",
+            "İSVEÇ" => "SE",
+            "JAPONYA" => "JP",
+            "KORE" => "KR",
+            "FİNLANDİYA" => "FI",
+            "TÜRKİYE" => "TR",
+            "BELÇİKA" => "BE",
+            "İSPANYA" => "ES",
+            "YENİZELANDA" => "NZ",
+            "İRLANDA" => "IR",
+            "DANİMARKA" => "DK",
+            "LÜKSEMBURG" => "LU",
+            "ARJANTİN" => "AR",
+            "MILANO" => "IT",
+            "MEKSİKA" => "MX",
+            "BREZİLYA" => "BR",
+            "PORTEKİZ" => "PT",
+            "POLONYA" => "PL",
+            "AVUSTRALYA" => "AU",
+            "MACARİSTAN" => "HU",
+            "SLOVENYA" => "SI",
+            "ŞİLİ" => "CL",
+            "A.B.D." => "US",
             _ => null
         };
         public List<string> BuildNotes (List<XElement> xElements )
@@ -527,19 +654,19 @@ namespace Diamond_TR_Maksim
 
             return notes;
         }
-        public void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                string url;
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
+                StringContent content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
+                string answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

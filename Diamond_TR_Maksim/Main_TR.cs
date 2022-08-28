@@ -8,11 +8,11 @@ namespace Diamond_TR_Maksim
 {
     class Main_TR
     {
+        private static readonly string path = @"C:\!Work\TR\TR_20220822_08";
+        private static readonly string sub = "27";
+        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
         {
-            string path = @"C:\Work\TR\TR_20210322_03_2";
-            string sub = "27";
-
             Methods methods = new Methods();
 
             List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = sub switch
@@ -33,7 +33,7 @@ namespace Diamond_TR_Maksim
 
             if (convertedPatents != null)
             {
-                methods.SendToDiamond(convertedPatents);
+                methods.SendToDiamond(convertedPatents, SendToProd);
             }
 
             else Console.WriteLine("SubCode must be 10, 13, 16, 17, 19, 27, 30, 31, 39");
