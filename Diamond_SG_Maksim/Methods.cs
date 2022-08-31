@@ -85,7 +85,7 @@ namespace Diamond_SG_Maksim
                     }
                 }
             }
-            else if (subCode is "7")
+            else if (subCode is "7" or "6")
             {
                 foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {

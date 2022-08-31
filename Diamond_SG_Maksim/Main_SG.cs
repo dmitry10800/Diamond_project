@@ -2,8 +2,8 @@
 {
     internal class Main_SG
     {
-        private static readonly string Path = @"C:\!Work\SG\SG_20220729_202208A_7";
-        private static readonly string SubCode = "7";
+        private static readonly string Path = @"D:\_work\TET\SG\SG_20220830_202209A";
+        private static readonly string SubCode = "6";
         private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
@@ -13,6 +13,7 @@
             List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = SubCode switch
             {
                 "5" => methods.Start(Path, SubCode),
+                "6" => methods.Start(Path, SubCode),
                 "7" => methods.Start(Path, SubCode),
                 _ => null
             };
