@@ -87,6 +87,22 @@ namespace Diamond_CO_Maksim
 
                     for (int row = startRow; row <= sheet.LastRowNum; row++)
                     {
+                        string check = null;
+
+                        if (check == null)
+                        {
+                            try
+                            {
+                                check = sheet.GetRow(row).GetCell(1).StringCellValue;
+                            }
+                            catch
+                            {
+                                break;
+                            }
+                        }
+
+                        check = sheet.GetRow(row).GetCell(1).StringCellValue;
+
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
                             CountryCode = "CO",
@@ -104,7 +120,6 @@ namespace Diamond_CO_Maksim
 
                             if (subCode is "6" or "7")
                             {
-                                if (sheet.GetRow(row).GetCell(3).ToString() is null) break;
                                 statusEvent.Biblio.Publication.LanguageDesignation = sheet.GetRow(row).GetCell(3).ToString();
                             }
                             else statusEvent.Biblio.Publication.LanguageDesignation = sheet.GetRow(row).GetCell(5).ToString();
@@ -143,7 +158,7 @@ namespace Diamond_CO_Maksim
                                     }
                                     else Console.WriteLine($"{matchDate.Groups["month"].Value.Trim()} wrong month");
                                 }
-                                else Console.WriteLine($"Wrong app date {sheet.GetRow(row).GetCell(n).ToString()}");
+                                else Console.WriteLine($"Wrong app date {sheet.GetRow(row).GetCell(n)}");
                             }
 
                             if (subCode is "6" or "7")
@@ -154,7 +169,7 @@ namespace Diamond_CO_Maksim
                                 {
                                     statusEvent.Biblio.Applicants.Add(new PartyMember()
                                     {
-                                        Name =member.Trim()
+                                        Name = member.Trim()
                                     });
                                 }                             
                             }
@@ -212,7 +227,6 @@ namespace Diamond_CO_Maksim
                                     });
                                 }
                             }
-
                             if (subCode is "6" or "7" or "8")
                             {
                                 int countryInt, numberInt, dateInt;
@@ -233,53 +247,55 @@ namespace Diamond_CO_Maksim
                                 List<string> numberList = new();
                                 List<string> countryList = Regex.Split(sheet.GetRow(row).GetCell(countryInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
                                 List<string> dateList = Regex.Split(sheet.GetRow(row).GetCell(dateInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
-                                if (MakeCountry(countryList[0]) is not "EP")
+                                if (countryList.Count != 0)
                                 {
-                                   numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @"(?<=,\d{3},)").Where(val => !string.IsNullOrEmpty(val)).ToList();
-                                }
-                                else
-                                { 
-                                    numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
-                                }
-
-                                if (countryList.Count == dateList.Count)
-                                {
-                                    string month = string.Empty, day = string.Empty, year = string.Empty;
-
-                                    for (int i = 0; i < countryList.Count; i++)
+                                    if (MakeCountry(countryList[0]) is not "EP")
                                     {
-                                        string country = MakeCountry(countryList[i].Replace("\r","").Replace("\n","").Trim());
-                                        
-                                        
-                                        Match matchDate = Regex.Match(dateList[i].Replace("\r", "").Replace("\n", "").Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @"(?<=,\d{3},)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                    }
+                                    else
+                                    {
+                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                    }
 
-                                        if (matchDate.Success)
+                                    if (countryList.Count == dateList.Count)
+                                    {
+                                        string month = string.Empty, day = string.Empty, year = string.Empty;
+
+                                        for (int i = 0; i < countryList.Count; i++)
                                         {
-                                            month = MakeMonth(matchDate.Groups["month"].Value.Trim());
+                                            string country = MakeCountry(countryList[i].Replace("\r", "").Replace("\n", "").Trim());
 
-                                            if (month is not null)
+
+                                            Match matchDate = Regex.Match(dateList[i].Replace("\r", "").Replace("\n", "").Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+
+                                            if (matchDate.Success)
                                             {
-                                                day = matchDate.Groups["day"].Value.Trim();
-                                                year = matchDate.Groups["year"].Value.Trim();
+                                                month = MakeMonth(matchDate.Groups["month"].Value.Trim());
+
+                                                if (month is not null)
+                                                {
+                                                    day = matchDate.Groups["day"].Value.Trim();
+                                                    year = matchDate.Groups["year"].Value.Trim();
+                                                }
+                                                else Console.WriteLine($"{matchDate.Groups["month"].Value.Trim()} wrong month");
                                             }
-                                            else Console.WriteLine($"{matchDate.Groups["month"].Value.Trim()} wrong month");
-                                        }
-                                        else Console.WriteLine($"Wrong app date {dateList[i]}");
+                                            else Console.WriteLine($"Wrong app date {dateList[i]}");
 
-                                        if (country is not null)
-                                        {
-                                            statusEvent.Biblio.Priorities.Add(new Priority()
+                                            if (country is not null)
                                             {
-                                                Number = numberList[i].Replace("\r", "").Replace("\n", "").TrimEnd(','),
-                                                Country = country,
-                                                Date = year + "/" + month + "/" + day
-                                            });
+                                                statusEvent.Biblio.Priorities.Add(new Priority()
+                                                {
+                                                    Number = numberList[i].Replace("\r", "").Replace("\n", "").TrimEnd(','),
+                                                    Country = country,
+                                                    Date = year + "/" + month + "/" + day
+                                                });
+                                            }
+                                            else Console.WriteLine($"{countryList[i].Trim()}");
                                         }
-                                        else Console.WriteLine($"{countryList[i].Trim()}");
                                     }
                                 }
                             }
-
                             if (subCode is "6" or "7" or "8")
                             {
                                 int n = 0;
@@ -316,6 +332,8 @@ namespace Diamond_CO_Maksim
                                 else Console.WriteLine($"Wrong app date {sheet.GetRow(row).GetCell(9).ToString()}");
                             }
                         }
+
+                        check = null;
                         statusEvents.Add(statusEvent);
                     }
                 }
