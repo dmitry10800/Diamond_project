@@ -73,6 +73,7 @@ namespace Diamond_SG_Maksim
                         }
 
                         statusEvent.LegalEvent.Note = "|| The year patents renewed for | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
+                        statusEvent.LegalEvent.Language = "EN";
 
                         Match match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
 
