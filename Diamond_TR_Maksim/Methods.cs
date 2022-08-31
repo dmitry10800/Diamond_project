@@ -168,7 +168,6 @@ namespace Diamond_TR_Maksim
             }
             return convertedPatents;
         }
-
         public Diamond.Core.Models.LegalStatusEvent SplitNote (string note, string subCode, string sectionCode)  
         {
             string workNote = note.Replace("\r", "").Replace("\n", " ");
@@ -287,7 +286,6 @@ namespace Diamond_TR_Maksim
             legalEvent.Biblio = biblio;
             return legalEvent;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatent (string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new Diamond.Core.Models.LegalStatusEvent()
@@ -326,8 +324,7 @@ namespace Diamond_TR_Maksim
 
                 else Console.WriteLine($"{note.Replace("\r", "").Replace("\n", " ").Trim()}");
             }
-            else
-            if(subCode == "27")
+            else if(subCode == "27")
             {
                 EuropeanPatent europeanPatent = new EuropeanPatent();
 
@@ -408,13 +405,12 @@ namespace Diamond_TR_Maksim
                             else europeanPatent.AppNumber = inid.Replace("\r", "").Replace("\n", " ").Replace("(86) EP Başvuru No", "").Replace("(96) EP Başvuru No", "").Trim();
                         }                      
                     }
-                    else
-                    if (inid.StartsWith("(96) Başvuru Tarihi"))
+                    else if (inid.StartsWith("(96) Başvuru Tarihi"))
                     {
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @".+(?<date>\d{4}\/\d{2}\/\d{2})");
                         if (match.Success)
                         {
-                            europeanPatent.AppDate = match.Groups["date"].Value.Trim();
+                            statusEvent.Biblio.Application.Date = match.Groups["date"].Value.Trim();
                         }
                         else Console.WriteLine($"{inid} --- 96");
 
