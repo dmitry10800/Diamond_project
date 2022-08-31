@@ -5,8 +5,8 @@ namespace Diamond_VE_Maksim
 {
     class Main_VE
     {
-        private static readonly string Path = @"D:\Develop\Country\VE\VE_20220329_615";
-        private static readonly string SubCode = "19";
+        private static readonly string Path = @"D:\_work\TET\VE\VE_20220526_616";
+        private static readonly string SubCode = "65";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
         /*
          * if 12 sub - you must find in the tet-file the beginning of the section "LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL" and insert "12_"
@@ -16,8 +16,6 @@ namespace Diamond_VE_Maksim
          *
          * if 19 sub - "LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"  => "19_LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"
          */
-
-
         static void Main(string[] args)
         {
             Methods methods = new();
@@ -31,7 +29,7 @@ namespace Diamond_VE_Maksim
             };
 
             Console.WriteLine();
-            //test
+
             if (patents != null) methods.SendToDiamond(patents, SendToProd);
             else Console.WriteLine("Wrong subcode");
         }

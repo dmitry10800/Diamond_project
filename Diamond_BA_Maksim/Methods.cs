@@ -212,7 +212,7 @@ namespace Diamond_BA_Maksim
                     }
                     else if (inid.StartsWith("(57n)"))
                     {
-                        Match match = Regex.Match(inid.Replace("(57n)", "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<text>.+:)\s(?<num>\d{1,3})");
+                        Match match = Regex.Match(inid.Replace("(57n)", "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<text>.+):\s(?<num>\d{1,3})");
 
                         if (match.Success)
                         {
