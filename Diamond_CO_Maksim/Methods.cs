@@ -101,8 +101,6 @@ namespace Diamond_CO_Maksim
                             }
                         }
 
-                        check = sheet.GetRow(row).GetCell(1).StringCellValue;
-
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
                             CountryCode = "CO",
@@ -333,7 +331,6 @@ namespace Diamond_CO_Maksim
                             }
                         }
 
-                        check = null;
                         statusEvents.Add(statusEvent);
                     }
                 }

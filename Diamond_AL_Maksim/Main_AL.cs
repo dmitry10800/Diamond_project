@@ -5,10 +5,9 @@ namespace Diamond_AL_Maksim
 {
     class Main_AL
     {
-
-        private static readonly string Path = @"C:\Work\AL\AL_20211122_36";
-        private static readonly string SubCode = "3";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"C:\Work\AL\AL_20211122_36";
+        private const string SubCode = "3";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {
