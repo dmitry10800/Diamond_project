@@ -2,15 +2,17 @@
 {
     internal class Main_PH
     {
-        private static readonly string Path = @"C:\!Work\PH\PH_20220729_87";
-        private static readonly string SubCode = "12";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"D:\LENS\PH\PH_20220831_99";
+        private const string SubCode = "7";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
+
         static void Main(string[] args)
         {
             Methods methods = new();
 
             List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
             {
+                "7" => methods.Start(Path, SubCode),
                 "12" => methods.Start(Path, SubCode),
                 _ => null
             };
