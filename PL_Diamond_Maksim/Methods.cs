@@ -84,18 +84,11 @@ namespace PL_Diamond_Maksim
                     else if (subCode == "32")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                            .SkipWhile(val => !val.Value.StartsWith("europejskiego, datę wygaśnięcia oraz zakres wygaśnięcia."))
-                            .TakeWhile(val => !val.Value.StartsWith("Wpisy i zmiany w rejestrze nieuwzględnione") 
-                            && !val.Value.StartsWith("w innych samodzielnych ogłoszeniach") 
-                            && !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
+                            .SkipWhile(val => !val.Value.StartsWith("Poniższe zestawienie zawiera kolejno: numer wygasłego patentu" + "\n" + "europejskiego, datę wygaśnięcia oraz zakres wygaśnięcia."))
+                            .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
                             .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        if (!notes[0].StartsWith(@"("))
-                        {
-                            notes.RemoveAt(0);
-                        }
+                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(")).ToList();
 
                         foreach (string note in notes)
                         {
@@ -120,7 +113,7 @@ namespace PL_Diamond_Maksim
                     else if (subCode is "51")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                            .SkipWhile(val => !val.Value.StartsWith("UNIEWAŻNIENIE PRAWA"))
+                            .SkipWhile(val => !val.Value.StartsWith("Poniższe zestawienie zawiera kolejno: numer unieważnionego patentu"))
                             .TakeWhile(val => !val.Value.StartsWith("WYGAŚNIĘCIE PRAWA"))
                             .ToList();
 
@@ -542,7 +535,7 @@ namespace PL_Diamond_Maksim
 
                     biblio.Publication.Number = match.Groups["number"].Value.Trim();
 
-                    legal.Date = match.Groups["date"].Value.Replace(" ", ".").Trim();
+                    legal.Date = match.Groups["date"].Value.Replace(" ", "/").Trim();
 
                     legal.Note = "|| Zakres wygaśnięcia | " + match.Groups["note"].Value.Trim();
                     legal.Language = "PL";
@@ -552,7 +545,7 @@ namespace PL_Diamond_Maksim
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
-                else Console.WriteLine($"Данная нота не разбилась {text}");
+                else Console.WriteLine($"This note not split {text}");
 
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
@@ -639,13 +632,9 @@ namespace PL_Diamond_Maksim
                     }
                     else Console.WriteLine($"{note}");
                 }
-
-              
-
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
             }
-
             return legalEvent;
         }
         internal string BuildText(List<XElement> xElements)
