@@ -5,8 +5,8 @@ namespace Diamond_CO_Maksim
 {
     class Main_CO
     {
-        private static readonly string Path = @"D:\_work\TET\CO\CO_20160819_768\xlsx";
-        private static readonly string SubCode = "7";
+        private static readonly string Path = @"D:\LENS\CO\CO_20220830_972";
+        private static readonly string SubCode = "8";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)

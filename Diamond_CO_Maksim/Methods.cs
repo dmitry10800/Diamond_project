@@ -247,13 +247,14 @@ namespace Diamond_CO_Maksim
                                 List<string> dateList = Regex.Split(sheet.GetRow(row).GetCell(dateInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
                                 if (countryList.Count != 0)
                                 {
-                                    if (MakeCountry(countryList[0]) is not "EP")
+                                    string code = MakeCountry(countryList[0]);
+                                    if (code != "EP" & code  != "GB" & code !="KR")
                                     {
-                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @"(?<=,\d{3},)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString().Replace("\r","").Replace("\n"," "), @"(?<=,\d{3},)").Where(val => !string.IsNullOrEmpty(val)).ToList();
                                     }
                                     else
                                     {
-                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString().Replace("\r", "").Replace("\n", " "), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
                                     }
 
                                     if (countryList.Count == dateList.Count)
@@ -263,8 +264,7 @@ namespace Diamond_CO_Maksim
                                         for (int i = 0; i < countryList.Count; i++)
                                         {
                                             string country = MakeCountry(countryList[i].Replace("\r", "").Replace("\n", "").Trim());
-
-
+                                            
                                             Match matchDate = Regex.Match(dateList[i].Replace("\r", "").Replace("\n", "").Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
 
                                             if (matchDate.Success)
@@ -349,6 +349,7 @@ namespace Diamond_CO_Maksim
             "ago." => "08",
             "sept." => "09",
             "oct." => "10",
+            "nov." => "11",
             "dic." => "12",
             _ => null,
         };
@@ -357,6 +358,16 @@ namespace Diamond_CO_Maksim
             "ESTADOS UNIDOS DE AMÉRICA" => "US",
             "HUNGRIA" => "HU",
             "BRASIL" => "BR",
+            "URUGUAY" => "UY",
+            "INDIA" => "IN",
+            "CHINA" => "CN",
+            "ALEMANIA" => "DE",
+            "JAPON" => "JP",
+            "JAPÓN" => "JP",
+            "SINGAPUR" => "SG",
+            "REINO UNIDO" => "GB",
+            "REPUBLICA DE COREA" => "KR",
+            "REPÚBLICA DE COREA" => "KR",
             "REINO UNIDO DE LA GRAN BRETAÑA" => "GB",
             "EUROP PATENT ORGANIZATION(EPO)" => "EP",
             _ => null,
