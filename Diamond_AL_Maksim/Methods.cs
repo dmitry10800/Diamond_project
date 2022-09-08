@@ -83,7 +83,8 @@ namespace Diamond_AL_Maksim
                 {
                     DOfPublication = new(),
                     EuropeanPatents = new()
-                }
+                },
+                LegalEvent = new()
             };
 
             CultureInfo culture = new("ru-RU");
@@ -429,14 +430,9 @@ namespace Diamond_AL_Maksim
                     var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"[0-9]{8}");
                     if (date.Success)
                     {
-                        legal.LegalEvent = new LegalEvent()
-                        {
-                            Date = date.Value.Insert(4, "/").Insert(7, "/").Trim()
-                        };
+                        legal.LegalEvent.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
                     }
-
                     legal.Biblio.EuropeanPatents.Add(europeanPatent);
-                    legal.legal.Biblio. = legal.Biblio.;
                     break;
                 }
             }

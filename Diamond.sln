@@ -363,15 +363,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CO", "CO", "{9FC5F1F1-4A5A-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_CO_Maksim", "Diamond_CO_Maksim\Diamond_CO_Maksim.csproj", "{C9D12141-17D9-423F-8B8F-1D376F898DF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_SG_Maksim", "Diamond_SG_Maksim\Diamond_SG_Maksim.csproj", "{357D91E0-8627-4090-947A-AB02BE8CBD60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_SG_Maksim", "Diamond_SG_Maksim\Diamond_SG_Maksim.csproj", "{357D91E0-8627-4090-947A-AB02BE8CBD60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_PH_Maksim_Excel", "Diamond_PH_Maksim_Excel\Diamond_PH_Maksim_Excel.csproj", "{87899B53-9381-4AC0-892D-62DDA19EBB52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_PH_Maksim_Excel", "Diamond_PH_Maksim_Excel\Diamond_PH_Maksim_Excel.csproj", "{87899B53-9381-4AC0-892D-62DDA19EBB52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_BA_Maksim", "Diamond_BA_Maksim\Diamond_BA_Maksim.csproj", "{80C2992A-77C8-4938-8AC3-89EBE17137CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_BA_Maksim", "Diamond_BA_Maksim\Diamond_BA_Maksim.csproj", "{80C2992A-77C8-4938-8AC3-89EBE17137CA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AW", "AW", "{136D61B1-48FD-4836-AA69-546930851D8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_AW_Maksim", "Diamond_AW_Maksim\Diamond_AW_Maksim.csproj", "{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_AW_Maksim", "Diamond_AW_Maksim\Diamond_AW_Maksim.csproj", "{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
