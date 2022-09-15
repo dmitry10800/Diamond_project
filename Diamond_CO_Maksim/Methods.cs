@@ -87,18 +87,11 @@ namespace Diamond_CO_Maksim
 
                     for (int row = startRow; row <= sheet.LastRowNum; row++)
                     {
-                        string check = null;
+                        bool isFailed = string.IsNullOrEmpty(sheet.GetRow(row)?.GetCell(1).StringCellValue);
 
-                        if (check == null)
+                        if (isFailed)
                         {
-                            try
-                            {
-                                check = sheet.GetRow(row).GetCell(1).StringCellValue;
-                            }
-                            catch
-                            {
-                                break;
-                            }
+                            break;
                         }
 
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
@@ -247,15 +240,7 @@ namespace Diamond_CO_Maksim
                                 List<string> dateList = Regex.Split(sheet.GetRow(row).GetCell(dateInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
                                 if (countryList.Count != 0)
                                 {
-                                    string code = MakeCountry(countryList[0]);
-                                    if (code != "EP" & code  != "GB" & code !="KR")
-                                    {
-                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString().Replace("\r","").Replace("\n"," "), @"(?<=,\d{3},)").Where(val => !string.IsNullOrEmpty(val)).ToList();
-                                    }
-                                    else
-                                    {
-                                        numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString().Replace("\r", "").Replace("\n", " "), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
-                                    }
+                                    numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                                     if (countryList.Count == dateList.Count)
                                     {
@@ -360,12 +345,19 @@ namespace Diamond_CO_Maksim
             "BRASIL" => "BR",
             "URUGUAY" => "UY",
             "INDIA" => "IN",
+            "PERU" => "PE",
             "CHINA" => "CN",
             "ALEMANIA" => "DE",
+            "PORTUGAL" => "PT",
             "JAPON" => "JP",
+            "ESPAÑA" => "ES",
             "JAPÓN" => "JP",
+            "FRANCIA" => "FR",
             "SINGAPUR" => "SG",
+            "PAISES BAJOS" => "NL",
             "REINO UNIDO" => "GB",
+            "FEDERACION DE RUSIA" => "RU",
+            "FEDERACIÓN DE RUSIA" => "RU",
             "REPUBLICA DE COREA" => "KR",
             "REPÚBLICA DE COREA" => "KR",
             "REINO UNIDO DE LA GRAN BRETAÑA" => "GB",

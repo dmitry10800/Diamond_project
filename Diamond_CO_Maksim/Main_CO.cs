@@ -5,7 +5,7 @@ namespace Diamond_CO_Maksim
 {
     class Main_CO
     {
-        private static readonly string Path = @"D:\LENS\CO\CO_20220830_972";
+        private static readonly string Path = @"D:\LENS\CO\CO_20220809_970";
         private static readonly string SubCode = "8";
         private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
 
