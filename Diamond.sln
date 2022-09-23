@@ -373,6 +373,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AW", "AW", "{136D61B1-48FD-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_AW_Maksim", "Diamond_AW_Maksim\Diamond_AW_Maksim.csproj", "{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_GC_Maksim_Excel", "Diamond_GC_Maksim_Excel\Diamond_GC_Maksim_Excel.csproj", "{09DFD8E9-3DAA-472A-A090-6CED5F57901A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -859,6 +861,10 @@ Global
 		{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09DFD8E9-3DAA-472A-A090-6CED5F57901A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09DFD8E9-3DAA-472A-A090-6CED5F57901A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09DFD8E9-3DAA-472A-A090-6CED5F57901A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09DFD8E9-3DAA-472A-A090-6CED5F57901A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1048,6 +1054,7 @@ Global
 		{80C2992A-77C8-4938-8AC3-89EBE17137CA} = {25E50513-CA7C-43B2-B9F8-E4684F9A3085}
 		{136D61B1-48FD-4836-AA69-546930851D8F} = {CD278762-9ACD-48B2-BD8A-424C2CD42A38}
 		{F8ED3432-A77A-4ACA-8E41-D4F7CD32700D} = {136D61B1-48FD-4836-AA69-546930851D8F}
+		{09DFD8E9-3DAA-472A-A090-6CED5F57901A} = {4E0AED62-DE22-4DBF-8499-8385D5AE6331}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D20EC653-9AB2-4390-80D0-3B8BEC2529F8}
