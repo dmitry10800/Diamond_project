@@ -49,8 +49,8 @@ namespace Diamond_PH_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                            CountryCode = "SG",
-                            SectionCode = "ND",
+                            CountryCode = "PH",
+                            SectionCode = "MK",
                             SubCode = subCode,
                             Id = Id++,
                             GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
@@ -102,8 +102,8 @@ namespace Diamond_PH_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                            CountryCode = "SG",
-                            SectionCode = "ND",
+                            CountryCode = "PH",
+                            SectionCode = "KA",
                             SubCode = subCode,
                             Id = Id++,
                             GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
@@ -161,7 +161,7 @@ namespace Diamond_PH_Maksim_Excel
                             statusEvent.Biblio.Publication.Date = DateTime.Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
 
-                        statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                            statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
                         statusEvent.Biblio.Titles.Add(new Integration.Title
                         {
