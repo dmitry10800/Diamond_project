@@ -136,8 +136,15 @@ namespace Diamond_TR_Maksim_Excel
                         }
                     }
                 }
-                else if (sub == "16")
+                else if (sub is "16" or "15")
                 {
+                    var sectionCode = sub switch
+                    {
+                        "16" => "FD",
+                        "15" => "DC",
+                        _ => null
+                    };
+
                     XSSFWorkbook OpenedDocument;
 
                     OpenedDocument = new(xlsFiles);
@@ -153,7 +160,7 @@ namespace Diamond_TR_Maksim_Excel
                                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
-                                SectionCode = "FD",
+                                SectionCode = sectionCode,
                                 Id = Id++,
                                 LegalEvent = new(),
                                 Biblio = new()

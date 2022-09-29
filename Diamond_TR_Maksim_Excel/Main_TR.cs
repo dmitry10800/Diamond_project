@@ -2,11 +2,11 @@
 {
     class Main_TR
     {
-        private static readonly string Path = @"C:\Work\TR\TR_20211122_11\47";
-        private static readonly string SubCode = "47";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"D:\LENS\TR\TR_20220921_09\15";
+        private const string SubCode = "15";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {           
             Methods methods = new();
 
@@ -14,6 +14,7 @@
             {
                 "10" => methods.Start(Path, SubCode),
                 "13" => methods.Start(Path, SubCode),
+                "15" => methods.Start(Path, SubCode),
                 "16" => methods.Start(Path, SubCode),
                 "17" => methods.Start(Path, SubCode),
                 "19" => methods.Start(Path, SubCode),
@@ -32,7 +33,7 @@
                 methods.SendToDiamond(convertedPatents, SendToProd);
             }
 
-            else Console.WriteLine("SubCode must be 10, 13, 16, 17, 19, 27, 30, 31, 39");
+            else Console.WriteLine("SubCode must be 10, 13, 15, 16, 17, 19, 27, 30, 31, 39");
 
         }
     }
