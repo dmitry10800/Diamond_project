@@ -5,18 +5,11 @@ namespace Diamond_VE_Maksim
 {
     class Main_VE
     {
-        private static readonly string Path = @"D:\_work\TET\VE\VE_20220526_616";
-        private static readonly string SubCode = "65";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
-        /*
-         * if 12 sub - you must find in the tet-file the beginning of the section "LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL" and insert "12_"
-         * at the beginning of the phrase,
-         * which would be "12_LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL" - then correctly effective date will be displayed
-         *
-         *
-         * if 19 sub - "LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"  => "19_LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"
-         */
-        static void Main(string[] args)
+        private const string Path = @"D:\LENS\VE\VE_20220921_618";
+        private const string SubCode = "12";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
+
+        private static void Main(string[] args)
         {
             Methods methods = new();
 

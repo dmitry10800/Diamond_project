@@ -45,19 +45,22 @@ namespace Diamond_VE_Maksim
                 if (subCode is "12")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("12_LA PROPIEDAD INTELECTUAL - REGISTRO DE LA PROPIEDAD INDUSTRIAL"))
+                        .SkipWhile(val => !val.Value.StartsWith("12_SOLICITADAS DE PATENTES EXTRANJERAS"))
                         .TakeWhile(val => !val.Value.StartsWith("Publiquese,"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
+                    var text = MakeText(xElements, subCode).Trim();
 
-                    Match match = Regex.Match(MakeText(xElements, subCode).Trim(), @"Caracas,\s(?<day>\d{2})(?<month>.+)(?<year>\d{4})");
+                    List<string> notes = Regex.Split(text, @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
+
+                    Match match = Regex.Match(text, @"Caracas,\s(?<day>\d{2})(?<month>.+?)(?<year>\d{4})");
 
                     if (match.Success)
                     {
                         string month = match.Groups["month"].Value.Trim() switch
                         {
                             "de febrero de" => "02",
+                            "de septiembre de" => "09",
                             _ => null
                         };
 
@@ -327,7 +330,7 @@ namespace Diamond_VE_Maksim
             {
                 List<string> inids = new();
 
-                Match splitNote = Regex.Match(note.Replace("\r","").Replace("\n"," ").Trim(), @"(?<allinids>.+)\s(?<inid57>\(57\).+?)_");
+                Match splitNote = Regex.Match(note.Replace("\r","").Replace("\n"," ").Trim(), @"(?<allinids>.+)\s(?<inid57>\(57\).+)_");
 
                 if (splitNote.Success)
                 {
@@ -336,7 +339,19 @@ namespace Diamond_VE_Maksim
 
                     inids.Add(splitNote.Groups["inid57"].Value.Trim());
                 }
-                else Console.WriteLine($"{note} -- not split");
+                else
+                {
+                    var splitNoteLast = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<allinids>.+)\s(?<inid57>\(57\).+)");
+
+                    if (splitNoteLast.Success)
+                    {
+                        inids = Regex.Split(splitNote.Groups["allinids"].Value.Trim(), @"(?=\(\d{2}\)\s)")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        inids.Add(splitNote.Groups["inid57"].Value.Trim());
+                    }
+                    else Console.WriteLine($"{note} -- not split");
+                }
 
                 foreach (string inid in inids)
                 {
@@ -625,27 +640,29 @@ namespace Diamond_VE_Maksim
             "COLOMBIA" => "CO",
             "BELGICA" => "BE",
             "NORUEGA" => "NO",
+            "ISRAEL" => "IL",
             _ => null
         };
         internal string MakeText(List<XElement> xElements, string subCode)
         {
-            string text = null;
+            var text = new StringBuilder();
 
             if(subCode is "24" or "19")
             {
                 foreach (XElement xElement in xElements)
                 {
-                    text += xElement.Value + "\n";
+                    text = text.Append(xElement.Value + "\n");
                 }
             }
             else if (subCode is "12" )
             {
                 foreach (XElement xElement in xElements)
                 {
-                    text += xElement.Value + " ";
+                    text = text.Append(xElement.Value + " ");
                 }
             }
-            return text;
+            var tmp = text.ToString();
+            return tmp;
         }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
