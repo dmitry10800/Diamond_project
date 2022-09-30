@@ -342,31 +342,39 @@ namespace Diamond_TR_Maksim
                         else Console.WriteLine($"{inid} --- 11");
 
                     }
-                    else
-                    if (inid.StartsWith("(21)"))
+                    else if (inid.StartsWith("(21)"))
                     {
                         statusEvent.Biblio.Application.Number = inid.Replace("\r", "").Replace("\n", " ").Replace("(21) Başvuru Numarası", "").Trim();
                     }
-                    else
-                    if (inid.StartsWith("(22)"))
+                    else if (inid.StartsWith("(22)"))
                     {
                         statusEvent.Biblio.Application.Date = inid.Replace("\r", "").Replace("\n", " ").Replace("(22) Başvuru Tarihi", "").Trim();
                     }
-                    else
-                    if (inid.StartsWith("(51)"))
+                    else if (inid.StartsWith("(51)"))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("(51) Buluşun tasnif sınıfları", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        List<string> ipcs = Regex.Split(inid.Replace("(51) Buluşun tasnif sınıfları", "").Replace("(51) Buluşun tasnif sınıfı", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
                         
                         foreach (string ipc in ipcs)
                         {
-                            statusEvent.Biblio.Ipcs.Add(new Ipc
+                            Match match = Regex.Match(ipc, @"^\D\d{2}\D\s?\d{1,4}\/\d{1,4}$");
+
+                            if(match.Success)
                             {
-                                Class = ipc.TrimStart('/').TrimStart('/').Insert(4," ").Trim()
-                            });
+                                var tmp = match.Value.Replace(" ","").Trim();
+
+                                if (tmp.Contains(@"//"))
+                                {
+                                    tmp = ipc.Replace("//", "").Trim();
+                                }
+
+                                statusEvent.Biblio.Ipcs.Add(new Ipc
+                                {
+                                    Class = tmp.Insert(4, " ").Trim()
+                                });
+                            }
                         }
                     }
-                    else
-                    if (inid.StartsWith("(86)") || inid.StartsWith("(96) EP Başvuru No"))
+                    else if (inid.StartsWith("(86)") || inid.StartsWith("(96) EP Başvuru No"))
                     {
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(86) EP Başvuru No", "").Replace("(96) EP Başvuru No", "").Replace("//"," ").Trim(),
                             @"(?<num>.+\.\d)\s(?<ipcs>.+?)\s[A-Z]{2}?");
@@ -417,14 +425,14 @@ namespace Diamond_TR_Maksim
                     }
                     else if (inid.StartsWith("(73)"))
                     {
-                        Match match = Regex.Match(inid.Replace("(73) Patent Sahibi", "").Trim(), @"(?<name>.+?)\n(?<adress>.+)\s(?<country>.+)", RegexOptions.Singleline);
+                        Match match = Regex.Match(inid.Replace("(73) Patent Sahibi", "").Replace("(73) Patent Sahipleri","").Trim(), @"(?<name>.+?)\n(?<adress>.+)\s(?<country>.+)", RegexOptions.Singleline);
 
                         if (match.Success)
                         {
                             statusEvent.Biblio.Assignees.Add(new PartyMember
                             {
                                 Name = match.Groups["name"].Value.Trim(),
-                                Address1 = match.Groups["adress"].Value.Trim(),
+                                Address1 = match.Groups["adress"].Value.Replace("BİRLEŞİK","").Trim(),
                                 Country = MakeCountry(match.Groups["country"].Value.Trim())
                             });
                         }
@@ -441,8 +449,7 @@ namespace Diamond_TR_Maksim
                             Console.WriteLine(match.Groups["country"].Value.Trim());
                         }                                      
                     }
-                    else
-                    if (inid.StartsWith("(72)"))
+                    else if (inid.StartsWith("(72)"))
                     {
                         List<string> inventors = Regex.Split(inid.Replace("(72) Buluşu Yapanlar", "").Replace("(72) Buluşu Yapan", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -454,8 +461,7 @@ namespace Diamond_TR_Maksim
                             });
                         }
                     }
-                    else
-                    if (inid.StartsWith("(54)"))
+                    else if (inid.StartsWith("(54)"))
                     {
                         statusEvent.Biblio.Titles.Add(new Title
                         {
@@ -463,8 +469,7 @@ namespace Diamond_TR_Maksim
                             Text = inid.Replace("\r", "").Replace("\n", " ").Replace("(54) Buluş Başlığı", "").Trim()
                         });
                     }
-                    else
-                    if (inid.StartsWith("(57)"))
+                    else if (inid.StartsWith("(57)"))
                     {
                         statusEvent.Biblio.Abstracts.Add(new Abstract
                         {
@@ -472,8 +477,7 @@ namespace Diamond_TR_Maksim
                             Text = inid.Replace("\r", "").Replace("\n", " ").Replace("(57) Özet", "").Trim()
                         });
                     }
-                    else
-                    if (inid.StartsWith("(97) EP Yayın No"))
+                    else if (inid.StartsWith("(97) EP Yayın No"))
                     {
                         Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(97) EP Yayın No", "").Trim(), @"(?<eNum>.+)(?<eKind>[A-Z]\d+)");
 
@@ -484,18 +488,15 @@ namespace Diamond_TR_Maksim
                         }
                         else Console.WriteLine($"{inid} --- 97 number");
                     }
-                    else
-                    if (inid.StartsWith("(97) EP Yayın Tarihi"))
+                    else if (inid.StartsWith("(97) EP Yayın Tarihi"))
                     {
                         europeanPatent.PubDate = inid.Replace("\r", "").Replace("\n", " ").Replace("(97) EP Yayın Tarihi", "").Trim();
                     }
-                    else
-                    if (inid.StartsWith("(43)"))
+                    else if (inid.StartsWith("(43)"))
                     {
                         statusEvent.Biblio.Publication.Date = inid.Replace("\r", "").Replace("\n", " ").Replace("(43) Basvuru Yay?n Tarihi)","").Trim();
                     }
-                    else
-                    if (inid.StartsWith("(71)"))
+                    else if (inid.StartsWith("(71)"))
                     {
                         List<string> applicants = Regex.Split(inid.Replace("(71) Başvuru Sahibi", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -521,38 +522,45 @@ namespace Diamond_TR_Maksim
                                 {
                                     Date = match.Groups["date"].Value.Trim(),
                                     Country = match.Groups["code"].Value.Trim(),
-                                    Number = match.Groups["num"].Value.Replace(" ", "").Trim()
+                                    Number = match.Groups["num"].Value.Trim()
                                 });
                             }
                         }
                     }
                     else if (inid.StartsWith("(74)"))
                     {
-                        Match match = Regex.Match(inid.Replace("(74) Vekil", "").Trim(), @"(?<inid74>.+\))\s(?<inid72>.+)", RegexOptions.Singleline);
+                            Match match = Regex.Match(inid.Replace("(74) Vekil", "").Trim(), @"(?<inid74>.+\))\s(?<inid72>.+)", RegexOptions.Singleline);
 
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.Agents.Add(new PartyMember
+                            if (match.Success)
                             {
-                                Name = match.Groups["inid74"].Value.Replace("\r", "").Replace("\n", " ").Trim()
-                            });
-
-                            List<string> inventors = Regex.Split(match.Groups["inid72"].Value.Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                            foreach (string inventor in inventors)
-                            {
-                                statusEvent.Biblio.Inventors.Add(new PartyMember
+                                statusEvent.Biblio.Agents.Add(new PartyMember
                                 {
-                                    Name = inventor.Trim()
+                                    Name = match.Groups["inid74"].Value.Replace("\r", "").Replace("\n", " ").Trim()
+                                });
+
+                                List<string> inventors = Regex.Split(match.Groups["inid72"].Value.Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                                foreach (string inventor in inventors)
+                                {
+                                    statusEvent.Biblio.Inventors.Add(new PartyMember
+                                    {
+                                        Name = inventor.Trim()
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Agents.Add(new PartyMember
+                                {
+                                    Name = inid.Replace("(74) Vekil", "").Replace("\r", "").Replace("\n", " ").Trim()
                                 });
                             }
-                        }
                     }
                     else if (inid.StartsWith("(12)"))
                     {
                         statusEvent.Biblio.Publication.LanguageDesignation = inid.Replace("(12)", "").Replace("\r","").Replace("\n"," ").Trim();
                     }
-                    else Console.WriteLine($"{inid}");
+                    else Console.WriteLine($"{inid} --- not process");
                 }
 
                 statusEvent.Biblio.EuropeanPatents.Add(europeanPatent);
@@ -576,7 +584,6 @@ namespace Diamond_TR_Maksim
 
             return statusEvent;
         }
-
         public string MakeText(List<XElement> xElements)
         {
             string fullText = null;
