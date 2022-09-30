@@ -96,6 +96,72 @@ namespace Diamond_PH_Maksim_Excel
                             legalStatusEvents.Add(statusEvent);
                         }
                     }
+                    else if (subCode == "5")
+                    {
+                        for (int row = 1; row <= sheet.LastRowNum; row++)
+                        {
+                            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                            {
+                                CountryCode = "PH",
+                                SectionCode = "MM",
+                                SubCode = subCode,
+                                Id = Id++,
+                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                Biblio = new()
+                                {
+                                    DOfPublication = new()
+                                },
+                                LegalEvent = new()
+                            };
+
+                            statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+                            List<string> aasigneers = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (string assigneer in aasigneers)
+                            {
+                                Match match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
+
+                                if (match73.Success)
+                                {
+                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                    {
+                                        Name = match73.Groups["name"].Value.Trim(),
+                                        Country = match73.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else Console.WriteLine($"{assigneer} --- not process");
+                            }
+
+                            var pubDate = sheet.GetRow(row).GetCell(2);
+                                
+                            if (pubDate != null)
+                            {
+                                statusEvent.Biblio.Publication.Date = DateTime
+                                    .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
+                                    .Replace(".", "/").Trim();
+                            }
+
+                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime
+                                .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim();
+
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "EN",
+                                Text = sheet.GetRow(row).GetCell(5).ToString()
+                            });
+
+                            var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+
+                            if (match.Success)
+                            {
+                                statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                            }
+
+                            legalStatusEvents.Add(statusEvent);
+                        }   
+                    }
                     else if (subCode is "12")
                     {
                         for (int row = 1; row <= sheet.LastRowNum; row++)
