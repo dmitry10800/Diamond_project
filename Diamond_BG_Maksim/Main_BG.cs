@@ -5,12 +5,11 @@ namespace Diamond_BG_Maksim
 {
     class Main_BG
     {
+        private const string Path = @"D:\LENS\BG\BG_20220930_09(2)";
+        private const string SubCode = "1";
+        private const bool SendToProd = false; //true - send to prod; false - send to stag
 
-        private static readonly string Path = @"C:\Work\BG\BG_20210915_09(1)";
-        private static readonly string SubCode = "4";
-        private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
-
-        static void Main(string[] args)
+        private static void Main()
         {
             Methods methods = new();
 
