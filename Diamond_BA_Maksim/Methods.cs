@@ -40,11 +40,12 @@ namespace Diamond_BA_Maksim
                 if(subCode is "4")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                       .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PA NATA UPISANIH U REGISTAR PATENATA"))
+                        .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATEN TA UPISANIH U REGISTAR PATENATA"))
+                       .TakeWhile(val => !val.Value.StartsWith("OBJAVLJIVANJE ZAHTJE A ZA KONSEZUALNI PATENT"))
                        .TakeWhile(val => !val.Value.StartsWith("OBJAVLJIVANJE ZAHTJEVA A KONSEZUALNI PATENT"))
                        .ToList();
 
-                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s[A-Z].+)", RegexOptions.Singleline)
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\D{2}\/.+)", RegexOptions.Singleline)
                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
                     foreach (var note in notes)
@@ -259,7 +260,20 @@ namespace Diamond_BA_Maksim
 
                 inids.Add("(57n) " + match.Groups["note"].Value.Trim());
             }
-            else Console.WriteLine($"{note} - not split");
+            else
+            {
+                var match1 = Regex.Match( note, @"(?<firstPart>.+)\s(?<inid57>\(57\).+)\s(?<note>Broj.+)", RegexOptions.Singleline);
+
+                if (match1.Success)
+                {
+                    inids = Regex.Split(match1.Groups["firstPart"].Value.Trim(), @"(?=\(\d{2}\).+)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    inids.Add(match1.Groups["inid57"].Value.Trim());
+
+                    inids.Add("(57n) " + match1.Groups["note"].Value.Trim());
+                }
+                else Console.WriteLine($"{note} - not split");
+            }
 
             return inids;
         }
