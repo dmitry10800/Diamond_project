@@ -26,12 +26,12 @@ namespace Diamond_CO_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
 
-            foreach (string xlsx in files)
+            foreach (var xlsx in files)
             {
                 CurrentFileName = xlsx;
 
@@ -43,8 +43,8 @@ namespace Diamond_CO_Maksim
                     OpenedDocument = new XSSFWorkbook(file);
                 }
 
-                string page = string.Empty;
-                string sectionCode = string.Empty;
+                var page = string.Empty;
+                var sectionCode = string.Empty;
 
                 if (subCode is "6")
                 {
@@ -67,11 +67,11 @@ namespace Diamond_CO_Maksim
                 {
                     sheet = OpenedDocument.GetSheet(page);
 
-                    int startRow = 0;
+                    var startRow = 0;
 
-                    for (int i = 0; i < sheet.LastRowNum; i++)
+                    for (var i = 0; i < sheet.LastRowNum; i++)
                     {
-                        string text = string.Join(" ", sheet.GetRow(i).Cells.Where(x => x.CellType is CellType.String && !string.IsNullOrWhiteSpace(x.StringCellValue)).Select(x => x?.StringCellValue));
+                        var text = string.Join(" ", sheet.GetRow(i).Cells.Where(x => x.CellType is CellType.String && !string.IsNullOrWhiteSpace(x.StringCellValue)).Select(x => x?.StringCellValue));
                         if (text.Contains("Expediente No. Tipo de trámite"))
                         {
                             startRow = ++i;
@@ -85,9 +85,9 @@ namespace Diamond_CO_Maksim
                         }
                     }
 
-                    for (int row = startRow; row <= sheet.LastRowNum; row++)
+                    for (var row = startRow; row <= sheet.LastRowNum; row++)
                     {
-                        bool isFailed = string.IsNullOrEmpty(sheet.GetRow(row)?.GetCell(1).StringCellValue);
+                        var isFailed = string.IsNullOrEmpty(sheet.GetRow(row)?.GetCell(1).StringCellValue);
 
                         if (isFailed)
                         {
@@ -138,11 +138,11 @@ namespace Diamond_CO_Maksim
                                 if (subCode is "6" or "7") n = 6;
                                 else n = 8;
 
-                                Match matchDate = Regex.Match(sheet.GetRow(row).GetCell(n).ToString(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+                                var matchDate = Regex.Match(sheet.GetRow(row).GetCell(n).ToString(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
 
                                 if (matchDate.Success)
                                 {
-                                    string month = MakeMonth(matchDate.Groups["month"].Value.Trim());
+                                    var month = MakeMonth(matchDate.Groups["month"].Value.Trim());
                                     if (month is not null)
                                     {
                                         statusEvent.Biblio.Application.Date = matchDate.Groups["year"].Value.Trim() + "/" + month + "/" + matchDate.Groups["day"].Value.Trim();
@@ -154,9 +154,9 @@ namespace Diamond_CO_Maksim
 
                             if (subCode is "6" or "7")
                             {
-                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(8).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var memberList = Regex.Split(sheet.GetRow(row).GetCell(8).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string member in memberList)
+                                foreach (var member in memberList)
                                 {
                                     statusEvent.Biblio.Applicants.Add(new PartyMember()
                                     {
@@ -166,9 +166,9 @@ namespace Diamond_CO_Maksim
                             }
                             else
                             {
-                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(11).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var memberList = Regex.Split(sheet.GetRow(row).GetCell(11).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string member in memberList)
+                                foreach (var member in memberList)
                                 {
                                     statusEvent.Biblio.Applicants.Add(new PartyMember()
                                     {
@@ -179,13 +179,13 @@ namespace Diamond_CO_Maksim
 
                             if (subCode is "6" or "7" or "8")
                             {
-                                int n = 0;
+                                var n = 0;
                                 if (subCode is "6" or "7") n = 9;
                                 else n = 12;
 
-                                List<string> inventorsList = Regex.Split(sheet.GetRow(row).GetCell(n).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var inventorsList = Regex.Split(sheet.GetRow(row).GetCell(n).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string inventor in inventorsList)
+                                foreach (var inventor in inventorsList)
                                 {
                                     statusEvent.Biblio.Inventors.Add(new PartyMember()
                                     {
@@ -196,9 +196,9 @@ namespace Diamond_CO_Maksim
 
                             if (subCode is "6" or "7")
                             {
-                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(10).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var memberList = Regex.Split(sheet.GetRow(row).GetCell(10).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string member in memberList)
+                                foreach (var member in memberList)
                                 {
                                     statusEvent.Biblio.Agents.Add(new PartyMember()
                                     {
@@ -208,9 +208,9 @@ namespace Diamond_CO_Maksim
                             }
                             else
                             {
-                                List<string> memberList = Regex.Split(sheet.GetRow(row).GetCell(13).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var memberList = Regex.Split(sheet.GetRow(row).GetCell(13).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string member in memberList)
+                                foreach (var member in memberList)
                                 {
                                     statusEvent.Biblio.Agents.Add(new PartyMember()
                                     {
@@ -236,8 +236,8 @@ namespace Diamond_CO_Maksim
                                 }
 
                                 List<string> numberList = new();
-                                List<string> countryList = Regex.Split(sheet.GetRow(row).GetCell(countryInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
-                                List<string> dateList = Regex.Split(sheet.GetRow(row).GetCell(dateInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var countryList = Regex.Split(sheet.GetRow(row).GetCell(countryInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var dateList = Regex.Split(sheet.GetRow(row).GetCell(dateInt).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
                                 if (countryList.Count != 0)
                                 {
                                     numberList = Regex.Split(sheet.GetRow(row).GetCell(numberInt).ToString(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -246,11 +246,11 @@ namespace Diamond_CO_Maksim
                                     {
                                         string month = string.Empty, day = string.Empty, year = string.Empty;
 
-                                        for (int i = 0; i < countryList.Count; i++)
+                                        for (var i = 0; i < countryList.Count; i++)
                                         {
-                                            string country = MakeCountry(countryList[i].Replace("\r", "").Replace("\n", "").Trim());
+                                            var country = MakeCountry(countryList[i].Replace("\r", "").Replace("\n", "").Trim());
                                             
-                                            Match matchDate = Regex.Match(dateList[i].Replace("\r", "").Replace("\n", "").Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+                                            var matchDate = Regex.Match(dateList[i].Replace("\r", "").Replace("\n", "").Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
 
                                             if (matchDate.Success)
                                             {
@@ -281,13 +281,13 @@ namespace Diamond_CO_Maksim
                             }
                             if (subCode is "6" or "7" or "8")
                             {
-                                int n = 0;
+                                var n = 0;
                                 if (subCode is "6" or "7") n = 14;
                                 else n = 17;
 
-                                List<string> ipcsList = Regex.Split(sheet.GetRow(row).GetCell(n).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var ipcsList = Regex.Split(sheet.GetRow(row).GetCell(n).ToString(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string ipc in ipcsList)
+                                foreach (var ipc in ipcsList)
                                 {
                                     statusEvent.Biblio.Ipcs.Add(new Ipc()
                                     {
@@ -301,11 +301,11 @@ namespace Diamond_CO_Maksim
                                 statusEvent.Biblio.IntConvention.PctApplNumber = sheet.GetRow(row).GetCell(2).StringCellValue;
                                 statusEvent.Biblio.IntConvention.PctPublNumber = sheet.GetRow(row).GetCell(3).StringCellValue;
 
-                                Match matchDate = Regex.Match(sheet.GetRow(row).GetCell(9).ToString(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+                                var matchDate = Regex.Match(sheet.GetRow(row).GetCell(9).ToString(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
 
                                 if (matchDate.Success)
                                 {
-                                    string month = MakeMonth(matchDate.Groups["month"].Value.Trim());
+                                    var month = MakeMonth(matchDate.Groups["month"].Value.Trim());
                                     if (month is not null)
                                     {
                                         statusEvent.Biblio.IntConvention.PctApplDate = matchDate.Groups["year"].Value.Trim() + "/" + month + "/" + matchDate.Groups["day"].Value.Trim();
@@ -366,6 +366,8 @@ namespace Diamond_CO_Maksim
             "ITALIA" => "IT",
             "ARGENTINA" => "AR",
             "SINGAPUR" => "SG",
+            "HUNGRIA " => "HK",
+            "TURQUIA" => "TR",
             "PAISES BAJOS" => "NL",
             "REINO UNIDO" => "GB",
             "FEDERACION DE RUSIA" => "RU",
@@ -380,15 +382,15 @@ namespace Diamond_CO_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }
