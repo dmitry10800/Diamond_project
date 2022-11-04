@@ -394,8 +394,7 @@ namespace Diamond_VN_Maksim
                         var match = Regex.Match(inid.Replace("(11)", "").Trim(), @"(?<num>\d+)\s(?<kind>\D)");
                         if (match.Success)
                         {
-                            if(subCode=="12") statusEvent.Biblio.Publication.Number ="1-" + match.Groups["num"].Value.PadLeft(7,'0').Trim();
-                            else statusEvent.Biblio.Publication.Number = "2-" + match.Groups["num"].Value.PadLeft(7, '0').Trim();
+                            statusEvent.Biblio.Publication.Number =match.Groups["num"].Value.PadLeft(7,'0').Trim();
                             statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
                         }
                         else Console.WriteLine($"{inid} -- 11");
@@ -1316,8 +1315,8 @@ namespace Diamond_VN_Maksim
                 if (match.Success)
                 {
                     statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
-                    if(subCode is "23") statusEvent.Biblio.Publication.Number ="1-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
-                    else statusEvent.Biblio.Publication.Number ="2-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                    statusEvent.Biblio.Publication.Number =match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                   
 
                     statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
                     {
