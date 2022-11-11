@@ -5,15 +5,15 @@ namespace Diamond_ZA_Maksim
 {
     class Main_ZA
     {
-        private static readonly string path = @"C:\!Work\ZA\ZA_20220330_03(2)";
-        private static readonly string subCode = "1";
-        private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
+        private const string path = @"D:\LENS\ZA\ZA_20221026_10(2)\1";
+        private const string subCode = "1";
+        private const bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
+            var convertedPatents = subCode switch
             {
                 "1" => methods.Start(path, subCode),
                 "3" => methods.Start(path, subCode),
