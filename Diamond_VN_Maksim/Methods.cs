@@ -17,8 +17,8 @@ namespace Diamond_VN_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -34,7 +34,7 @@ namespace Diamond_VN_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -299,8 +299,8 @@ namespace Diamond_VN_Maksim
                 CountryCode = "VN",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                Id = _id++,
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new Biblio
                 {
                     InvOrApps = new List<PartyMember>(),
@@ -394,7 +394,7 @@ namespace Diamond_VN_Maksim
                         var match = Regex.Match(inid.Replace("(11)", "").Trim(), @"(?<num>\d+)\s(?<kind>\D)");
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Publication.Number =match.Groups["num"].Value.PadLeft(7,'0').Trim();
+                            statusEvent.Biblio.Publication.Number =match.Groups["num"].Value.Trim();
                             statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
                         }
                         else Console.WriteLine($"{inid} -- 11");
@@ -1315,7 +1315,7 @@ namespace Diamond_VN_Maksim
                 if (match.Success)
                 {
                     statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
-                    statusEvent.Biblio.Publication.Number =match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                    statusEvent.Biblio.Publication.Number =match.Groups["pubNum"].Value.Trim();
                    
 
                     statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
@@ -1421,8 +1421,8 @@ namespace Diamond_VN_Maksim
                             CountryCode = "VN",
                             SubCode = subCode,
                             SectionCode = sectionCode,
-                            Id = Id++,
-                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                             Biblio = new()
                             {
                                 InvOrApps = new(),
@@ -1550,8 +1550,8 @@ namespace Diamond_VN_Maksim
                             CountryCode = "VN",
                             SubCode = subCode,
                             SectionCode = sectionCode,
-                            Id = Id++,
-                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                             Biblio = new()
                             {
                                 InvOrApps = new(),
