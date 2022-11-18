@@ -5,16 +5,18 @@ namespace Diamond_RO_Maksim
 {
     class Main_RO
     {
-        private static readonly string path = @"C:\!Work\RO\new folder";
-        private static readonly string subCode = "29";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string path = @"D:\LENS\RO\RO_20221028_10_E";
+        private const string subCode = "12";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
+            var convertedPatents = subCode switch
             {
+                "11" => methods.Start(path, subCode),
+                "12" => methods.Start(path, subCode),
                 "13" => methods.Start(path, subCode),
                 "14" => methods.Start(path, subCode),
                 "16" => methods.Start(path, subCode),
