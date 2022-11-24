@@ -366,7 +366,7 @@ namespace Diamond_CO_Maksim
             "ITALIA" => "IT",
             "ARGENTINA" => "AR",
             "SINGAPUR" => "SG",
-            "HUNGRIA " => "HK",
+            "FINLANDIA" => "FI",
             "TURQUIA" => "TR",
             "PAISES BAJOS" => "NL",
             "REINO UNIDO" => "GB",
