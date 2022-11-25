@@ -394,8 +394,16 @@ namespace Diamond_VN_Maksim
                         var match = Regex.Match(inid.Replace("(11)", "").Trim(), @"(?<num>\d+)\s(?<kind>\D)");
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Publication.Number =match.Groups["num"].Value.Trim();
-                            statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                            statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
+                            if (subCode is "13")
+                            {
+                                if (match.Groups["kind"].Value.Trim() is "A")
+                                {
+                                    statusEvent.Biblio.Publication.Kind = "U";
+                                }
+                                else statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                            }
+                            else statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
                         }
                         else Console.WriteLine($"{inid} -- 11");
                     }
@@ -861,7 +869,15 @@ namespace Diamond_VN_Maksim
                         if (match.Success)
                         {
                             statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
-                            statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                            if (subCode is "15")
+                            {
+                                if (match.Groups["kind"].Value.Trim() is "B")
+                                {
+                                    statusEvent.Biblio.Publication.Kind = "Y";
+                                }
+                                else statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
+                            }
+                            else statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
                         }
                         else Console.WriteLine($"{inid} -- 11");
                     }
