@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Diamond.Core.Models;
 using Integration;
 
 namespace Diamond_VN_Maksim
@@ -105,18 +106,16 @@ namespace Diamond_VN_Maksim
                 }
                 else if (subCode == "12")
                 {
+                    var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("§¬n yªu cÇu cÊp b»ng ®éc quyÒn S¸NG CHÕ"))
+                        .SkipWhile(val => !val.Value.EndsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
                         .TakeWhile(val => !val.Value.StartsWith("§¬n yªu cÇu cÊp b»ng ®éc quyÒn GI¶I PH¸P H÷U ÝCH"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
-                    foreach (var note in notes)
-                    {
-                        statusEvents.Add(MakePatent(note,subCode,"AA"));
-                    }
+                    statusEvents.AddRange(notes.Select(note => MakePatent(note, subCode, "AA", imageFiles)));
                 }
                 else if (subCode == "13")
                 {
@@ -292,7 +291,63 @@ namespace Diamond_VN_Maksim
             }
             return statusEvents;
         }
-        internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
+
+        private Dictionary<string,string> GetImages(XElement tet)
+        {
+            var result = new Dictionary<string,string>();
+            try
+            {
+                var iDAndFilenameInfo = new Dictionary<string, string>();
+                var imagesList = tet.Descendants()
+                    .Where(x => x.Name.LocalName == "Image")
+                    .Select(x => (x.Attribute("id")?.Value, x.Attribute("filename")?.Value)).ToList();
+                foreach (var i in imagesList.Where(i => !iDAndFilenameInfo.ContainsKey(i.Item1)))
+                {
+                    iDAndFilenameInfo.Add(i.Item1, i.Item2);
+                }
+                var iDAndPatentKeyInfo = new Dictionary<string, string>();
+                var pages = tet.Descendants().Elements().Where(x => x.Name.LocalName == "Page").ToList();
+                foreach (var page in pages)
+                {
+                    var numberPattern = new Regex(@"(?=\(11\)\s(?<Number>\d[^\(]+))");
+                    var pageImage = page.Descendants()
+                        .FirstOrDefault(x => x.Name.LocalName == "PlacedImage");
+                    if (pageImage == null)
+                    {
+                        continue;
+                    }
+                    var pageElements = page.Descendants().Where(x => x.Name.LocalName == "Text").ToList();
+                    var patentNumber = pageElements.Where(x => numberPattern.Match(x.Value).Success).ToList();
+                    if (patentNumber.Any() && patentNumber.Count == 1)
+                    {
+                        var patentNumberValue = numberPattern.Match(patentNumber.FirstOrDefault()?.Value).Groups["Number"]
+                            .Value.Trim();
+                        if (!string.IsNullOrWhiteSpace(patentNumberValue) && !iDAndPatentKeyInfo.ContainsKey(pageImage.Attribute("image")?.Value))
+                        {
+                            var value = pageImage.Attribute("image")?.Value;
+                            if (value != null)
+                            {
+                                iDAndPatentKeyInfo.Add(value, patentNumberValue);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var pair in iDAndPatentKeyInfo.Where(pair => iDAndFilenameInfo.ContainsKey(pair.Key)))
+                {
+                    result.Add(iDAndPatentKeyInfo[pair.Key], iDAndFilenameInfo[pair.Key]);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Getting images failed. {e.Message}");
+                throw;
+            }
+            
+            return result;
+        }
+
+        internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode, Dictionary<string, string> imagesDictionary = null)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
             {
@@ -1396,18 +1451,75 @@ namespace Diamond_VN_Maksim
                 }
             }
 
+            //Add image to the record Abstract section
+            AddAbstractScreenShot(statusEvent, imagesDictionary);
+
             return statusEvent;
         }
+
+        private void AddAbstractScreenShot(LegalStatusEvent statusEvent, Dictionary<string, string> imagesDictionary)
+        {
+            var patentKey = statusEvent.Biblio.Publication.Number;
+            if (patentKey == null || imagesDictionary == null)
+            {
+                return;
+            }
+
+            var patentImageInfo = imagesDictionary.FirstOrDefault(x => x.Key.Contains(patentKey)).Value;
+            if (!string.IsNullOrWhiteSpace(patentImageInfo))
+            {
+                var pathToFolder = Path.GetDirectoryName(_currentFileName);
+                if (pathToFolder != null)
+                {
+                    var pathToImageFile = Path.Combine(pathToFolder, patentImageInfo);
+                    var imageString = GetImageString(pathToImageFile);
+                    if (!string.IsNullOrWhiteSpace(imageString))
+                    {
+                        var imageValue = $"data:image/png;base64, {imageString}";
+                        var id = GetUniqueScreenShotId();
+                        var idText = $"<img id=\"{id}\">";
+                        if (string.IsNullOrWhiteSpace(statusEvent.Biblio.Abstracts.FirstOrDefault()?.Text))
+                        {
+                            return;
+                        }
+                        var tmpAbstract = statusEvent.Biblio.Abstracts.FirstOrDefault();
+                        if (tmpAbstract == null)
+                        {
+                            return;
+                        }
+                        tmpAbstract.Text += idText;
+                        statusEvent.Biblio.Abstracts = new List<Abstract> { tmpAbstract };
+                        statusEvent.Biblio.ScreenShots.Add(new ScreenShot()
+                        {
+                            Id = id,
+                            Data = imageValue
+                        });
+                    }
+                }
+            }
+        }
+
+        private string GetImageString(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            {
+                return null;
+            }
+            try
+            {
+                var data = File.ReadAllBytes(path);
+                return Convert.ToBase64String(data);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Reading image to string failed. {e.Message}");
+                throw;
+            }
+        }
+
         internal string MakeText(List<XElement> xElements, string subCode)
         {
-            string text = null;
-
-                foreach (var xElement in xElements)
-                {
-                    text += xElement.Value + " ";
-                }
-
-            return text.Trim();
+            return xElements.Aggregate<XElement, string>(null, (current, xElement) => current + xElement.Value + " ").Trim();
         }
         internal string MakeCountryCode(string country) => country switch
         {
@@ -1669,6 +1781,21 @@ namespace Diamond_VN_Maksim
                 var result = httpClient.PostAsync("", content).Result;
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
+        }
+
+        internal static string GetUniqueScreenShotId()
+        {
+            return $"{GetRandomString(4)}-{GetRandomString(12)}";
+        }
+        private static string GetRandomString(int stringLength)
+        {
+            var sb = new StringBuilder();
+            var guIds = (stringLength - 1) / 32 + 1;
+            for (var i = 1; i <= guIds; i++)
+            {
+                sb.Append(Guid.NewGuid().ToString("N"));
+            }
+            return sb.ToString(0, stringLength);
         }
     }
 }

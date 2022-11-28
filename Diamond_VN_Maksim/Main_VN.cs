@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Diamond_VN_Maksim
 {
     class Main_VN
     {
-        private const string Path = @"C:\!Work\VN\VN_20220425_409B";
-        private const string SubCode = "15";
+        private const string Path = @"D:\_DFA_main\_JiraTasks\_Lantern\LAN-3316\";
+        private const string SubCode = "12";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
@@ -19,10 +20,10 @@ namespace Diamond_VN_Maksim
                 "4" => methods.Start(Path, SubCode),
                 "6" => methods.Start(Path, SubCode),
                 "7" => methods.Start(Path, SubCode),
-                "12" => methods.Start(Path, SubCode),
-                "13" => methods.Start(Path, SubCode),
-                "14" => methods.Start(Path, SubCode),
-                "15" => methods.Start(Path, SubCode),
+                "12" => methods.Start(Path, SubCode), // Abstract screenshots has to be added
+                "13" => methods.Start(Path, SubCode), // Abstract screenshots has to be added
+                "14" => methods.Start(Path, SubCode), // Abstract screenshots has to be added
+                "15" => methods.Start(Path, SubCode), // Abstract screenshots has to be added
                 "16" => methods.Start(Path, SubCode),
                 "17" => methods.Start(Path, SubCode),
                 "18" => methods.Start(Path, SubCode),
