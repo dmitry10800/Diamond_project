@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Diamond_VN_Maksim
 {
     class Main_VN
     {
-        private const string Path = @"D:\_DFA_main\_JiraTasks\_Lantern\LAN-3316\";
-        private const string SubCode = "12";
+        private const string Path = @"D:\LENS\VN\VN_20221125_416B";
+        private const string SubCode = "14";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)

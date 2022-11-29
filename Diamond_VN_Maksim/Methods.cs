@@ -4,19 +4,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Diamond.Core.Models;
 using Integration;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Diamond_VN_Maksim
 {
@@ -112,8 +107,8 @@ namespace Diamond_VN_Maksim
                 {
                     var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.EndsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
-                        .TakeWhile(val => !val.Value.StartsWith("§¬n yªu cÇu cÊp b»ng ®éc quyÒn GI¶I PH¸P H÷U ÝCH"))
+                        .SkipWhile(val => !val.Value.EndsWith("ĐƠN YÊU CẦU CẤP BẰNG ĐỘC QUYỀN SÁNG CHẾ"))
+                        .TakeWhile(val => !val.Value.StartsWith("PHẦN II"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
@@ -123,48 +118,42 @@ namespace Diamond_VN_Maksim
                 }
                 else if (subCode == "13")
                 {
+                    var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("§¬n yªu cÇu cÊp b»ng ®éc quyÒn GI¶I PH¸P H÷U ÝCH"))
+                        .SkipWhile(val => !val.Value.StartsWith("ĐƠN YÊU CẦU CẤP BẰNG ĐỘC QUYỀN GIẢI PHÁP HỮU ÍCH"))
                         .TakeWhile(val => !val.Value.StartsWith("Y£U CÇU thÈm ®Þnh NéI DUNG"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
-                    foreach (var note in notes)
-                    {
-                        statusEvents.Add(MakePatent(note, subCode, "AA"));
-                    }
+                    statusEvents.AddRange(notes.Select(note => MakePatent(note, subCode, "AA", imageFiles)));
                 }
                 else if (subCode == "14")
                 {
+                    var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("S¸ng chÕ ®−îc cÊp B»NG ®éC QUYÒN"))
-                        .TakeWhile(val => !val.Value.StartsWith("Gi¶i ph¸p h÷u Ých ®−îc cÊp B»NG ®éC QUYÒN"))
+                        .SkipWhile(val => !val.Value.StartsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
+                        .TakeWhile(val => !val.Value.StartsWith("PHẦN II"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
-                    foreach (var note in notes)
-                    {
-                        statusEvents.Add(MakePatent(note, subCode, "FG"));
-                    }
+                    statusEvents.AddRange(notes.Select(note => MakePatent(note, subCode, "FG", imageFiles)));
                 }
                 else if (subCode == "15")
                 {
+                    var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Gi¶i ph¸p h÷u Ých ®−îc cÊp B»NG ®éC QUYÒN"))
+                        .SkipWhile(val => !val.Value.StartsWith("GIẢI PHÁP HỮU ÍCH ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
                         .TakeWhile(val => !val.Value.StartsWith("PhÇn iII"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
-                    foreach (var note in notes)
-                    {
-                        statusEvents.Add(MakePatent(note, subCode, "FG"));
-                    }
+                    statusEvents.AddRange(notes.Select(note => MakePatent(note, subCode, "FG", imageFiles)));
                 }
                 else if (subCode == "16")
                 {
