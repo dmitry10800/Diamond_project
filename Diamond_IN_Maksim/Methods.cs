@@ -336,6 +336,10 @@ namespace Diamond_IN_Maksim
                         }
                         if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
                         {
+                            if (secondNumber.Length == 1)
+                            {
+                                secondNumber = $"{secondNumber}0";
+                            }
                             secondPart = $"{firstNumber}/{secondNumber}";
                         }
 
@@ -367,6 +371,10 @@ namespace Diamond_IN_Maksim
                         }
                         if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
                         {
+                            if (secondNumber.Length == 1)
+                            {
+                                secondNumber = $"{secondNumber}0";
+                            }
                             secondPart = $"{firstNumber}/{secondNumber}";
                         }
 
