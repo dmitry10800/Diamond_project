@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Integration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -151,6 +152,7 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(71)"))
                     {
+                        // todo: сделать нормальную регулярку и предусмотреть символы --------- и формат, в которой есть NA
                         List<string> applicants = Regex.Split(inid.Replace("\r","").Replace("\n"," ").Replace("(71)Name of Applicant :","").Trim(),
                             @"(?>\d\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -269,14 +271,10 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(51)"))
                     {
-                        List <string> ipcs = Regex.Split(inid.Replace("\r","").Replace("\n"," ").Trim(), @"(?=[A-Z]\d{2}[A-Z]\d+)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"(?=[A-Z]\d{2}[A-Z]\d+)").Match(val).Success).ToList();
-
-                        foreach (string ipc in ipcs)
+                        var ipcs = GetInternationalClassification(inid);
+                        if (ipcs.Any())
                         {
-                            statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
-                            {
-                                Class = ipc.Substring(0, 4) + " " + ipc.Substring(6, 2) + "/" + ipc.Substring(8, 3)
-                            });
+                            statusEvent.Biblio.Ipcs = ipcs;
                         }
                     }
 
@@ -299,10 +297,102 @@ namespace Diamond_IN_Maksim
                         Address1 = match.Groups["f74"].Value.Trim()
                     });
                 }
-               else Console.WriteLine($"{note}");
+                else
+                {
+                    Console.WriteLine($"{note}");
+                }
             }
 
             return statusEvent;
+        }
+
+        private static List<Ipc> GetInternationalClassification(string inid)
+        {
+            inid = new Regex(@"\s").Replace(inid, "");
+            var results = new List<Ipc>();
+            try
+            {
+                var pattern = new Regex(@"(?<FirstPart>[A-Z]{1}\d+[A-Z]{1})(?<SecondPart>(?<FirstNumber>\d+)(\/(?<SecondNumber>\d+))*)"); //example: C07D0239420000, C12P0013000000, C22C 1/04, C22C 14/00
+                var matches = pattern.Matches(inid).Where(x => !string.IsNullOrWhiteSpace(x.Value)).ToList();
+                if (!matches.Any())
+                {
+                    return results.Any() ? results : null;
+                }
+                foreach (var match in matches)
+                {
+                    var firstPart = match.Groups["FirstPart"].Value;
+                    var secondPart = match.Groups["SecondPart"].Value;
+                    if (secondPart.Contains("/"))
+                    {
+                        var firstNumber = match.Groups["FirstNumber"].Value.TrimStart('0');
+                        var secondNumber = match.Groups["SecondNumber"].Value.TrimEnd('0');
+                        if (firstNumber.Length == 0)
+                        {
+                            firstNumber = "00";
+                        }
+                        if (secondNumber.Length == 0)
+                        {
+                            secondNumber = "00";
+                        }
+                        if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
+                        {
+                            if (secondNumber.Length == 1)
+                            {
+                                secondNumber = $"{secondNumber}0";
+                            }
+                            secondPart = $"{firstNumber}/{secondNumber}";
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
+                        {
+                            results.Add(new Ipc
+                            {
+                                Class = $"{firstPart} {secondPart}"
+                            });
+                        }
+                    }
+                    else
+                    {
+                        var pat = new Regex(@"(?<FirstNumber>\d{4})(?<SecondNumber>\d+)");
+                        var patMatch = pat.Match(secondPart);
+                        if (!patMatch.Success)
+                        {
+                            continue;
+                        }
+                        var firstNumber = patMatch.Groups["FirstNumber"].Value.TrimStart('0');
+                        var secondNumber = patMatch.Groups["SecondNumber"].Value.TrimEnd('0');
+                        if (firstNumber.Length == 0)
+                        {
+                            firstNumber = "00";
+                        }
+                        if (secondNumber.Length == 0)
+                        {
+                            secondNumber = "00";
+                        }
+                        if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
+                        {
+                            if (secondNumber.Length == 1)
+                            {
+                                secondNumber = $"{secondNumber}0";
+                            }
+                            secondPart = $"{firstNumber}/{secondNumber}";
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
+                        {
+                            results.Add(new Ipc
+                            {
+                                Class = $"{firstPart} {secondPart}"
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Getting (51) International classification failed. Ex:{e.Message}");
+            }
+            return results.Any() ? results : null;
         }
 
         internal string MakeCountryCode(string code) => code switch
