@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Diamond_AU_Subcodes_4_5_6
+﻿namespace Diamond_AU_Subcodes_4_5_6
 {
     public class Elements
     {

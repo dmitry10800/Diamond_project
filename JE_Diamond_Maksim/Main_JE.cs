@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Diamond_JE_Maksim
+﻿namespace Diamond_JE_Maksim
 {
     class Main_JE
     {

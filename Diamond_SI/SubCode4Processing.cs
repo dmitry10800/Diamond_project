@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Diamond_SI
+﻿namespace Diamond_SI
 {
     public class SubCode4Processing
     {

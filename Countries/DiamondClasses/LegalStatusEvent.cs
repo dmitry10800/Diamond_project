@@ -1,5 +1,4 @@
-﻿using System;
-using Integration;
+﻿using Integration;
 
 namespace Diamond.Core.Models
 {

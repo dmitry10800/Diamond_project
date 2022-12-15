@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Integration
+﻿namespace Integration
 {
     public class Ipc
     {

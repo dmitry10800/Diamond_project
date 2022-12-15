@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Diamond_CO_Maksim
+﻿namespace Diamond_CO_Maksim
 {
     class Main_CO
     {
