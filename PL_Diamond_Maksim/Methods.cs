@@ -13,10 +13,10 @@ using System.Xml.Linq;
 
 namespace PL_Diamond_Maksim
 {
-    class Methods
+    internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode, string newOrOld)
         {
@@ -26,7 +26,7 @@ namespace PL_Diamond_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -37,9 +37,9 @@ namespace PL_Diamond_Maksim
 
             if (newOrOld == "new")
             {
-                foreach (string tetml in files)
+                foreach (var tetml in files)
                 {
-                    CurrentFileName = tetml;
+                    _currentFileName = tetml;
 
                     tet = XElement.Load(tetml);
 
@@ -54,14 +54,14 @@ namespace PL_Diamond_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("OGŁOSZENIA"))
                              .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([0-9]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([0-9]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         if (!notes[0].StartsWith(@"("))
                         {
                             notes.RemoveAt(0);
                         }
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteNew(note, subCode, "BZ/RC"));
                         }
@@ -73,9 +73,9 @@ namespace PL_Diamond_Maksim
                            .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
                            .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\(\D\d{1,2}\)").Match(val).Success).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\(\D\d{1,2}\)").Match(val).Success).ToList();
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
                         }
@@ -87,9 +87,9 @@ namespace PL_Diamond_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("WPISY I ZMIANY W REJESTRZE NIEUWZGLĘDNIONE"))
                             .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(")).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z])").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(")).ToList();
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
                         }
@@ -101,9 +101,9 @@ namespace PL_Diamond_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("Wygaśnięcie prawa"))
                             .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z][0-9]\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z][0-9]\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteNew(note.Trim(), subCode, "RH"));
                         }
@@ -116,9 +116,9 @@ namespace PL_Diamond_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("WYGAŚNIĘCIE PRAWA"))
                             .ToList();
 
-                        List<string> notesList = Regex.Split(BuildText(xElements), @"(?=\(T\d\)\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(T")).ToList();
+                        var notesList = Regex.Split(BuildText(xElements), @"(?=\(T\d\)\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(T")).ToList();
 
-                        foreach (string note in notesList)
+                        foreach (var note in notesList)
                         {
                             convertedPatents.Add(SplitNoteNew(note.Trim(), subCode, "MF"));
                         }
@@ -127,9 +127,9 @@ namespace PL_Diamond_Maksim
             }
             else if (newOrOld == "old")
             {
-                foreach (string tetml in files)
+                foreach (var tetml in files)
                 {
-                    CurrentFileName = tetml;
+                    _currentFileName = tetml;
 
                     tet = XElement.Load(tetml);
 
@@ -142,14 +142,14 @@ namespace PL_Diamond_Maksim
                        .TakeWhile(e => !e.Value.StartsWith("DECYZJE O ZMIANIE LUB UCHYLENIU DECYZJI") && !e.Value.StartsWith("B. WZORY ŻYTKOWE"))
                        .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\()").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\()").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         if (!notes[0].StartsWith(@"("))
                         {
                             notes.RemoveAt(0);
                         }
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteOld(note, subCode, "MK"));
                         }
@@ -161,14 +161,14 @@ namespace PL_Diamond_Maksim
                        .TakeWhile(e => !e.Value.StartsWith("DECYZJE O UNIEWAŻNIENIU PATENTU"))
                        .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z]\d)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z]\d)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         if (!notes[0].StartsWith(@"("))
                         {
                             notes.RemoveAt(0);
                         }
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteOld(note, subCode, "BZ/RC"));
                         }
@@ -180,13 +180,13 @@ namespace PL_Diamond_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("Poniższe zestawienie zawiera kolejno: numer zgłoszenia albo numer") && !val.Value.StartsWith("patentu, numer i rok wydania Wiadomości Urzędu Patentowego,"))
                             .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z]\d)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z]\d)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         if (!notes[0].StartsWith(@"("))
                         {
                             notes.RemoveAt(0);
                         }
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteOld(note, subCode, "MZ"));
                         }
@@ -198,9 +198,9 @@ namespace PL_Diamond_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("DECYZJE O ODMOWIE UDZIELENIA PATENTU"))
                             .ToList();
 
-                        List<string> notes = Regex.Split(BuildText(xElements), @"(?=T[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var notes = Regex.Split(BuildText(xElements), @"(?=T[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string note in notes)
+                        foreach (var note in notes)
                         {
                             convertedPatents.Add(SplitNoteOld(note.Trim(), subCode, "RH"));
                         }
@@ -216,11 +216,11 @@ namespace PL_Diamond_Maksim
         }
         internal Diamond.Core.Models.LegalStatusEvent SplitNoteOld(string note, string subCode, string sectionCode)
         {
-            string text = note.Replace("\r", "").Replace("\n", " ").Trim();
+            var text = note.Replace("\r", "").Replace("\n", " ").Trim();
 
             Diamond.Core.Models.LegalStatusEvent legalEvent = new()
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
 
                 SubCode = subCode,
 
@@ -228,7 +228,7 @@ namespace PL_Diamond_Maksim
 
                 CountryCode = "PL",
 
-                Id = Id++
+                Id = _id++
             };
 
             LegalEvent legal = new();
@@ -248,7 +248,7 @@ namespace PL_Diamond_Maksim
 
             if (subCode == "10")
             {
-                Match match = Regex.Match(text, @"\((?<kind>[A-Z]+\d+)\)\s?(?<number>\d+)\s(?<date>\d{4}\s\d{2}\s\d{2})");
+                var match = Regex.Match(text, @"\((?<kind>[A-Z]+\d+)\)\s?(?<number>\d+)\s(?<date>\d{4}\s\d{2}\s\d{2})");
 
                 if (match.Success)
                 {
@@ -260,7 +260,7 @@ namespace PL_Diamond_Maksim
 
                     biblio.EuropeanPatents.Add(europeanPatent);
 
-                    string date = match.Groups["date"].Value.Trim().Replace(" ", "/");
+                    var date = match.Groups["date"].Value.Trim().Replace(" ", "/");
 
                     legal.Date = date;
                 }
@@ -272,7 +272,7 @@ namespace PL_Diamond_Maksim
             else
             if(subCode == "25")
             {
-                Match match = Regex.Match(text, @"\((?<kind>[A-Z]+\d+)\)\s?(?<number>\d+)\s(?<date>\d{4}\s\d{2}\s\d{2})\s(?<info>.+)");
+                var match = Regex.Match(text, @"\((?<kind>[A-Z]+\d+)\)\s?(?<number>\d+)\s(?<date>\d{4}\s\d{2}\s\d{2})\s(?<info>.+)");
 
                 if (match.Success)
                 {
@@ -284,7 +284,7 @@ namespace PL_Diamond_Maksim
 
                     biblio.EuropeanPatents.Add(europeanPatent);
 
-                    string date = match.Groups["date"].Value.Trim().Replace(" ", ".");
+                    var date = match.Groups["date"].Value.Trim().Replace(" ", ".");
                     legal.Note = "|| Datę wpisu | " + date;
                     legal.Language = "PL";
 
@@ -293,26 +293,26 @@ namespace PL_Diamond_Maksim
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
-                    string leDate = Path.GetFileName(CurrentFileName.Replace(".tetml", ""));
-                    Match leDateBuild = Regex.Match(leDate, @"(?<f1>[A-Z]{2}_)(?<date>[0-9]+)(?<f2>_.+)");
+                    var leDate = Path.GetFileName(_currentFileName.Replace(".tetml", ""));
+                    var leDateBuild = Regex.Match(leDate, @"(?<f1>[A-Z]{2}_)(?<date>[0-9]+)(?<f2>_.+)");
                     if (leDateBuild.Success)
                     {
                         legal.Date = leDateBuild.Groups["date"].Value.Trim().Insert(4, ".").Insert(7, ".");
                     }
 
                     biblio.Assignees = new List<PartyMember>();
-                    Match assignerBuild = Regex.Match(match.Groups["info"].Value.Trim(), @".+?:(?<grant1>.+)\si\s.+:(?<grant2>.+)");
+                    var assignerBuild = Regex.Match(match.Groups["info"].Value.Trim(), @".+?:(?<grant1>.+)\si\s.+:(?<grant2>.+)");
                     if (assignerBuild.Success)
                     {
-                        List<string> assigner = new List<string>
+                        var assigner = new List<string>
                         {
                             assignerBuild.Groups["grant1"].Value.Trim(),
                             assignerBuild.Groups["grant2"].Value.Trim()
                         };
 
-                        foreach (string item in assigner)
+                        foreach (var item in assigner)
                         {
-                            Match matchAssigner = Regex.Match(item, @"(?<name>.+?),\s?(?<adress>.+),\s?(?<code>.+)");
+                            var matchAssigner = Regex.Match(item, @"(?<name>.+?),\s?(?<adress>.+),\s?(?<code>.+)");
 
                             if (matchAssigner.Success) {
                                 biblio.Assignees.Add(new PartyMember
@@ -322,7 +322,7 @@ namespace PL_Diamond_Maksim
                                     Country = MakeCountryCode(matchAssigner.Groups["code"].Value.Trim())
                                 });
 
-                                string proverka = MakeCountryCode(matchAssigner.Groups["code"].Value.Trim());
+                                var proverka = MakeCountryCode(matchAssigner.Groups["code"].Value.Trim());
                                 if ( proverka == null)
                                 {
                                     Console.WriteLine($"{matchAssigner.Groups["code"].Value.Trim()} --- {biblio.Publication.Number}");
@@ -333,11 +333,11 @@ namespace PL_Diamond_Maksim
                     else
                     if(match.Groups["info"].Value.Trim().Contains(";"))
                     {
-                        List<string> assigners = Regex.Split(match.Groups["info"].Value.Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var assigners = Regex.Split(match.Groups["info"].Value.Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string assigner in assigners)
+                        foreach (var assigner in assigners)
                         {
-                            Match match1 = Regex.Match(assigner, @"(?<name>.+?),\s?(?<adress>.+),\s?(?<code>.+)\s");
+                            var match1 = Regex.Match(assigner, @"(?<name>.+?),\s?(?<adress>.+),\s?(?<code>.+)\s");
                             if (match1.Success)
                             {
                                 biblio.Assignees.Add(new PartyMember
@@ -347,7 +347,7 @@ namespace PL_Diamond_Maksim
                                     Country = MakeCountryCode(match1.Groups["code"].Value.Trim())
                                 });
 
-                                string proverka = MakeCountryCode(match1.Groups["code"].Value.Trim());
+                                var proverka = MakeCountryCode(match1.Groups["code"].Value.Trim());
                                 if (proverka == null)
                                 {
                                     Console.WriteLine($"{match1.Groups["code"].Value.Trim()} --- {biblio.Publication.Number}");
@@ -365,7 +365,7 @@ namespace PL_Diamond_Maksim
             else
             if(subCode == "32")
             {
-                Match match = Regex.Match(text, @"\((?<kind>[A-Z]\d)\)\s?\(\d+\)\s?(?<number>\d+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+\.)");
+                var match = Regex.Match(text, @"\((?<kind>[A-Z]\d)\)\s?\(\d+\)\s?(?<number>\d+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+\.)");
 
                 if (match.Success)
                 {
@@ -378,7 +378,7 @@ namespace PL_Diamond_Maksim
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "|| Expiry range | Patent has expired in completely.";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired completely.";
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
@@ -390,7 +390,7 @@ namespace PL_Diamond_Maksim
             else
             if(subCode == "46")
             {
-                Match match = Regex.Match(note, @"(?<pubKind>[A-Z][0-9]).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
+                var match = Regex.Match(note, @"(?<pubKind>[A-Z][0-9]).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
 
                 if (match.Success)
                 {
@@ -406,7 +406,7 @@ namespace PL_Diamond_Maksim
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
-                    Match match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
+                    var match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
                     if (match1.Success)
                     {
                         biblio.Publication.Number = match1.Groups["number"].Value.Trim();
@@ -420,7 +420,7 @@ namespace PL_Diamond_Maksim
                     Console.WriteLine($"{note}");
                 }
 
-                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
                 legal.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
 
                 biblio.EuropeanPatents.Add(europeanPatent);
@@ -432,15 +432,15 @@ namespace PL_Diamond_Maksim
         }
         internal Diamond.Core.Models.LegalStatusEvent SplitNoteNew(string note, string subCode, string sectionCode)
         {
-            string text = note.Replace("\r", "").Replace("\n", " ").Trim();
+            var text = note.Replace("\r", "").Replace("\n", " ").Trim();
 
             Diamond.Core.Models.LegalStatusEvent legalEvent = new()
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 SubCode = subCode,
                 SectionCode = sectionCode,
                 CountryCode = "PL",
-                Id = Id++
+                Id = _id++
             };
 
             LegalEvent legal = new ();
@@ -459,7 +459,7 @@ namespace PL_Diamond_Maksim
             }
             else if(subCode == "25")
             {
-                Match match = Regex.Match(text, @"\([0-9]{2}\)\s(?<number>\d+)\s?.+?:(?<grant1>.+)\sW.+:\s(?<grant2>.+)");
+                var match = Regex.Match(text, @"\([0-9]{2}\)\s(?<number>\d+)\s?.+?:(?<grant1>.+)\sW.+:\s(?<grant2>.+)");
 
                 if (match.Success)
                 {
@@ -467,15 +467,15 @@ namespace PL_Diamond_Maksim
 
                     biblio.Assignees = new List<PartyMember>();
 
-                    List<string> assigners = new List<string>
+                    var assigners = new List<string>
                         {
                             match.Groups["grant1"].Value.Trim(),
                             match.Groups["grant2"].Value.Trim()
                         };
 
-                    foreach (string assigner in assigners)
+                    foreach (var assigner in assigners)
                     {
-                        Match match1 = Regex.Match(assigner, @"(?<name>.+?),\s(?<adress>.+),\s(?<country>\D+)");
+                        var match1 = Regex.Match(assigner, @"(?<name>.+?),\s(?<adress>.+),\s(?<country>\D+)");
 
                         if (match1.Success)
                         {
@@ -486,7 +486,7 @@ namespace PL_Diamond_Maksim
                                 Country = MakeCountryCode( match1.Groups["country"].Value.Trim())
                             });
 
-                            string proverka = MakeCountryCode(match1.Groups["country"].Value.Trim());
+                            var proverka = MakeCountryCode(match1.Groups["country"].Value.Trim());
 
                             if (proverka == null)
                             {
@@ -503,7 +503,7 @@ namespace PL_Diamond_Maksim
             }
             else if(subCode == "31")
             {
-                Match match = Regex.Match(note.Trim().TrimEnd('.'), @"\((?<pKind>\D\d{1,2})\)\s.+?\s(?<pNum>.+?)\s(?<leDate>\d{4}\s?\d{2}\s?\d{2})\s(?<leNote>.+)");
+                var match = Regex.Match(note.Trim().TrimEnd('.'), @"\((?<pKind>\D\d{1,2})\)\s.+?\s(?<pNum>.+?)\s(?<leDate>\d{4}\s?\d{2}\s?\d{2})\s(?<leNote>.+)");
 
                 if (match.Success)
                 {
@@ -526,7 +526,7 @@ namespace PL_Diamond_Maksim
             }
             else if (subCode == "32")
             {
-                Match match = Regex.Match(text, @"\((?<kind>[A-Z]{1}\d+)\)(\s\([0-9]{2}\)\s)?(?<number>[0-9]+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+)");
+                var match = Regex.Match(text, @"\((?<kind>[A-Z]{1}\d+)\)(\s\([0-9]{2}\)\s)?(?<number>[0-9]+)\s?(?<date>[0-9]{4}\s[0-9]{2}\s[0-9]{2})\s?(?<note>.+)");
 
                 if (match.Success)
                 {
@@ -540,7 +540,7 @@ namespace PL_Diamond_Maksim
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "|| Expiry range | Patent has expired in completely.";
+                    noteTranslation.Tr = "|| Expiry range | Patent has expired completely.";
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
                 }
@@ -551,7 +551,7 @@ namespace PL_Diamond_Maksim
             }
             else if(subCode == "47")
             {
-                Match match = Regex.Match(note, @"\((?<pubKind>[A-Z][0-9])\).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
+                var match = Regex.Match(note, @"\((?<pubKind>[A-Z][0-9])\).+(?<date>[0-9]{2}\s[0-9]{2}\s[0-9]{4})\s(?<note>[0-9]{4}\/[0-9]{2})\s(?<other>.+)");
 
                 EuropeanPatent europeanPatent = new();
 
@@ -569,7 +569,7 @@ namespace PL_Diamond_Maksim
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
-                    Match match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
+                    var match1 = Regex.Match(match.Groups["other"].Value.Trim(), @"(?<kind>\D+)(?<number>\d+)\s(?<code>[A-Z]{1}[0-9]{1,2})");
                     if (match1.Success)
                     {
                         biblio.Publication.Number = match1.Groups["number"].Value.Trim();
@@ -582,7 +582,7 @@ namespace PL_Diamond_Maksim
                 {
                     Console.WriteLine($"{note}");
                 }
-                Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
                 legal.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
 
                 biblio.EuropeanPatents.Add(europeanPatent);
@@ -591,7 +591,7 @@ namespace PL_Diamond_Maksim
             }
             else if (subCode is "51")
             {
-                Match match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>\D.+)\.?");
+                var match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"\((?<kind>[A-Z]\d+)\).+\)\s(?<num>\d+)\s(?<leNote>\D.+)\.?");
 
                 if (match.Success)
                 {
@@ -606,12 +606,12 @@ namespace PL_Diamond_Maksim
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
-                    Match match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
+                    var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
                     legal.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
                 }
                 else
                 {
-                    Match matchNew = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    var matchNew = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                         @"\((?<kind>\D\d).+?(?<num>\d+)\s(?<ledate>.+?)\s(?<note>\D+)\.?");
 
                     if (matchNew.Success)
@@ -640,7 +640,7 @@ namespace PL_Diamond_Maksim
         {
             string fullText = null;
 
-            foreach (XElement text in xElements)
+            foreach (var text in xElements)
             {
                 fullText += text.Value.Trim() + " ";
             }
@@ -648,7 +648,7 @@ namespace PL_Diamond_Maksim
         }
         internal string MakeCountryCode(string code)
         {
-            string countryCode = code switch
+            var countryCode = code switch
             {
                 "Niemcy" =>"DE",
                 "Malta" => "MT",
@@ -695,15 +695,15 @@ namespace PL_Diamond_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

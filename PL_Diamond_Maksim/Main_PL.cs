@@ -5,15 +5,16 @@ namespace PL_Diamond_Maksim
 {
     class Main_PL
     {
-        private static readonly string Path = @"D:\LENS\PL\PL_20220801_31W";
-        private static readonly string SubCode = "51";
-        private static readonly string NewOrOld = "new";  // new / old
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
-        static void Main(string[] args)
+        private const string Path = @"D:\LENS\PL\PL_20220801_31W";
+        private const string SubCode = "51";
+        private const string NewOrOld = "new"; // new / old
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
+
+        private static void Main()
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = SubCode switch
+            var convertedPatents = SubCode switch
             {
                 "10" => methods.Start(Path, SubCode, NewOrOld),
                 "25" => methods.Start(Path, SubCode, NewOrOld),
