@@ -15,38 +15,37 @@ namespace Diamond_RO_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-        private int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
-        private readonly string I11 = "(11)";
-        private readonly string I51 = "(51)";
-        private readonly string I21 = "(21)";
-        private readonly string I22 = "(22)";
-        private readonly string I41 = "(41)";
-        private readonly string I71 = "(71)";
-        private readonly string I72 = "(72)";
-        private readonly string I73 = "(73)";
-        private readonly string I74 = "(74)";
-        private readonly string I86 = "(86)";
-        private readonly string I87 = "(87)";
-        private readonly string I30 = "(30)";
-        private readonly string I54 = "(54)";
-        private readonly string I57 = "(57)";
-        private readonly string I57n = "(57n)";
-        private readonly string I45 = "(45)";
-        private readonly string I56 = "(56)";
-        private readonly string I95 = "(95)";
-        private readonly string I96 = "(96)";
-        private readonly string I92 = "(92)";
-        private readonly string I93 = "(93)";
-        private readonly string I97 = "(97)";
-        private readonly string I80 = "(80)";
-        private readonly string I84 = "(84)";
-        private readonly string I66 = "(66)";
-        private readonly string I67 = "(67)";
-        private readonly string I68 = "(68)";
+        private const string I11 = "(11)";
+        private const string I51 = "(51)";
+        private const string I21 = "(21)";
+        private const string I22 = "(22)";
+        private const string I41 = "(41)";
+        private const string I71 = "(71)";
+        private const string I72 = "(72)";
+        private const string I73 = "(73)";
+        private const string I74 = "(74)";
+        private const string I86 = "(86)";
+        private const string I87 = "(87)";
+        private const string I30 = "(30)";
+        private const string I54 = "(54)";
+        private const string I57 = "(57)";
+        private const string I57n = "(57n)";
+        private const string I45 = "(45)";
+        private const string I56 = "(56)";
+        private const string I95 = "(95)";
+        private const string I96 = "(96)";
+        private const string I92 = "(92)";
+        private const string I93 = "(93)";
+        private const string I97 = "(97)";
+        private const string I80 = "(80)";
+        private const string I84 = "(84)";
+        private const string I66 = "(66)";
+        private const string I67 = "(67)";
+        private const string I68 = "(68)";
         
-
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
             List<Diamond.Core.Models.LegalStatusEvent> events = new();
@@ -66,7 +65,7 @@ namespace Diamond_RO_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -235,10 +234,18 @@ namespace Diamond_RO_Maksim
 
                     var notes = Regex.Split(MakeText(xElements), @"(?=a\s\d{4})").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("a 2")).ToList();
 
-                    foreach (var note in notes)
-                    {
-                        events.Add(MakeConvertedPatent(note, subCode, "FA"));
-                    }
+                    events.AddRange(notes.Select(note => MakeConvertedPatent(note, subCode, "FA")));
+                }
+                else if (subCode is "5")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("5. Transmiteri de drepturi înregistrate la Oficiul de Stat"))
+                        .TakeWhile(val => !val.Value.StartsWith("6. Modificãri în situaþia juridicã a brevetelor de invenþie"))
+                        .ToList();
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=RO\s?\/\s?[A-Z]{2}.+)").Where(x => !string.IsNullOrEmpty(x) && x.StartsWith("RO")).ToList();
+
+                    events.AddRange(notes.Select(note => MakeConvertedPatent(note, subCode, "PC")));
                 }
             }
             return events;
@@ -258,11 +265,11 @@ namespace Diamond_RO_Maksim
         {
             Diamond.Core.Models.LegalStatusEvent legalStatus = new()
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 CountryCode = "RO",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = id++,
+                Id = _id++,
                 LegalEvent = new(),
                 NewBiblio = new ()
             };
@@ -274,7 +281,75 @@ namespace Diamond_RO_Maksim
             };
 
             CultureInfo cultureInfo = new("RU-ru");
-            if (subCode is "11")
+            if (subCode == "5")
+            {
+                var match = Regex.Match(note.Replace("Brevet de", "")
+                    .Replace("Nr. cerere de", "")
+                    .Replace("Titular", "")
+                    .Replace("Succesor în drepturi", "")
+                    .Replace("inventie nr.", "")
+                    .Replace("brevet de", "")
+                    .Replace("invenþie", "").Trim(), @"(?<pNum>RO\/[A-Z]{2}\s\d{7})\s?(?<aNum>\d+\.?\d+)\s?\(73\)(?<old>.+)\(73\)(?<new>.+)", RegexOptions.Singleline);
+
+                if (match.Success)
+                {
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+                    biblio.EuropeanPatents.Add(new EuropeanPatent()
+                    {
+                        AppNumber = match.Groups["aNum"].Value.Trim()
+                    });
+
+                    var oldAssignees = Regex.Split(match.Groups["old"].Value.Trim(), @";")
+                        .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                    foreach (var assignee in oldAssignees)
+                    {
+                        var matchAssignee = Regex.Match(assignee.Replace("\r", "").Replace("\n", " ").Trim(),
+                            @"(?<name>.+?),(?<adress>.+)\s(?<code>[A-Z]{2})");
+
+                        if (matchAssignee.Success)
+                        {
+                            biblio.Assignees.Add(new PartyMember()
+                            {
+                                Country = matchAssignee.Groups["code"].Value.Trim(),
+                                Address1 = matchAssignee.Groups["adress"].Value.TrimEnd(',').Trim(),
+                                Name = matchAssignee.Groups["name"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{assignee} --- old is not matched");
+                    }
+
+                    var newAssignees = Regex.Split(match.Groups["new"].Value.Trim(), @";")
+                        .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                    foreach (var assignee in newAssignees)
+                    {
+                        var matchAssignee = Regex.Match(assignee.Replace("\r", "").Replace("\n", " ").Trim(),
+                            @"(?<name>.+?),(?<adress>.+)\s(?<code>[A-Z]{2})");
+
+                        if (matchAssignee.Success)
+                        {
+                            legalStatus.NewBiblio.Assignees.Add(new PartyMember()
+                            {
+                                Country = matchAssignee.Groups["code"].Value.Trim(),
+                                Address1 = matchAssignee.Groups["adress"].Value.TrimEnd(',').Trim(),
+                                Name = matchAssignee.Groups["name"].Value.Trim()
+                            });
+                        }
+                        else Console.WriteLine($"{assignee} --- new is not matched");
+                    }
+
+                    var legalDate = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
+                    if (legalDate.Success)
+                    {
+                        legalStatus.LegalEvent.Date = legalDate.Value.Trim().Insert(4,"/").Insert(7,"/");
+                    }
+                }
+                else Console.WriteLine($"{note} - not matched");
+
+                legalStatus.Biblio = biblio;
+            }
+            else if (subCode is "11")
             {
                 var commonMatch = Regex.Match(note, @"(?<pNum>RO\/EP\s?.+?)\s(?<aNum>\d.+)\s?\(73\)(?<assignees>.+)\s?\(73\)(?<newAssignees>.+)", RegexOptions.Singleline);
 
@@ -1589,7 +1664,7 @@ namespace Diamond_RO_Maksim
                 biblio.EuropeanPatents.Add(europeanPatent);
                 legalStatus.Biblio = biblio;
 
-                var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                 if (date.Success)
                 {
                     legalStatus.LegalEvent.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -1751,7 +1826,7 @@ namespace Diamond_RO_Maksim
                         }
                     }
 
-                    var match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                     if (match2.Success)
                     {
                         legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -1783,7 +1858,7 @@ namespace Diamond_RO_Maksim
                             }
                         }
 
-                        var match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                        var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                         if (match2.Success)
                         {
                             legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -1818,7 +1893,7 @@ namespace Diamond_RO_Maksim
                         }
                     }
 
-                    var match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                     if (match2.Success)
                     {
                         legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -1849,7 +1924,7 @@ namespace Diamond_RO_Maksim
                             }
                         }
 
-                        var match2 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                        var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                         if (match2.Success)
                         {
                             legalStatus.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -1857,10 +1932,6 @@ namespace Diamond_RO_Maksim
                     }
                     else Console.WriteLine($"{note}");
                 }
-
-
-
-               
                 legalStatus.Biblio = biblio;
             }
             else if(subCode == "27" || subCode == "29")
@@ -1993,14 +2064,8 @@ namespace Diamond_RO_Maksim
             {
                 var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : // продакшен
+                    @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // стейдж
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

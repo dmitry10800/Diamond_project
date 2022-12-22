@@ -4,28 +4,29 @@ namespace Diamond_RO_Maksim
 {
     class Main_RO
     {
-        private const string path = @"D:\LENS\RO\RO_20221028_10_E";
-        private const string subCode = "12";
+        private const string Path = @"D:\LENS\RO\RO_20221129_11_E";
+        private const string SubCode = "5";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        static void Main()
         {
             Methods methods = new();
 
-            var convertedPatents = subCode switch
+            var convertedPatents = SubCode switch
             {
-                "11" => methods.Start(path, subCode),
-                "12" => methods.Start(path, subCode),
-                "13" => methods.Start(path, subCode),
-                "14" => methods.Start(path, subCode),
-                "16" => methods.Start(path, subCode),
-                "17" => methods.Start(path, subCode),
-                "20" => methods.Start(path, subCode),
-                "22" => methods.Start(path, subCode),
-                "23" => methods.Start(path, subCode),
-                "24" => methods.Start(path, subCode),
-                "27" => methods.Start(path, subCode),
-                "29" => methods.Start(path, subCode),
+                "5" => methods.Start(Path, SubCode),
+                "11" => methods.Start(Path, SubCode),
+                "12" => methods.Start(Path, SubCode),
+                "13" => methods.Start(Path, SubCode),
+                "14" => methods.Start(Path, SubCode),
+                "16" => methods.Start(Path, SubCode),
+                "17" => methods.Start(Path, SubCode),
+                "20" => methods.Start(Path, SubCode),
+                "22" => methods.Start(Path, SubCode),
+                "23" => methods.Start(Path, SubCode),
+                "24" => methods.Start(Path, SubCode),
+                "27" => methods.Start(Path, SubCode),
+                "29" => methods.Start(Path, SubCode),
                 _ => null
             };
 
