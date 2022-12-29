@@ -337,6 +337,7 @@ namespace Diamond_CO_Maksim
         {
             "ESTADOS UNIDOS DE AMÉRICA" => "US",
             "HUNGRIA" => "HU",
+            "UCRANIA" => "UA",
             "BRASIL" => "BR",
             "URUGUAY" => "UY",
             "INTERNATIONAL BUREAU" => "IB",
