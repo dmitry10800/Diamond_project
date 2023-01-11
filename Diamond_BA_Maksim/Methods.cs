@@ -41,6 +41,15 @@ namespace Diamond_BA_Maksim
                        .TakeWhile(val => !val.Value.StartsWith("OBJAVLJIVANJE ZAHTJEVA A KONSEZUALNI PATENT"))
                        .ToList();
 
+                    if (xElements.Count == 0)
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATE TA UPISANIH U REGISTAR PATENATA"))
+                            .TakeWhile(val => !val.Value.StartsWith("OBJAVLJIVANJE ZAHTJE A ZA KONSEZUALNI PATENT"))
+                            .TakeWhile(val => !val.Value.StartsWith("OBJAVLJIVANJE ZAHTJEVA A KONSEZUALNI PATENT"))
+                            .ToList();
+                    }
+                    
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\D{2}\/.+)", RegexOptions.Singleline)
                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
