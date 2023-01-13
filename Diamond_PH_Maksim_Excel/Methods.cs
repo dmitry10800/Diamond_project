@@ -41,7 +41,7 @@ namespace Diamond_PH_Maksim_Excel
 
                     if (subCode is "7")
                     {
-                        for (int row = 0; row <= sheet.LastRowNum; row++)
+                        for (var row = 0; row <= sheet.LastRowNum; row++)
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
@@ -94,7 +94,7 @@ namespace Diamond_PH_Maksim_Excel
                     }
                     else if (subCode == "5")
                     {
-                        for (int row = 1; row <= sheet.LastRowNum; row++)
+                        for (var row = 1; row <= sheet.LastRowNum; row++)
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
@@ -112,11 +112,11 @@ namespace Diamond_PH_Maksim_Excel
 
                             statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
 
-                            List<string> aasigneers = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var aasigneers = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string assigneer in aasigneers)
+                            foreach (var assigneer in aasigneers)
                             {
-                                Match match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
+                                var match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
 
                                 if (match73.Success)
                                 {
@@ -126,7 +126,19 @@ namespace Diamond_PH_Maksim_Excel
                                         Country = match73.Groups["code"].Value.Trim()
                                     });
                                 }
-                                else Console.WriteLine($"{assigneer} --- not process");
+                                else
+                                {
+                                    var match73Second = Regex.Match(assigneer, @"(?<name>.+)\((?<code>\D{2})");
+                                    if (match73Second.Success)
+                                    {
+                                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                        {
+                                            Name = match73Second.Groups["name"].Value.Trim(),
+                                            Country = match73Second.Groups["code"].Value.Trim()
+                                        });
+                                    }
+                                    else Console.WriteLine($"{assigneer} --- not process");
+                                }
                             }
 
                             var pubDate = sheet.GetRow(row).GetCell(2);
@@ -160,7 +172,7 @@ namespace Diamond_PH_Maksim_Excel
                     }
                     else if (subCode is "12")
                     {
-                        for (int row = 1; row <= sheet.LastRowNum; row++)
+                        for (var row = 1; row <= sheet.LastRowNum; row++)
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
@@ -180,7 +192,7 @@ namespace Diamond_PH_Maksim_Excel
 
                         var applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @"and").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string applicant in applicantsList)
+                        foreach (var applicant in applicantsList)
                         {
                             var applicantMatch = Regex.Match(applicant.Trim(), @"(?<name>.+)\s?\[(?<code>\D{2})");
 
@@ -256,7 +268,7 @@ namespace Diamond_PH_Maksim_Excel
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
+                var result = httpClient.PostAsync("", content).Result;
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
         }

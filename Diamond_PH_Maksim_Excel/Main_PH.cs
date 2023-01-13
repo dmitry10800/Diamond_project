@@ -2,7 +2,7 @@
 {
     internal class Main_PH
     {
-        private const string Path = @"D:\LENS\PH\PH_20220930_111\5";
+        private const string Path = @"D:\LENS\PH\PH_20230111_04";
         private const string SubCode = "5";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
@@ -10,7 +10,7 @@
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
+            var patents = SubCode switch
             {
                 "5" => methods.Start(Path, SubCode),
                 "7" => methods.Start(Path, SubCode),
