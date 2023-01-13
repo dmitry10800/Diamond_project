@@ -97,9 +97,12 @@ namespace Diamond_UG_Maksim
 
                                 if (match.Success)
                                 {
+                                    var country = match.Groups["code"].Value.Trim();
+                                    if (country is "UK") country = "GB";
+                                    
                                     legalStatus.Biblio.Priorities.Add(new Priority()
                                     {
-                                        Country = match.Groups["code"].Value.Trim(),
+                                        Country = country,
                                         Number = match.Groups["num"].Value.Trim(),
                                         Date = match.Groups["date"].Value.Replace(".", "/").Trim()
                                     });
@@ -143,16 +146,19 @@ namespace Diamond_UG_Maksim
                                     var matchApplicant = Regex.Match(applicant.Trim(), @"(?<name>.+):(?<adress>.+),\s(?<code>\D{2}$)");
                                     if (matchApplicant.Success)
                                     {
+                                        var country = matchApplicant.Groups["code"].Value.Trim();
+                                        if (country is "UK") country = "GB";
+
                                         legalStatus.Biblio.Applicants.Add(new PartyMember()
                                         {
-                                            Country = matchApplicant.Groups["code"].Value.Trim(),
+                                            Country = country,
                                             Name = matchApplicant.Groups["name"].Value.Trim(),
                                             Address1 = matchApplicant.Groups["adress"].Value.Trim()
                                         });
 
                                         legalStatus.Biblio.Assignees.Add(new PartyMember()
                                         {
-                                            Country = matchApplicant.Groups["code"].Value.Trim(),
+                                            Country = country,
                                             Name = matchApplicant.Groups["name"].Value.Trim(),
                                             Address1 = matchApplicant.Groups["adress"].Value.Trim()
                                         });
@@ -204,9 +210,12 @@ namespace Diamond_UG_Maksim
                                 var match = Regex.Match(inventor.Trim(), @"(?<name>.+):(?<adress>.+),\s(?<code>\D{2}$)");
                                 if (match.Success)
                                 {
+                                    var country = match.Groups["code"].Value.Trim();
+                                    if (country is "UK") country = "GB";
+
                                     legalStatus.Biblio.Inventors.Add(new PartyMember()
                                     {
-                                        Country = match.Groups["code"].Value.Trim(),
+                                        Country = country,
                                         Name = match.Groups["name"].Value.Trim(),
                                         Address1 = match.Groups["adress"].Value.Trim()
                                     });
@@ -235,27 +244,32 @@ namespace Diamond_UG_Maksim
                     }
                     else if (inid.StartsWith("(74)"))
                     {
-                        var match = Regex.Match(inid.Replace("(74) Representative Name","").Replace("\r","").Replace("\n"," ").Trim(), 
-                            @"(?<name>.+)\s:(?<adress>.+)");
+                        var agents = Regex.Split(inid.Replace("(74) Representative Name", "").Trim(), "\n")
+                            .Where(_ => !string.IsNullOrWhiteSpace(_)).ToList();
 
-                        if (match.Success)
+                        foreach (var agent in agents)
                         {
-                            legalStatus.Biblio.Agents.Add(new PartyMember()
-                            {
-                                Name = match.Groups["name"].Value.Trim(),
-                                Address1 = match.Groups["adress"].Value.Trim()
-                            });
-                        }
-                        else
-                        {
-                            var name = inid.Replace("(74) Representative Name ", "").Replace("\r", "").Replace("\n", "").Trim();
+                            var match = Regex.Match(agent.Trim(), @"(?<name>.+)\s:(?<adress>.+)");
 
-                            if (!string.IsNullOrWhiteSpace(name))
+                            if (match.Success)
                             {
                                 legalStatus.Biblio.Agents.Add(new PartyMember()
                                 {
-                                    Name = name
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim()
                                 });
+                            }
+                            else
+                            {
+                                var name = agent.Trim();
+
+                                if (!string.IsNullOrWhiteSpace(name))
+                                {
+                                    legalStatus.Biblio.Agents.Add(new PartyMember()
+                                    {
+                                        Name = name
+                                    });
+                                }
                             }
                         }
                     }
@@ -264,11 +278,30 @@ namespace Diamond_UG_Maksim
                         var titles = Regex.Split(inid.Replace("(54) Title", "").Trim(), @"\n")
                             .Where(_ => !string.IsNullOrWhiteSpace(_)).ToList();
 
-                        legalStatus.Biblio.Titles.Add(new Title()
+                        if (titles.Count > 1)
                         {
-                            Text = titles[0],
-                            Language = "EN"
-                        });
+                            var firstWord = titles[0].Split()[0];
+                            var secondWord = titles[1].Split()[0];
+
+                            if (firstWord == secondWord)
+                            {
+                                legalStatus.Biblio.Titles.Add(new Title()
+                                {
+                                    Text = titles[0],
+                                    Language = "EN"
+                                });
+                            }
+                            else
+                            {
+                                legalStatus.Biblio.Titles.Add(new Title()
+                                {
+                                    Text = titles[0] + " " + titles[1],
+                                    Language = "EN"
+                                });
+                            }
+                        }
+
+
                     }
                     else Console.WriteLine($"{inid}");
                 }

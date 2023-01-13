@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        private const string Path = @"D:\LENS\UG\UG_20221231_01UM";
+        private const string Path = @"D:\lens\ug\ug_20221231_01um";
         private const string SubCode = "4";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
