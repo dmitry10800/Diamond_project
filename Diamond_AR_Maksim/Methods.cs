@@ -541,7 +541,9 @@ namespace Diamond_AR_Maksim
                     if (inid.StartsWith("(30)"))
                     {
                         List<string> priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", "").Replace("(30) Prioridad Convenio de Paris ","")
-                            .Replace("(30) Prioridad convenio de Paris ", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            .Replace("(30) Prioridad convenio de Paris ", "")
+                            .Replace("(30) Prioridad Convenio de París ", "")
+                            .Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (string priority in priorities)
                         {
@@ -712,7 +714,7 @@ namespace Diamond_AR_Maksim
                         legal.Note = legal.Note + "|| (74) Agente/s Nro. | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
 
 
-                        noteTranslation.Tr = noteTranslation.Tr + "|| Ordinary processing publication || (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
+                        noteTranslation.Tr = noteTranslation.Tr + "|| (74) Agent/s number | " + inid.Replace("\r", "").Replace("\n", " ").Replace("(74) Agente/s", "").Trim();
                     }
                     else
                     if (inid.StartsWith("(45)"))
