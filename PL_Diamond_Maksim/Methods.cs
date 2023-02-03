@@ -94,6 +94,20 @@ namespace PL_Diamond_Maksim
                             convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
                         }
                     }
+                    else if (subCode == "33")
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .SkipWhile(val => !val.Value.StartsWith("Poniższe zestawienie zawiera kolejno: numer wygasłego prawa" + "\n" + "ochronnego, datę wygaśnięcia oraz zakres wygaśnięcia."))
+                            .TakeWhile(val => !val.Value.StartsWith("Wpisy i zmiany w rejestrze nieuwzględnione"))
+                            .ToList();
+
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([A-Z]\d\).+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(")).ToList();
+
+                        foreach (var note in notes)
+                        {
+                            convertedPatents.Add(SplitNoteNew(note, subCode, "MZ"));
+                        }
+                    }
                     else if (subCode == "47")
                     {
                         xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -548,6 +562,31 @@ namespace PL_Diamond_Maksim
 
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
+            }
+            else if (subCode == "33")
+            {
+                var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), 
+                    @"\((?<pKind>\D\d).+?(?<pNum>\d+)\s(?<evDate>\d{4}\s\d{2}\s\d{2})\s(?<note>.+)");
+
+                if (match.Success)
+                {
+                    biblio.Publication.Kind = match.Groups["pKind"].Value.Trim();
+                    biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
+
+                    legal.Date = match.Groups["evDate"].Value.Replace(" ", "/").Trim();
+
+                    legal.Note = "|| Zakres wygaśnięcia | " + match.Groups["note"].Value.Trim();
+                    legal.Language = "PL";
+
+                    noteTranslation.Language = "EN";
+                    noteTranslation.Tr = "|| Expiry range | The right has expired completely.";
+                    noteTranslation.Type = "INID";
+                    legal.Translations = new List<NoteTranslation> { noteTranslation };
+
+                    legalEvent.LegalEvent = legal;
+                    legalEvent.Biblio = biblio;
+                }
+                else Console.WriteLine(note + " -- not matched");
             }
             else if(subCode == "47")
             {

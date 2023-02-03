@@ -5,8 +5,8 @@ namespace PL_Diamond_Maksim
 {
     class Main_PL
     {
-        private const string Path = @"D:\LENS\PL\PL_20220801_31W";
-        private const string SubCode = "51";
+        private const string Path = @"D:\LENS\PL\PL_20230130_05W";
+        private const string SubCode = "33";
         private const string NewOrOld = "new"; // new / old
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
@@ -20,6 +20,7 @@ namespace PL_Diamond_Maksim
                 "25" => methods.Start(Path, SubCode, NewOrOld),
                 "31" => methods.Start(Path, SubCode, NewOrOld),
                 "32" => methods.Start(Path, SubCode, NewOrOld),
+                "33" => methods.Start(Path, SubCode, NewOrOld),
                 "46" => methods.Start(Path, SubCode, NewOrOld),
                 "47" => methods.Start(Path, SubCode, NewOrOld),
                 "51" => methods.Start(Path, SubCode, NewOrOld),
