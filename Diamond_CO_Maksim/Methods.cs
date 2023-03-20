@@ -364,6 +364,7 @@ namespace Diamond_CO_Maksim
             "SINGAPUR" => "SG",
             "FINLANDIA" => "FI",
             "TURQUIA" => "TR",
+            "POLONIA" => "PL",
             "PAISES BAJOS" => "NL",
             "REINO UNIDO" => "GB",
             "FEDERACION DE RUSIA" => "RU",
