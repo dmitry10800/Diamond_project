@@ -45,7 +45,16 @@ namespace Diamond_RO_Maksim
         private const string I66 = "(66)";
         private const string I67 = "(67)";
         private const string I68 = "(68)";
-        
+
+        private readonly Regex _classificationPattern = new(@"(?<Classification>.+)\s\((?<Version>.+)\)");
+        private readonly Regex _publicationInfoPattern = new(@"(?<PubNumber>.+)\s*(?<PubKind>[A-Z]{1}\d?)");
+        private readonly Regex _europeanAppPattern = new(@"(?<AppNumber>.+)\s(?<AppDate>\d{2}.\d{2}.\d{4})");
+        private readonly Regex _europeanPubPattern = new(@"^(?<PubNumber>\d+)\s(?<NoteDate>\d{2}.\d{2}.\d{4})");
+        private readonly Regex _priorityPattern = new(@"^(?<CountryPriority>\D{2})\s(?<NumberPriority>.+)\s(?<DatePriority>\d{2}.\d{2}.\d{4})");
+        private readonly Regex _intConventionPattern = new(@"(?<PctPubNumber>.+),\s(?<PctPubDate>\d{2}.\d{2}.\d{4})");
+        private readonly Regex _personPattern = new(@"(?<Name>.+),\s(?<Adress>.+),\s(?<Country>\D{2})$");
+        private readonly Regex _datePattern = new(@"\d{2}.\d{2}.\d{4}");
+
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
             List<Diamond.Core.Models.LegalStatusEvent> events = new();
@@ -136,7 +145,7 @@ namespace Diamond_RO_Maksim
 
                     foreach (var note in notes)
                     {
-                        events.Add(MakeConvertedPatent(note, subCode, "BZ"));
+                        events.Add(GetPatent16SubCode(note, subCode, "BZ"));
                     }
 
                 }
@@ -280,7 +289,7 @@ namespace Diamond_RO_Maksim
                 EuropeanPatents = new()
             };
 
-            CultureInfo cultureInfo = new("RU-ru");
+            var cultureInfo = new CultureInfo("ru-Ru");
             if (subCode == "5")
             {
                 var match = Regex.Match(note.Replace("Brevet de", "")
@@ -952,259 +961,6 @@ namespace Diamond_RO_Maksim
 
                 legalStatus.Biblio = biblio;
 
-            }
-            else if (subCode == "16")
-            {
-                biblio.EuropeanPatents = new();
-                EuropeanPatent europeanPatent = new();
-                biblio.IntConvention = new();
-                biblio.IntConvention.DesignatedStates = new();
-
-                foreach (var inid in MakeInids16(note))
-                {
-                    if (inid.StartsWith(I51))
-                    {
-                        biblio.Ipcs = new();
-
-                        var ipcs = Regex.Split(inid.Replace(I51, "").Trim(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        foreach (var ipc in ipcs)
-                        {
-                            var match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<version>[0-9]{4}.[0-9]{2})\)?");
-
-                            if (match.Success)
-                            {
-                                biblio.Ipcs.Add(new Ipc
-                                {
-                                    Class = match.Groups["class"].Value.Trim(),
-                                    Date = match.Groups["version"].Value.Trim()
-                                });
-                            }
-                            else
-                            {
-                                biblio.Ipcs.Add(new Ipc
-                                {
-                                    Class = ipc.Trim(),
-                                    Date = "2006.01"
-                                });
-                            }
-
-                        }
-                    }
-                    else
-                    if (inid.StartsWith(I11))
-                    {
-                        var match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<number>.+)\s(?<kind>[A-Z]{1}\d+)");
-
-                        if (match.Success)
-                        {
-                            biblio.Publication.Number = match.Groups["number"].Value.Trim();
-                            biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
-                        }
-                        else Console.WriteLine($"{inid} не разбился");
-                    }
-                    else
-                    if (inid.StartsWith(I96))
-                    {
-                        var match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
-
-                        if (match.Success)
-                        {
-                            europeanPatent.AppNumber = match.Groups["number"].Value.Trim();
-                            europeanPatent.AppDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
-                        }
-                        else Console.WriteLine($"{inid} не разбился в 96");
-                    }
-                    else
-                    if (inid.StartsWith(I97))
-                    {
-                        var match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<number>.+)\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
-
-                        if (match.Success)
-                        {
-                            europeanPatent.PubNumber = match.Groups["number"].Value.Trim();
-
-                            legalStatus.LegalEvent = new LegalEvent
-                            {
-                                Language = "EN",
-                                Note = "|| Date of publication of EP application  | " + DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim()                            
-                            };
-                        }
-                        else Console.WriteLine($"{inid} не разбился в 97");
-                    }
-                    else
-                    if (inid.StartsWith(I80))
-                    {
-                        europeanPatent.PubDate = DateTime.Parse(inid.Replace(I80, "").Trim().TrimEnd(';'), cultureInfo).ToString("yyyy.MM.dd").Trim();
-
-                        biblio.EuropeanPatents.Add(europeanPatent);
-                    }
-                    else
-                    if (inid.StartsWith(I30))
-                    {
-                        biblio.Priorities = new();
-
-                        var priorities = Regex.Split(inid.Replace(I30, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        foreach (var priority in priorities)
-                        {
-                            var match = Regex.Match(priority.Trim(), @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>.+)");
-
-                            if (match.Success)
-                            {
-                                biblio.Priorities.Add(new Priority
-                                {
-                                    Country = match.Groups["code"].Value.Trim(),
-                                    Number = match.Groups["number"].Value.Trim(),
-                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
-                                });
-                            }
-                            else Console.WriteLine($"{priority} не разбился в 30");
-                        }
-                    }
-                    else
-                    if (inid.StartsWith(I84))
-                    {
-                        var designatedStates = Regex.Split(inid.Replace(I84, "").Trim(), @",\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        foreach (var item in designatedStates)
-                        {
-                            if (item.Length == 2)
-                            {
-                                biblio.IntConvention.DesignatedStates.Add(item);
-                            }
-                            else
-                            if (item.Length == 3)
-                            {
-                                var tmp = item.Trim().TrimEnd(';');
-                                biblio.IntConvention.DesignatedStates.Add(tmp);
-                            }
-                            else
-                            {
-                                var designatedStates1 = Regex.Split(inid.Replace(I84, "").Trim(), @"\s").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                                foreach (var item1 in designatedStates1)
-                                {
-                                    if (item1.Length == 2)
-                                    {
-                                        biblio.IntConvention.DesignatedStates.Add(item1);
-                                    }
-                                    else
-                                    if (item1.Length == 3)
-                                    {
-                                        var tmp1 = item1.Trim().TrimEnd(';');
-                                        biblio.IntConvention.DesignatedStates.Add(tmp1);
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"{item1}");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    if (inid.StartsWith(I73))
-                    {
-                        biblio.Assignees = new();
-
-                        var match = Regex.Match(inid.Replace(I73, "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
-
-                        if (match.Success)
-                        {
-                            biblio.Assignees.Add(new PartyMember
-                            {
-                                Name = match.Groups["name"].Value.Trim(),
-                                Address1 = match.Groups["adress"].Value.Trim(),
-                                Country = match.Groups["country"].Value.Trim()
-                            });
-                        }
-                        else Console.WriteLine($"{inid} Не разбился в 73");
-                    }
-                    else
-                    if (inid.StartsWith(I74))
-                    {
-                        var match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
-                        if (match.Success)
-                        {
-                            biblio.Agents = new List<PartyMember>
-                            {
-                                new PartyMember
-                                {
-                                    Name = match.Groups["name"].Value.Trim(),
-                                    Address1 = match.Groups["adress"].Value.Trim(),
-                                    Country = "RO"
-                                }
-                            };
-                        }
-                        else Console.WriteLine($"{inid} Не разделился в 74");
-                    }
-                    else
-                    if (inid.StartsWith(I72))
-                    {
-                        biblio.Inventors = new();
-
-                        var inventors = Regex.Split(inid.Replace(I72, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        foreach (var inventor in inventors)
-                        {
-                            var match = Regex.Match(inventor.Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>[A-Z]{2})");
-
-                            if (match.Success)
-                            {
-                                biblio.Inventors.Add(new PartyMember
-                                {
-                                    Name = match.Groups["name"].Value.Trim(),
-                                    Address1 = match.Groups["adress"].Value.Trim(),
-                                    Country = match.Groups["country"].Value.Trim()
-                                });
-                            }
-                            else Console.WriteLine($"{inventor} не разбился в 72");
-                        }
-                    }
-                    else
-                    if (inid.StartsWith(I54))
-                    {
-                        biblio.Titles = new List<Title>
-                        {
-                            new Title
-                            {
-                                Text = inid.Replace(I54, "").Trim(),
-                                Language = "RO"
-                            }
-                        };
-                    }
-                    else
-                    if (inid.StartsWith(I87))
-                    {
-                        var match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{2}\/[0-9]{2}\/[0-9]{4})");
-
-                        if (match.Success)
-                        {
-
-                            biblio.IntConvention.PctPublNumber = match.Groups["number"].Value.Trim();
-                            biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["date"].Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim();
-
-                        }
-                        else Console.WriteLine($"{inid} не разбился в 87");
-                    }
-                    else
-                    if (inid.StartsWith(I41))
-                    {
-                        var match = Regex.Match(inid.Replace(I41, ""), @"([0-9]{2}.[0-9]{2}.[0-9]{4})");
-                        if (match.Success)
-                        {
-                            biblio.DOfPublication = new()
-                            {
-                                date_41 = DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy.MM.dd").Trim()
-                            };
-
-                        }
-                        else Console.WriteLine($"{inid} не разбился в 41");
-                    }
-                    else Console.WriteLine($"{inid} Не обработан");
-                }
-                legalStatus.Biblio = biblio;
             }
             else if (subCode == "17")
             {
@@ -1974,7 +1730,155 @@ namespace Diamond_RO_Maksim
             }
             return legalStatus;
         }
+        internal Diamond.Core.Models.LegalStatusEvent GetPatent16SubCode(string note, string subCode, string sectionCode)
+        {
+            Diamond.Core.Models.LegalStatusEvent record = new()
+            {
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
+                CountryCode = "RO",
+                SubCode = subCode,
+                SectionCode = sectionCode,
+                Id = _id++,
+                LegalEvent = new(),
+                Biblio = new()
+                {
+                    IntConvention = new IntConvention()
+                }
+            };
 
+            var cultureInfo = new CultureInfo("ru-Ru");
+            var europeanPatent = new EuropeanPatent();
+
+            foreach (var rawRecord in MakeInids16(note))
+            {
+                var cleanRawRecord = Clean(rawRecord).Trim();
+
+                if (rawRecord.StartsWith(I51))
+                {
+                    var ipcs = Regex.Split(cleanRawRecord, @",").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    foreach (var ipc in ipcs)
+                    {
+                        var match = _classificationPattern.Match(ipc.Trim());
+                        if (match.Success)
+                        {
+                            record.Biblio.Ipcs.Add(new Ipc
+                            {
+                                Class = match.Groups["Classification"].Value.Trim(),
+                                Date = match.Groups["Version"].Value.Trim()
+                            });
+                        }
+                    }
+                }
+                if (rawRecord.StartsWith(I11))
+                {
+                    var match = _publicationInfoPattern.Match(cleanRawRecord);
+                    if (match.Success)
+                    {
+                        record.Biblio.Publication.Number = match.Groups["PubNumber"].Value;
+                        record.Biblio.Publication.Kind = match.Groups["PubKind"].Value;
+                    }
+                }
+                if (rawRecord.StartsWith(I96))
+                {
+                    var match = _europeanAppPattern.Match(cleanRawRecord);
+                    if (match.Success)
+                    {
+                        europeanPatent.AppNumber = match.Groups["AppNumber"].Value;
+                        europeanPatent.AppDate = DateTime.Parse(match.Groups["AppDate"].Value, cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                }
+                if (rawRecord.StartsWith(I97))
+                {
+                    var match = _europeanPubPattern.Match(cleanRawRecord);
+                    if (match.Success)
+                    {
+                        europeanPatent.PubNumber = match.Groups["PubNumber"].Value;
+
+                        record.LegalEvent.Note = @"|| Date of publication of EP application | " +
+                                                 DateTime.Parse(match.Groups["NoteDate"].Value, cultureInfo)
+                                                     .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        record.LegalEvent.Language = "EN";
+                    }
+
+                }
+                if (rawRecord.StartsWith(I30))
+                {
+                    var priorities = Regex.Split(cleanRawRecord, @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    foreach (var priority in priorities)
+                    {
+                        var match = _priorityPattern.Match(priority);
+                        if (match.Success)
+                        {
+                            record.Biblio.Priorities.Add(new Priority()
+                            {
+                                Country = match.Groups["CountryPriority"].Value,
+                                Number = match.Groups["NumberPriority"].Value,
+                                Date = DateTime.Parse(match.Groups["DatePriority"].Value, cultureInfo)
+                                    .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                            });
+                        }
+                    }
+                }
+                if (rawRecord.StartsWith(I80))
+                {
+                    var match = _datePattern.Match(cleanRawRecord);
+                    if (match.Success)
+                    {
+                        europeanPatent.PubDate =
+                            DateTime.Parse(match.Value, cultureInfo)
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                }
+                if (rawRecord.StartsWith(I84))
+                {
+                    var designatedStates = Regex.Split(cleanRawRecord, @",").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    foreach (var state in designatedStates)
+                    {
+                        var match = Regex.Match(state.Trim(), @"[A-Z]{2}");
+                        if (match.Success)
+                        {
+                            record.Biblio.IntConvention.DesignatedStates.Add(match.Value);
+                        }
+                    }
+                }
+                if (rawRecord.StartsWith(I87))
+                {
+                    var match = _intConventionPattern.Match(cleanRawRecord);
+                    if (match.Success)
+                    {
+                        record.Biblio.IntConvention.PctPublNumber = match.Groups["PctPubNumber"].Value;
+                        record.Biblio.IntConvention.PctPublDate = DateTime.Parse(match.Groups["PctPubDate"].Value, cultureInfo)
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                }
+                if (rawRecord.StartsWith(I73))
+                {
+                    record.Biblio.Assignees = ParsePersons(cleanRawRecord);
+                }
+                if (rawRecord.StartsWith(I72))
+                {
+                    record.Biblio.Inventors = ParsePersons(cleanRawRecord);
+                }
+                if (rawRecord.StartsWith(I74))
+                {
+                    record.Biblio.Agents = ParsePersons(cleanRawRecord);
+                }
+                if (rawRecord.StartsWith(I54))
+                {
+                    record.Biblio.Titles.Add(new Title
+                    {
+                        Text = cleanRawRecord,
+                        Language = "RO"
+                    });
+                }
+            }
+            record.Biblio.EuropeanPatents.Add(europeanPatent);
+
+            return record;
+        }
         internal List<string> MakeInids13 (string note)
         {
             var inid57 = note.Substring(note.IndexOf("(57)")).Replace("\r","").Replace("\n", " ").Trim();
@@ -2018,7 +1922,6 @@ namespace Diamond_RO_Maksim
 
             return inids;
         }
-
         internal List<string> MakeInids14(string note)
         {
             var inid11 = note.Replace("\r", "").Replace("\n", " ").Trim().Substring(note.IndexOf("(11)"), note.IndexOf("(51)")).Trim();
@@ -2031,9 +1934,7 @@ namespace Diamond_RO_Maksim
 
             return inids;
         }
-
         internal List<string> MakeInids16(string note) => Regex.Split(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
         internal List<string> MakeInids (string note, string subCode)
         {
             List<string> inids = new();
@@ -2057,7 +1958,48 @@ namespace Diamond_RO_Maksim
 
             return inids;
         }
+        public string Clean(string str)
+        {
+            str = str.Replace("ª", "Ş")
+                .Replace("º", "ş")
+                .Replace("Þ", "Ţ");
+            return Regex.Replace(str, @"^\(\d{2}\)\s", string.Empty).Trim();
+        }
+        private List<PartyMember> ParsePersons(string str)
+        {
+            var persons = new List<PartyMember>();
 
+            var personsTmp = Regex.Split(str, @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+            foreach (var assignee in personsTmp)
+            {
+                var match = _personPattern.Match(assignee);
+
+                if (match.Success)
+                {
+                    persons.Add(new PartyMember()
+                    {
+                        Name = match.Groups["Name"].Value,
+                        Address1 = match.Groups["Adress"].Value,
+                        Country = match.Groups["Country"].Value
+                    });
+                }
+                else
+                {
+                    var matchAgent = Regex.Match(assignee, @"(?<Name>.+),\s(?<Adress>.+)");
+                    if (matchAgent.Success)
+                    {
+                        persons.Add(new PartyMember()
+                        {
+                            Name = matchAgent.Groups["Name"].Value,
+                            Address1 = matchAgent.Groups["Adress"].Value,
+                            Country = "RO"
+                        });
+                    }
+                }
+            }
+            return persons;
+        }
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)
@@ -2074,5 +2016,6 @@ namespace Diamond_RO_Maksim
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
+
     }
 }
