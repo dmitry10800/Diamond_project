@@ -4,8 +4,8 @@ namespace Diamond_RO_Maksim
 {
     class Main_RO
     {
-        private const string Path = @"D:\LENS\TET\RO\RO_20230228_02_E";
-        private const string SubCode = "17";
+        private const string Path = @"D:\LENS\TET\RO\10-11\RO_20230228_02_E";
+        private const string SubCode = "12";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main()

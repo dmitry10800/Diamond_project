@@ -81,9 +81,17 @@ namespace Diamond_RO_Maksim
                 if (subCode is "11")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Modificare înregistratã privind brevetul de invenþie european cu"))
-                        .TakeWhile(val => !val.Value.StartsWith("Modificare nume/adresã mandatar:"))
+                        .SkipWhile(val => !val.Value.StartsWith("Modificări în situaţia juridică a brevetelor de invenţie europene cu efecte în România care au fost"))
+                        .TakeWhile(val => !val.Value.StartsWith("Modificare nume/adresă mandatar:"))
                         .ToList();
+
+                    if (xElements.Count == 0)
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .SkipWhile(val => !val.Value.StartsWith("Modificări în situaţia juridică a brevetelor de invenţie europene cu efecte în România"))
+                            .TakeWhile(val => !val.Value.StartsWith("Modificare nume/adresă mandatar:"))
+                            .ToList();
+                    }
 
                     var notes = Regex.Split(MakeText(xElements), @"(?=RO/EP.+)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("RO")).ToList();
 
@@ -375,7 +383,7 @@ namespace Diamond_RO_Maksim
                         .Where(x => !string.IsNullOrEmpty(x)).ToList();
                     foreach (var oldAssigner in oldAssigners)
                     {
-                        var match = Regex.Match(oldAssigner.Trim(), @"(?<name>.+?),(?<adress>.+)(?<code>[A-Z]{2})$");
+                        var match = Regex.Match(oldAssigner.Trim(), @"(?<name>.+?),(?<adress>.+)\(?(?<code>[A-Z]{2})");
                         if (match.Success)
                         {
                             biblio.Assignees.Add(new PartyMember()
@@ -393,7 +401,8 @@ namespace Diamond_RO_Maksim
                         .Where(x => !string.IsNullOrEmpty(x)).ToList();
                     foreach (var newAssigner in newAssigners)
                     {
-                        var match = Regex.Match(newAssigner.Trim(), @"(?<name>.+?),(?<adress>.+)(?<code>[A-Z]{2})$");
+                        var match = Regex.Match(newAssigner.Trim(), @"(?<name>.+?),(?<adress>.+)\s\(?(?<code>[A-Z]{2})");
+
                         if (match.Success)
                         {
                             legalStatus.NewBiblio.Assignees.Add(new PartyMember()
@@ -403,7 +412,30 @@ namespace Diamond_RO_Maksim
                                 Country = match.Groups["code"].Value.Trim()
                             });
                         }
-                        else Console.WriteLine($"{newAssigner} - not splited newAssigner");
+                        else
+                        {
+                            var match2 = Regex.Match(newAssigner.Trim(), @"(?<name>.+?),(?<adress>.+)\s(?<code>.+)");
+
+                            if (match2.Success)
+                            {
+                                var country = match2.Groups["adress"].Value.Trim();
+                                if (country.Length != 2)
+                                {
+                                    country = country switch
+                                    {
+                                        "Switzerland" => "CH",
+                                        _ => null
+                                    };
+                                }
+                                legalStatus.NewBiblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = match2.Groups["name"].Value.Trim(),
+                                    Address1 = match2.Groups["adress"].Value.TrimEnd(',').Trim(),
+                                    Country = country
+                                });
+                            }
+                            else Console.WriteLine($"{newAssigner} - not splited newAssigner");
+                        }
                     }
                     legalStatus.Biblio = biblio;
                 }
@@ -411,7 +443,8 @@ namespace Diamond_RO_Maksim
             }
             else if (subCode is "12")
             {
-                var commonMatch = Regex.Match(note, @"(?<pNum>RO\/EP\s?.+?)\s(?<aNum>\d.+)\s?\(74\)(?<agents>.+)\s?\(74\)(?<newagents>.+)", RegexOptions.Singleline);
+                note = Clean(note);
+                var commonMatch = Regex.Match(note, @"(?<pNum>RO\/EP\s?.+?)\s(?<aNum>\d.+)\s?\(74\)(?<agents>.+)\s?\(74\)(?<newAgents>.+)", RegexOptions.Singleline);
 
                 if (commonMatch.Success)
                 {
@@ -439,11 +472,11 @@ namespace Diamond_RO_Maksim
                     }
 
                     var newAgents = Regex
-                        .Split(commonMatch.Groups["newagents"].Value.Replace("\r", "").Replace("\n", " ").Trim(), @";")
+                        .Split(commonMatch.Groups["newAgents"].Value.Replace("\r", "").Replace("\n", " ").Trim(), @";")
                         .Where(x => !string.IsNullOrEmpty(x)).ToList();
                     foreach (var newAgent in newAgents)
                     {
-                        var match = Regex.Match(newAgent.Trim(), @"(?<name>.+?),(?<adress>.+)");
+                        var match = Regex.Match(newAgent.Trim(), @"(?<name>.+?),(?<adress>.+)(Brevet)");
                         if (match.Success)
                         {
                             legalStatus.NewBiblio.Agents.Add(new PartyMember()
@@ -452,11 +485,30 @@ namespace Diamond_RO_Maksim
                                 Address1 = match.Groups["adress"].Value.Trim()
                             });
                         }
-                        else Console.WriteLine($"{newAgent} - not splited newAgent");
+                        else
+                        {
+                            var match1 = Regex.Match(newAgent.Trim(), @"(?<name>.+?),(?<adress>.+)");
+                            if (match1.Success)
+                            {
+                                legalStatus.NewBiblio.Agents.Add(new PartyMember()
+                                {
+                                    Name = match1.Groups["name"].Value.Trim(),
+                                    Address1 = match1.Groups["adress"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{newAgent} - not splited newAgent");
+                        }
                     }
-                    legalStatus.Biblio = biblio;
+
+                    var legalDate = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @".+(?<date>\d{8})_");
+                    if (legalDate.Success)
+                    {
+                        legalStatus.LegalEvent.Date = legalDate.Groups["date"].Value.Insert(4,"/").Insert(7,"/").Trim();
+                    }
                 }
                 else Console.WriteLine($"{note} - not split 12 sub");
+                
+                legalStatus.Biblio = biblio;
             }
             else if (subCode == "13")
             {
