@@ -81,8 +81,8 @@ namespace Diamond_RO_Maksim
                 if (subCode is "11")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Modificări în situaţia juridică a brevetelor de invenţie europene cu efecte în România care au fost"))
-                        .TakeWhile(val => !val.Value.StartsWith("Modificare nume/adresă mandatar:"))
+                        .SkipWhile(val => !val.Value.StartsWith("Modificãri în situaþia juridicã a brevetelor de invenþie europene cu efecte în România care au fost"))
+                        .TakeWhile(val => !val.Value.StartsWith("Modificare nume/adresã mandatar:"))
                         .ToList();
 
                     if (xElements.Count == 0)
@@ -436,6 +436,12 @@ namespace Diamond_RO_Maksim
                             }
                             else Console.WriteLine($"{newAssigner} - not splited newAssigner");
                         }
+                    }
+
+                    var legalDate = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @".+(?<date>\d{8})_");
+                    if (legalDate.Success)
+                    {
+                        legalStatus.LegalEvent.Date = legalDate.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
                     }
                     legalStatus.Biblio = biblio;
                 }
