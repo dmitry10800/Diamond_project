@@ -44,7 +44,7 @@ namespace Diamond_IN_Maksim
                 if (subCode == "1")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                            .SkipWhile(val => !val.Value.StartsWith("Early Publication:"))
+                            //.SkipWhile(val => !val.Value.StartsWith("Early Publication:"))
                             .TakeWhile(val => !val.Value.StartsWith("Publication After 18 Months:"))
                             .ToList();
 
@@ -322,70 +322,127 @@ namespace Diamond_IN_Maksim
                 {
                     var firstPart = match.Groups["FirstPart"].Value;
                     var secondPart = match.Groups["SecondPart"].Value;
+
                     if (secondPart.Contains("/"))
                     {
-                        var firstNumber = match.Groups["FirstNumber"].Value.TrimStart('0');
-                        var secondNumber = match.Groups["SecondNumber"].Value.TrimEnd('0');
-                        if (firstNumber.Length == 0)
+                        var editionMatch = Regex.Match(secondPart.Trim(), @"(?<FirstPart>[0-9].+)/(?<SecondPart>[0-9]{2})");
+                        if (editionMatch.Success)
                         {
-                            firstNumber = "00";
-                        }
-                        if (secondNumber.Length == 0)
-                        {
-                            secondNumber = "00";
-                        }
-                        if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
-                        {
-                            if (secondNumber.Length == 1)
+                            if (editionMatch.Groups["FirstPart"].Value.Length == 1)
                             {
-                                secondNumber = $"{secondNumber}0";
+                                secondPart = "0" + editionMatch.Groups["FirstPart"].Value + "/" + editionMatch.Groups["SecondPart"].Value;
+                                results.Add(new Ipc
+                                {
+                                    Class = $"{firstPart} {secondPart}"
+                                });
                             }
-                            secondPart = $"{firstNumber}/{secondNumber}";
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
-                        {
-                            results.Add(new Ipc
+                            else
                             {
-                                Class = $"{firstPart} {secondPart}"
-                            });
+                                if (editionMatch.Groups["FirstPart"].Value.Length == 2)
+                                {
+                                    secondPart = editionMatch.Groups["FirstPart"].Value + "/" +
+                                                 editionMatch.Groups["SecondPart"].Value;
+                                    results.Add(new Ipc
+                                    {
+                                        Class = $"{firstPart} {secondPart}"
+                                    });
+                                }
+                                else Console.WriteLine($"{editionMatch.Groups["FirstPart"].Value}");
+                            }
                         }
                     }
                     else
                     {
-                        var pat = new Regex(@"(?<FirstNumber>\d{4})(?<SecondNumber>\d+)");
-                        var patMatch = pat.Match(secondPart);
-                        if (!patMatch.Success)
+                        if (secondPart.StartsWith("00"))
                         {
-                            continue;
-                        }
-                        var firstNumber = patMatch.Groups["FirstNumber"].Value.TrimStart('0');
-                        var secondNumber = patMatch.Groups["SecondNumber"].Value.TrimEnd('0');
-                        if (firstNumber.Length == 0)
-                        {
-                            firstNumber = "00";
-                        }
-                        if (secondNumber.Length == 0)
-                        {
-                            secondNumber = "00";
-                        }
-                        if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
-                        {
-                            if (secondNumber.Length == 1)
+                            var editionMatch = Regex.Match(secondPart.Trim(), @"00(?<FirstPart>[0-9]{2})(?<SecondPart>[0-9]{2})");
+                            if (editionMatch.Success)
                             {
-                                secondNumber = $"{secondNumber}0";
+                                secondPart = editionMatch.Groups["FirstPart"].Value + "/" + editionMatch.Groups["SecondPart"].Value;
+                                results.Add(new Ipc
+                                {
+                                    Class = $"{firstPart} {secondPart}"
+                                });
                             }
-                            secondPart = $"{firstNumber}/{secondNumber}";
                         }
-
-                        if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
+                        else
                         {
-                            results.Add(new Ipc
+                            var editionMatch = Regex.Match(secondPart.Trim(), @"(?<FirstPart>[0-9]{2})(?<SecondPart>[0-9]{2})");
+                            if (editionMatch.Success)
                             {
-                                Class = $"{firstPart} {secondPart}"
-                            });
+                                secondPart = editionMatch.Groups["FirstPart"].Value + "/" + editionMatch.Groups["SecondPart"].Value;
+                                results.Add(new Ipc
+                                {
+                                    Class = $"{firstPart} {secondPart}"
+                                });
+                            }
                         }
                     }
+
+                    //if (secondPart.Contains("/"))
+                    //{
+                    //    var firstNumber = match.Groups["FirstNumber"].Value.TrimStart('0');
+                    //    var secondNumber = match.Groups["SecondNumber"].Value.TrimEnd('0');
+                    //    if (firstNumber.Length == 0)
+                    //    {
+                    //        firstNumber = "00";
+                    //    }
+                    //    if (secondNumber.Length == 0)
+                    //    {
+                    //        secondNumber = "00";
+                    //    }
+                    //    if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
+                    //    {
+                    //        if (secondNumber.Length == 1)
+                    //        {
+                    //            secondNumber = $"{secondNumber}0";
+                    //        }
+                    //        secondPart = $"{firstNumber}/{secondNumber}";
+                    //    }
+
+                    //    if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
+                    //    {
+                    //        results.Add(new Ipc
+                    //        {
+                    //            Class = $"{firstPart} {secondPart}"
+                    //        });
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    var pat = new Regex(@"(?<FirstNumber>\d{4})(?<SecondNumber>\d+)");
+                    //    var patMatch = pat.Match(secondPart);
+                    //    if (!patMatch.Success)
+                    //    {
+                    //        continue;
+                    //    }
+                    //    var firstNumber = patMatch.Groups["FirstNumber"].Value.TrimStart('0');
+                    //    var secondNumber = patMatch.Groups["SecondNumber"].Value.TrimEnd('0');
+                    //    if (firstNumber.Length == 0)
+                    //    {
+                    //        firstNumber = "00";
+                    //    }
+                    //    if (secondNumber.Length == 0)
+                    //    {
+                    //        secondNumber = "00";
+                    //    }
+                    //    if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
+                    //    {
+                    //        if (secondNumber.Length == 1)
+                    //        {
+                    //            secondNumber = $"{secondNumber}0";
+                    //        }
+                    //        secondPart = $"{firstNumber}/{secondNumber}";
+                    //    }
+
+                    //    if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
+                    //    {
+                    //        results.Add(new Ipc
+                    //        {
+                    //            Class = $"{firstPart} {secondPart}"
+                    //        });
+                    //    }
+                    //}
                 }
             }
             catch (Exception e)
