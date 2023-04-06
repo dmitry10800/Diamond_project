@@ -300,6 +300,7 @@ namespace Diamond_RO_Maksim
             var cultureInfo = new CultureInfo("ru-Ru");
             if (subCode == "5")
             {
+                note = Clean(note);
                 var match = Regex.Match(note.Replace("Brevet de", "")
                     .Replace("Nr. cerere de", "")
                     .Replace("Titular", "")
@@ -1985,6 +1986,9 @@ namespace Diamond_RO_Maksim
         public string Clean(string str)
         {
             str = str.Replace("ª", "Ş")
+                .Replace("³", "ł")
+                .Replace("¹", "ą")
+                //.Replace(, "ę")
                 .Replace("º", "ş")
                 .Replace("Þ", "Ţ");
             return Regex.Replace(str, @"^\(\d{2}\)\s", string.Empty).Trim();
