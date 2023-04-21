@@ -2,17 +2,19 @@
 {
     class Main_PK
     {
-        private static readonly string Path = @"C:\!Work\MY\MY_20220511_04";
-        private static readonly string SubCode = "1";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"D:\LENS\TET\MY\MY_20230419_05";
+        private const string SubCode = "10";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent>? convertedPatents = SubCode switch
+            var convertedPatents = SubCode switch
             {
                 "1" => methods.Start(Path, SubCode),
+                "9" => methods.Start(Path, SubCode),
+                "10" => methods.Start(Path, SubCode),
                 _ => null
             };
 
