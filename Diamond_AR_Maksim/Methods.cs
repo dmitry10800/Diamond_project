@@ -136,7 +136,7 @@ namespace Diamond_AR_Maksim
                 else if (subCode == "9")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .SkipWhile(val => !val.Value.StartsWith("Expediente Actuación Agente Expediente Actuación Agente"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d{11}\s?Desistida [F|f]orzosa\s?\d+").Match(val).Success).ToList();
@@ -149,7 +149,7 @@ namespace Diamond_AR_Maksim
                 else if (subCode == "10")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .SkipWhile(val => !val.Value.StartsWith("Expediente Actuación Agente Expediente Actuación Agente"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
@@ -163,7 +163,7 @@ namespace Diamond_AR_Maksim
                 else if (subCode == "11")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .SkipWhile(val => !val.Value.StartsWith("Expediente Actuación Agente Expediente Actuación Agente"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
@@ -177,7 +177,7 @@ namespace Diamond_AR_Maksim
                 else if (subCode == "12")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .SkipWhile(val => !val.Value.StartsWith("Expediente Actuación Agente Expediente Actuación Agente"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
@@ -191,7 +191,7 @@ namespace Diamond_AR_Maksim
                 else if (subCode == "13")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .SkipWhile(val => !val.Value.StartsWith("Expediente Actuación Agente Expediente Actuación Agente"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
@@ -205,7 +205,7 @@ namespace Diamond_AR_Maksim
                 else if (subCode == "14")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Nº Acta Descripción Agente Nº Acta Descripción Agente"))
+                        .SkipWhile(val => !val.Value.StartsWith("Expediente Actuación Agente Expediente Actuación Agente"))
                         .ToList();
 
                     List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=2\d{10})")
