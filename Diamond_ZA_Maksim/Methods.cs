@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Integration;
 
 namespace Diamond_ZA_Maksim
 {
@@ -89,7 +90,7 @@ namespace Diamond_ZA_Maksim
                            .TakeWhile(val => !val.Value.StartsWith("CHANGE OF NAME IN TERMS OF REGULATION 39"))
                            .ToList();
 
-                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\d{4}\/\d+\s.+)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("2")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\d{4}\/\d+\s.+)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("2")).ToList();
 
                     foreach (var note in notes)
                     {
@@ -127,7 +128,7 @@ namespace Diamond_ZA_Maksim
                 NewBiblio = new()
             };
 
-            CultureInfo culture = new("ru-RU");
+            var culture = new CultureInfo("ru-RU");
 
             if(subCode == "1")
             {
@@ -400,44 +401,48 @@ namespace Diamond_ZA_Maksim
             }
             else if(subCode == "5")
             {
-                var match = Regex.Match(note.Replace("Application Number Assignor Assignee", "").Replace("\r","").Replace("\n"," "),
-                    @"(?<appNum>\d{4}\/\d+)\s(?<assigner>.+(LTD\.?|INC\.?|PLC|LLC|LIMITED|LICENSING|CORPORARTION|CORPORATION))\s(?<assignerNew>.+)");
+                string appNum = string.Empty, assigner = string.Empty, assignerNew = string.Empty;
 
-                if (match.Success)
+                var match1 = Regex.Match(note,
+                    @"(?<AppNum>\d{4}\/\d+)\s(?<Assigner>.+?(PTY\.?|LTD\.?|INC\.?|PLC|LLC|LIMITED|LICENSING|CORPORARTION|CORPORATION))\s(?<AssignerNew>.+?)~~(?<AssignerOld>.+)~~",
+                    RegexOptions.Singleline);
+
+                if (match1.Success)
                 {
-                    statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
-
-                    statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
-                    {
-                        Name = match.Groups["assigner"].Value.Trim()
-                    });
-
-                    statusEvent.NewBiblio.Assignees.Add(new Integration.PartyMember
-                    {
-                        Name = match.Groups["assignerNew"].Value.Trim()
-                    });
+                    appNum = match1.Groups["AppNum"].Value.Trim();
+                    assigner = match1.Groups["Assigner"].Value.Trim() + " " + match1.Groups["AssignerOld"].Value.Trim();
+                    assignerNew = match1.Groups["AssignerNew"].Value.Trim();
                 }
                 else
                 {
-                    var match1 = Regex.Match(note.Replace("Application Number Assignor Assignee", "").Replace("\r", "").Replace("\n", " "), @"(?<appNum>\d{4}\/\d+)\s(?<assigner>.+)");
-
-                    if (match1.Success)
+                    var match2 = Regex.Match(note, @"(?<AppNum>\d{4}\/\d+)\s~~(?<Assigner>.+)~~(?<AssignerNew>.+)~~(?<AssignerOld>.+)~~",  RegexOptions.Singleline);
+                    if (match2.Success)
                     {
-                        statusEvent.Biblio.Application.Number = match1.Groups["appNum"].Value.Trim();
-
-                        statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
-                        {
-                            Name = match1.Groups["assigner"].Value.Trim()
-                        });
+                        appNum = match2.Groups["AppNum"].Value.Trim();
+                        assigner = match2.Groups["Assigner"].Value.Trim() + " " + match2.Groups["AssignerOld"].Value.Trim();
+                        assignerNew = match2.Groups["AssignerNew"].Value.Trim();
                     }
-                    else Console.WriteLine($"{note}");
+                    else
+                    {
+                        var match3 = Regex.Match(note, @"(?<AppNum>\d{4}\/\d+)\s~?~?(?<Assigner>.+)~~(?<AssignerNew>.+)~~", RegexOptions.Singleline);
+                        if (match3.Success)
+                        {
+                            appNum = match3.Groups["AppNum"].Value.Trim();
+                            assigner = match3.Groups["Assigner"].Value.Trim();
+                            assignerNew = match3.Groups["AssignerNew"].Value.Trim();
+                        }
+                        else Console.WriteLine(note);
+                    }
                 }
 
-                var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "").Replace("ZA_", "")), @"\d{8}");
+                statusEvent.Biblio = MakeBiblioFor5Subs(appNum, assigner);
+                statusEvent.NewBiblio = MakeNewBiblioFor5Subs(assignerNew);
 
-                if (match2.Success)
+                var matchDate = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "").Replace("ZA_", "")), @"\d{8}");
+
+                if (matchDate.Success)
                 {
-                    statusEvent.LegalEvent.Date = match2.Value.Insert(4, "/").Insert(7, "/"); 
+                    statusEvent.LegalEvent.Date = matchDate.Value.Insert(4, "/").Insert(7, "/"); 
                 }
             }
             else if(subCode == "6")
@@ -480,6 +485,21 @@ namespace Diamond_ZA_Maksim
             }
 
             return statusEvent;
+        }
+        private Biblio MakeBiblioFor5Subs(string appNum, string assigner)
+        {
+            return new Biblio()
+            {
+                Application = new Application { Number = appNum.Replace("\r","").Replace("\n", " ").Trim() },
+                Assignees = new List<PartyMember> { new PartyMember { Name = assigner.Replace("\r", "").Replace("\n", " ").Trim() } }
+            };
+        }
+        private Biblio MakeNewBiblioFor5Subs(string assignerNew)
+        {
+            return new Biblio()
+            {
+                Assignees = new List<PartyMember> { new PartyMember { Name = assignerNew.Replace("\r", "").Replace("\n", " ").Trim() } }
+            };
         }
         internal string MakeCountryCode(string code) => code switch
         {
@@ -739,7 +759,7 @@ namespace Diamond_ZA_Maksim
         };
         internal string MakeText(List<XElement> xElements, string subCode)
         {
-            StringBuilder text = new();
+            var text = new StringBuilder();
 
             switch (subCode)
             {
@@ -751,11 +771,19 @@ namespace Diamond_ZA_Maksim
                     }
                     break;
                 }
-                case "3" or "5" or "6":
+                case "3" or "6":
                 {
                     foreach (var xElement in xElements)
                     {
                         text = text.Append(xElement.Value + " ");
+                    }
+                    break;
+                }
+                case "5":
+                {
+                    foreach (var xElement in xElements)
+                    {
+                        text = text.AppendLine(xElement.Value + " ~~ ");
                     }
                     break;
                 }
@@ -770,10 +798,10 @@ namespace Diamond_ZA_Maksim
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : // продакшен
                     @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // стейдж
-                HttpClient httpClient = new();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
                 var result = httpClient.PostAsync("", content).Result;
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
