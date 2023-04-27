@@ -194,12 +194,12 @@ namespace Diamond_LV_Maksim
                         {
                             for (int i = 0; i < text.Count/2; i++)
                             {
-                                sbLV.Append(text[i] + " ");
+                                sbLV.Append(text[i].Trim() + " ");
                             }
 
                             for (int i = text.Count/2; i < text.Count; i++)
                             {
-                                sbEN.Append(text[i] + " ");
+                                sbEN.Append(text[i].Trim() + " ");
                             }
 
                             patent.Biblio.Titles.Add(new Title()
@@ -218,12 +218,12 @@ namespace Diamond_LV_Maksim
                         {
                             for (int i = 0; i < (text.Count/2)+1; i++)
                             {
-                                sbLV.Append(text[i] + " ");
+                                sbLV.Append(text[i].Trim() + " ");
                             }
 
                             for (int i = (text.Count / 2)+1; i < text.Count; i++)
                             {
-                                sbEN.Append(text[i] + " ");
+                                sbEN.Append(text[i].Trim() + " ");
                             }
 
                             patent.Biblio.Titles.Add(new Title()
@@ -247,7 +247,7 @@ namespace Diamond_LV_Maksim
                             patent.Biblio.Publication.Number = match.Groups["Inid11"].Value.Trim();
                             patent.Biblio.Publication.Kind = match.Groups["Inid13"].Value.Trim();
 
-                            var ipcs = Regex.Split(match.Groups["Inid51"].Value + " " + match.Groups["Inid51Next"].Value, @"\n").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                            var ipcs = Regex.Split(match.Groups["Inid51"].Value + match.Groups["Inid51Next"].Value, @"\n").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
                             foreach (var ipc in ipcs)
                             {
@@ -264,7 +264,7 @@ namespace Diamond_LV_Maksim
                                 {
                                     patent.Biblio.Ipcs.Add(new Ipc()
                                     {
-                                        Class = ipc
+                                        Class = ipc.Trim()
                                     });
                                 }
                             }
@@ -319,7 +319,7 @@ namespace Diamond_LV_Maksim
                                 patent.Biblio.Priorities.Add(new Priority()
                                 {
                                     Number = priorMatch.Groups["Num"].Value.Trim(),
-                                    Date = priorMatch.Groups["Date"].Value.Trim(),
+                                    Date = DateTime.Parse(priorMatch.Groups["Date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
                                     Country = priorMatch.Groups["Country"].Value.Trim(),
                                 });
                             }
