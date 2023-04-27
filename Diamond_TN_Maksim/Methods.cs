@@ -97,7 +97,13 @@ namespace Diamond_TN_Maksim
                 {
                     if (inid.StartsWith(I21))
                     {
-                        patent.Biblio.Application.Number = CleanInid(inid, subCode);
+                        var matchAppNum = Regex.Match(CleanInid(inid, subCode), @"(?<Num>[A-Z]{2}\d.+)(?<Kind>[A-Z]\d+)");
+                        if (matchAppNum.Success)
+                        {
+                            patent.Biblio.Application.Number = matchAppNum.Groups["Num"].Value.Trim();
+                            patent.Biblio.Publication.Kind = matchAppNum.Groups["Kind"].Value.Trim();
+                        }
+                        else patent.Biblio.Application.Number = CleanInid(inid, subCode);
                     }
                     if (inid.StartsWith(I22))
                     {
@@ -158,7 +164,7 @@ namespace Diamond_TN_Maksim
         }
         private string CleanNote(string note)
         {
-            return note.Replace("\r", "").Replace("\n", " ");
+            return note.Replace("\r", "").Replace("\n", " ").Replace("|","");
         }
         private string CleanInid(string inid, string subCode)
         {
