@@ -600,11 +600,11 @@ namespace PL_Diamond_Maksim
 
                     europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Replace(" ", ".").Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "-").Trim();
 
-                    legal.Note = "|| Rok wydania i numer Europejskiego Biuletynu Patentowego, w którym ogłoszono o udzieleniu lub zmianie patentu | " + match.Groups["note"].Value.Trim();
+                    legal.Note = "|| Rok wydania i numer Europejskiego Biuletynu Patentowego, w którym ogłoszono o udzieleniu patentu | " + match.Groups["note"].Value.Trim();
                     legal.Language = "PL";
 
                     noteTranslation.Language = "EN";
-                    noteTranslation.Tr = "|| Year of issue and number of the European Patent Bulletin in which grant or amendment of the patent was announced | " + match.Groups["note"].Value.Trim();
+                    noteTranslation.Tr = "|| Year of issue and number of the European Patent Bulletin, in which the patent was announced | " + match.Groups["note"].Value.Trim();
                     noteTranslation.Type = "INID";
                     legal.Translations = new List<NoteTranslation> { noteTranslation };
 
