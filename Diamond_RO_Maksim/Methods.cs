@@ -1612,13 +1612,13 @@ namespace Diamond_RO_Maksim
 
                     foreach (var priority in priorities)
                     {
-                        var match = _priorityPattern.Match(priority);
+                        var match = _priorityPattern.Match(priority.Trim());
                         if (match.Success)
                         {
                             record.Biblio.Priorities.Add(new Priority()
                             {
-                                Country = match.Groups["CountryPriority"].Value,
-                                Number = match.Groups["NumberPriority"].Value,
+                                Country = match.Groups["CountryPriority"].Value.Trim(),
+                                Number = match.Groups["NumberPriority"].Value.Trim(),
                                 Date = DateTime.Parse(match.Groups["DatePriority"].Value, cultureInfo)
                                     .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
                             });
