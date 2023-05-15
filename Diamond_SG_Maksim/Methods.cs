@@ -22,12 +22,12 @@ namespace Diamond_SG_Maksim
 
             if (subCode is "5")
             {
-                foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
+                foreach (var file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {
                     files.Add(file.FullName);
                 }
 
-                foreach (string xlsxFile in files)
+                foreach (var xlsxFile in files)
                 {
                     CurrentFileName = xlsxFile;
 
@@ -42,7 +42,7 @@ namespace Diamond_SG_Maksim
 
                     sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
@@ -57,9 +57,9 @@ namespace Diamond_SG_Maksim
 
                         statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString().Trim();
 
-                        List<string> applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string applicant in applicantsList)
+                        foreach (var applicant in applicantsList)
                         {
                             statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                             {
@@ -70,7 +70,7 @@ namespace Diamond_SG_Maksim
                         statusEvent.LegalEvent.Note = "|| The year patents renewed for | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
                         statusEvent.LegalEvent.Language = "EN";
 
-                        Match match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+                        var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
 
                         if (match.Success)
                         {
@@ -83,12 +83,12 @@ namespace Diamond_SG_Maksim
             }
             else if (subCode is "7" or "6")
             {
-                foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
+                foreach (var file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {
                     files.Add(file.FullName);
                 }
 
-                foreach (string xlsxFile in files)
+                foreach (var xlsxFile in files)
                 {
                     CurrentFileName = xlsxFile;
 
@@ -103,7 +103,7 @@ namespace Diamond_SG_Maksim
 
                     sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
@@ -118,9 +118,9 @@ namespace Diamond_SG_Maksim
 
                         statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString().Trim();
 
-                        List<string> applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var applicantsList = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string applicant in applicantsList)
+                        foreach (var applicant in applicantsList)
                         {
                             statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                             {
@@ -128,7 +128,7 @@ namespace Diamond_SG_Maksim
                             });
                         }
 
-                        Match match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+                        var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
 
                         if (match.Success)
                         {
@@ -145,15 +145,15 @@ namespace Diamond_SG_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

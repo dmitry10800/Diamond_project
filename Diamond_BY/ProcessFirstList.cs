@@ -41,15 +41,15 @@ namespace Diamond_BY
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
 
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -84,7 +84,7 @@ namespace Diamond_BY
                                 string[] tmpSplittedValue = null;
                                 string[] tmpIntClass = null;
                                 string[] tmpVersion = null;
-                                Regex datePattern = new Regex(@"\(\d{4}\.\d{2}\)");
+                                var datePattern = new Regex(@"\(\d{4}\.\d{2}\)");
 
                                 tmpRecValue = inidCode.Replace(I51, "").Trim('\n');
                                 //MatchCollection dateMatches = datePattern.Matches
@@ -114,7 +114,7 @@ namespace Diamond_BY
                                 string[] tmpDate = null;
                                 string[] tmpNumber = null;
                                 string[] tmpSplittedValue = null;
-                                string recordPattern = @".*\s*\d{2}\.\d{2}\.\d{4}\s*[A-Z]{2}$";
+                                var recordPattern = @".*\s*\d{2}\.\d{2}\.\d{4}\s*[A-Z]{2}$";
                                 tmpRecValue = inidCode.Replace(I31, "").Replace(I32, "").Replace(I33, "").Trim();
                                 if (tmpRecValue.Contains("\n"))
                                 {

@@ -7,12 +7,12 @@ namespace Diamond_IE_Subcodes_7_8
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub7_8Convert(List<SubCode7_8> elements, string gazetteName, string numberSubCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 biblio.Assignees = new List<PartyMember>();
                 biblio.Ipcs = new List<Ipc>();
                 legalEvent.LegalEvent = new LegalEvent();

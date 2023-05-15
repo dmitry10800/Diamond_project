@@ -12,8 +12,8 @@ namespace CZ
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub6 processing started");
-                List<OutElements.Sub6> elements = new List<OutElements.Sub6>();
-                Regex recordPattern = new Regex(@"\(97\)\s*(?<number>[^\(]+)");
+                var elements = new List<OutElements.Sub6>();
+                var recordPattern = new Regex(@"\(97\)\s*(?<number>[^\(]+)");
                 foreach (var record in v)
                 {
                     var match = recordPattern.Matches(record.Value.Replace("\n", " "));

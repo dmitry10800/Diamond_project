@@ -57,15 +57,15 @@ namespace Diamond_BG
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
 
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -144,7 +144,7 @@ namespace Diamond_BG
                                 string[] tmpDate = null;
                                 string[] tmpNumber = null;
                                 string[] tmpSplittedValue = null;
-                                string recordPattern = @".*\s*\d{2}\.\d{2}\.\d{4}\s*[A-Z]{2}$";
+                                var recordPattern = @".*\s*\d{2}\.\d{2}\.\d{4}\s*[A-Z]{2}$";
                                 tmpRecValue = inidCode.Replace(I31, "").Replace(I32, "").Replace(I33, "").Trim();
                                 if (tmpRecValue.Contains("\n"))
                                 {
@@ -199,7 +199,7 @@ namespace Diamond_BG
                                 string[] tmpSplittedValue = null;
                                 string[] tmpIntClass = null;
                                 string[] tmpVersion = null;
-                                string datePattern = @"\(\d{4}\.\d{2}\)";
+                                var datePattern = @"\(\d{4}\.\d{2}\)";
                                 tmpRecValue = inidCode.Replace(I51, "").Trim('\n');
                                 if (tmpRecValue.Contains("\n"))
                                 {
@@ -241,7 +241,7 @@ namespace Diamond_BG
                                 tmpRecValue = inidCode.Replace(I67, "").Trim();
                                 string tmpDateValue = null;
                                 string tmpNumValue = null;
-                                string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+                                var datePattern = @"\d{2}\.\d{2}\.\d{4}";
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
                                     tmpDateValue = Regex.Match(tmpRecValue, datePattern).Value;
@@ -264,7 +264,7 @@ namespace Diamond_BG
                             if (inidCode.StartsWith(I86))
                             {
                                 string tmpDateValue = null;
-                                string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+                                var datePattern = @"\d{2}\.\d{2}\.\d{4}";
                                 tmpRecValue = inidCode.Replace(I86, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
@@ -281,7 +281,7 @@ namespace Diamond_BG
                             /*87*/
                             if (inidCode.StartsWith(I87))
                             {
-                                string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+                                var datePattern = @"\d{2}\.\d{2}\.\d{4}";
                                 tmpRecValue = inidCode.Replace(I87, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
@@ -312,8 +312,8 @@ namespace Diamond_BG
                                                 {
                                                     if (record.Count(f => f == ',') >= 2)
                                                     {
-                                                        int firstIndex = record.IndexOf(",");
-                                                        int secondIndex = record.IndexOf(",", firstIndex + 1);
+                                                        var firstIndex = record.IndexOf(",");
+                                                        var secondIndex = record.IndexOf(",", firstIndex + 1);
                                                         tmpSplName = record.Remove(secondIndex).Trim();
                                                         tmpSplAddr = record.Substring(secondIndex).Trim(',').Trim();
                                                     }
@@ -370,8 +370,8 @@ namespace Diamond_BG
                                         {
                                             if (tmpRecValue.Count(f => f == ',') >= 2)
                                             {
-                                                int firstIndex = tmpRecValue.IndexOf(",");
-                                                int secondIndex = tmpRecValue.IndexOf(",", firstIndex + 1);
+                                                var firstIndex = tmpRecValue.IndexOf(",");
+                                                var secondIndex = tmpRecValue.IndexOf(",", firstIndex + 1);
                                                 tmpSplName = tmpRecValue.Remove(secondIndex).Trim();
                                                 tmpSplAddr = tmpRecValue.Substring(secondIndex).Trim(',').Trim();
                                             }
@@ -425,7 +425,7 @@ namespace Diamond_BG
                                 tmpRecValue = inidCode.Replace(I72, "").Replace("\n", " ").Replace(",", " ").Replace("  ", " ").Trim();
                                 if (tmpRecValue.Contains(";"))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var inventor in tmpSplValue)

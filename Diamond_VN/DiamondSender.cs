@@ -22,8 +22,8 @@ namespace Diamond_VN
             }
             foreach (var @event in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(@event);
-                HttpClient httpClient = new HttpClient();
+                var tmpValue = JsonConvert.SerializeObject(@event);
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

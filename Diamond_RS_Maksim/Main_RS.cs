@@ -10,12 +10,12 @@ namespace Diamond_RS_Maksim
 
         static void Main(string[] args)
         {
-            string path = @"C:\Work\RS\RS_20200731_07";
-            string subCode = "3";
+            var path = @"C:\Work\RS\RS_20200731_07";
+            var subCode = "3";
 
-            Methods methods = new Methods();
+            var methods = new Methods();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = subCode switch
+            var convertedPatents = subCode switch
             {
                 "3" => methods.Start(path, subCode),
                 _ => null

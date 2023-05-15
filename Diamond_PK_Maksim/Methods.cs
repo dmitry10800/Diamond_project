@@ -20,7 +20,7 @@ namespace Diamond_PK_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -29,7 +29,7 @@ namespace Diamond_PK_Maksim
 
             List<XElement> xElements = null;
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -41,9 +41,9 @@ namespace Diamond_PK_Maksim
                        .SkipWhile(val => !val.Value.StartsWith("Expiry List of 2021"))
                        .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\d{6}\s)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"(^\d)").Match(val).Success).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\d{6}\s)").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"(^\d)").Match(val).Success).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "MK"));
                     }  
@@ -54,11 +54,11 @@ namespace Diamond_PK_Maksim
 
         internal string MakeText(List<XElement> xElement, string subCode)
         {
-            string text = "";
+            var text = "";
 
             if(subCode == "13")
             {
-                foreach (XElement element in xElement)
+                foreach (var element in xElement)
                 {
                     text += element.Value + "\n";
                 }
@@ -86,7 +86,7 @@ namespace Diamond_PK_Maksim
 
             if(subCode == "13")
             {
-                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                     @"(?<num>\d{6})\s(?<appDate>\d{2}.\d{2}.\d{4})\s(?<prDate>\d{2}.\d{2}.\d{4})\s(?<code>\D\s?\D)\s(?<evDate>\d{2}.\d{2}.\d{4})");
 
                 if (match.Success)
@@ -94,7 +94,7 @@ namespace Diamond_PK_Maksim
                     statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
                     statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["appDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                    string country = match.Groups["code"].Value.Replace(" ", "").Trim();
+                    var country = match.Groups["code"].Value.Replace(" ", "").Trim();
                     if(country == "UK")
                     {
                         country = "GB";
@@ -109,7 +109,7 @@ namespace Diamond_PK_Maksim
                 }
                 else 
                 {
-                    Match match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    var match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
                         @"(?<num>\d{6})\s(?<appDate>\d{2}.\d{2}.\d{4})\s(?<evDate>\d{2}.\d{2}.\d{4})");
 
                     if (match1.Success)
@@ -129,7 +129,7 @@ namespace Diamond_PK_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -143,8 +143,8 @@ namespace Diamond_PK_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

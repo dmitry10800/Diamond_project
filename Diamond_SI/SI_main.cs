@@ -15,7 +15,7 @@ namespace Diamond_SI
         private static void Main(string[] args)
         {
             Console.WriteLine("Enter path to folder with PDF file");
-            string pathToPDF = Console.ReadLine();
+            var pathToPDF = Console.ReadLine();
             PathToTetml = new DirectoryInfo(pathToPDF);
             var countFiles = PathToTetml.GetFiles().Count();
 
@@ -39,33 +39,33 @@ namespace Diamond_SI
             }
 
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
-            List<XElement> allElementsList = new List<XElement>(); // all elements in processing gazette
-            List<XElement> subCode3_4 = new List<XElement>();
-            List<XElement> subCode20 = new List<XElement>();
+            var allElementsList = new List<XElement>(); // all elements in processing gazette
+            var subCode3_4 = new List<XElement>();
+            var subCode20 = new List<XElement>();
 
             foreach (var file in files)
             {
-                string nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
+                var nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
                 currentFile = new FileInfo(file);
                 elem = XElement.Load(file);
 
                 allElementsList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                string startChapterStr = "Prenehanja veljavnosti patentov";
-                string endChapterStr = "Spremembe";
+                var startChapterStr = "Prenehanja veljavnosti patentov";
+                var endChapterStr = "Spremembe";
                 //string startChapterSubcode20 = "Prevodi zahtevkov evropskih patentov (T1,T2,T4)";
                 //string endChapterSubcode20 = "Kazalo po kodah MPK";
-                string startChapterSubcode20 = "Prevodi zahtevkov evro";
-                string endChapterSubcode20 = "Kazalo po";
-                string startAmendmentsSubcode15 = "Popravki prevodov zahtevkov evropskih patentov";
+                var startChapterSubcode20 = "Prevodi zahtevkov evro";
+                var endChapterSubcode20 = "Kazalo po";
+                var startAmendmentsSubcode15 = "Popravki prevodov zahtevkov evropskih patentov";
 
-                int tempInc = 0;
-                for (int i = 0; i < allElementsList.Count; i++)
+                var tempInc = 0;
+                for (var i = 0; i < allElementsList.Count; i++)
                 {
                     var value = allElementsList[i].Value;
                     tempInc = i;
@@ -81,7 +81,7 @@ namespace Diamond_SI
                 }
 
                 tempInc = 0;
-                for (int i = 0; i < allElementsList.Count; i++)
+                for (var i = 0; i < allElementsList.Count; i++)
                 {
                     var value = allElementsList[i].Value;
                     tempInc = i;
@@ -97,8 +97,8 @@ namespace Diamond_SI
                     }
                 }
 
-                List<Subcode3> Subcode3List = new List<Subcode3>();
-                List<Subcode4> Subcode4List = new List<Subcode4>();
+                var Subcode3List = new List<Subcode3>();
+                var Subcode4List = new List<Subcode4>();
 
                 var resultSubcode20 = SubCode20_Processing.Subcode20Process(subCode20);
                 if(resultSubcode20 != null && resultSubcode20.Count > 0)

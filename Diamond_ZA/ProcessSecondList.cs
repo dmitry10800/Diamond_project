@@ -37,22 +37,22 @@ namespace Diamond_ZA
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
 
             if (elemList != null)
             {
                 ElementOut currentElement = null;
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string[] recordSplitted = null;
                     if (value.StartsWith(I21))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        int tmpInc = i;
-                        string tmpRecordValue = "";
+                        var tmpInc = i;
+                        var tmpRecordValue = "";
                         do
                         {
                             tmpRecordValue += elemList[tmpInc].Value + " ";
@@ -80,9 +80,9 @@ namespace Diamond_ZA
                                     else if (Regex.IsMatch(item, @"\d+(\/|\-)\d+(\/|\-)\d{4}"))
                                     {
                                         var s = Regex.Match(item, @"(?<month>\d+)(\/|\-)(?<day>\d+)(\/|\-)(?<year>\d{4})");
-                                        string day = s.Groups["day"].Value.Trim();
-                                        string month = s.Groups["month"].Value.Trim();
-                                        string year = s.Groups["year"].Value.Trim();
+                                        var day = s.Groups["day"].Value.Trim();
+                                        var month = s.Groups["month"].Value.Trim();
+                                        var year = s.Groups["year"].Value.Trim();
                                         if (day.Length == 1) day = "0" + day;
                                         if (month.Length == 1) month = "0" + month;
                                         currentElement.I22 = year + "-" + month + "-" + day;
@@ -99,9 +99,9 @@ namespace Diamond_ZA
                                     else if (Regex.IsMatch(item, @"\d+(\/|\-)\d+(\/|\-)\d{4}"))
                                     {
                                         var s = Regex.Match(item, @"(?<month>\d+)(\/|\-)(?<day>\d+)(\/|\-)(?<year>\d{4})");
-                                        string day = s.Groups["day"].Value.Trim();
-                                        string month = s.Groups["month"].Value.Trim();
-                                        string year = s.Groups["year"].Value.Trim();
+                                        var day = s.Groups["day"].Value.Trim();
+                                        var month = s.Groups["month"].Value.Trim();
+                                        var year = s.Groups["year"].Value.Trim();
                                         if (day.Length == 1) day = "0" + day;
                                         if (month.Length == 1) month = "0" + month;
                                         currentElement.I43 = year + "-" + month + "-" + day;
@@ -111,7 +111,7 @@ namespace Diamond_ZA
                                 /*51*/
                                 if (item.StartsWith(I51))
                                 {
-                                    string tmpValue = item.Replace(I51, "").Trim().Replace(" ", ";").Replace(";;", ";");
+                                    var tmpValue = item.Replace(I51, "").Trim().Replace(" ", ";").Replace(";;", ";");
                                     string[] splitedI51 = null;
                                     if (tmpValue.Contains(";"))
                                     {
@@ -166,7 +166,7 @@ namespace Diamond_ZA
                                 /*33*/
                                 if (item.StartsWith(I33))
                                 {
-                                    string tmpValue = item.Replace(I33, "").Trim();
+                                    var tmpValue = item.Replace(I33, "").Trim();
                                     tmpValue = Regex.IsMatch(tmpValue, @"^[A-Z]{2}.*\([A-Z]{2}\)") ? tmpValue = Regex.Match(tmpValue, @"[A-Z]{2}").Value : tmpValue = item.Replace(I33, "").Trim();
                                     currentElement.I33 = (currentElement.I33 ?? Enumerable.Empty<string>()).Concat(new string[] { tmpValue }).ToArray();
                                 }

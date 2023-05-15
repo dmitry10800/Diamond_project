@@ -36,8 +36,8 @@ namespace Diamond_BA_publication_of_europen_patents
         {
             try
             {
-                string swapDate = "";
-                string[] splitDate = tmpDate.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
+                var swapDate = "";
+                var splitDate = tmpDate.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splitDate.Count() == 3)
                 {
                     swapDate = splitDate[2] + splitDate[1] + splitDate[0];
@@ -54,13 +54,13 @@ namespace Diamond_BA_publication_of_europen_patents
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace(I32, "").Replace(I33, "");
+            var tempStrC = recString.Replace(I32, "").Replace(I33, "");
             if (tempStrC != "")
             {
                 if (tempStrC.Contains("("))
                 {
-                    Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                    MatchCollection matchesClass = regexPatOne.Matches(tempStrC);
+                    var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                    var matchesClass = regexPatOne.Matches(tempStrC);
                     if (matchesClass.Count > 0)
                     {
                         foreach (Match matchC in matchesClass)
@@ -81,37 +81,37 @@ namespace Diamond_BA_publication_of_europen_patents
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\BA\Reg\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             /*Tetml files processing*/
             foreach (var tetFile in files)
             {
                 ElementOut.ElementsOut.Clear();
-                string FileName = tetFile;
-                XElement tet = XElement.Load(FileName);
+                var FileName = tetFile;
+                var tet = XElement.Load(FileName);
                 /*TETML elements*/
                 var elements = tet.Descendants().Where(d => d.Name.LocalName == "Text" || d.Name.LocalName == "PlacedImage" || d.Name.LocalName == "Page").ToList();
 
                 /*Root settings*/
                 var root = Directory.GetParent(FileName);
-                string folderPath = Path.Combine(root.FullName);
+                var folderPath = Path.Combine(root.FullName);
                 Directory.CreateDirectory(folderPath);
                 var processed = Directory.CreateDirectory(Path.Combine(folderPath, FileName.Remove(FileName.IndexOf("."))));
                 /*TXT file for output information*/
-                string path = Path.Combine(folderPath, FileName.Substring(0, FileName.IndexOf(".")) + ".txt"); //Output Filename
-                StreamWriter sf = new StreamWriter(path);
+                var path = Path.Combine(folderPath, FileName.Substring(0, FileName.IndexOf(".")) + ".txt"); //Output Filename
+                var sf = new StreamWriter(path);
                 ElementOut currentElement = null;
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     /*Main part except description*/
                     if (value.StartsWith(I11))
                     {
                         currentElement = new ElementOut();
                         ElementOut.ElementsOut.Add(currentElement);
                         /*Reading value of Record*/
-                        int tmpCounter = i;
-                        string tmpRecValue = "";
+                        var tmpCounter = i;
+                        var tmpRecValue = "";
                         string[] splittedRev = null;
                         do
                         {
@@ -126,9 +126,9 @@ namespace Diamond_BA_publication_of_europen_patents
                         /*Elements identification*/
                         if (splittedRev != null)
                         {
-                            for (int k = 0; k < splittedRev.Length; k++)
+                            for (var k = 0; k < splittedRev.Length; k++)
                             {
-                                string iValue = splittedRev[k];
+                                var iValue = splittedRev[k];
                                 /*11*/
                                 if (iValue.StartsWith(I11))
                                 {
@@ -152,7 +152,7 @@ namespace Diamond_BA_publication_of_europen_patents
                                 /*96*/
                                 if (iValue.StartsWith(I96))
                                 {
-                                    string tmpValue = iValue.Replace(I96, "").Replace("\n", "").Trim();
+                                    var tmpValue = iValue.Replace(I96, "").Replace("\n", "").Trim();
                                     string tmpDate = null;
                                     if (Regex.IsMatch(tmpValue, @"\d{4}\-\d{2}\-\d{2}"))
                                     {
@@ -164,7 +164,7 @@ namespace Diamond_BA_publication_of_europen_patents
                                 /*97*/
                                 if (iValue.StartsWith(I97))
                                 {
-                                    string tmpValue = iValue.Replace(I97, "").Replace("\n", "").Trim();
+                                    var tmpValue = iValue.Replace(I97, "").Replace("\n", "").Trim();
                                     if (Regex.IsMatch(tmpValue, @"\d{4}\-\d{2}\-\d{2}"))
                                     {
                                         currentElement.I97D = Regex.Match(tmpValue, @"\d{4}\-\d{2}\-\d{2}").Value;
@@ -182,7 +182,7 @@ namespace Diamond_BA_publication_of_europen_patents
                                     string tmpNumber = null;
                                     string tmpCC = null;
                                     string[] splittedValue = null;
-                                    string tmpValue = iValue.Replace(I31, "");
+                                    var tmpValue = iValue.Replace(I31, "");
                                     if (tmpValue.Contains("\n"))
                                     {
                                         splittedValue = tmpValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -216,7 +216,7 @@ namespace Diamond_BA_publication_of_europen_patents
                                     string[] tmpDateNum = null; // whole record with number and (if present) date 
                                     string[] tmpNumValue = null; // only number after splitting
                                     string[] tmpDateValue = null; //only date after splitting
-                                    string tmpValue = iValue.Replace(I51, "").Replace("\n", " ").Trim();
+                                    var tmpValue = iValue.Replace(I51, "").Replace("\n", " ").Trim();
                                     if (tmpValue.Contains(","))
                                     {
                                         splittedValue = tmpValue.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
@@ -259,13 +259,13 @@ namespace Diamond_BA_publication_of_europen_patents
                                     string[] tmpName = null;
                                     string[] tmpAddr = null;
                                     string[] tmpCC = null;
-                                    string tmpValue = iValue.Replace(I72, "").Trim();
+                                    var tmpValue = iValue.Replace(I72, "").Trim();
                                     if (Regex.IsMatch(tmpValue, @"\n[A-Z]{2}"))
                                     {
-                                        string[] tmpSplValue = Regex.Split(tmpValue, @"(?<=(\n[A-Z]{2}))").Where(d => d.Length > 3).Select(d => d.Trim()).ToArray(); //(?<=\([A - Z]{ 2}\))
+                                        var tmpSplValue = Regex.Split(tmpValue, @"(?<=(\n[A-Z]{2}))").Where(d => d.Length > 3).Select(d => d.Trim()).ToArray(); //(?<=\([A - Z]{ 2}\))
                                         foreach (var rec in tmpSplValue)
                                         {
-                                            string tmpRec = rec;
+                                            var tmpRec = rec;
                                             if (Regex.IsMatch(tmpRec, @"\n[A-Z]{2}$"))
                                             {
                                                 tmpCC = (tmpCC ?? Enumerable.Empty<string>()).Concat(new string[] { Regex.Match(tmpRec, @"\n[A-Z]{2}$").Value.Trim() }).ToArray();
@@ -291,13 +291,13 @@ namespace Diamond_BA_publication_of_europen_patents
                                     string[] tmpName = null;
                                     string[] tmpAddr = null;
                                     string[] tmpCC = null;
-                                    string tmpValue = iValue.Replace(I73, "").Trim();
+                                    var tmpValue = iValue.Replace(I73, "").Trim();
                                     if (Regex.IsMatch(tmpValue, @"\n[A-Z]{2}"))
                                     {
-                                        string[] tmpSplValue = Regex.Split(tmpValue, @"(?<=(\n[A-Z]{2}))").Where(d => d.Length > 3).Select(d => d.Trim()).ToArray(); //(?<=\([A - Z]{ 2}\))
+                                        var tmpSplValue = Regex.Split(tmpValue, @"(?<=(\n[A-Z]{2}))").Where(d => d.Length > 3).Select(d => d.Trim()).ToArray(); //(?<=\([A - Z]{ 2}\))
                                         foreach (var rec in tmpSplValue)
                                         {
-                                            string tmpRec = rec;
+                                            var tmpRec = rec;
                                             if (Regex.IsMatch(tmpRec, @"\n[A-Z]{2}$"))
                                             {
                                                 tmpCC = (tmpCC ?? Enumerable.Empty<string>()).Concat(new string[] { Regex.Match(tmpRec, @"\n[A-Z]{2}$").Value.Trim() }).ToArray();
@@ -323,7 +323,7 @@ namespace Diamond_BA_publication_of_europen_patents
                                     string tmpName = null;
                                     string tmpAddr = null;
                                     string tmpCC = null;
-                                    string tmpValue = iValue.Replace(I74, "").Trim();
+                                    var tmpValue = iValue.Replace(I74, "").Trim();
                                     if (Regex.IsMatch(tmpValue, @"\n[A-Z]{2}$"))
                                     {
                                         tmpCC = Regex.Match(tmpValue, @"\n[A-Z]{2}$").Value.Trim();
@@ -347,8 +347,8 @@ namespace Diamond_BA_publication_of_europen_patents
                     /*Desc 57*/
                     if (value.StartsWith(I57) && currentElement != null)
                     {
-                        int tmpCounter = i;
-                        string tmpRecValue = "";
+                        var tmpCounter = i;
+                        var tmpRecValue = "";
                         do
                         {
                             if (!elements[tmpCounter].Value.Contains("tetml"))
@@ -366,17 +366,17 @@ namespace Diamond_BA_publication_of_europen_patents
                 /*Output*/
                 if (ElementOut.ElementsOut != null)
                 {
-                    int leCounter = 1;
-                    List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+                    var leCounter = 1;
+                    var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
                     foreach (var record in ElementOut.ElementsOut)
                     {
-                        Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                        var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                         legalEvent.GazetteName = Path.GetFileName(tetFile.Replace(".tetml", ".pdf"));
                         legalEvent.SubCode = "4";
                         legalEvent.SectionCode = "BA";
                         legalEvent.CountryCode = "BS";
                         legalEvent.Id = leCounter++; // creating uniq identifier
-                        Biblio biblioData = new Biblio();
+                        var biblioData = new Biblio();
                         /*Elements output*/
                         biblioData.Publication.Number = record.I11;
                         biblioData.Publication.Language = "BS";
@@ -387,9 +387,9 @@ namespace Diamond_BA_publication_of_europen_patents
                         if (record.I31 != null && record.I32 != null && record.I33 != null)
                         {
                             biblioData.Priorities = new List<Priority>();
-                            for (int i = 0; i < record.I31.Count(); i++)
+                            for (var i = 0; i < record.I31.Count(); i++)
                             {
-                                Priority priority = new Priority();
+                                var priority = new Priority();
                                 priority.Country = record.I31[i];
                                 priority.Date = record.I32[i];
                                 priority.Number = record.I33[i];
@@ -401,9 +401,9 @@ namespace Diamond_BA_publication_of_europen_patents
                         if (record.I51N != null && record.I51D != null)
                         {
                             biblioData.Ipcs = new List<Ipc>();
-                            for (int i = 0; i < record.I51N.Count(); i++)
+                            for (var i = 0; i < record.I51N.Count(); i++)
                             {
-                                Ipc ipc = new Ipc()
+                                var ipc = new Ipc()
                                 {
                                     Class = record.I51N[i],
                                     Date = record.I51D[i]
@@ -414,9 +414,9 @@ namespace Diamond_BA_publication_of_europen_patents
                         else if (record.I51N != null && record.I51D == null)
                         {
                             biblioData.Ipcs = new List<Ipc>();
-                            for (int i = 0; i < record.I51N.Count(); i++)
+                            for (var i = 0; i < record.I51N.Count(); i++)
                             {
-                                Ipc ipc = new Ipc()
+                                var ipc = new Ipc()
                                 {
                                     Class = record.I51N[i],
                                 };
@@ -424,7 +424,7 @@ namespace Diamond_BA_publication_of_europen_patents
                             }
                         }
                         /*54 Title*/
-                        Title title = new Title()
+                        var title = new Title()
                         {
                             Language = "BS",
                             Text = record.I54
@@ -432,7 +432,7 @@ namespace Diamond_BA_publication_of_europen_patents
                         biblioData.Titles.Add(title);
                         /*57 description*/
                         biblioData.Abstracts = new List<Abstract>();
-                        Abstract description = new Abstract()
+                        var description = new Abstract()
                         {
                             Language = "BS",
                             Text = record.I57
@@ -442,9 +442,9 @@ namespace Diamond_BA_publication_of_europen_patents
                         if (record.I72N != null)
                         {
                             biblioData.Inventors = new List<PartyMember>();
-                            for (int i = 0; i < record.I72N.Count(); i++)
+                            for (var i = 0; i < record.I72N.Count(); i++)
                             {
-                                PartyMember inventor = new PartyMember()
+                                var inventor = new PartyMember()
                                 {
                                     Name = record.I72N[i],
                                     Address1 = record.I72A[i],
@@ -457,9 +457,9 @@ namespace Diamond_BA_publication_of_europen_patents
                         if (record.I73N != null)
                         {
                             biblioData.Assignees = new List<PartyMember>();
-                            for (int i = 0; i < record.I73N.Count(); i++)
+                            for (var i = 0; i < record.I73N.Count(); i++)
                             {
-                                PartyMember Assignees = new PartyMember()
+                                var Assignees = new PartyMember()
                                 {
                                     Name = record.I73N[i],
                                     Address1 = record.I73A[i],
@@ -470,7 +470,7 @@ namespace Diamond_BA_publication_of_europen_patents
                         }
                         /*74 name, address, cc*/
                         biblioData.Agents = new List<PartyMember>();
-                        PartyMember agent = new PartyMember()
+                        var agent = new PartyMember()
                         {
                             Name = record.I74N,
                             Address1 = record.I74A,
@@ -480,7 +480,7 @@ namespace Diamond_BA_publication_of_europen_patents
                         /*--------------------*/
                         /*96/97 number and date*/
                         biblioData.EuropeanPatents = new List<EuropeanPatent>();
-                        EuropeanPatent euPatent = new EuropeanPatent()
+                        var euPatent = new EuropeanPatent()
                         {
                             AppNumber = record.I96N,
                             AppDate = record.I96D,
@@ -492,9 +492,9 @@ namespace Diamond_BA_publication_of_europen_patents
                     }
                     foreach (var rec in fullGazetteInfo)
                     {
-                        string tmpValue = JsonConvert.SerializeObject(rec);
-                        string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                        HttpClient httpClient = new HttpClient();
+                        var tmpValue = JsonConvert.SerializeObject(rec);
+                        var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                        var httpClient = new HttpClient();
                         httpClient.BaseAddress = new Uri(url);
                         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

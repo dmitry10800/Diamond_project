@@ -18,7 +18,7 @@ namespace Diamond_AU
         }
         public static string GetDateFromGazette(string v)
         {
-            Regex date = new Regex(@"[A-Z]_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})");
+            var date = new Regex(@"[A-Z]_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})");
             var _ = date.Match(v);
             if (_.Success)
             {
@@ -30,10 +30,10 @@ namespace Diamond_AU
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
@@ -44,7 +44,7 @@ namespace Diamond_AU
         public static List<OutElements.FirstList> GetSplElements(List<XElement> v)
         {
             var values = v.Select(x => x.Value.Replace("\n", " ").Trim()).ToList();
-            List<OutElements.FirstList> elements = new List<OutElements.FirstList>();
+            var elements = new List<OutElements.FirstList>();
             var pat = new Regex(@"(?<number>\b\d+\b)\s*(?<nameOld>.*)The patent has been assigned to(?<nameNew>.*)");
             foreach (var rec in values)
             {

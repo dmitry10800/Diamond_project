@@ -23,19 +23,19 @@ namespace Dimond_EE.Subs
 
             try
             {
-                Methods methods = new Methods();
+                var methods = new Methods();
 
-                string fullText = methods.BuildAllWorkText(path);
+                var fullText = methods.BuildAllWorkText(path);
 
-                List<string> records = methods.SplitByInid(fullText, I51);
+                var records = methods.SplitByInid(fullText, I51);
              
                 foreach (var record in records)
                 {
-                    Patent patent = new Patent();
+                    var patent = new Patent();
 
-                    List<string> splittedRecords = methods.RecSplit(record);
+                    var splittedRecords = methods.RecSplit(record);
 
-                    string nameNews = methods.NameNewspaper(path);
+                    var nameNews = methods.NameNewspaper(path);
 
                     foreach (var element in splittedRecords)
                     {
@@ -44,10 +44,10 @@ namespace Dimond_EE.Subs
 
                         if (element.StartsWith(I51))
                         {
-                            string I_51 = element.Replace(I51, "");
-                            Regex regex = new Regex(@"\(10\)\s*.+?\d+");
+                            var I_51 = element.Replace(I51, "");
+                            var regex = new Regex(@"\(10\)\s*.+?\d+");
 
-                            string[] splitString = regex.Split(I_51);
+                            var splitString = regex.Split(I_51);
 
                             string tmp = null;
                             foreach (var item in splitString)
@@ -57,7 +57,7 @@ namespace Dimond_EE.Subs
 
                             patent.i51 = methods.GetIpcs(tmp.Replace("\n"," ").Trim());
 
-                            Match match = regex.Match(I_51);
+                            var match = regex.Match(I_51);
                             if (match.Success)
                             {
                                 patent.note.Add(match.Value.Trim());
@@ -66,9 +66,9 @@ namespace Dimond_EE.Subs
                         else
                         if (element.StartsWith(I11))
                         {
-                            string I_11 = element.Replace(I11, "").Replace("\n","").Trim();
-                            Regex pattern = new Regex(@"(?<group1>.+?\s.+?\s)\s*(?<group2>[A-Z]{1}[0-9]{1,2})");
-                            Match result = pattern.Match(I_11);
+                            var I_11 = element.Replace(I11, "").Replace("\n","").Trim();
+                            var pattern = new Regex(@"(?<group1>.+?\s.+?\s)\s*(?<group2>[A-Z]{1}[0-9]{1,2})");
+                            var result = pattern.Match(I_11);
                             if (result.Success)
                             {
                                 patent.i11 = result.Groups["group1"].Value.Trim();
@@ -78,24 +78,24 @@ namespace Dimond_EE.Subs
                         else
                         if (element.StartsWith(I30))
                         {
-                            string I_30 = element.Replace(I30, "").Replace("\n", "").Trim();
+                            var I_30 = element.Replace(I30, "").Replace("\n", "").Trim();
 
-                            Regex pattern = new Regex(@"(?=\d{2}\.\d{2}\.\d{4})");
+                            var pattern = new Regex(@"(?=\d{2}\.\d{2}\.\d{4})");
 
                             var notes = pattern.Split(I_30).Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-                            Regex regex = new Regex(@"(?<Date>\d{2}\.\d{2}\.\d{4})\s*,\s*(?<Kind>[A-Z]{2})\s*,\s*(?<Number>.*)");
+                            var regex = new Regex(@"(?<Date>\d{2}\.\d{2}\.\d{4})\s*,\s*(?<Kind>[A-Z]{2})\s*,\s*(?<Number>.*)");
 
                             foreach (var item in notes)
                             {
-                                Match match = regex.Match(item);
+                                var match = regex.Match(item);
 
                                 if (match.Success)
                                 {
 
                                     var ruCulture = new System.Globalization.CultureInfo("ru-RU");
 
-                                    string tmp = match.Groups["Date"].Value.Trim();
+                                    var tmp = match.Groups["Date"].Value.Trim();
 
                                     patent.i30.Add(new Priorities
                                     {
@@ -109,15 +109,15 @@ namespace Dimond_EE.Subs
                         else
                         if (element.StartsWith(I96))
                         {
-                            string I_96 = element.Replace(I96, "").Replace("\n", "").Trim();
-                            Regex regex = new Regex(@"(?<group1>\d{2}.\d{2}.\d{4}),*\s*(?<group2>.+)");
-                            Match result = regex.Match(I_96);
+                            var I_96 = element.Replace(I96, "").Replace("\n", "").Trim();
+                            var regex = new Regex(@"(?<group1>\d{2}.\d{2}.\d{4}),*\s*(?<group2>.+)");
+                            var result = regex.Match(I_96);
 
                             if (result.Success)
                             {
                                 var ruCulture = new System.Globalization.CultureInfo("ru-RU");
 
-                                string date = result.Groups["group1"].Value.Trim();
+                                var date = result.Groups["group1"].Value.Trim();
                                 patent.i96appDate = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("yyyy/MM/dd");
                                 patent.i96appNumber = result.Groups["group2"].Value.Trim();
                             }
@@ -125,13 +125,13 @@ namespace Dimond_EE.Subs
                         else
                         if (element.StartsWith(I97))
                         {
-                            string I_97 = element.Replace(I97, "").Replace("\n", "").Trim();
-                            Regex regex = new Regex(@"(?<group1>\d{2}.\d{2}.\d{4}),*\s*(?<group2>[A-Z]{2}),*\s*(?<group3>.+)");
-                            Match match = regex.Match(I_97);
+                            var I_97 = element.Replace(I97, "").Replace("\n", "").Trim();
+                            var regex = new Regex(@"(?<group1>\d{2}.\d{2}.\d{4}),*\s*(?<group2>[A-Z]{2}),*\s*(?<group3>.+)");
+                            var match = regex.Match(I_97);
                             if (match.Success)
                             {
                                 var ruCulture = new System.Globalization.CultureInfo("ru-RU");
-                                string date = match.Groups["group1"].Value.Replace(".", "/").Trim();
+                                var date = match.Groups["group1"].Value.Replace(".", "/").Trim();
                                 patent.i97.Add(new Priorities
                                 {
                                     date = DateTime.Parse(date, ruCulture.DateTimeFormat).ToString("yyyy/MM/dd"),
@@ -148,17 +148,17 @@ namespace Dimond_EE.Subs
                         else
                         if (element.StartsWith(I73))
                         {
-                            string I_73 = element.Replace(I73, "").Trim();
+                            var I_73 = element.Replace(I73, "").Trim();
 
-                            Regex regex = new Regex(@"(?<=\b[A-Z]{2}\b$)");
+                            var regex = new Regex(@"(?<=\b[A-Z]{2}\b$)");
 
                             var notes = regex.Split(I_73).Where(val => !string.IsNullOrEmpty(val)).Select(x => x.Trim()).ToList();
 
-                            Regex pattern = new Regex(@"(?<name>.+?)\n(?<adress>.+\n?.+\n?.+),\s(?<kind>[A-Z]{2})");
+                            var pattern = new Regex(@"(?<name>.+?)\n(?<adress>.+\n?.+\n?.+),\s(?<kind>[A-Z]{2})");
 
                             foreach (var item in notes)
                             {
-                                Match match = pattern.Match(item);
+                                var match = pattern.Match(item);
 
                                 if (match.Success)
                                 {
@@ -174,17 +174,17 @@ namespace Dimond_EE.Subs
                         else
                         if (element.StartsWith(I72))
                         {
-                            string I_72 = element.Replace(I72, "").Trim();
+                            var I_72 = element.Replace(I72, "").Trim();
 
-                            Regex regex = new Regex(@"(?<=\b[A-Z]{2}\b$)", RegexOptions.Multiline);
+                            var regex = new Regex(@"(?<=\b[A-Z]{2}\b$)", RegexOptions.Multiline);
 
                             var notes = regex.Split(I_72).Where(val => !string.IsNullOrEmpty(val)).Select(x => x.Trim()).ToList();
 
-                            Regex pattern = new Regex(@"(?<name>.+?)\n(?<adress>.+\n?.+\n?.+),\s(?<kind>[A-Z]{2})");
+                            var pattern = new Regex(@"(?<name>.+?)\n(?<adress>.+\n?.+\n?.+),\s(?<kind>[A-Z]{2})");
 
                             foreach (var item in notes)
                             {
-                                Match match = pattern.Match(item);
+                                var match = pattern.Match(item);
 
                                 if (match.Success)
                                 {
@@ -201,11 +201,11 @@ namespace Dimond_EE.Subs
                         if (element.StartsWith(I74))
                         {
                             
-                            string I_74 = element.Replace(I74, "").Trim();
-                            Regex regex = new Regex(@"(?<name>.+)\n(?<adress>.+\n.+),\s(?<kind>[A-Z]{2})\n(?<note>.+)");
+                            var I_74 = element.Replace(I74, "").Trim();
+                            var regex = new Regex(@"(?<name>.+)\n(?<adress>.+\n.+),\s(?<kind>[A-Z]{2})\n(?<note>.+)");
                             
 
-                            Match match = regex.Match(I_74);
+                            var match = regex.Match(I_74);
                             if (match.Success)
                             {
                                 patent.i74.Add(new Person

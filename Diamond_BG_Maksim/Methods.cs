@@ -49,7 +49,7 @@ namespace Diamond_BG_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -65,7 +65,7 @@ namespace Diamond_BG_Maksim
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(51\) I)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(51) I")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "BA"));
                     }
@@ -78,9 +78,9 @@ namespace Diamond_BG_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени европейски патенти"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
@@ -92,9 +92,9 @@ namespace Diamond_BG_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени европейски патенти"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "BA"));
                     }
@@ -108,9 +108,9 @@ namespace Diamond_BG_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Европейски патенти > Издадени ЕП след процедура по опозиция, съгласно чл. 103 от ЕПК"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
@@ -122,9 +122,9 @@ namespace Diamond_BG_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Прекратили действието си обекти на закрила > Прекратили действието си патенти"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("(11)")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
@@ -138,9 +138,9 @@ namespace Diamond_BG_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("Раздел: > Прекратили действието си обекти на закрила > Европейски патенти - отказ от право"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=BG)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("BG")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=BG)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("BG")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "MM"));
                     }
@@ -215,15 +215,15 @@ namespace Diamond_BG_Maksim
                 {
                     if (inid.StartsWith(I51))
                     {
-                        List<string> ipcrs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var ipcrs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string ipcr in ipcrs)
+                        foreach (var ipcr in ipcrs)
                         {
-                            Match match = Regex.Match(ipcr.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
+                            var match = Regex.Match(ipcr.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
 
                             if (match.Success)
                             {
-                                Match match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
+                                var match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
 
                                 if (match1.Success)
                                 {
@@ -261,7 +261,7 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I86, "").Trim() != "") 
                         { 
-                            Match match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                            var match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                             if (match.Success)
                             {
                                 intConvention.PctApplNumber = match.Groups["num"].Value.Trim();
@@ -274,7 +274,7 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I87, "").Trim() != "")
                         {
-                            Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                            var match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                             if (match.Success)
                             {
                                 intConvention.PctPublNumber = match.Groups["num"].Value.Trim();
@@ -285,11 +285,11 @@ namespace Diamond_BG_Maksim
                     }
                     else if (inid.StartsWith(I71))
                     {
-                        List<string> applicants = Regex.Split(inid.Replace(I71, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var applicants = Regex.Split(inid.Replace(I71, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string applicant in applicants)
+                        foreach (var applicant in applicants)
                         {
-                            Match match = Regex.Match(applicant, @"(?<name>.+?),\s(?<adress>.+)");
+                            var match = Regex.Match(applicant, @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -304,9 +304,9 @@ namespace Diamond_BG_Maksim
                     }
                     else if (inid.StartsWith(I72))
                     {
-                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string inventor in inventors)
+                        foreach (var inventor in inventors)
                         {
                             biblio.Inventors.Add(new PartyMember
                             {
@@ -316,11 +316,11 @@ namespace Diamond_BG_Maksim
                     }
                     else if (inid.StartsWith(I74))
                     {
-                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=[\s|\.][0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=[\s|\.][0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string agent in agents)
+                        foreach (var agent in agents)
                         {
-                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                            var match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -351,7 +351,7 @@ namespace Diamond_BG_Maksim
                     }
                     else if (inid.StartsWith(I57n))
                     {
-                        Match match = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
+                        var match = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
 
                         if (match.Success)
                         {
@@ -372,7 +372,7 @@ namespace Diamond_BG_Maksim
                         }
                         else
                         {
-                            Match match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
+                            var match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
 
                             if (match1.Success)
                             {
@@ -404,11 +404,11 @@ namespace Diamond_BG_Maksim
             }
             else if(subCode == "3")
             {
-                foreach (string inid in MakeInids(note, subCode))
+                foreach (var inid in MakeInids(note, subCode))
                 {
                     if (inid.StartsWith(I11))
                     {
-                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<num>[0-9]+)\s(?<kind>[A-Z]{1,2}.+)");
+                        var match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<num>[0-9]+)\s(?<kind>[A-Z]{1,2}.+)");
 
                         if (match.Success)
                         {
@@ -419,15 +419,15 @@ namespace Diamond_BG_Maksim
                     }
                     else if (inid.StartsWith(I51))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string ipc in ipcs)
+                        foreach (var ipc in ipcs)
                         {
-                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
+                            var match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
 
                             if (match.Success)
                             {
-                                Match match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
+                                var match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
 
                                 if (match1.Success)
                                 {
@@ -474,7 +474,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I41))
                     {
-                        Match match = Regex.Match(inid.Replace(I41, "").Trim(), @".+\/(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        var match = Regex.Match(inid.Replace(I41, "").Trim(), @".+\/(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                         if (match.Success)
                         {
                             biblio.DOfPublication = new DOfPublication
@@ -489,7 +489,7 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I86, "").Trim() != "")
                         {
-                            Match match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                            var match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                             if (match.Success)
                             {
                                 intConvention.PctApplNumber = match.Groups["num"].Value.Trim();
@@ -503,7 +503,7 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I87, "").Trim() != "")
                         {
-                            Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                            var match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                             if (match.Success)
                             {
                                 intConvention.PctPublNumber = match.Groups["num"].Value.Trim();
@@ -515,9 +515,9 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I72))
                     {
-                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string inventor in inventors)
+                        foreach (var inventor in inventors)
                         {
                             biblio.Inventors.Add(new PartyMember
                             {
@@ -528,11 +528,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I73))
                     {
-                        List<string> assignes = Regex.Split(inid.Replace(I73, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var assignes = Regex.Split(inid.Replace(I73, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string assign in assignes)
+                        foreach (var assign in assignes)
                         {
-                            Match match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+)");
+                            var match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -548,11 +548,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     {
-                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=[а-я]\.?[\s|\.][0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=[а-я]\.?[\s|\.][0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string agent in agents)
+                        foreach (var agent in agents)
                         {
-                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                            var match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -577,7 +577,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I57n))
                     {
-                        Match match = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
+                        var match = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
 
                         if (match.Success)
                         {
@@ -598,7 +598,7 @@ namespace Diamond_BG_Maksim
                         }
                         else
                         {
-                            Match match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
+                            var match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
 
                             if (match1.Success)
                             {
@@ -623,11 +623,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I57))
                     {
-                        List<string> claims = Regex.Split(inid.Replace(I57, "").Trim(), @"(?=\.\s[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var claims = Regex.Split(inid.Replace(I57, "").Trim(), @"(?=\.\s[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string claim in claims)
+                        foreach (var claim in claims)
                         {
-                            Match match = Regex.Match(claim, @"((?<num>[0-9]{1,3})\.\s(?<text>.+))");
+                            var match = Regex.Match(claim, @"((?<num>[0-9]{1,3})\.\s(?<text>.+))");
                             if (match.Success)
                             {
                                 biblio.Claims.Add(new DiamondProjectClasses.Claim
@@ -650,7 +650,7 @@ namespace Diamond_BG_Maksim
             }
             else if(subCode == "4")
             {
-                foreach (string inid in MakeInids(note,subCode))
+                foreach (var inid in MakeInids(note,subCode))
                 {
                     if (inid.StartsWith(I11))
                     {
@@ -689,9 +689,9 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I72))
                     {
-                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string inventor in inventors)
+                        foreach (var inventor in inventors)
                         {
                             biblio.Inventors.Add(new PartyMember
                             {
@@ -702,11 +702,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I73))
                     {
-                        List<string> assignes = Regex.Split(inid.Replace(I73, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var assignes = Regex.Split(inid.Replace(I73, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string assign in assignes)
+                        foreach (var assign in assignes)
                         {
-                            Match match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+),\s\((?<code>.+)\)");
+                            var match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+),\s\((?<code>.+)\)");
 
                             if (match.Success)
                             {
@@ -725,7 +725,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     {
-                        Match match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                        var match = Regex.Match(inid.Replace(I74, "").Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                         if (match.Success)
                         {
@@ -740,7 +740,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I54))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace(I54, "").Trim(), @"(?<title>.+)\s(?<note>\d+)\s(?<claim>пре.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace(I54, "").Trim(), @"(?<title>.+)\s(?<note>\d+)\s(?<claim>пре.+)");
 
                         if (match.Success)
                         {
@@ -764,15 +764,15 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I51))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string ipc in ipcs)
+                        foreach (var ipc in ipcs)
                         {
-                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
+                            var match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
 
                             if (match.Success)
                             {
-                                Match match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
+                                var match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
 
                                 if (match1.Success)
                                 {
@@ -796,11 +796,11 @@ namespace Diamond_BG_Maksim
             }
             else if(subCode == "5")
             {
-                foreach (string inid in MakeInids(note, subCode))
+                foreach (var inid in MakeInids(note, subCode))
                 {
                     if (inid.StartsWith(I11))
                     {
-                        Match match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<num>.+)\s(?<kind>\D{1,2}.+)");
+                        var match = Regex.Match(inid.Replace(I11, "").Trim(), @"(?<num>.+)\s(?<kind>\D{1,2}.+)");
 
                         if (match.Success)
                         {
@@ -812,15 +812,15 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I51))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string ipc in ipcs)
+                        foreach (var ipc in ipcs)
                         {
-                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
+                            var match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
 
                             if (match.Success)
                             {
-                                Match match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
+                                var match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
 
                                 if (match1.Success)
                                 {
@@ -838,7 +838,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I97))
                     {
-                        Match match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<num>.+)[,|\.]\s?(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        var match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<num>.+)[,|\.]\s?(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
 
                         if (match.Success)
                         {
@@ -850,7 +850,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I96))
                     {
-                        Match match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<num>.+)[,|\.]\s?(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        var match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<num>.+)[,|\.]\s?(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
 
                         if (match.Success)
                         {
@@ -884,7 +884,7 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I86, "").Trim() != "")
                         {
-                            Match match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                            var match = Regex.Match(inid.Replace(I86, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                             if (match.Success)
                             {
                                 intConvention.PctApplNumber = match.Groups["num"].Value.Trim();
@@ -898,7 +898,7 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I87, "").Trim() != "")
                         {
-                            Match match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                            var match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<num>.+),\s(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                             if (match.Success)
                             {
                                 intConvention.PctPublNumber = match.Groups["num"].Value.Trim();
@@ -910,9 +910,9 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I72))
                     {
-                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex.Split(inid.Replace(I72, "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string inventor in inventors)
+                        foreach (var inventor in inventors)
                         {
                             biblio.Inventors.Add(new PartyMember
                             {
@@ -923,11 +923,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I73))
                     {
-                        List<string> assignes = Regex.Split(inid.Replace(I73, "").Trim(), @"(?<=\])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var assignes = Regex.Split(inid.Replace(I73, "").Trim(), @"(?<=\])").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string assign in assignes)
+                        foreach (var assign in assignes)
                         {
-                            Match match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+),\s\[(?<code>[A-Z]{2})");
+                            var match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+),\s\[(?<code>[A-Z]{2})");
 
                             if (match.Success)
                             {
@@ -944,11 +944,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I74))
                     { 
-                        List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=\s[0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var agents = Regex.Split(inid.Replace(I74, "").Trim(), @"(?<=\s[0-9]{1,2}\s)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string agent in agents)
+                        foreach (var agent in agents)
                         {
-                            Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                            var match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -964,7 +964,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I54))
                     {
-                        Match match = Regex.Match(inid.Replace(I54, "").Trim(), @"(?<title>.+)\s(?<note>[0-9]{1,3}\sпр.+)");
+                        var match = Regex.Match(inid.Replace(I54, "").Trim(), @"(?<title>.+)\s(?<note>[0-9]{1,3}\sпр.+)");
 
                         if (match.Success)
                         {
@@ -974,7 +974,7 @@ namespace Diamond_BG_Maksim
                                 Text = match.Groups["title"].Value.Trim()
                             });
 
-                            Match match1 = Regex.Match(match.Groups["note"].Value.Replace("Раздел: > Европейски патенти > Издадени европейски патенти","").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
+                            var match1 = Regex.Match(match.Groups["note"].Value.Replace("Раздел: > Европейски патенти > Издадени европейски патенти","").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
 
                             if (match1.Success)
                             {
@@ -995,7 +995,7 @@ namespace Diamond_BG_Maksim
                             }
                             else
                             {
-                                Match match2 = Regex.Match(inid.Replace(I57n, "").Replace("Раздел: > Европейски патенти > Издадени европейски","").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
+                                var match2 = Regex.Match(inid.Replace(I57n, "").Replace("Раздел: > Европейски патенти > Издадени европейски","").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
 
                                 if (match2.Success)
                                 {
@@ -1028,11 +1028,11 @@ namespace Diamond_BG_Maksim
             }
             else if(subCode == "7")
             {
-                foreach (string inid in MakeInids(note, subCode))
+                foreach (var inid in MakeInids(note, subCode))
                 {
                     if (inid.StartsWith(I11))
                     {
-                        Match match = Regex.Match(inid.Replace(I11, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<num>[0-9]+)\s(?<kind>[A-Z]{1,2}.+)");
+                        var match = Regex.Match(inid.Replace(I11, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<num>[0-9]+)\s(?<kind>[A-Z]{1,2}.+)");
 
                         if (match.Success)
                         {
@@ -1044,16 +1044,16 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I51))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var ipcs = Regex.Split(inid.Replace("(51) Int. Cl.", "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string ipc in ipcs)
+                        foreach (var ipc in ipcs)
                         {
-                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
+                            var match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\((?<date>.+)\)");
 
                             if (match.Success)
                             {
 
-                                Match match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
+                                var match1 = Regex.Match(match.Groups["class"].Value.Trim(), @"(?<f>.+)\s(?<s>.+)");
 
                                 if (match1.Success)
                                 {
@@ -1081,7 +1081,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I24))
                     {
-                        Match match = Regex.Match(inid.Replace(I24, "").Replace("\r", "").Replace("\n", " "), @"(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4}).+");
+                        var match = Regex.Match(inid.Replace(I24, "").Replace("\r", "").Replace("\n", " "), @"(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4}).+");
 
                         if (match.Success)
                         {
@@ -1093,7 +1093,7 @@ namespace Diamond_BG_Maksim
                     if (inid.StartsWith(I41))
                     {
 
-                        Match match = Regex.Match(inid.Replace(I41, "").Replace("\r", "").Replace("\n", " ").Trim(), @".+\/(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
+                        var match = Regex.Match(inid.Replace(I41, "").Replace("\r", "").Replace("\n", " ").Trim(), @".+\/(?<date>[0-9]{2}.[0-9]{2}.[0-9]{4})");
                         if (match.Success)
                         {
                             biblio.DOfPublication = new DOfPublication
@@ -1106,9 +1106,9 @@ namespace Diamond_BG_Maksim
                     else                    
                     if (inid.StartsWith(I72))
                     {
-                        List<string> inventors = Regex.Split(inid.Replace(I72, "").Replace("\r", "").Replace("\n", " ").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex.Split(inid.Replace(I72, "").Replace("\r", "").Replace("\n", " ").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string inventor in inventors)
+                        foreach (var inventor in inventors)
                         {
                             biblio.Inventors.Add(new PartyMember
                             {
@@ -1119,11 +1119,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I73))
                     {
-                        List<string> assignes = Regex.Split(inid.Replace(I73, "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var assignes = Regex.Split(inid.Replace(I73, "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string assign in assignes)
+                        foreach (var assign in assignes)
                         {
-                            Match match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+)");
+                            var match = Regex.Match(assign, @"(?<name>.+?),\s(?<adress>.+)");
 
                             if (match.Success)
                             {
@@ -1141,12 +1141,12 @@ namespace Diamond_BG_Maksim
                     {
                         if (inid.Replace(I74, "").Trim() != "")
                         {
-                            List<string> agents = Regex.Split(inid.Replace(I74, "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var agents = Regex.Split(inid.Replace(I74, "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string agent in agents)
+                            foreach (var agent in agents)
                             {
 
-                                Match match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
+                                var match = Regex.Match(agent.Trim(), @"(?<name>.+?),\s(?<adress>.+)");
 
                                 if (match.Success)
                                 {
@@ -1173,7 +1173,7 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I57n))
                     {
-                        Match match = Regex.Match(inid.Replace(I57n, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
+                        var match = Regex.Match(inid.Replace(I57n, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+),\s(?<numFigures>[0-9]+)\s(?<figures>.+)");
 
                         if (match.Success)
                         {
@@ -1194,7 +1194,7 @@ namespace Diamond_BG_Maksim
                         }
                         else
                         {
-                            Match match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
+                            var match1 = Regex.Match(inid.Replace(I57n, "").Trim(), @"(?<numClaims>[0-9]+)\s(?<claim>.+)");
 
                             if (match1.Success)
                             {
@@ -1219,11 +1219,11 @@ namespace Diamond_BG_Maksim
                     else
                     if (inid.StartsWith(I57))
                     {
-                        List<string> claims = Regex.Split(inid.Replace(I57, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\.\s[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var claims = Regex.Split(inid.Replace(I57, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\.\s[0-9])").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string claim in claims)
+                        foreach (var claim in claims)
                         {
-                            Match match = Regex.Match(claim, @"((?<num>[0-9]{1,3})\.\s(?<text>.+))");
+                            var match = Regex.Match(claim, @"((?<num>[0-9]{1,3})\.\s(?<text>.+))");
                             if (match.Success)
                             {
                                 biblio.Claims.Add(new DiamondProjectClasses.Claim
@@ -1245,7 +1245,7 @@ namespace Diamond_BG_Maksim
             }
             else if(subCode == "21")
             {
-                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Replace("> Прекратили действието си обекти на закрила > Прекратили действието си eвропейски","").Trim(), @"(?<appNum>BG.+?),.+№\s?:(?<pubNum>\d+),\s(?<title>.+)Р");
+                var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Replace("> Прекратили действието си обекти на закрила > Прекратили действието си eвропейски","").Trim(), @"(?<appNum>BG.+?),.+№\s?:(?<pubNum>\d+),\s(?<title>.+)Р");
 
                 if (match.Success)
                 {
@@ -1263,7 +1263,7 @@ namespace Diamond_BG_Maksim
                     Console.WriteLine($"{note} -------------------------");
                 }
 
-                Match match1 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "").Trim()), @"[0-9]{8}");
+                var match1 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "").Trim()), @"[0-9]{8}");
 
                 if (match1.Success)
                 {
@@ -1291,13 +1291,13 @@ namespace Diamond_BG_Maksim
             List<string> inids = new();
             if (subCode == "1" || subCode == "3" || subCode == "7")
             {
-                string noteWithOut57 = note.Substring(0, note.IndexOf("(57)"));
+                var noteWithOut57 = note.Substring(0, note.IndexOf("(57)"));
 
                 inids = Regex.Split(noteWithOut57, @"(?=\([0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                string field57 = note.Substring(note.IndexOf("(57)"));
+                var field57 = note.Substring(note.IndexOf("(57)"));
 
-                Match match = Regex.Match(field57.Replace("\r","").Replace("\n"," ").Trim(), @"(?<f57>.+)\.\s(?<note>[0-9]+\sпр.+?)\s(?<else>[А-Я])");
+                var match = Regex.Match(field57.Replace("\r","").Replace("\n"," ").Trim(), @"(?<f57>.+)\.\s(?<note>[0-9]+\sпр.+?)\s(?<else>[А-Я])");
                 if (match.Success)
                 {
                     inids.Add(match.Groups["f57"].Value.Trim());
@@ -1305,7 +1305,7 @@ namespace Diamond_BG_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(field57.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<f57>.+)\.\s(?<note>[0-9]+\sпр.+)");
+                    var match1 = Regex.Match(field57.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<f57>.+)\.\s(?<note>[0-9]+\sпр.+)");
                     if (match1.Success)
                     {
                         inids.Add(match1.Groups["f57"].Value.Trim());
@@ -1324,7 +1324,7 @@ namespace Diamond_BG_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : // продакшен
                     @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // стейдж
@@ -1332,8 +1332,8 @@ namespace Diamond_BG_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

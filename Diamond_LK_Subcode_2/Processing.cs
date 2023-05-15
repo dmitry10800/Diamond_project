@@ -8,9 +8,9 @@ namespace Diamond_LK_Subcode_2
     {
         public static List<Elements> Applications(List<string> elements)
         {
-            List<Elements> elementsOut = new List<Elements>();
+            var elementsOut = new List<Elements>();
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
                 try
                 {

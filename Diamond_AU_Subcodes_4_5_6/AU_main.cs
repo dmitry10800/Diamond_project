@@ -15,12 +15,12 @@ namespace Diamond_AU_Subcodes_4_5_6
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> textList = new List<XElement>();
+            var textList = new List<XElement>();
 
             foreach (var file in files)
             {

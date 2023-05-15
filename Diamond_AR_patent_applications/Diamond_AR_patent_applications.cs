@@ -49,7 +49,7 @@ namespace Diamond_AR_patent_applications
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("/"))
             {
@@ -68,15 +68,15 @@ namespace Diamond_AR_patent_applications
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             if (recString != "")
             {
                 //if (recString.Contains("\n"))
                 //{
                 //    recString = recString.Replace("\n", " ");
                 //}
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -95,7 +95,7 @@ namespace Diamond_AR_patent_applications
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AR\App\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -128,10 +128,10 @@ namespace Diamond_AR_patent_applications
                     if (value != null)
                         Images.Add(value, item.Attribute("filename")?.Value);
                 }
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -179,11 +179,11 @@ namespace Diamond_AR_patent_applications
                                 /*Saving images*/
                                 if (imageNames != null)
                                 {
-                                    int imgCount = 1;
+                                    var imgCount = 1;
                                     foreach (var image in imageNames)
                                     {
-                                        string ext = Path.GetExtension(Images[image]);
-                                        string imageFileName = Path.Combine(root.FullName, Images[image]);
+                                        var ext = Path.GetExtension(Images[image]);
+                                        var imageFileName = Path.Combine(root.FullName, Images[image]);
                                         if (File.Exists(imageFileName))
                                             try
                                             {
@@ -262,7 +262,7 @@ namespace Diamond_AR_patent_applications
                                 tmpRecValue = inidCode.Replace(I41, "").Replace("\n", " ").Trim();
                                 if (tmpRecValue.Contains("Bol. Nro.:"))
                                 {
-                                    string tRec = tmpRecValue.Substring(tmpRecValue.IndexOf("Bol. Nro.:")).Replace("Bol. Nro.:", "").Replace("SOLICITUDES E PATENTE", "").Trim();
+                                    var tRec = tmpRecValue.Substring(tmpRecValue.IndexOf("Bol. Nro.:")).Replace("Bol. Nro.:", "").Replace("SOLICITUDES E PATENTE", "").Trim();
                                     currentElement.I41B = tRec.Trim();
                                     currentElement.I41 = DateNormalize(tmpRecValue.Remove(tmpRecValue.IndexOf("Bol. Nro.:")).Trim());
                                 }
@@ -277,11 +277,11 @@ namespace Diamond_AR_patent_applications
                                 string[] tmpIntClass = null;
                                 string tmpCodeValue = null;
                                 tmpRecValue = inidCode.Replace(I51, "").Replace("\n", " ").Trim();
-                                string ipcPattern = @"([A-Z]{1}\d{2}[A-Z]{1}).*?";
-                                string[] splIPC = Regex.Split(tmpRecValue, ipcPattern).Where(s => s != String.Empty).ToArray();
+                                var ipcPattern = @"([A-Z]{1}\d{2}[A-Z]{1}).*?";
+                                var splIPC = Regex.Split(tmpRecValue, ipcPattern).Where(s => s != String.Empty).ToArray();
                                 if (splIPC != null && splIPC.Count() % 2 == 0)
                                 {
-                                    for (int k = 0; k < splIPC.Count(); k++)
+                                    for (var k = 0; k < splIPC.Count(); k++)
                                     {
                                         if (Regex.IsMatch(splIPC[k].Trim(), @"[A-Z]{1}\d{2}[A-Z]{1}"))
                                         {
@@ -336,12 +336,12 @@ namespace Diamond_AR_patent_applications
                                 tmpRecValue = inidCode.Replace(I71, "").Trim();
                                 if (tmpRecValue.Contains("\n"))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 1)
                                     {
-                                        string tmpSplValueTitular = "";
+                                        var tmpSplValueTitular = "";
                                         currentElement.I71N = tmpSplValue[0].Replace("-", " ").Trim();
-                                        for (int s = 1; s < tmpSplValue.Count(); s++)
+                                        for (var s = 1; s < tmpSplValue.Count(); s++)
                                         {
                                             tmpSplValueTitular += " " + tmpSplValue[s];
                                         }
@@ -367,7 +367,7 @@ namespace Diamond_AR_patent_applications
                                 tmpRecValue = inidCode.Replace(I72, "").Replace("\n", " ");
                                 if (tmpRecValue.Contains(" - "))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var inventor in tmpSplValue)
@@ -407,7 +407,7 @@ namespace Diamond_AR_patent_applications
                         sf.WriteLine("22:\t" + field.I22);
                         if (field.I30C != null && field.I30C.Count() == field.I30N.Count() && field.I30C.Count() == field.I30D.Count())
                         {
-                            for (int i = 0; i < field.I30C.Count(); i++)
+                            for (var i = 0; i < field.I30C.Count(); i++)
                             {
                                 sf.WriteLine("30C:\t" + field.I30C[i]);
                                 sf.WriteLine("30N:\t" + field.I30N[i]);

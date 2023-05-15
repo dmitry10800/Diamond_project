@@ -14,17 +14,17 @@ namespace Diamond_MY
         public static Regex Pattern = new Regex(@"(?<Id>\d+)\s[A-Z]{2}-*(?<PatNumber>\d+)-*(?<Kind>[A-Z]{1})\s(?<AppNumber>.*)");
         public static List<LegalStatusEvent> Process2SubCode(List<XElement> elements)
         {
-            List<LegalStatusEvent> legalEvents = new List<LegalStatusEvent>();
+            var legalEvents = new List<LegalStatusEvent>();
             var records = GetTextFromXelements(elements);
             var eventDate = GetDateFromGazetteName(MY_main.CurrentFileName);
             var gazetteName = Path.GetFileName(MY_main.CurrentFileName.Replace(".tetml", ".pdf"));
-            int leCounter = 1;
+            var leCounter = 1;
             foreach (var record in records)
             {
                 var match = Pattern.Match(record);
                 if (match.Success)
                 {
-                    LegalStatusEvent lEvent = new LegalStatusEvent();
+                    var lEvent = new LegalStatusEvent();
                     lEvent.GazetteName = gazetteName;
                     /*Setting subcode*//*Setting Section Code*/
                     lEvent.SubCode = "2";

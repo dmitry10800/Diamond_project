@@ -20,24 +20,24 @@ namespace Diamond_ES
 
         public static List<SubCode3> ProcessSubCode3(List<XElement> elements)
         {
-            List<SubCode3> ElementsOut = new List<SubCode3>();
-            List<XElement> finalListSubCode3Elements = new List<XElement>();
+            var ElementsOut = new List<SubCode3>();
+            var finalListSubCode3Elements = new List<XElement>();
 
             if (elements != null && elements.Count > 0)
             {
                 string[] splittedRecord = null;
-                string recordValues = "";
+                var recordValues = "";
                 int tmpInc;
-                bool statusSearchingStart = false;
+                var statusSearchingStart = false;
 
                 int startSubCode3 = -1, endSubCode3 = -1;
-                List<int> endSubCodeIndexes = new List<int>();
-                bool flag1 = false;
-                bool flag2 = false;
-                bool flag3 = false;
-                bool flag4 = false;
-                bool flag5 = false;
-                for (int i = 0; i < elements.Count; i++)
+                var endSubCodeIndexes = new List<int>();
+                var flag1 = false;
+                var flag2 = false;
+                var flag3 = false;
+                var flag4 = false;
+                var flag5 = false;
+                for (var i = 0; i < elements.Count; i++)
                 {
                     var value = elements[i].Value;
                     if (value.StartsWith(@"CADUCIDAD (ART. 116 LP)"))
@@ -118,7 +118,7 @@ namespace Diamond_ES
 
                 if (startSubCode3 > -1 && endSubCode3 > -1)
                 {
-                    for (int i = startSubCode3; i < endSubCode3; i++)
+                    for (var i = startSubCode3; i < endSubCode3; i++)
                     {
                         finalListSubCode3Elements.Add(elements[i]);
                     }
@@ -126,7 +126,7 @@ namespace Diamond_ES
 
                 int tempInc;
 
-                for (int i = 0; i < finalListSubCode3Elements.Count; i++)
+                for (var i = 0; i < finalListSubCode3Elements.Count; i++)
                 {
                     var value = finalListSubCode3Elements[i].Value;
 
@@ -196,8 +196,8 @@ namespace Diamond_ES
 
                             if (record.StartsWith(RELATED_PUB_INF))
                             {
-                                List<RelatedPublicationInformation> outList = new List<RelatedPublicationInformation>();
-                                RelatedPublicationInformation related = new RelatedPublicationInformation();
+                                var outList = new List<RelatedPublicationInformation>();
+                                var related = new RelatedPublicationInformation();
                                 var result = Methods.RelatedPublicationInformationNormalize(record.Trim());
 
                                 related.Number = result[0].Number;

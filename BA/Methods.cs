@@ -24,11 +24,11 @@ namespace BA
         }
         public static List<Priority> PrioritySplit(string prioString)
         {
-            List<Priority> priorityStruct = new List<Priority>();
-            string tmpPrio = prioString.Replace("(31)", "").Trim();
+            var priorityStruct = new List<Priority>();
+            var tmpPrio = prioString.Replace("(31)", "").Trim();
             string[] lineSplittedPrio = null;
-            string datePattern = @"\d{4}\-\d{2}\-\d{2}";
-            string countryPattern = @"[A-Z]{2}$";
+            var datePattern = @"\d{4}\-\d{2}\-\d{2}";
+            var countryPattern = @"[A-Z]{2}$";
             /*If more than one priority separated with new line*/
             if (tmpPrio.Contains("\n"))
             {
@@ -41,7 +41,7 @@ namespace BA
                 foreach (var rec in lineSplittedPrio)
                 {
                     /*add found value to output*/
-                    Priority record = new Priority
+                    var record = new Priority
                     {
                         Date = Regex.Match(rec, datePattern).Value.Trim(),
                         Number = rec.Remove(rec.IndexOf(Regex.Match(rec, datePattern).Value.Trim())).Trim(),
@@ -57,7 +57,7 @@ namespace BA
         public static List<string> RecSplit(string recString)
         {
             List<string> splittedRecord = null;
-            string tempStrC = recString
+            var tempStrC = recString
                 .Replace("(32)", "")
                 .Replace("(33)", "")
                 .Replace("Broj ostalih patentnih zahtjeva:", "(I99)")
@@ -71,8 +71,8 @@ namespace BA
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57)")).Trim();
                     tempStrC = tempStrC.Remove(tempStrC.IndexOf("(57)")).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -92,9 +92,9 @@ namespace BA
 
         public static List<Ipc> ClassificationInfoSplit(string tmpString)
         {
-            List<Ipc> priority = new List<Ipc>();
+            var priority = new List<Ipc>();
             string[] splClass = null;
-            string tmpClass = tmpString.Replace("(51)", "").Replace(" ", "").Trim();
+            var tmpClass = tmpString.Replace("(51)", "").Replace(" ", "").Trim();
             if (tmpClass.Contains(","))
             {
                 splClass = tmpClass.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
@@ -132,12 +132,12 @@ namespace BA
         /*Without address - 71, 73, 74*/
         public static List<PartyMember> GetPersonsShortInfo(string tmpString)
         {
-            List<PartyMember> persons = new List<PartyMember>();
+            var persons = new List<PartyMember>();
             var person = new PartyMember();
-            string tmpValues = tmpString.Replace("(71)", "").Replace("(73)", "").Replace("(74)", "").Replace("\n", "****").Trim();
+            var tmpValues = tmpString.Replace("(71)", "").Replace("(73)", "").Replace("(74)", "").Replace("\n", "****").Trim();
             if (Regex.IsMatch(tmpValues, @"\*{4}[A-Z]{2}\*{4}"))
             {
-                string[] tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").ToArray();
+                var tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").ToArray();
                 foreach (var rec in tmpSplValues)
                 {
                     if (Regex.IsMatch(rec, @"\*{4}[A-Z]{2}\*{4}"))
@@ -161,10 +161,10 @@ namespace BA
         /*With address - 72, 75*/
         public static List<PartyMember> GetPersonsInfo(string tmpString)
         {
-            List<PartyMember> persons = new List<PartyMember>();
+            var persons = new List<PartyMember>();
             
-            List<string> tmpSplValues = new List<string>();
-            string tmpValues = tmpString.Replace("(72)", "").Replace("(73)", "").Replace("(75)", "").Replace("\n", "****").Trim();
+            var tmpSplValues = new List<string>();
+            var tmpValues = tmpString.Replace("(72)", "").Replace("(73)", "").Replace("(75)", "").Replace("\n", "****").Trim();
             if (Regex.IsMatch(tmpValues, @"\*{4}[A-Z]{2}\*{4}"))
             {
                 tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").Select(x => x.TrimEnd('*')).ToList();
@@ -175,7 +175,7 @@ namespace BA
             }
             foreach (var rec in tmpSplValues)
             {
-                string tmpName = rec.Remove(rec.IndexOf(Regex.Match(rec, @"\*{4}[A-Z]{2}$").Value)).Trim().Trim(',').Trim();
+                var tmpName = rec.Remove(rec.IndexOf(Regex.Match(rec, @"\*{4}[A-Z]{2}$").Value)).Trim().Trim(',').Trim();
 
                 if (tmpName.Contains("****"))
                 {

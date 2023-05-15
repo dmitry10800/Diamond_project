@@ -14,7 +14,7 @@ namespace Diamond_BG
         /*Date*/
         public static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("."))
             {
@@ -31,9 +31,9 @@ namespace Diamond_BG
         {
             string[] splittedRecord = null;
             string tmpDescValue = null;
-            string tempStrC = recString.Trim();
-            string I32 = "(32) ";
-            string I33 = "(33) ";
+            var tempStrC = recString.Trim();
+            var I32 = "(32) ";
+            var I33 = "(33) ";
             if (tempStrC.Contains("(57) "))
             {
                 tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57) ")).Trim();
@@ -41,8 +41,8 @@ namespace Diamond_BG
             }
             if (tempStrC != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(tempStrC);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(tempStrC);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -67,9 +67,9 @@ namespace Diamond_BG
         {
             string[] splittedRecord = null;
             string tmpDescValue = null;
-            string tempStrC = recString.Trim();
-            string I32 = "(32) ";
-            string I33 = "(33) ";
+            var tempStrC = recString.Trim();
+            var I32 = "(32) ";
+            var I33 = "(33) ";
             if (tempStrC.Contains("(57) "))
             {
                 tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57) ")).Trim();
@@ -77,8 +77,8 @@ namespace Diamond_BG
             }
             if (recString != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -103,10 +103,10 @@ namespace Diamond_BG
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

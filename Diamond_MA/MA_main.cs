@@ -15,7 +15,7 @@ namespace Diamond_MA
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\MA\Test\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> sub1Elements = null; // APPLICATIONS WITHDRAWN, REFUSED, TAKEN TO BE ABANDONED
             //List<XElement> sub2Elements = null; // PATENTS RENEWED UNDER SECTION 36

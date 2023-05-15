@@ -13,7 +13,7 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub8 processing started");
-                List<OutElements.Sub8> elements = new List<OutElements.Sub8>();
+                var elements = new List<OutElements.Sub8>();
                 var checkPattern = new Regex(@"[A-Z]{2}\d+");
                 foreach (var record in v)
                 {
@@ -37,8 +37,8 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub9 processing started");
-                List<OutElements.Sub9> elements = new List<OutElements.Sub9>();
-                List<string> splElements = new List<string>();
+                var elements = new List<OutElements.Sub9>();
+                var splElements = new List<string>();
                 var checkPattern = new Regex(@"(?<pubNumber>[A-Z]{2}\d+)\s(?<appNumber>[A-Z]{2}\d+\.\d+)$");
                 foreach (var elValue in v)
                 {
@@ -68,7 +68,7 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub10 processing started");
-                List<OutElements.Sub10> elements = new List<OutElements.Sub10>();
+                var elements = new List<OutElements.Sub10>();
                 var checkPattern = new Regex(@"(?<date>\d+\s\w+\s\d{4})\s(?<pubNumber>[A-Z]{2}\d+)\s(?<appNumber>[A-Z]{2}\d+\.*(\d+)*)$");
                 foreach (var record in v)
                 {
@@ -95,7 +95,7 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub11 processing started");
-                List<OutElements.Sub11> elements = new List<OutElements.Sub11>();
+                var elements = new List<OutElements.Sub11>();
                 var datePattern = new Regex(@"\d+\s\w+\s\d{4}");
                 var recPatter = new Regex(@"[A-Z]{2}\d+");
                 string dateValue = null;
@@ -129,7 +129,7 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub12 processing started");
-                List<OutElements.Sub12> elements = new List<OutElements.Sub12>();
+                var elements = new List<OutElements.Sub12>();
                 var datePattern = new Regex(@"\d+\s\w+\s\d{4}");
                 var recPatter = new Regex(@"[A-Z]{2}\d+");
                 string dateValue = null;
@@ -163,7 +163,7 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub42 processing started");
-                List<OutElements.Sub42> elements = new List<OutElements.Sub42>();
+                var elements = new List<OutElements.Sub42>();
                 var datePattern = new Regex(@"\d+\s\w+\s\d{4}");
                 var recPatter = new Regex(@"[A-Z]{2}\d+");
                 string dateValue = null;
@@ -200,7 +200,7 @@ namespace Diamond_GB
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub43 processing started");
-                List<OutElements.Sub43> elements = new List<OutElements.Sub43>();
+                var elements = new List<OutElements.Sub43>();
                 var datePattern = new Regex(@"\d+\s\w+\s\d{4}");
                 var recPatter = new Regex(@"[A-Z]{2}\d+");
                 string dateValue = null;

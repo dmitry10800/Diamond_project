@@ -7,12 +7,12 @@ namespace Diamond_PH
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub7Convert(List<Elements> records)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
-            int id = 1;
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var id = 1;
 
             foreach (var record in records)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                 legalEvent.GazetteName = PH_main.currentFileName.Replace(".txt", ".pdf");
 
@@ -20,7 +20,7 @@ namespace Diamond_PH
                 legalEvent.SectionCode = "MK";
                 legalEvent.CountryCode = "PH";
                 legalEvent.Id = id++;
-                Biblio biblio = new Biblio();
+                var biblio = new Biblio();
 
                 if (record.AppNumber != null)
                 {

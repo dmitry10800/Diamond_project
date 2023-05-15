@@ -17,19 +17,19 @@ namespace Diamond_ES
 
         public static List<SubCode12> ProcessSubCode12(List<XElement> elements)
         {
-            List<SubCode12> ElementsOut = new List<SubCode12>();
-            List<XElement> finalListSubCode12Elements = new List<XElement>();
+            var ElementsOut = new List<SubCode12>();
+            var finalListSubCode12Elements = new List<XElement>();
 
             if (elements != null && elements.Count > 0)
             {
                 string[] splittedRecord = null;
-                string recordValues = "";
+                var recordValues = "";
                 int tmpInc;
-                bool statusSearchingStart = false;
+                var statusSearchingStart = false;
 
                 int startSubCode12 = -1, endSubCode12 = -1;
 
-                for (int i = 0; i < elements.Count; i++)
+                for (var i = 0; i < elements.Count; i++)
                 {
                     var value = elements[i].Value;
 
@@ -45,7 +45,7 @@ namespace Diamond_ES
 
                 if (startSubCode12 > -1 && endSubCode12 > -1)
                 {
-                    for (int i = startSubCode12; i <= endSubCode12; i++)
+                    for (var i = startSubCode12; i <= endSubCode12; i++)
                     {
                         finalListSubCode12Elements.Add(elements[i]);
                     }
@@ -53,7 +53,7 @@ namespace Diamond_ES
 
                 int tempInc;
 
-                for (int i = 0; i < finalListSubCode12Elements.Count; i++)
+                for (var i = 0; i < finalListSubCode12Elements.Count; i++)
                 {
                     var value = finalListSubCode12Elements[i].Value;
 

@@ -10,16 +10,16 @@ namespace Diamond_IE
         public static List<Diamond.Core.Models.LegalStatusEvent> FirstList(List<OutElements.FirstList> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(IE_diam.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(IE_diam.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
 
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(IE_diam.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     if (record.PatNumber.StartsWith("S"))
@@ -34,15 +34,15 @@ namespace Diamond_IE
                     /*Setting Country Code*/
                     legalEvent.CountryCode = "IE";
                     legalEvent.Id = leCounter++;
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Publication.Number = record.PatNumber;
                     if (record.IpcVersion != null)
                     {
                         biblioData.Ipcs = new List<Ipc>();
-                        for (int i = 0; i < record.IpcClass.Count(); i++)
+                        for (var i = 0; i < record.IpcClass.Count(); i++)
                         {
-                            Ipc ipcValue = new Ipc
+                            var ipcValue = new Ipc
                             {
                                 Date = record.IpcVersion,
                                 Class = record.IpcClass[i]
@@ -52,7 +52,7 @@ namespace Diamond_IE
                     }
                     /*-------------------*/
                     /*54 Title*/
-                    Title title = new Title()
+                    var title = new Title()
                     {
                         Language = "EN",
                         Text = record.Title
@@ -61,7 +61,7 @@ namespace Diamond_IE
                     /*--------------*/
                     /*71 name, address, country code*/
                     biblioData.Assignees = new List<PartyMember>();
-                    PartyMember assignee = new PartyMember()
+                    var assignee = new PartyMember()
                     {
                         Name = record.AppName
                     };

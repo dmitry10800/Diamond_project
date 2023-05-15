@@ -21,13 +21,13 @@ namespace Diamond_RS_Maksim
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var convertedPatents = new List<Diamond.Core.Models.LegalStatusEvent>();
 
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            var directoryInfo = new DirectoryInfo(path);
 
-            List<string> files = new List<string>();
+            var files = new List<string>();
 
-            foreach (FileInfo file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -36,7 +36,7 @@ namespace Diamond_RS_Maksim
 
             List<XElement> xElements = null;
 
-            foreach (string tetFile in files)
+            foreach (var tetFile in files)
             {
                 CurrentFileName = tetFile;
 
@@ -54,7 +54,7 @@ namespace Diamond_RS_Maksim
 
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text").ToList();
 
-                    foreach (string note in BuildNotes(xElements))
+                    foreach (var note in BuildNotes(xElements))
                     {
                         convertedPatents.Add(SplitNote(note, subCode, "FG"));
                     }
@@ -67,14 +67,14 @@ namespace Diamond_RS_Maksim
         {
             string fullText = null;
 
-            foreach (XElement text in xElements)
+            foreach (var text in xElements)
             {
                 fullText += text.Value.Trim() + "\n";
             }
 
-            Regex splitText = new Regex(@"(?=\(51\))", RegexOptions.Multiline);
+            var splitText = new Regex(@"(?=\(51\))", RegexOptions.Multiline);
 
-            List<string> notes = splitText.Split(fullText).ToList();
+            var notes = splitText.Split(fullText).ToList();
             notes.RemoveAt(0);
 
             return notes;
@@ -82,7 +82,7 @@ namespace Diamond_RS_Maksim
 
         internal Diamond.Core.Models.LegalStatusEvent SplitNote(string note, string sub, string sectionCode)
         {
-            Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+            var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
             legalEvent.GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"));
 
@@ -94,25 +94,25 @@ namespace Diamond_RS_Maksim
 
             legalEvent.SubCode = sub;
 
-            Biblio biblioData = new Biblio();
+            var biblioData = new Biblio();
 
             biblioData.EuropeanPatents = new List<EuropeanPatent>();
            
-            EuropeanPatent europeanPatent = new EuropeanPatent();
+            var europeanPatent = new EuropeanPatent();
 
-            IntConvention intConvention = new IntConvention();
+            var intConvention = new IntConvention();
 
-            CultureInfo cultureInfo = new CultureInfo("ru-Ru");
+            var cultureInfo = new CultureInfo("ru-Ru");
 
-            foreach (string record in SplitNoteIntoInid(note))
+            foreach (var record in SplitNoteIntoInid(note))
             {
                 if (record.StartsWith("(51)"))
                 {
-                    string text = record.Replace("(51)", "").Trim();
+                    var text = record.Replace("(51)", "").Trim();
 
                     biblioData.Ipcs = new List<Ipc>();
 
-                    List <(string, string)> ipcs = SplitIpcs(text);
+                    var ipcs = SplitIpcs(text);
 
                     foreach (var  ipc in ipcs)
                     {
@@ -126,11 +126,11 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(11)"))
                 {
-                    string text = record.Replace("(11)", "").Trim();
+                    var text = record.Replace("(11)", "").Trim();
 
-                    Regex regex = new Regex(@"(?<number>\d.+)\s?(?<kind>[A-Z]{1}\d)");
+                    var regex = new Regex(@"(?<number>\d.+)\s?(?<kind>[A-Z]{1}\d)");
 
-                    Match match = regex.Match(text);
+                    var match = regex.Match(text);
 
                     if (match.Success)
                     {
@@ -147,26 +147,26 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(22)"))
                 {
-                    string text = record.Replace("(22)", "").Trim().TrimEnd('.');
+                    var text = record.Replace("(22)", "").Trim().TrimEnd('.');
 
                     biblioData.Application.Date = DateTime.Parse(text, cultureInfo).ToString("yyyy/MM/dd").Replace(".","/");
                 }
                 else
                 if (record.StartsWith("(30)"))
                 {
-                    string text = record.Replace("(30)", "").Trim();
+                    var text = record.Replace("(30)", "").Trim();
 
-                    Regex regexSplit = new Regex(@"\n");
+                    var regexSplit = new Regex(@"\n");
 
-                    List<string> notes = regexSplit.Split(text).ToList();
+                    var notes = regexSplit.Split(text).ToList();
 
                     biblioData.Priorities = new List<Priority>();
 
-                    foreach (string element in notes)
+                    foreach (var element in notes)
                     {
-                        Regex regex = new Regex(@"(?<code>[A-Z]{2})\s(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
+                        var regex = new Regex(@"(?<code>[A-Z]{2})\s(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
 
-                        Match match = regex.Match(element);
+                        var match = regex.Match(element);
 
                         if (match.Success)
                         {
@@ -186,11 +186,11 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(86)"))
                 {
-                    string text = record.Replace("(86)", "").Trim();
+                    var text = record.Replace("(86)", "").Trim();
 
-                    Regex regex = new Regex(@"(?<code>[A-Z]{2})\s(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
+                    var regex = new Regex(@"(?<code>[A-Z]{2})\s(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
 
-                    Match match = regex.Match(text);
+                    var match = regex.Match(text);
 
                     if (match.Success)
                     {
@@ -207,11 +207,11 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(87)"))
                 {
-                    string text = record.Replace("(87)", "").Trim();
+                    var text = record.Replace("(87)", "").Trim();
 
-                    Regex regex = new Regex(@"(?<code>[A-Z]{2})\s(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
+                    var regex = new Regex(@"(?<code>[A-Z]{2})\s(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
 
-                    Match match = regex.Match(text);
+                    var match = regex.Match(text);
 
                     if (match.Success)
                     {
@@ -230,11 +230,11 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(96)"))
                 {
-                    string text = record.Replace("(96)", "").Trim();
+                    var text = record.Replace("(96)", "").Trim();
 
-                    Regex regex = new Regex(@"(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
+                    var regex = new Regex(@"(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)");
 
-                    Match match = regex.Match(text);
+                    var match = regex.Match(text);
 
                     if (match.Success)
                     {
@@ -249,11 +249,11 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(97)"))
                 {
-                    string text = record.Replace("(97)", "").Trim();
+                    var text = record.Replace("(97)", "").Trim();
 
-                    Regex regex = new Regex(@"(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)\s(?<kind>\D)\s(?<note>.+)");
+                    var regex = new Regex(@"(?<date>\d{2}.\d{2}.\d{4}).\s(?<number>.+)\s(?<kind>\D)\s(?<note>.+)");
 
-                    Match match = regex.Match(text);
+                    var match = regex.Match(text);
 
                     if (match.Success)
                     {
@@ -270,12 +270,12 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(54)"))
                 {
-                    string text = record.Replace("(54)", "").Trim();
+                    var text = record.Replace("(54)", "").Trim();
 
-                    List<string> lines = text.Split("\n").ToList();
+                    var lines = text.Split("\n").ToList();
 
-                    List<string> serbian = new List<string>();
-                    List<string> english = new List<string>();
+                    var serbian = new List<string>();
+                    var english = new List<string>();
 
                     biblioData.Titles = new List<Title>();
 
@@ -284,33 +284,33 @@ namespace Diamond_RS_Maksim
                     if (lines.Count % 2 == 0)
                     {
                       
-                        for (int i = 0; i < lines.Count/2; i++)
+                        for (var i = 0; i < lines.Count/2; i++)
                         {
                             serbian.Add(lines[i]);
                         }
 
-                        for(int i = lines.Count/2; i<lines.Count; i++)
+                        for(var i = lines.Count/2; i<lines.Count; i++)
                         {
                             english.Add(lines[i]);
                         }
 
-                        foreach (string item in serbian)
+                        foreach (var item in serbian)
                         {
                             serbianText += item + " ";
                         }
 
-                        foreach (string item in english)
+                        foreach (var item in english)
                         {
                             englishText += item + " ";
                         }
 
-                        Title serbianTitle = new Title
+                        var serbianTitle = new Title
                         {
                             Text = serbianText,
                             Language = "RS"
                         };
 
-                        Title englishTitle = new Title
+                        var englishTitle = new Title
                         {
                             Text = englishText,
                             Language = "EN"
@@ -321,33 +321,33 @@ namespace Diamond_RS_Maksim
                     }
                     else
                     {
-                        for (int i = 0; i < (lines.Count/2) + 1; i++)
+                        for (var i = 0; i < (lines.Count/2) + 1; i++)
                         {
                             serbian.Add(lines[i]);
                         }
 
-                        for (int i = (lines.Count/2)+1; i < lines.Count; i++)
+                        for (var i = (lines.Count/2)+1; i < lines.Count; i++)
                         {
                             english.Add(lines[i]);
                         }
 
-                        foreach (string item in serbian)
+                        foreach (var item in serbian)
                         {
                             serbianText += item + " ";
                         }
 
-                        foreach (string item in english)
+                        foreach (var item in english)
                         {
                             englishText += item + " ";
                         }
 
-                        Title serbianTitle = new Title
+                        var serbianTitle = new Title
                         {
                             Text = serbianText,
                             Language = "RS"
                         };
 
-                        Title englishTitle = new Title
+                        var englishTitle = new Title
                         {
                             Text = englishText,
                             Language = "EN"
@@ -361,17 +361,17 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(73)"))
                 {
-                    string text = record.Replace("(73)", "").Replace("\r", "").Replace("\n", " ").Trim();
+                    var text = record.Replace("(73)", "").Replace("\r", "").Replace("\n", " ").Trim();
 
-                    List<string> people = text.Split(";").ToList();
+                    var people = text.Split(";").ToList();
 
-                    Regex regex = new Regex(@"(?<name>.+?)\s(?<adress>[A-Z][a-z].+)\s(?<code>[A-Z]{2}$)");
+                    var regex = new Regex(@"(?<name>.+?)\s(?<adress>[A-Z][a-z].+)\s(?<code>[A-Z]{2}$)");
 
                     biblioData.Assignees = new List<PartyMember>();
 
-                    foreach (string item in people)
+                    foreach (var item in people)
                     {
-                        Match match = regex.Match(text);
+                        var match = regex.Match(text);
 
                         if (match.Success)
                         {
@@ -388,17 +388,17 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(72)"))
                 {
-                    string text = record.Replace("(72)", "").Replace("\r","").Replace("\n"," ").Trim();
+                    var text = record.Replace("(72)", "").Replace("\r","").Replace("\n"," ").Trim();
 
-                    List<string> people = text.Split(@";").ToList();
+                    var people = text.Split(@";").ToList();
 
-                    Regex regex = new Regex(@"(?<name>.+?,.+?,)\s(?<adress>.+)\s(?<code>[A-Z]{2}$)");
+                    var regex = new Regex(@"(?<name>.+?,.+?,)\s(?<adress>.+)\s(?<code>[A-Z]{2}$)");
 
                     biblioData.Inventors = new List<PartyMember>();
 
-                    foreach (string item in people)
+                    foreach (var item in people)
                     {
-                        Match match = regex.Match(item);
+                        var match = regex.Match(item);
 
                         if (match.Success)
                         {
@@ -418,13 +418,13 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(74)"))
                 {
-                    string text = record.Replace("(74)", "").Replace("\r", "").Replace("\n", " ").Trim();
+                    var text = record.Replace("(74)", "").Replace("\r", "").Replace("\n", " ").Trim();
 
-                    Regex regex = new Regex(@"(?<name>.+,.+,)\s(?<adress>[A-Z][a-z].+)");
+                    var regex = new Regex(@"(?<name>.+,.+,)\s(?<adress>[A-Z][a-z].+)");
 
                     biblioData.Agents = new List<PartyMember>();
 
-                    Match match = regex.Match("text");
+                    var match = regex.Match("text");
 
                     if (match.Success)
                     {
@@ -436,9 +436,9 @@ namespace Diamond_RS_Maksim
                     }
                     else
                     {
-                        Regex regex1 = new Regex(@"(?<name>\D+)\s(?<adress>[A-Z][a-z].+)");
+                        var regex1 = new Regex(@"(?<name>\D+)\s(?<adress>[A-Z][a-z].+)");
 
-                        Match match1 = regex1.Match(text);
+                        var match1 = regex1.Match(text);
 
                         if (match1.Success)
                         {
@@ -457,7 +457,7 @@ namespace Diamond_RS_Maksim
                 else
                 if (record.StartsWith("(43)"))
                 {
-                    string text = record.Replace("(43)", "").Replace("\r","").Replace("\n","").Trim().TrimEnd('.');
+                    var text = record.Replace("(43)", "").Replace("\r","").Replace("\n","").Trim().TrimEnd('.');
 
                     biblioData.Publication.Date = DateTime.Parse(text, cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
 
@@ -472,11 +472,11 @@ namespace Diamond_RS_Maksim
 
         internal List<string> SplitNoteIntoInid (string note)
         {
-            string cut51field = note.Substring(note.IndexOf("(51)"), note.IndexOf("(21)")).Replace("\r","").Replace("\n", " ").Trim();
+            var cut51field = note.Substring(note.IndexOf("(51)"), note.IndexOf("(21)")).Replace("\r","").Replace("\n", " ").Trim();
 
-            Regex split51field = new Regex(@"(?<f51>.+)\s(?<f11>\(11\).\d+.[A-Z]{1}[0-9])(?<f51c>\s?.+)?");
+            var split51field = new Regex(@"(?<f51>.+)\s(?<f11>\(11\).\d+.[A-Z]{1}[0-9])(?<f51c>\s?.+)?");
 
-            Match match51field = split51field.Match(cut51field);
+            var match51field = split51field.Match(cut51field);
 
             string parseNote = null;
 
@@ -487,33 +487,33 @@ namespace Diamond_RS_Maksim
                     + note.Substring(note.IndexOf("(21)")).Trim();
             }
 
-            Regex splitRegex = new Regex(@"(?=\(\d{2}\)\s)");
+            var splitRegex = new Regex(@"(?=\(\d{2}\)\s)");
 
             if (parseNote != null) 
             { 
-                List<string> inid = splitRegex.Split(parseNote).Where(val =>!string.IsNullOrEmpty(val)).ToList();
+                var inid = splitRegex.Split(parseNote).Where(val =>!string.IsNullOrEmpty(val)).ToList();
                 return inid;
             }
             else
             {
-                List<string> inid = splitRegex.Split(note).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                var inid = splitRegex.Split(note).Where(val => !string.IsNullOrEmpty(val)).ToList();
                 return inid;
             }
         }
 
         internal List<(string, string)> SplitIpcs (string text)
         {
-            Regex regexSplit = new Regex(@"\)");
+            var regexSplit = new Regex(@"\)");
 
-            List<string> records = regexSplit.Split(text).Where(val =>!string.IsNullOrEmpty(val)).ToList();
+            var records = regexSplit.Split(text).Where(val =>!string.IsNullOrEmpty(val)).ToList();
 
-            List<(string, string)> ipcs = new List<(string, string)>();
+            var ipcs = new List<(string, string)>();
 
-            foreach (string record in records)
+            foreach (var record in records)
             {
-                Regex regex = new Regex(@"(?<number>.+)\s\((?<date>\d{4}.\d{2})");
+                var regex = new Regex(@"(?<number>.+)\s\((?<date>\d{4}.\d{2})");
 
-                Match match = regex.Match(record);
+                var match = regex.Match(record);
 
                 if (match.Success)
                 {
@@ -528,10 +528,10 @@ namespace Diamond_RS_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

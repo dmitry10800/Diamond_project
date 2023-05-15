@@ -26,7 +26,7 @@ namespace Diamond_IN_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -35,7 +35,7 @@ namespace Diamond_IN_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -48,10 +48,10 @@ namespace Diamond_IN_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("Publication After 18 Months:"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(12\)\sPA)")
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(12\)\sPA)")
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(12) PA")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
@@ -63,16 +63,16 @@ namespace Diamond_IN_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("PUBLICATION UNDER SECTION 57 AND UNDER RULE 81(3)"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?>(\d{1,3}\sKOLKATA)|(\d{1,3}\sDELHI)|(\d{1,3}\sMUMBAI)|(\d{1,3}\sCHENNAI))")
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?>(\d{1,3}\sKOLKATA)|(\d{1,3}\sDELHI)|(\d{1,3}\sMUMBAI)|(\d{1,3}\sCHENNAI))")
                         .Where(val => !string.IsNullOrEmpty(val) && new Regex(@"\d").Match(val).Success).ToList();
 
                     List<string> works = new();
-                    for (int i = 0; i < notes.Count; i+=2)
+                    for (var i = 0; i < notes.Count; i+=2)
                     {
                         works.Add(notes[i] + " " + notes[i+1]);
                     }
 
-                    foreach (string note in works)
+                    foreach (var note in works)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "EC"));
                     }
@@ -99,7 +99,7 @@ namespace Diamond_IN_Maksim
             CultureInfo culture = new("ru-RU");
             if(subCode == "1")
             {
-                foreach (string inid in MakeInids(note, subCode))
+                foreach (var inid in MakeInids(note, subCode))
                 {
                     if (inid.StartsWith("(12)"))
                     {
@@ -107,7 +107,7 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(21)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @"(?<num>\d+)\s(?<kind>\D)");
+                        var match = Regex.Match(inid.Trim(), @"(?<num>\d+)\s(?<kind>\D)");
 
                         if (match.Success)
                         {
@@ -118,7 +118,7 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(22)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                        var match = Regex.Match(inid.Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (match.Success)
                         {
@@ -128,7 +128,7 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(43)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                        var match = Regex.Match(inid.Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
 
                         if (match.Success)
                         {
@@ -138,7 +138,7 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(54)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"invention :\s?(?<title>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"invention :\s?(?<title>.+)");
 
                         if (match.Success)
                         {
@@ -153,12 +153,12 @@ namespace Diamond_IN_Maksim
                     else if (inid.StartsWith("(71)"))
                     {
                         // todo: сделать нормальную регулярку и предусмотреть символы --------- и формат, в которой есть NA
-                        List<string> applicants = Regex.Split(inid.Replace("\r","").Replace("\n"," ").Replace("(71)Name of Applicant :","").Trim(),
+                        var applicants = Regex.Split(inid.Replace("\r","").Replace("\n"," ").Replace("(71)Name of Applicant :","").Trim(),
                             @"(?>\d\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string applicant in applicants)
+                        foreach (var applicant in applicants)
                         {
-                            Match match = Regex.Match(applicant.Trim(), @"(?<name>.+)\sAddress\sof\sApplicant\s?:(?<adress>.+),\s?(?<code>.+?)\s");
+                            var match = Regex.Match(applicant.Trim(), @"(?<name>.+)\sAddress\sof\sApplicant\s?:(?<adress>.+),\s?(?<code>.+?)\s");
 
                             if (match.Success)
                             {
@@ -176,7 +176,7 @@ namespace Diamond_IN_Maksim
                             }
                             else
                             {
-                                Match match1 = Regex.Match(applicant.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+");
+                                var match1 = Regex.Match(applicant.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+");
 
                                 if (match1.Success)
                                 {
@@ -197,12 +197,12 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(72)"))
                     {
-                        List<string> inventors = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(72)Name of Inventor :", "").Trim(),
+                        var inventors = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(72)Name of Inventor :", "").Trim(),
                             @"(?>\d\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string inventor in inventors)
+                        foreach (var inventor in inventors)
                         {
-                            Match match = Regex.Match(inventor.Trim(), @"(?<name>.+)\sAddress\sof\sApplicant\s?:(?<adress>.+),\s?(?<code>.+?)\s");
+                            var match = Regex.Match(inventor.Trim(), @"(?<name>.+)\sAddress\sof\sApplicant\s?:(?<adress>.+),\s?(?<code>.+?)\s");
 
                             if (match.Success)
                             {
@@ -220,7 +220,7 @@ namespace Diamond_IN_Maksim
                             }
                             else
                             {
-                                Match match1 = Regex.Match(inventor.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+");
+                                var match1 = Regex.Match(inventor.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+");
 
                                 if (match1.Success)
                                 {
@@ -241,7 +241,7 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(57)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"act\s?:(?<text>.+?)\s(?<note>No\..+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"act\s?:(?<text>.+?)\s(?<note>No\..+)");
 
                         if (match.Success)
                         {
@@ -251,7 +251,7 @@ namespace Diamond_IN_Maksim
                                 Text = match.Groups["text"].Value.Trim()
                             });
 
-                            Match match1 = Regex.Match(match.Groups["note"].Value.Trim(), @"(?<a1>No\..+?)\s?:\s?(?<p>\d+)\s(?<a2>No\..+)\s?:\s?(?<c>\d+)");
+                            var match1 = Regex.Match(match.Groups["note"].Value.Trim(), @"(?<a1>No\..+?)\s?:\s?(?<p>\d+)\s(?<a2>No\..+)\s?:\s?(?<c>\d+)");
 
                             if (match1.Success)
                             {
@@ -282,7 +282,7 @@ namespace Diamond_IN_Maksim
             }
             else if(subCode == "10")
             {
-                Match match = Regex.Match(note.Trim(), @"\d{1,3}?\s(?<city>\D.+?)\s\s?(?<aNum>\d.+)\s(?<eDate>\d{2}\/\d{2}\/\d{4}).+?(?<f74>[A-Z].+)\s(?<note>.+@.+)");
+                var match = Regex.Match(note.Trim(), @"\d{1,3}?\s(?<city>\D.+?)\s\s?(?<aNum>\d.+)\s(?<eDate>\d{2}\/\d{2}\/\d{4}).+?(?<f74>[A-Z].+)\s(?<note>.+@.+)");
 
                 if (match.Success)
                 {
@@ -524,7 +524,7 @@ namespace Diamond_IN_Maksim
 
             if(subCode == "1")
             {
-                Match match = Regex.Match(note.Trim(),
+                var match = Regex.Match(note.Trim(),
                     @"(?<inid12>\(12.+)\s(?<inid21>\(21.+)\(19.+(?<inid22>\(22.+)\s(?<inid43>\(43.+)\s(?<inid54>\(54.+)\s(?<inids51all>\(51.+)\s(?<inid71>\(71.+)\s(?<inid72>\(72.+)\s(?<inid57>\(57.+)",
                     RegexOptions.Singleline);
 
@@ -549,7 +549,7 @@ namespace Diamond_IN_Maksim
             string text = null;
             if(subCode == "1")
             {
-                foreach (XElement xElement in xElements)
+                foreach (var xElement in xElements)
                 {
                     text += xElement.Value + "\n";
                 }
@@ -558,7 +558,7 @@ namespace Diamond_IN_Maksim
             }
             else if (subCode == "10")
             {
-                foreach (XElement xElement in xElements)
+                foreach (var xElement in xElements)
                 {
                     text += xElement.Value + " ";
                 }
@@ -572,7 +572,7 @@ namespace Diamond_IN_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -586,8 +586,8 @@ namespace Diamond_IN_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

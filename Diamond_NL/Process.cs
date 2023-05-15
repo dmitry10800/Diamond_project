@@ -13,7 +13,7 @@ namespace Diamond_NL
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("SubCombo processing started");
-                List<OutElements.SubCombo> elements = new List<OutElements.SubCombo>();
+                var elements = new List<OutElements.SubCombo>();
                 var pat = new Regex(@"(?=\(11\))");
                 var splitPat = new Regex(@"\(11\)(?<elem11>.*)\s*\(00\)\s*(?<elemDate>\d{2}\.\d{2}\.\d{4})\s*\(00\)\s*(?<elemOther>.*)");
                 var mergeText = string.Join("\n", v.Select(x => x.Value)).Replace("\n", " ");
@@ -49,7 +49,7 @@ namespace Diamond_NL
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub26 processing started");
-                List<OutElements.Sub26> elements = new List<OutElements.Sub26>();
+                var elements = new List<OutElements.Sub26>();
                 var pat = new Regex(@"(?=\(71\))");
                 var splitPat = new Regex(@"(\(71\)(?<I71>.*)\s*)*\(73\)\s*(?<I73>.*)\s*\(11\)\s*(?<I11>.*)\(00\)\s*(?<I00Date>\d{2}\.\d{2}\.\d{4})\s*\(51\)\s*(?<I51>.*)\s*\(00\)\s*(?<I00Other>.*)");
                 var mergeText = string.Join("\n", v.Select(x => x.Value)).Replace("\n", " ");

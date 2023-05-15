@@ -25,7 +25,7 @@ namespace Diamond_NG_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -34,7 +34,7 @@ namespace Diamond_NG_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -47,9 +47,9 @@ namespace Diamond_NG_Maksim
                          .TakeWhile(val => !val.Value.StartsWith("DESIGNS"))
                          .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=Application|APLICATION\sNUMBER)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=Application|APLICATION\sNUMBER)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                        // statusEvents.Add(MakePatent(note, subCode, "AA"));
                     }
@@ -66,7 +66,7 @@ namespace Diamond_NG_Maksim
 
             if(subCode == "1")
             {
-                foreach (XElement xElement in xElements)
+                foreach (var xElement in xElements)
                 {
                     text += xElement.Value + "\n";
                 }
@@ -78,7 +78,7 @@ namespace Diamond_NG_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -92,8 +92,8 @@ namespace Diamond_NG_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

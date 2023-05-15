@@ -70,11 +70,11 @@ namespace Diamond_MK_Andrey
 
         public static List<ElementsOut> Sub3Process(List<XElement> elements)
         {
-            List<ElementsOut> elementsOut = new List<ElementsOut>();
+            var elementsOut = new List<ElementsOut>();
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                int inc = i;
+                var inc = i;
                 string val = null;
 
                 var value = elements[i].Value;
@@ -115,7 +115,7 @@ namespace Diamond_MK_Andrey
 
                             curElem.Priorities = new List<Priority>();
 
-                            for (int j = 0; j < priorities.Count(); j++)
+                            for (var j = 0; j < priorities.Count(); j++)
                             {
                                 curElem.Priorities.Add(new Priority
                                 {
@@ -229,7 +229,7 @@ namespace Diamond_MK_Andrey
                             var ipcs = record.Replace(I51, "").Replace("\n", " ").Split(',', StringSplitOptions.RemoveEmptyEntries);
                             var ipcsOut = new List<string>();
 
-                            for (int j = 0; j < ipcs.Count(); j++)
+                            for (var j = 0; j < ipcs.Count(); j++)
                             {
                                 ipcsOut.Add(ipcs[j]);
                             }

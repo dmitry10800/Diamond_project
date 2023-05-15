@@ -7,17 +7,17 @@ namespace Diamond_RS
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub3Convert(List<Elements> elements)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 1;
             foreach (var rec in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                 legalEvent.GazetteName = RS_main.currentFileName.Replace(".tetml", ".pdf");
                 legalEvent.SubCode = "3";
                 legalEvent.SectionCode = "FG";
                 legalEvent.CountryCode = "RS";
                 legalEvent.Id = id++;
-                Biblio biblio = new Biblio();
+                var biblio = new Biblio();
                 biblio.Ipcs = new List<Ipc>();
                 biblio.Assignees = new List<Integration.PartyMember>();
                 biblio.Inventors = new List<Integration.PartyMember>();

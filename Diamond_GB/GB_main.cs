@@ -15,7 +15,7 @@ namespace Diamond_GB
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\GB\20200206");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> sub8 = null; // Applications Terminated before Publication under Section 16(1)
             List<XElement> sub9 = null; // Applications Terminated after Publication under Section 16(1)

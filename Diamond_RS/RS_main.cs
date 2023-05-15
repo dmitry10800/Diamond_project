@@ -14,13 +14,13 @@ namespace Diamond_RS
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTeml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTeml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> tmpList = new List<XElement>();
-            List<XElement> sub3 = new List<XElement>();
+            var tmpList = new List<XElement>();
+            var sub3 = new List<XElement>();
 
             foreach (var file in files)
             {
@@ -31,7 +31,7 @@ namespace Diamond_RS
                 tmpList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                for (int i = 0; i < tmpList.Count; i++)
+                for (var i = 0; i < tmpList.Count; i++)
                 {
                     var tmp = i;
                     if (tmpList[tmp].Value.Contains("РЕГИСТРОВАНИ ПА ТЕНТИ / Patents granted"))

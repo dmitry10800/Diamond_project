@@ -9,16 +9,16 @@ namespace Diamond_SG
         public static List<Diamond.Core.Models.LegalStatusEvent> FirstList(List<OutElements.FirstList> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
 
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(SG_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "2";
@@ -28,7 +28,7 @@ namespace Diamond_SG
                     legalEvent.CountryCode = "SG";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     /*Notes*/
@@ -43,16 +43,16 @@ namespace Diamond_SG
         public static List<Diamond.Core.Models.LegalStatusEvent> SecondList(List<OutElements.SecondList> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
 
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(SG_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "5";
@@ -62,7 +62,7 @@ namespace Diamond_SG
                     legalEvent.CountryCode = "SG";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     biblioData.Applicants = new List<PartyMember>
@@ -81,15 +81,15 @@ namespace Diamond_SG
         public static List<Diamond.Core.Models.LegalStatusEvent> ThirdList(List<OutElements.SecondList> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(SG_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "6";
@@ -99,7 +99,7 @@ namespace Diamond_SG
                     legalEvent.CountryCode = "SG";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     biblioData.Applicants = new List<PartyMember>
@@ -118,15 +118,15 @@ namespace Diamond_SG
         public static List<Diamond.Core.Models.LegalStatusEvent> FourthList(List<OutElements.SecondList> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(SG_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(SG_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "7";
@@ -136,7 +136,7 @@ namespace Diamond_SG
                     legalEvent.CountryCode = "SG";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     biblioData.Applicants = new List<PartyMember>

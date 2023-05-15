@@ -48,15 +48,15 @@ namespace Diamond_BA
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
 
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -157,7 +157,7 @@ namespace Diamond_BA
                             /*86*/
                             if (inidCode.StartsWith(I86))
                             {
-                                string datePattern = @"\d{4}\-\d{2}\-\d{2}";
+                                var datePattern = @"\d{4}\-\d{2}\-\d{2}";
                                 tmpRecValue = inidCode.Replace(I86, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
@@ -168,12 +168,12 @@ namespace Diamond_BA
                             /*87*/
                             if (inidCode.StartsWith(I87))
                             {
-                                string datePattern = @"\d{4}\-\d{2}\-\d{2}";
+                                var datePattern = @"\d{4}\-\d{2}\-\d{2}";
                                 tmpRecValue = inidCode.Replace(I87, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
                                     currentElement.I87D = Regex.Match(tmpRecValue, datePattern).Value;
-                                    string tmpPCT = Regex.Replace(tmpRecValue, datePattern, "").Replace(",", "").Trim();
+                                    var tmpPCT = Regex.Replace(tmpRecValue, datePattern, "").Replace(",", "").Trim();
                                     if (Regex.IsMatch(tmpPCT, @"[A-Z]{1}$"))
                                     {
                                         currentElement.I87K = Regex.Match(tmpPCT, @"[A-Z]{1}$").Value;

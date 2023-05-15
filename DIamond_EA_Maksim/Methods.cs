@@ -26,7 +26,7 @@ namespace DIamond_EA_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -35,7 +35,7 @@ namespace DIamond_EA_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -49,10 +49,10 @@ namespace DIamond_EA_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=\d{9}\s)")
+                    var notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=\d{9}\s)")
                         .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("2")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(SplitNote(note, subCode, "FA9A"));
                     }
@@ -66,10 +66,10 @@ namespace DIamond_EA_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=\d{9}\s[A-Z])")
+                    var notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=\d{9}\s[A-Z])")
                         .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("2")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(SplitNote(note, subCode, "PC1A"));
                     }
@@ -82,10 +82,10 @@ namespace DIamond_EA_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=0\d{5}\s)")
+                    var notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=0\d{5}\s)")
                         .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("0")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(SplitNote(note, subCode, "MK"));
                     }
@@ -99,10 +99,10 @@ namespace DIamond_EA_Maksim
                             .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                             .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=0\d{5}\s)")
+                    var notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=0\d{5}\s)")
                         .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("0")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(SplitNote(note, subCode, "MK"));
                     }
@@ -115,10 +115,10 @@ namespace DIamond_EA_Maksim
                            .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                            .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=\d{6}\s[A-Z])")
+                    var notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=\d{6}\s[A-Z])")
                         .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("0")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(SplitNote(note, subCode, "NF4A"));
                     }
@@ -131,10 +131,10 @@ namespace DIamond_EA_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(BuildText(xElements).Replace("\r","").Replace("\n"," "), @"(?=[0-9]{6}\s[A-Z])")
+                    var notes = Regex.Split(BuildText(xElements).Replace("\r","").Replace("\n"," "), @"(?=[0-9]{6}\s[A-Z])")
                         .Where(val => !string.IsNullOrEmpty(val)).Where( val => val.StartsWith("0")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(SplitNote(note, subCode, "PC4A"));
                     }
@@ -146,7 +146,7 @@ namespace DIamond_EA_Maksim
         {
             string fullText = null;
 
-            foreach (XElement text in xElements)
+            foreach (var text in xElements)
             {
                 fullText += text.Value.Trim() + " ";
             }
@@ -184,7 +184,7 @@ namespace DIamond_EA_Maksim
 
             if (subCode == "5")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<pubKind>\D\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<note>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})");
+                var match = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<pubKind>\D\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<note>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})");
 
                 if (match.Success)
                 {
@@ -208,7 +208,7 @@ namespace DIamond_EA_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D\d+)\s(?<note>.+)");
+                    var match1 = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D\d+)\s(?<note>.+)");
 
                     if (match1.Success)
                     {
@@ -239,7 +239,7 @@ namespace DIamond_EA_Maksim
             else
             if( subCode == "9")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<appKind>\D\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<note>N\s?o\s?\d+)\s(?<applicants>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})");
+                var match = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<appKind>\D\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<note>N\s?o\s?\d+)\s(?<applicants>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})");
 
                 if (match.Success)
                 {
@@ -261,10 +261,10 @@ namespace DIamond_EA_Maksim
 
                     legalEvent.Date = match.Groups["leDate"].Value.Replace(".", "/").Trim();
 
-                    List<string> applicantsTemp = Regex.Split(match.Groups["applicants"].Value.Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var applicantsTemp = Regex.Split(match.Groups["applicants"].Value.Trim(), @"(?<=\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
                     List<string> applicants = new();
 
-                    foreach (string applicantTemp in applicantsTemp)
+                    foreach (var applicantTemp in applicantsTemp)
                     {
                         if (applicantTemp.Contains(";"))
                         {
@@ -275,11 +275,11 @@ namespace DIamond_EA_Maksim
 
                     if (applicants.Count % 2 != 0)
                     {
-                        for (int i = 0; i < applicants.Count; i++)
+                        for (var i = 0; i < applicants.Count; i++)
                         {
                             if(i == applicants.Count - 1)
                             {
-                                Match match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
+                                var match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
                                 if (match1.Success)
                                 {
                                     legal.NewBiblio.Applicants.Add(new PartyMember
@@ -292,7 +292,7 @@ namespace DIamond_EA_Maksim
                             }
                             else
                             {
-                                Match match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
+                                var match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
                                 if (match1.Success)
                                 {
                                     biblio.Applicants.Add(new PartyMember
@@ -313,9 +313,9 @@ namespace DIamond_EA_Maksim
                     }
                     else
                     {
-                        for (int i = 0; i < applicants.Count/2; i++)
+                        for (var i = 0; i < applicants.Count/2; i++)
                         {
-                            Match match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
+                            var match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
                             if (match1.Success)
                             {
                                 biblio.Applicants.Add(new PartyMember
@@ -334,9 +334,9 @@ namespace DIamond_EA_Maksim
                         }
 
 
-                        for (int i = applicants.Count/2; i < applicants.Count; i++)
+                        for (var i = applicants.Count/2; i < applicants.Count; i++)
                         {
-                            Match match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
+                            var match1 = Regex.Match(applicants[i].Trim(), @"(?<name>.+)\((?<country>[A-Z]{2})");
                             if (match1.Success)
                             {
                                 legal.NewBiblio.Applicants.Add(new PartyMember
@@ -364,7 +364,7 @@ namespace DIamond_EA_Maksim
             else
             if(subCode == "11")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>[A-Z]\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<noteNum>N\s?o\s?\d+)\s(?<appNum>\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})");
+                var match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>[A-Z]\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<noteNum>N\s?o\s?\d+)\s(?<appNum>\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})");
 
                 if (match.Success)
                 {
@@ -396,7 +396,7 @@ namespace DIamond_EA_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<appNum>\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>[A-Z]\d+)\s(?<noteNum>N\s?o\s?\d+)\s(?<leNote>.+)");
+                    var match1 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<appNum>\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>[A-Z]\d+)\s(?<noteNum>N\s?o\s?\d+)\s(?<leNote>.+)");
 
                     if (match1.Success)
                     {
@@ -435,7 +435,7 @@ namespace DIamond_EA_Maksim
             else
             if (subCode == "12")
             {
-                Match match = Regex.Match(note.Trim(), 
+                var match = Regex.Match(note.Trim(), 
                     @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNote1>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})\s(?<leNum>.+)");
 
                 if (match.Success)
@@ -468,7 +468,7 @@ namespace DIamond_EA_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(note.Trim(),
+                    var match1 = Regex.Match(note.Trim(),
                         @"(?<pubNum>\d+)\s(?<leNum>.+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNote1>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})");
 
                     if (match1.Success)
@@ -500,7 +500,7 @@ namespace DIamond_EA_Maksim
                     }
                     else
                     {
-                        Match match2 = Regex.Match(note.Trim(), 
+                        var match2 = Regex.Match(note.Trim(), 
                             @"(?<pubNum>\d+)\s(?<pubKind>\D{1}\d{1,2})\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNum>.+?)\s(?<leNote1>[A-Z].+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})");
 
                         if (match2.Success)
@@ -532,7 +532,7 @@ namespace DIamond_EA_Maksim
                         }
                         else
                         {
-                            Match match3 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNum>.+?)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})");
+                            var match3 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<leNum>.+?)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote2>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})\s(?<pubKind>\D{1}\d{1,2})");
 
                             if (match3.Success)
                             {
@@ -576,7 +576,7 @@ namespace DIamond_EA_Maksim
             else
             if (subCode == "14")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>[A-Z]\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<noteNum>N\s?o\s?\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leNoteNumber>.+?)\s(?<leNoteCountry>[A-Z].+)\s(?<leDate>\d{4}.\d{2}.\d{2})");
+                var match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>[A-Z]\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<noteNum>N\s?o\s?\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leNoteNumber>.+?)\s(?<leNoteCountry>[A-Z].+)\s(?<leDate>\d{4}.\d{2}.\d{2})");
 
                 if (match.Success)
                 {
@@ -611,7 +611,7 @@ namespace DIamond_EA_Maksim
             else
             if (subCode == "31")
             {
-                Match match = Regex.Match(note.Trim(), @"(?<pubNum>[0-9]+)\s?(?<pubKind>[A-Z][0-9]+)\s?(?<date45>[0-9]{4}.[0-9]{2}.[0-9]{2}).+(?<note1>[N|№]\s?o?\s?\d+)\s?(?<name1>.+?)\((?<code1>[A-Z]{2})\)\s?(?<name2>.+)\((?<code2>[A-Z]{2})\)\s?(?<evDate>[0-9]{4}.[0-9]{2}.[0-9]{2})\s?(?<noteNum>.+)\s(?<noteDate>[0-9]{4}.[0-9]{2}.[0-9]{2})");
+                var match = Regex.Match(note.Trim(), @"(?<pubNum>[0-9]+)\s?(?<pubKind>[A-Z][0-9]+)\s?(?<date45>[0-9]{4}.[0-9]{2}.[0-9]{2}).+(?<note1>[N|№]\s?o?\s?\d+)\s?(?<name1>.+?)\((?<code1>[A-Z]{2})\)\s?(?<name2>.+)\((?<code2>[A-Z]{2})\)\s?(?<evDate>[0-9]{4}.[0-9]{2}.[0-9]{2})\s?(?<noteNum>.+)\s(?<noteDate>[0-9]{4}.[0-9]{2}.[0-9]{2})");
 
                 if (match.Success)
                 {
@@ -665,7 +665,7 @@ namespace DIamond_EA_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -679,8 +679,8 @@ namespace DIamond_EA_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

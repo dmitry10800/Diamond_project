@@ -45,21 +45,21 @@ namespace Diamond_ID
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     if (value.StartsWith(I20))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        int tmpInc = i;
+                        var tmpInc = i;
                         tmpRecordValue = "";
                         do
                         {

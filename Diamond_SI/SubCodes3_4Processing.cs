@@ -8,12 +8,12 @@ namespace Diamond_SI
     {
         public static (List<Subcode3>, List<Subcode4>) ProcessSubcodes(List<XElement> elements)
         {
-            List<Subcode3> listSubCode3Elements = new List<Subcode3>();
-            List<Subcode4> listSubCode4Elements = new List<Subcode4>();
+            var listSubCode3Elements = new List<Subcode3>();
+            var listSubCode4Elements = new List<Subcode4>();
 
-            List<string> allElements = new List<string>();
-            int tempInc = 0;
-            for (int i = 0; i < elements.Count; i++)
+            var allElements = new List<string>();
+            var tempInc = 0;
+            for (var i = 0; i < elements.Count; i++)
             {
                 tempInc = i;
 
@@ -21,8 +21,8 @@ namespace Diamond_SI
 
                 if (flag)
                 {
-                    Regex regex = new Regex(@"^\d{3}");
-                    MatchCollection matches = regex.Matches(elements[tempInc].Value);
+                    var regex = new Regex(@"^\d{3}");
+                    var matches = regex.Matches(elements[tempInc].Value);
                     if (matches.Count > 0)
                     {
                         allElements.Add(elements[i].Value.Replace(matches[0].Value, "****" + matches[0].Value));
@@ -33,11 +33,11 @@ namespace Diamond_SI
             }
 
             string[] splittedRecord;
-            for (int i = 0; i < allElements.Count; i++)
+            for (var i = 0; i < allElements.Count; i++)
             {
                 splittedRecord = null;
                 int ink;
-                string recordsStr = "";
+                var recordsStr = "";
                 if (allElements[i].StartsWith("****"))
                 {
                     ink = i;

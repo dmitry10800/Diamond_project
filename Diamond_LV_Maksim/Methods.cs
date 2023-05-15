@@ -192,12 +192,12 @@ namespace Diamond_LV_Maksim
 
                         if (text.Count % 2 == 0)
                         {
-                            for (int i = 0; i < text.Count/2; i++)
+                            for (var i = 0; i < text.Count/2; i++)
                             {
                                 sbLV.Append(text[i].Trim() + " ");
                             }
 
-                            for (int i = text.Count/2; i < text.Count; i++)
+                            for (var i = text.Count/2; i < text.Count; i++)
                             {
                                 sbEN.Append(text[i].Trim() + " ");
                             }
@@ -216,12 +216,12 @@ namespace Diamond_LV_Maksim
                         }
                         else
                         {
-                            for (int i = 0; i < (text.Count/2)+1; i++)
+                            for (var i = 0; i < (text.Count/2)+1; i++)
                             {
                                 sbLV.Append(text[i].Trim() + " ");
                             }
 
-                            for (int i = (text.Count / 2)+1; i < text.Count; i++)
+                            for (var i = (text.Count / 2)+1; i < text.Count; i++)
                             {
                                 sbEN.Append(text[i].Trim() + " ");
                             }

@@ -39,13 +39,13 @@ namespace Diamond_VN
         public static Diamond.Core.Models.LegalStatusEvent _patentRecord;
         public static string GetKindValue(string subcode)
         {
-            Dictionary<string, string> pairs = new Dictionary<string, string> { ["12"] = "A", ["13"] = "U", ["14"] = "B", ["15"] = "Y" };
+            var pairs = new Dictionary<string, string> { ["12"] = "A", ["13"] = "U", ["14"] = "B", ["15"] = "Y" };
             return pairs[subcode];
         }
         public static List<Diamond.Core.Models.LegalStatusEvent> ProcessSubCodes(List<XElement> xElements, string subcode, string sectionCode, string gazetteName)
         {
             _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
-            int tmpID = 0;
+            var tmpID = 0;
             foreach (var record in SplitStringByRegex(xElements, _sub12Regex))
             {
                 var splittedRecord = SplitRecordsByInids(record);
@@ -67,7 +67,7 @@ namespace Diamond_VN
                     _patentRecord.CountryCode = "VN";
                     _patentRecord.Id = tmpID++;
                     _patentRecord.Biblio.Publication.Kind = GetKindValue(subcode);
-                    Integration.NoteTranslation noteTranslation = new Integration.NoteTranslation();
+                    var noteTranslation = new Integration.NoteTranslation();
 
                     foreach (var inid in splittedRecord)
                     {
@@ -421,7 +421,7 @@ namespace Diamond_VN
         {
             classificationInfo = Regex.Replace(classificationInfo, @"\.*\,*", "");
             var ips = new List<Integration.Ipc>();
-            int tmpEdition = 0;
+            var tmpEdition = 0;
             var ipsRegex = new Regex(@"^(?<Edition>\d{1})\s(?<Value>[A-Z]{1}\d{2}[A-Z]{1}.*)");
             var match = ipsRegex.Match(classificationInfo);
             if (match.Success)
@@ -445,7 +445,7 @@ namespace Diamond_VN
         public static List<Integration.Ipc> OldConvertClassificationInfo(string classificationInfo) //51
         {
             var ips = new List<Integration.Ipc>();
-            int tmpEdition = 0;
+            var tmpEdition = 0;
             string tmpValueFirst = null;
             var ipsRegex = new Regex(@"^((?<Edition>\d{1}|\d{2})\s)*(?<Value>.*)");
             var valueFirst = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}");
@@ -528,7 +528,7 @@ namespace Diamond_VN
         public static List<string> SplitRecordsByInids(string record)
         {
             var tmpList = new List<string>();
-            Regex regex = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
             string tmpI57 = null;
             string tmpI87 = null;
             if (record.Contains(I57))
@@ -549,7 +549,7 @@ namespace Diamond_VN
                     Console.WriteLine($"Record splitting error. Message:{e.Message}");
                 }
             }
-            MatchCollection matches = regex.Matches(record);
+            var matches = regex.Matches(record);
             if (matches.Count > 0)
             {
                 foreach (Match match in matches)
@@ -591,8 +591,8 @@ namespace Diamond_VN
         {
             char[] vi = { 'Ă', 'Á', 'À', 'Â', 'Ã', 'È', 'É', 'Ê', 'Ì', 'Í', 'Ò', 'Ó', 'Ô', 'Õ', 'Ù', 'Ú', 'Ý', 'ă', 'â', 'à', 'á', 'ã', 'è', 'é', 'ê', 'ì', 'í', 'ò', 'ó', 'ô', 'õ', 'ù', 'ý', 'Ỳ', 'Ỹ', 'ỳ', 'ỹ', 'Ỷ', 'ỷ', 'Ỵ', 'ỵ', 'ự', 'Ự', 'ử', 'Ử', 'ữ', 'Ữ', 'ừ', 'Ừ', 'ứ', 'Ứ', 'ư', 'Ư', 'ụ', 'Ụ', 'ủ', 'Ủ', 'ũ', 'Ũ', 'ợ', 'Ợ', 'ở', 'Ở', 'ỡ', 'Ỡ', 'ờ', 'Ờ', 'ớ', 'Ớ', 'ơ', 'Ơ', 'ộ', 'Ộ', 'ổ', 'Ổ', 'ỗ', 'Ỗ', 'ồ', 'Ồ', 'ố', 'Ố', 'ọ', 'Ọ', 'ỏ', 'Ỏ', 'ị', 'Ị', 'ỉ', 'Ỉ', 'ĩ', 'Ĩ', 'ệ', 'Ệ', 'ể', 'Ể', 'ễ', 'Ễ', 'ề', 'Ề', 'ế', 'Ế', 'ẹ', 'Ẹ', 'ẻ', 'Ẻ', 'ẽ', 'Ẽ', 'ặ', 'Ặ', 'ẳ', 'Ẳ', 'ẵ', 'Ẵ', 'ằ', 'Ằ', 'ắ', 'Ắ', 'ă', 'Ă', 'ậ', 'Ậ', 'ẩ', 'Ẩ', 'ẫ', 'Ẫ', 'ầ', 'Ầ', 'ấ', 'Ấ', 'ạ', 'Ạ', 'ả', 'Ả', 'đ', '₫', 'Đ' };
             char[] en = { 'A', 'A', 'A', 'A', 'A', 'E', 'E', 'E', 'I', 'I', 'O', 'O', 'O', 'O', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'e', 'e', 'e', 'i', 'i', 'o', 'o', 'o', 'o', 'u', 'y', 'Y', 'Y', 'y', 'y', 'Y', 'y', 'Y', 'y', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'i', 'I', 'i', 'I', 'i', 'I', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'd', 'd', 'D' };
-            StringBuilder strB = new StringBuilder(s);
-            for (int i = 0; i < vi.Length; i++)
+            var strB = new StringBuilder(s);
+            for (var i = 0; i < vi.Length; i++)
             {
                 strB.Replace(vi[i], en[i]);
             }

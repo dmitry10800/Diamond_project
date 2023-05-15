@@ -30,7 +30,7 @@ namespace Diamond_VN
                 _sub15Elements = new List<XElement>();
                 _currentFileInProcess = tetmlFile;
                 _tet = XElement.Load(tetmlFile.FullName);
-                string currentFileName = Path.GetFileNameWithoutExtension(tetmlFile.FullName);
+                var currentFileName = Path.GetFileNameWithoutExtension(tetmlFile.FullName);
 
                 if (currentFileName.EndsWith("A"))
                 {

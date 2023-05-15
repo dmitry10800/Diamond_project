@@ -20,7 +20,7 @@ namespace Diamond_MK_Andrey
                 _sub1Elements = new List<XElement>();
                 _tet = XElement.Load(tetml.FullName);
                 _currentFileName = tetml.FullName;
-                string currentFileName = Path.GetFileNameWithoutExtension(tetml.FullName);
+                var currentFileName = Path.GetFileNameWithoutExtension(tetml.FullName);
 
                 _sub1Elements = _tet.Descendants().Where(x => x.Name.LocalName == "Text")
                     .SkipWhile(x => !x.Value.Contains("(51) C 07J 1/00, C 07J 7/00, C 07J 51/00, C"))

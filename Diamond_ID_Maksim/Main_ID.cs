@@ -5,15 +5,15 @@ namespace Diamond_ID_Maksim
 {
     class Main_ID
     {
-        private static readonly string Path = @"D:\_work\TET\ID\ID_20220401_01(D)";
-        private static readonly string SubCode = "3";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"D:\LENS\TET\ID\ID_20230428_798";
+        private const string SubCode = "1";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
+            var patents = SubCode switch
             {
                 "1" => methods.Start(Path, SubCode),
                 "2" => methods.Start(Path, SubCode),

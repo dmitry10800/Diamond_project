@@ -46,10 +46,10 @@ namespace BA
 
         public static List<LegalStatusEvent> ProcessSubcode4(List<XElement> elemList, string gazetteName)
         {
-            string datePattern = @"\d{4}\-\d{2}\-\d{2}";
-            List<LegalStatusEvent> processedRecords = new List<LegalStatusEvent>();
+            var datePattern = @"\d{4}\-\d{2}\-\d{2}";
+            var processedRecords = new List<LegalStatusEvent>();
             LegalStatusEvent patent;
-            int patentCounter = 1;
+            var patentCounter = 1;
             if (elemList != null && elemList.Count > 0)
             {
                 var records = GetRecordsFromTetml(elemList, StartKeyPatternSub4).Where(x => !string.IsNullOrEmpty(x));
@@ -63,8 +63,8 @@ namespace BA
                         continue;
                     }
                     patent = new LegalStatusEvent();
-                    Biblio biblioData = new Biblio();
-                    EuropeanPatent euPatent = new EuropeanPatent();
+                    var biblioData = new Biblio();
+                    var euPatent = new EuropeanPatent();
                     patent.GazetteName = gazetteName;
                     patent.SubCode = "4";
                     patent.SectionCode = "BA";

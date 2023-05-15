@@ -13,10 +13,10 @@ namespace Diamond_BG_Subcode_21
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //Production
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

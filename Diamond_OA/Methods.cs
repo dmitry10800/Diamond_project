@@ -14,7 +14,7 @@ namespace Diamond_OA
         /*Date*/
         public static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             try
             {
@@ -45,9 +45,9 @@ namespace Diamond_OA
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             string tmpDescValue = null;
-            string I57 = "(57)";
+            var I57 = "(57)";
             if (recString != "")
             {
                 if (recString.Contains(I57))
@@ -55,8 +55,8 @@ namespace Diamond_OA
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf(I57)).Trim();
                     tempStrC = tempStrC.Remove(recString.IndexOf(I57)).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -82,15 +82,15 @@ namespace Diamond_OA
         /*51 internationa calssification splitting*/
         public static IntClassStruct IntClassSplit(string tmpIntClass)
         {
-            string I51 = "(51)";
-            IntClassStruct classInfo = new IntClassStruct();
+            var I51 = "(51)";
+            var classInfo = new IntClassStruct();
             //string patternClass = @"[A-Z]{1}\d{2}[A-Z]{1}(\d{1}|\d{2}|\d{3})\/(\d{2}|\d{3}|\d{4})";
-            string patternClass = @"[A-Z]{1}\d{2}[A-Z]{1}(\d+)\/(\d+)";
-            string patternDate = @"\(\d{4}\.\d{2}\)";
+            var patternClass = @"[A-Z]{1}\d{2}[A-Z]{1}(\d+)\/(\d+)";
+            var patternDate = @"\(\d{4}\.\d{2}\)";
             if (tmpIntClass != null && tmpIntClass != "")
             {
                 string[] splIntClass = null;
-                string tmpStr = tmpIntClass.Replace(I51, "").Replace(" ", "").Trim();
+                var tmpStr = tmpIntClass.Replace(I51, "").Replace(" ", "").Trim();
                 if (tmpStr.Contains("\n"))
                 {
                     splIntClass = tmpStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -128,12 +128,12 @@ namespace Diamond_OA
         }
         public static PriorityStruct PrioritySplitting(string tmpString)
         {
-            string I30 = "(30)";
-            string patternDate = @"(\d{1}|\d{2})\/\d{2}\/\d{4}";
-            string patternCountry = @"^[A-Z]{2}$";
+            var I30 = "(30)";
+            var patternDate = @"(\d{1}|\d{2})\/\d{2}\/\d{4}";
+            var patternCountry = @"^[A-Z]{2}$";
             string[] splPrio = null;
-            PriorityStruct priorityList = new PriorityStruct();
-            string tmpPrio = tmpString.Replace(I30, "").Replace("n°", "***").Replace("du", "***").Trim();
+            var priorityList = new PriorityStruct();
+            var tmpPrio = tmpString.Replace(I30, "").Replace("n°", "***").Replace("du", "***").Trim();
             if (tmpPrio != null && tmpPrio != "")
             {
                 if (tmpPrio.Contains("\n"))
@@ -184,16 +184,16 @@ namespace Diamond_OA
         }
         public static InvStruct InventorSplit(string tmpInv)
         {
-            InvStruct inventorList = new InvStruct();
-            string I72 = "(72)";
-            string tmpRecValue = tmpInv.Replace(I72, "");
+            var inventorList = new InvStruct();
+            var I72 = "(72)";
+            var tmpRecValue = tmpInv.Replace(I72, "");
             if (Regex.IsMatch(tmpRecValue, @".*\([A-Z]{2}\)"))
             {
-                Regex pat = new Regex(@".*?\([A-Z]{2}\)", RegexOptions.Singleline);
-                MatchCollection matchCollection = pat.Matches(tmpRecValue);
+                var pat = new Regex(@".*?\([A-Z]{2}\)", RegexOptions.Singleline);
+                var matchCollection = pat.Matches(tmpRecValue);
                 foreach (Match item in matchCollection)
                 {
-                    string tmpSplValue = item.Value.Replace("\n", " ");
+                    var tmpSplValue = item.Value.Replace("\n", " ");
                     tmpSplValue = Regex.Replace(tmpSplValue, @"^\s*et(\s|\n)", "");
                     string tmpSplName = null;
                     string tmpSplCountry = null;
@@ -226,10 +226,10 @@ namespace Diamond_OA
         }
         public static AssigneeStruct AssigneeSplitting(string tmpString)
         {
-            AssigneeStruct assigneeList = new AssigneeStruct();
-            string I73 = "(73)";
-            string tmpRecValue = tmpString.Replace(I73, "").Replace(";", "").Trim();
-            string status = @"(\,.*\sv\.v\.i\.\,)|(\,.*\sllc\,)|(\,.*\sgmbh\,)|(\,.*\sinc(\.|\,)*\,)|(\,.*\sltd(\.|\,)*\,)|(\,.*\ss\.a\.\,)|(\,.*\ss\.l\.\,)|(\,.*\ss\.a\.u\.\,)";
+            var assigneeList = new AssigneeStruct();
+            var I73 = "(73)";
+            var tmpRecValue = tmpString.Replace(I73, "").Replace(";", "").Trim();
+            var status = @"(\,.*\sv\.v\.i\.\,)|(\,.*\sllc\,)|(\,.*\sgmbh\,)|(\,.*\sinc(\.|\,)*\,)|(\,.*\sltd(\.|\,)*\,)|(\,.*\ss\.a\.\,)|(\,.*\ss\.l\.\,)|(\,.*\ss\.a\.u\.\,)";
             string[] splValue = null;
             string coutryCode = null;
             string name = null;
@@ -241,15 +241,15 @@ namespace Diamond_OA
                 {
                     if (record.Contains(","))
                     {
-                        string tmpValue = Regex.Replace(record, @"^\s*et(\s|\n)", "");
+                        var tmpValue = Regex.Replace(record, @"^\s*et(\s|\n)", "");
                         string tmpSplName = null;
                         string tmpSplAddr = null;
                         if (Regex.IsMatch(tmpValue.ToLower(), status))
                         {
                             if (tmpValue.Count(f => f == ',') >= 2)
                             {
-                                int firstIndex = tmpValue.IndexOf(",");
-                                int secondIndex = tmpValue.IndexOf(",", firstIndex + 1);
+                                var firstIndex = tmpValue.IndexOf(",");
+                                var secondIndex = tmpValue.IndexOf(",", firstIndex + 1);
                                 tmpSplName = tmpValue.Remove(secondIndex).Trim();
                                 tmpSplAddr = tmpValue.Substring(secondIndex).Trim(',').Trim();
                             }
@@ -319,15 +319,15 @@ namespace Diamond_OA
         }
         public static AgentStruct AgentSplitting(string tmpStr)
         {
-            AgentStruct agentList = new AgentStruct();
-            string I74 = "(74)";
+            var agentList = new AgentStruct();
+            var I74 = "(74)";
             string coutryCode = null;
             string name = null;
             string address = null;
-            string tmpRecValue = tmpStr.Replace(I74, "").Replace("\n", " ").Trim();
+            var tmpRecValue = tmpStr.Replace(I74, "").Replace("\n", " ").Trim();
             if (tmpRecValue.Contains(","))
             {
-                string tmpValue = Regex.Replace(tmpRecValue, @"\.$", "").Trim();
+                var tmpValue = Regex.Replace(tmpRecValue, @"\.$", "").Trim();
                 try
                 {
                     coutryCode = Regex.Match(tmpValue, @"\([A-Z]{2}\)$").Value.Replace("(", "").Replace(")", "");
@@ -350,9 +350,9 @@ namespace Diamond_OA
         public static string[] InventorSplitUM(string tmpStr)
         {
             string[] inventors = null;
-            string I72 = "(72)";
+            var I72 = "(72)";
             string[] invSplitted = null;
-            string tmpInv = tmpStr.Replace("\n", "").Replace(I72, "").Trim();
+            var tmpInv = tmpStr.Replace("\n", "").Replace(I72, "").Trim();
             if (tmpInv != null && tmpInv != "")
             {
                 if (tmpInv.Contains(";"))
@@ -380,9 +380,9 @@ namespace Diamond_OA
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

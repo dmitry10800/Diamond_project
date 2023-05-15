@@ -21,7 +21,7 @@ namespace Diamond_ZA_Change_of_name_in_terms
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\ZA\LegalOwner\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             foreach (var txtFile in files)
             {
                 //ElementsOut.Clear();
@@ -46,17 +46,17 @@ namespace Diamond_ZA_Change_of_name_in_terms
                 //);
 
                 var root = Directory.GetParent(txtFile);
-                string folderPath = Path.Combine(root.FullName);
+                var folderPath = Path.Combine(root.FullName);
                 Directory.CreateDirectory(folderPath);
-                string path = Path.Combine(folderPath, txtFile.Substring(0, txtFile.IndexOf(".")) + ".text"); //Output Filename
-                StreamWriter sf = new StreamWriter(path);
+                var path = Path.Combine(folderPath, txtFile.Substring(0, txtFile.IndexOf(".")) + ".text"); //Output Filename
+                var sf = new StreamWriter(path);
                 ElementOut currentElement = null;
-                List<string> allLinesText = File.ReadAllLines(txtFile).ToList();
+                var allLinesText = File.ReadAllLines(txtFile).ToList();
                 allLinesText.RemoveAll(x => x.Contains("CHANGE OF NAME IN TERMS OF REGULATION 39")
                 || x.Contains("Application Number")
                 || x.Contains("PATENT JOURNAL")
                 || x.Contains("Page |"));
-                for (int i = 0; i < allLinesText.Count(); ++i)
+                for (var i = 0; i < allLinesText.Count(); ++i)
                 {
                     if (Regex.IsMatch(allLinesText[i], @"\d{4}\/\d{5}"))
                     {

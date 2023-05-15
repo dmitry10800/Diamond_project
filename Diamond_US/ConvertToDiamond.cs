@@ -9,14 +9,14 @@ namespace Diamond_US
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub1(List<OutElements.Sub1> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(US_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "1";
@@ -26,7 +26,7 @@ namespace Diamond_US
                     legalEvent.CountryCode = "US";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     biblioData.Application.Number = record.AppNumber;
                     biblioData.Publication.Number = record.PubNumber;
                     biblioData.DOfPublication = new DOfPublication { date_45 = record.IssueDate };

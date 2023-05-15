@@ -14,14 +14,14 @@ namespace Diamond_BE
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> paraList = new List<XElement>();
-            List<XElement> subCode4List = new List<XElement>();
-            List<string> finalList = new List<string>();
+            var paraList = new List<XElement>();
+            var subCode4List = new List<XElement>();
+            var finalList = new List<string>();
 
             foreach (var file in files)
             {
@@ -31,7 +31,7 @@ namespace Diamond_BE
                 paraList = elem.Descendants().Where(e => e.Name.LocalName == "Text").ToList();
                 var tmp = 0;
 
-                for (int i = 0; i < paraList.Count; i++)
+                for (var i = 0; i < paraList.Count; i++)
                 {
                     tmp = i;
                     if (paraList[i].Value.Contains("Contains data concerning lapse , annulment or rejection of patent(s) (applications) and SPC"))

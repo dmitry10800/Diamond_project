@@ -7,11 +7,11 @@ namespace Diamond_IE_Subcodes_7_8
     {
         public static List<SubCode7_8> SubCodes7_8_Processing(List<string> elements, string nameGazette)
         {
-            List<SubCode7_8> elementsOut = new List<SubCode7_8>();
+            var elementsOut = new List<SubCode7_8>();
 
             if (elements != null && elements.Count > 0)
             {
-                string recordValues = "";
+                var recordValues = "";
                 foreach (var element in elements)
                 {
                     var currentElement = new SubCode7_8();

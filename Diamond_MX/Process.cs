@@ -13,7 +13,7 @@ namespace Diamond_MX
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Second and third sub processing started");
-                List<OutElements.SubSecondThird> elements = new List<OutElements.SubSecondThird>();
+                var elements = new List<OutElements.SubSecondThird>();
                 var tmpString = string.Join("\n", v.Select(x => x.Value)).Replace("\n", " ").Trim();
                 var patForSplit = new Regex(@"(?=[A-Z]{2}\/[a-z]{1}\/.*)");
                 var patForMatch = new Regex(@"(?<appNumber>[A-Z]{2}\/[a-z]{1}\/\d{4}\/\d+)\s(?<pubNumber>\b\d+\b)*\s*(?<name>.*)?$");

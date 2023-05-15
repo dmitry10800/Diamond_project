@@ -1776,7 +1776,7 @@ namespace Diamond_RO_Maksim
 
                     foreach (var priority in priorities)
                     {
-                        var match = _priorityPattern.Match(priority);
+                        var match = _priorityPattern.Match(priority.Trim());
                         if (match.Success)
                         {
                             record.Biblio.Priorities.Add(new Priority()
@@ -1857,7 +1857,7 @@ namespace Diamond_RO_Maksim
                 {
                     var notesTmp = Regex.Split(cleanRawRecord, @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
-                    for (int i = 0; i < notesTmp.Count; i++)
+                    for (var i = 0; i < notesTmp.Count; i++)
                     {
                         var match = Regex.Match(notesTmp[i].Trim(), @"(?<Text>.+):\s(?<Date>\d{2}.\d{2}.\d{4})");
                         if (match.Success)

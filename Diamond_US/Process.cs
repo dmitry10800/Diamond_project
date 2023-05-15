@@ -13,9 +13,9 @@ namespace Diamond_US
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub1 processing started");
-                List<string> splValues = new List<string>();
+                var splValues = new List<string>();
                 string eventDate = null;
-                List<OutElements.Sub1> elements = new List<OutElements.Sub1>();
+                var elements = new List<OutElements.Sub1>();
                 /*Get Event Date start*/
                 var a = v.Where(x => x.Value.StartsWith("PATENTS WHICH EXPIRED ON")).Select(x => x.Value).FirstOrDefault();
                 if (a != null)
@@ -33,7 +33,7 @@ namespace Diamond_US
                 /*Concat end*/
                 foreach (var record in splValues)
                 {
-                    Regex pattern = new Regex(@"(?<pubNumber>[\d,]+)\s(?<appNumber>[\d,\/]+)\s(?<date>\d+\/\d+\/\d+)");
+                    var pattern = new Regex(@"(?<pubNumber>[\d,]+)\s(?<appNumber>[\d,\/]+)\s(?<date>\d+\/\d+\/\d+)");
                     var b = pattern.Match(record);
                     if (b.Success)
                     {

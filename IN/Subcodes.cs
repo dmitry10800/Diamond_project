@@ -39,7 +39,7 @@ namespace IN
         public static List<Diamond.Core.Models.LegalStatusEvent> Process1SubCode(List<string> elements, string subcode, string sectionCode, string gazetteName)
         {
             _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
-            int tmpID = 0;
+            var tmpID = 0;
             var totalRecords = Methods.SplitStringByRegex(elements, _sub1Regex);
             foreach (var record in totalRecords)
             {
@@ -191,17 +191,17 @@ namespace IN
         public static List<Diamond.Core.Models.LegalStatusEvent> Process2SubCode(string filePath, string subcode, string sectionCode, string gazetteName)
         {
             XSSFWorkbook OpenedDocument;
-            using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 OpenedDocument = new XSSFWorkbook(file);
             }
-            ISheet sheet = OpenedDocument.GetSheet("Лист1");
+            var sheet = OpenedDocument.GetSheet("Лист1");
 
 
             _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
-            int tmpID = 0;
+            var tmpID = 0;
 
-            for (int row = 0; row <= sheet.LastRowNum; row++)
+            for (var row = 0; row <= sheet.LastRowNum; row++)
             {
                 if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                 {
@@ -262,17 +262,17 @@ namespace IN
         public static List<Diamond.Core.Models.LegalStatusEvent> Process10SubCode(string filePath, string subcode, string sectionCode, string gazetteName)
         {
             XSSFWorkbook OpenedDocument;
-            using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 OpenedDocument = new XSSFWorkbook(file);
             }
-            ISheet sheet = OpenedDocument.GetSheet("Лист1");
+            var sheet = OpenedDocument.GetSheet("Лист1");
 
 
             _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
-            int tmpID = 0;
+            var tmpID = 0;
 
-            for (int row = 0; row <= sheet.LastRowNum; row++)
+            for (var row = 0; row <= sheet.LastRowNum; row++)
             {
                 if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                 {
@@ -292,15 +292,15 @@ namespace IN
                     _patentRecord.LegalEvent.Date = Methods.ConvertDate(sheet.GetRow(row).GetCell(3).ToString());
 
 
-                    string fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', ' ').Replace('\n', ' ');
+                    var fullInfo = sheet.GetRow(row).GetCell(4).ToString().Replace('\r', ' ').Replace('\n', ' ');
 
                 
 
-                    Regex regex = new Regex(@"((Mobile|Phone|Telephone|India Ph|India Tel|PHONE|INDIA Tel Nos).+\d)");
+                    var regex = new Regex(@"((Mobile|Phone|Telephone|India Ph|India Tel|PHONE|INDIA Tel Nos).+\d)");
 
-                    Match match = regex.Match(fullInfo);
+                    var match = regex.Match(fullInfo);
 
-                    string phoneInfo = "";
+                    var phoneInfo = "";
 
                     if (match.Success)
                     {

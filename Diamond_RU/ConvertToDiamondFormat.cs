@@ -41,14 +41,14 @@ namespace Diamond_RU
 
         public static List<Diamond.Core.Models.LegalStatusEvent> ConvertSubCodeToDiamondFormat(List<RecordElements.SubCode> elementOuts, int numberSubCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = RU_main.NameArchive;
                     /*Setting subcode*/
                     legalEvent.SubCode = numberSubCode.ToString();
@@ -58,7 +58,7 @@ namespace Diamond_RU
                     legalEvent.CountryCode = record.B190;
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     legalEvent.NewBiblio = new Biblio();
                     legalEvent.LegalEvent = new LegalEvent();
                     legalEvent.LegalEvent.Translations = new List<NoteTranslation>();
@@ -103,7 +103,7 @@ namespace Diamond_RU
                             {
                                 if (record.B734i != null)
                                 {
-                                    string countryCode = Regex
+                                    var countryCode = Regex
                                         .Match(record.B734i[0], @"(?<value>\([A-Z]{2}\))", RegexOptions.IgnoreCase)?.Groups["value"]
                                         .Value;
                                     legalEvent.NewBiblio.Assignees.Add(new PartyMember { Name = record.B734i[0].Replace(countryCode, "").Trim(), Address1 = record.B980i.Address, Country = countryCode.Replace(@"(", "").Replace(@")", "").Trim() });
@@ -148,7 +148,7 @@ namespace Diamond_RU
                     {
                         foreach (var item in record.B711)
                         {
-                            string countryCode = Regex
+                            var countryCode = Regex
                                 .Match(item, @"(?<value>\([A-Z]{2}\))", RegexOptions.IgnoreCase)?.Groups["value"]
                                 .Value;
                             var applicant = new PartyMember
@@ -165,7 +165,7 @@ namespace Diamond_RU
                     {
                         foreach (var item in record.B721)
                         {
-                            string countryCode = Regex
+                            var countryCode = Regex
                                 .Match(item, @"(?<value>\([A-Z]{2}\))", RegexOptions.IgnoreCase)?.Groups["value"]
                                 .Value;
                             var inventor = new PartyMember
@@ -182,7 +182,7 @@ namespace Diamond_RU
                     {
                         foreach (var item in record.B731)
                         {
-                            string countryCode = Regex
+                            var countryCode = Regex
                                 .Match(item, @"(?<value>\([A-Z]{2}\))", RegexOptions.IgnoreCase)?.Groups["value"]
                                 .Value;
                             biblioData.Assignees.Add(new PartyMember { Name = item.Replace(countryCode, "").Trim(), Country = countryCode.Replace(@"(", "").Replace(@")", "").Trim() });
@@ -196,7 +196,7 @@ namespace Diamond_RU
                         {
                             foreach (var item in record.B731i)
                             {
-                                string countryCode = Regex
+                                var countryCode = Regex
                                     .Match(item, @"(?<value>\([A-Z]{2}\))", RegexOptions.IgnoreCase)?.Groups["value"]
                                     .Value;
                                 biblioData.Assignees = new List<PartyMember>();
@@ -221,7 +221,7 @@ namespace Diamond_RU
                         {
                             foreach (var item in record.B734i)
                             {
-                                string countryCode = Regex
+                                var countryCode = Regex
                                     .Match(item, @"(?<value>\([A-Z]{2}\))", RegexOptions.IgnoreCase)?.Groups["value"]
                                     .Value;
                                 legalEvent.NewBiblio.Assignees.Add(new PartyMember { Name = item.Replace(countryCode, "").Trim(), Country = countryCode.Replace(@"(", "").Replace(@")", "").Trim() });
@@ -259,10 +259,10 @@ namespace Diamond_RU
                     }
 
                     /*Notes*/
-                    int[] array1 = new[] { 1, 2, 7, 8, 9, 10, 11, 12, 13 }; //выводим только номер Бюллетеня
-                    int[] array2 = new[] { 3, 4, 5 };  //выводим номер гос. рег. ; дата публикации ; номер Бюллетеня
-                    int[] array3 = new[] { 14, 15 }; // выводим Дата публикации, номер бюллетеня
-                    int[] array4 = new[] { 17, 18, 19, 20, 21, 22, 26, 28, 31, 32 }; //Выводим  Номер бюллетеня и номер публикации
+                    var array1 = new[] { 1, 2, 7, 8, 9, 10, 11, 12, 13 }; //выводим только номер Бюллетеня
+                    var array2 = new[] { 3, 4, 5 };  //выводим номер гос. рег. ; дата публикации ; номер Бюллетеня
+                    var array3 = new[] { 14, 15 }; // выводим Дата публикации, номер бюллетеня
+                    var array4 = new[] { 17, 18, 19, 20, 21, 22, 26, 28, 31, 32 }; //Выводим  Номер бюллетеня и номер публикации
                     if (array1.Contains(numberSubCode))
                     {
                         legalEvent.LegalEvent = new LegalEvent
@@ -329,7 +329,7 @@ namespace Diamond_RU
                     }
                     else if (array4.Contains(numberSubCode))
                     {
-                        string tempDateValue = "";
+                        var tempDateValue = "";
                         if (numberSubCode == 17 || numberSubCode == 18 || numberSubCode == 21 || numberSubCode == 22)
                             tempDateValue = record.B994i;
                         if (numberSubCode == 19 || numberSubCode == 20)

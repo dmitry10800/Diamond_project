@@ -16,7 +16,7 @@ namespace Diamond_BY
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\BY\Gaz\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null; //PUBLICATION INFORMATION ABOUT APPLICATIONS
             List<XElement> secondList = null; //PUBLICATION INFORMATION ABOUT INTERNATIONAL APPLICATIONS (PCT), INTRODUCED TO THE NATIONAL PHASE IN THE REPUBLIC OF BELARUS
@@ -53,8 +53,8 @@ namespace Diamond_BY
                 /*Granted European patents valid in the Republic of Bulgaria**/
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessFirstList grantedEP = new ProcessFirstList();
-                    List<ProcessFirstList.ElementOut> el = grantedEP.OutputValue(firstList);
+                    var grantedEP = new ProcessFirstList();
+                    var el = grantedEP.OutputValue(firstList);
                     //var legalStatusEvents = ConvertToDiamond.GrantedPatentsForInventionsConvertation(el);
                     //try
                     //{

@@ -11,10 +11,10 @@ namespace Diamond_EA
         {
             /*Folder with tetml files to process*/
             var dir = new DirectoryInfo(@"C:\Work\EA\EA_20201130_11");
-            string subcode = "12";
+            var subcode = "12";
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
 
             foreach (var textFile in files)
             {

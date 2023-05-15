@@ -13,7 +13,7 @@ namespace Diamond_AL_Maksim
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = SubCode switch
+            var convertedPatents = SubCode switch
             {
                 "3" => methods.Start(Path, SubCode),
                 "19" => methods.Start(Path, SubCode),

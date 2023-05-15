@@ -15,7 +15,7 @@ namespace Diamond_AR
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AR\20190930\3");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null;
 
@@ -35,8 +35,8 @@ namespace Diamond_AR
 
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessApplications grantedEP = new ProcessApplications();
-                    List<ProcessApplications.ElementOut> el = grantedEP.OutputValue(firstList);
+                    var grantedEP = new ProcessApplications();
+                    var el = grantedEP.OutputValue(firstList);
                     var legalStatusEvents = ConvertToDiamond.ApplicationsConvertation(el);
                     try
                     {

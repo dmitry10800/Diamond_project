@@ -7,12 +7,12 @@ namespace Diamond_NZ_Subcodes_1_2_4
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub1Convert(List<SubCode1> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 legalEvent.NewBiblio = new Biblio();
                 legalEvent.LegalEvent = new LegalEvent();
                 biblio.DOfPublication = new DOfPublication();
@@ -57,12 +57,12 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub2Convert(List<SubCode2> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 legalEvent.LegalEvent = new LegalEvent();
                 legalEvent.SubCode = "2";
                 legalEvent.SectionCode = "MM";
@@ -79,12 +79,12 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub4Convert(List<SubCode4> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 legalEvent.LegalEvent = new LegalEvent();
                 legalEvent.SubCode = "4";
                 legalEvent.SectionCode = "MK";

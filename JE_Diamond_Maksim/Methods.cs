@@ -19,13 +19,13 @@ namespace Diamond_JE_Maksim
 
             DirectoryInfo directory = new(path);
 
-            List<string> files = directory.GetFiles("*.tetml", SearchOption.AllDirectories).Select(file => file.FullName).ToList();
+            var files = directory.GetFiles("*.tetml", SearchOption.AllDirectories).Select(file => file.FullName).ToList();
 
             XElement tet;
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -37,10 +37,10 @@ namespace Diamond_JE_Maksim
                         .SkipWhile(val => !val.Value.StartsWith("Jersey Registration"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Jersey\s?Registration.+)")
+                    var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Jersey\s?Registration.+)")
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Jersey")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                        legalStatus.Add(MakePatent(note, subCode, "FG"));
                     }
@@ -70,7 +70,7 @@ namespace Diamond_JE_Maksim
 
             if (subCode == "1")
             {
-                Match match = Regex.Match(note,
+                var match = Regex.Match(note,
                     @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\s?\d+\s?[A-Z]?(\d+)?)\s?(?<firstReg>\d{2}\/\d{2}\/\d{4})\s?(?<field45>\d{2}\/\d{2}\/\d{4})\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates\s?(?<update>.+)");
 
                 if (match.Success)
@@ -91,17 +91,17 @@ namespace Diamond_JE_Maksim
                         Name = match.Groups["field74"].Value.Trim()
                     });
 
-                    List<string> assigness = Regex.Split(match.Groups["field73"].Value.Trim(), @"(?<=[A-Z]{2}\/)")
+                    var assigness = Regex.Split(match.Groups["field73"].Value.Trim(), @"(?<=[A-Z]{2}\/)")
                         .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                    foreach (string assigner in assigness)
+                    foreach (var assigner in assigness)
                     {
                         legal.Biblio.Assignees.Add(new PartyMember()
                         {
                             Name = assigner.TrimEnd('/')
                         });
                     }
-                    Match update = Regex.Match(match.Groups["update"].Value.Trim(),
+                    var update = Regex.Match(match.Groups["update"].Value.Trim(),
                         @".+(?<leNote>\d{2}\/\d{2}\/\d{4})\s?(?<leDate>\d{2}\/\d{2}\/\d{4})");
 
                     if (update.Success)
@@ -132,7 +132,7 @@ namespace Diamond_JE_Maksim
                 }
                 else
                 {
-                    Match match2 = Regex.Match(note,
+                    var match2 = Regex.Match(note,
                         @"(?<kind>[A-Z]\s?\d+)\s?(?<UkReg>([A-Z]{1,2})?\s?\d+\s?[A-Z]?(\d+)?)\s?Invention(?<title>.+)\s?Agent(?<field74>.+)\s?Proprietor(?<field73>.+)\s?POA.+Remarks(?<note>.+)\s?Updates");
 
                     if (match2.Success)
@@ -150,10 +150,10 @@ namespace Diamond_JE_Maksim
                             Name = match2.Groups["field74"].Value.Trim()
                         });
 
-                        List<string> assigness = Regex.Split(match.Groups["field73"].Value.Trim(), @"(?<=[A-Z]{2}\/)")
+                        var assigness = Regex.Split(match.Groups["field73"].Value.Trim(), @"(?<=[A-Z]{2}\/)")
                             .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string assigner in assigness)
+                        foreach (var assigner in assigness)
                         {
                             legal.Biblio.Assignees.Add(new PartyMember()
                             {
@@ -161,7 +161,7 @@ namespace Diamond_JE_Maksim
                             });
                         }
 
-                        Match update = Regex.Match(match.Groups["update"].Value.Trim(),
+                        var update = Regex.Match(match.Groups["update"].Value.Trim(),
                             @".+(?<leNote>\d{2}\/\d{2}\/\d{4})\s?(?<leDate>\d{2}\/\d{2}\/\d{4})");
 
                         if (update.Success)
@@ -197,7 +197,7 @@ namespace Diamond_JE_Maksim
 
             if (subCode == "1")
             {
-                foreach (XElement item in xElements)
+                foreach (var item in xElements)
                 {
                     text += item.Value + " ";
                 }
@@ -210,7 +210,7 @@ namespace Diamond_JE_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -224,8 +224,8 @@ namespace Diamond_JE_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

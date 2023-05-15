@@ -43,7 +43,7 @@ namespace Diamond_UY_applications_for_invention
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             try
             {
@@ -69,7 +69,7 @@ namespace Diamond_UY_applications_for_invention
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             string tmpDescValue = null;
             if (recString != "")
             {
@@ -78,8 +78,8 @@ namespace Diamond_UY_applications_for_invention
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf(I57)).Trim();
                     tempStrC = tempStrC.Remove(recString.IndexOf(I57)).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s*(Clasificación\sInternacional\:|Fecha\sde\spresentación\:|Datos\sde\sprioridad\:|Solicitante\:|Inventor\:|Agente\/apoderado\:|Título\:|Invención)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s*(Clasificación\sInternacional\:|Fecha\sde\spresentación\:|Datos\sde\sprioridad\:|Solicitante\:|Inventor\:|Agente\/apoderado\:|Título\:|Invención)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -102,7 +102,7 @@ namespace Diamond_UY_applications_for_invention
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\UY\Reg\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -139,10 +139,10 @@ namespace Diamond_UY_applications_for_invention
                     if (value != null)
                         Images.Add(value, item.Attribute("filename")?.Value);
                 }
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -181,11 +181,11 @@ namespace Diamond_UY_applications_for_invention
                                 /*Saving images*/
                                 if (imageNames != null)
                                 {
-                                    int imgCount = 1;
+                                    var imgCount = 1;
                                     foreach (var image in imageNames)
                                     {
-                                        string ext = Path.GetExtension(Images[image]);
-                                        string imageFileName = Path.Combine(root.FullName, Images[image]);
+                                        var ext = Path.GetExtension(Images[image]);
+                                        var imageFileName = Path.Combine(root.FullName, Images[image]);
                                         if (File.Exists(imageFileName))
                                             try
                                             {
@@ -262,7 +262,7 @@ namespace Diamond_UY_applications_for_invention
                                                     {
                                                         if (item.Contains(" "))
                                                         {
-                                                            string[] tmpSplValue = item.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                                            var tmpSplValue = item.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                                                             try
                                                             {
                                                                 if (tmpSplValue.Count() == 3)
@@ -282,7 +282,7 @@ namespace Diamond_UY_applications_for_invention
                                             }
                                             else if (record.Contains(" "))
                                             {
-                                                string[] tmpSplValue = record.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                                var tmpSplValue = record.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                                                 try
                                                 {
                                                     if (tmpSplValue.Count() == 3)
@@ -310,7 +310,7 @@ namespace Diamond_UY_applications_for_invention
                                         {
                                             if (item.Contains(" "))
                                             {
-                                                string[] tmpSplValue = item.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                                var tmpSplValue = item.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                                                 try
                                                 {
                                                     if (tmpSplValue.Count() == 3)
@@ -332,7 +332,7 @@ namespace Diamond_UY_applications_for_invention
                                 {
                                     if (tmpRecValue.Contains(" "))
                                     {
-                                        string[] tmpSplValue = tmpRecValue.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                        var tmpSplValue = tmpRecValue.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                                         try
                                         {
                                             if (tmpSplValue.Count() == 3)
@@ -375,7 +375,7 @@ namespace Diamond_UY_applications_for_invention
                                         {
                                             try
                                             {
-                                                string countryCode = Regex.Match(item, @"\[[A-Z]{2}\]").Value;
+                                                var countryCode = Regex.Match(item, @"\[[A-Z]{2}\]").Value;
                                                 currentElement.I71N = (currentElement.I71N ?? Enumerable.Empty<string>()).Concat(new string[] { item.Replace(countryCode, "").Trim() }).ToArray();
                                                 currentElement.I71C = (currentElement.I71C ?? Enumerable.Empty<string>()).Concat(new string[] { countryCode.Replace("[", "").Replace("]", "").Trim() }).ToArray();
                                             }
@@ -405,7 +405,7 @@ namespace Diamond_UY_applications_for_invention
                                         {
                                             try
                                             {
-                                                string countryCode = Regex.Match(item, @"\[[A-Z]{2}\]").Value;
+                                                var countryCode = Regex.Match(item, @"\[[A-Z]{2}\]").Value;
                                                 currentElement.I72N = (currentElement.I72N ?? Enumerable.Empty<string>()).Concat(new string[] { item.Replace(countryCode, "").Trim() }).ToArray();
                                                 currentElement.I72C = (currentElement.I72C ?? Enumerable.Empty<string>()).Concat(new string[] { countryCode.Replace("[", "").Replace("]", "").Trim() }).ToArray();
 
@@ -421,7 +421,7 @@ namespace Diamond_UY_applications_for_invention
                                 {
                                     try
                                     {
-                                        string countryCode = Regex.Match(tmpRecValue, @"\[[A-Z]{2}\]").Value;
+                                        var countryCode = Regex.Match(tmpRecValue, @"\[[A-Z]{2}\]").Value;
                                         currentElement.I72N = (currentElement.I72N ?? Enumerable.Empty<string>()).Concat(new string[] { tmpRecValue.Replace(countryCode, "").Trim() }).ToArray();
                                         currentElement.I72C = (currentElement.I72C ?? Enumerable.Empty<string>()).Concat(new string[] { countryCode.Replace("[", "").Replace("]", "").Trim() }).ToArray();
 
@@ -452,7 +452,7 @@ namespace Diamond_UY_applications_for_invention
                         sf.WriteLine("22:\t" + field.I22);
                         if (field.I30C != null && field.I30C.Count() == field.I30N.Count() && field.I30C.Count() == field.I30D.Count())
                         {
-                            for (int i = 0; i < field.I30C.Count(); i++)
+                            for (var i = 0; i < field.I30C.Count(); i++)
                             {
                                 sf.WriteLine("30C:\t" + field.I30C[i]);
                                 sf.WriteLine("30N:\t" + field.I30N[i]);
@@ -473,7 +473,7 @@ namespace Diamond_UY_applications_for_invention
                         }
                         if (field.I71N != null && field.I71C != null)
                         {
-                            for (int i = 0; i < field.I71N.Count(); i++)
+                            for (var i = 0; i < field.I71N.Count(); i++)
                             {
                                 sf.WriteLine("71N:\t" + field.I71N[i]);
                                 sf.WriteLine("71C:\t" + field.I71C[i]);
@@ -481,7 +481,7 @@ namespace Diamond_UY_applications_for_invention
                         }
                         if (field.I72N != null && field.I72C != null)
                         {
-                            for (int i = 0; i < field.I72N.Count(); i++)
+                            for (var i = 0; i < field.I72N.Count(); i++)
                             {
                                 sf.WriteLine("72N:\t" + field.I72N[i]);
                                 sf.WriteLine("72C:\t" + field.I72C[i]);

@@ -55,7 +55,7 @@ namespace Diamond_OA_patent_of_invention
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             try
             {
@@ -81,7 +81,7 @@ namespace Diamond_OA_patent_of_invention
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             string tmpDescValue = null;
             if (recString != "")
             {
@@ -90,8 +90,8 @@ namespace Diamond_OA_patent_of_invention
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf(I57)).Trim();
                     tempStrC = tempStrC.Remove(recString.IndexOf(I57)).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -114,7 +114,7 @@ namespace Diamond_OA_patent_of_invention
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\OA\Reg\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -149,10 +149,10 @@ namespace Diamond_OA_patent_of_invention
                     if (value != null)
                         Images.Add(value, item.Attribute("filename")?.Value);
                 }
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -191,11 +191,11 @@ namespace Diamond_OA_patent_of_invention
                                 /*Saving images*/
                                 if (imageNames != null)
                                 {
-                                    int imgCount = 1;
+                                    var imgCount = 1;
                                     foreach (var image in imageNames)
                                     {
-                                        string ext = Path.GetExtension(Images[image]);
-                                        string imageFileName = Path.Combine(root.FullName, Images[image]);
+                                        var ext = Path.GetExtension(Images[image]);
+                                        var imageFileName = Path.Combine(root.FullName, Images[image]);
                                         if (File.Exists(imageFileName))
                                             try
                                             {
@@ -287,8 +287,8 @@ namespace Diamond_OA_patent_of_invention
                                         {
                                             if (recordPrio.Contains(" "))
                                             {
-                                                string tmpRecordPrio = recordPrio.Replace("n°", "").Replace("du", "").Trim();
-                                                string[] splTmpRecordPrio = tmpRecordPrio.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                                var tmpRecordPrio = recordPrio.Replace("n°", "").Replace("du", "").Trim();
+                                                var splTmpRecordPrio = tmpRecordPrio.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                                 if (splTmpRecordPrio.Count() == 3)
                                                 {
                                                     currentElement.I30N = (currentElement.I30N ?? Enumerable.Empty<string>()).Concat(new string[] { splTmpRecordPrio[1].Trim() }).ToArray();
@@ -301,8 +301,8 @@ namespace Diamond_OA_patent_of_invention
                                 }
                                 else if (tmpRecValue.Contains(" ") && !tmpRecValue.Contains("\n"))
                                 {
-                                    string tmpRecordPrio = tmpRecValue.Replace("n°", "").Replace("du", "").Trim();
-                                    string[] splTmpRecordPrio = tmpRecordPrio.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpRecordPrio = tmpRecValue.Replace("n°", "").Replace("du", "").Trim();
+                                    var splTmpRecordPrio = tmpRecordPrio.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (splTmpRecordPrio.Count() == 3)
                                     {
                                         currentElement.I30N = (currentElement.I30N ?? Enumerable.Empty<string>()).Concat(new string[] { splTmpRecordPrio[1].Trim() }).ToArray();
@@ -331,11 +331,11 @@ namespace Diamond_OA_patent_of_invention
                                     tmpRecValue = inidCode.Replace(I72, "");
                                     if (Regex.IsMatch(tmpRecValue, @".*\([A-Z]{2}\)"))
                                     {
-                                        Regex pat = new Regex(@".*?\([A-Z]{2}\)", RegexOptions.Singleline);
-                                        MatchCollection matchCollection = pat.Matches(tmpRecValue);
+                                        var pat = new Regex(@".*?\([A-Z]{2}\)", RegexOptions.Singleline);
+                                        var matchCollection = pat.Matches(tmpRecValue);
                                         foreach (Match item in matchCollection)
                                         {
-                                            string tmpSplValue = item.Value.Replace("\n", " ");
+                                            var tmpSplValue = item.Value.Replace("\n", " ");
                                             tmpSplValue = Regex.Replace(tmpSplValue, @"^\s*et(\s|\n)", "");
                                             string tmpSplName = null;
                                             string tmpSplCountry = null;
@@ -376,7 +376,7 @@ namespace Diamond_OA_patent_of_invention
                                     {
                                         if (record.Contains(","))
                                         {
-                                            string tmpValue = Regex.Replace(record, @"^\s*et(\s|\n)", "");
+                                            var tmpValue = Regex.Replace(record, @"^\s*et(\s|\n)", "");
                                             //try
                                             //{
                                             //    coutryCode = Regex.Match(tmpValue, @"\([A-Z]{2}\)$").Value.Replace("(","").Replace(")","");
@@ -390,8 +390,8 @@ namespace Diamond_OA_patent_of_invention
                                             {
                                                 if (tmpValue.Count(f => f == ',') >= 2)
                                                 {
-                                                    int firstIndex = tmpValue.IndexOf(",");
-                                                    int secondIndex = tmpValue.IndexOf(",", firstIndex + 1);
+                                                    var firstIndex = tmpValue.IndexOf(",");
+                                                    var secondIndex = tmpValue.IndexOf(",", firstIndex + 1);
                                                     tmpSplName = tmpValue.Remove(secondIndex).Trim();
                                                     tmpSplAddr = tmpValue.Substring(secondIndex).Trim(',').Trim();
                                                 }
@@ -447,7 +447,7 @@ namespace Diamond_OA_patent_of_invention
                                 tmpRecValue = inidCode.Replace(I74, "").Replace("\n", " ").Trim();
                                 if (tmpRecValue.Contains(","))
                                 {
-                                    string tmpValue = Regex.Replace(tmpRecValue, @"\.$", "").Trim();
+                                    var tmpValue = Regex.Replace(tmpRecValue, @"\.$", "").Trim();
                                     try
                                     {
                                         coutryCode = Regex.Match(tmpValue, @"\([A-Z]{2}\)$").Value.Replace("(", "").Replace(")", "");
@@ -477,7 +477,7 @@ namespace Diamond_OA_patent_of_invention
                         sf.WriteLine("22:\t" + field.I22);
                         if (field.I30C != null && field.I30C.Count() == field.I30N.Count() && field.I30C.Count() == field.I30D.Count())
                         {
-                            for (int i = 0; i < field.I30C.Count(); i++)
+                            for (var i = 0; i < field.I30C.Count(); i++)
                             {
                                 sf.WriteLine("30C:\t" + field.I30C[i]);
                                 sf.WriteLine("30N:\t" + field.I30N[i]);
@@ -486,7 +486,7 @@ namespace Diamond_OA_patent_of_invention
                         }
                         if (field.I51C != null && field.I51D != null)
                         {
-                            for (int i = 0; i < field.I51D.Count(); i++)
+                            for (var i = 0; i < field.I51D.Count(); i++)
                             {
                                 sf.WriteLine("51N:\t" + field.I51D[i].Trim());
                                 sf.WriteLine("51C:\t" + field.I51C[i].Trim());
@@ -499,7 +499,7 @@ namespace Diamond_OA_patent_of_invention
                         }
                         if (field.I72N != null && field.I72C != null)
                         {
-                            for (int i = 0; i < field.I72N.Count(); i++)
+                            for (var i = 0; i < field.I72N.Count(); i++)
                             {
                                 sf.WriteLine("72N:\t" + field.I72N[i]);
                                 sf.WriteLine("72C:\t" + field.I72C[i]);
@@ -507,7 +507,7 @@ namespace Diamond_OA_patent_of_invention
                         }
                         if (field.I73N != null && field.I73C != null && field.I73N != null)
                         {
-                            for (int i = 0; i < field.I73N.Count(); i++)
+                            for (var i = 0; i < field.I73N.Count(); i++)
                             {
                                 sf.WriteLine("73N:\t" + field.I73N[i].Trim());
                                 sf.WriteLine("73A:\t" + field.I73A[i].Trim());

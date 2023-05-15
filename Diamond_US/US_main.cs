@@ -15,7 +15,7 @@ namespace Diamond_US
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\US\Input");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> sub1 = null; // 
 

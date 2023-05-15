@@ -19,7 +19,7 @@ namespace Diamond_ES
         {
             Console.WriteLine("Country:\t\t\tES\n\n");
             Console.WriteLine("Enter path to folder with PDF file");
-            string pathToPDF = Console.ReadLine();
+            var pathToPDF = Console.ReadLine();
             PathToTetml = new DirectoryInfo(pathToPDF);
             var countFiles = PathToTetml.GetFiles().Count();
             if (countFiles < 2)
@@ -41,14 +41,14 @@ namespace Diamond_ES
             }
 
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
-            List<XElement> allElementsList = new List<XElement>(); // all elements in processing gazette
-            List<XElement> subCode3 = new List<XElement>();
-            List<XElement> subCode11 = new List<XElement>();
-            List<XElement> subCode12 = new List<XElement>();
+            var allElementsList = new List<XElement>(); // all elements in processing gazette
+            var subCode3 = new List<XElement>();
+            var subCode11 = new List<XElement>();
+            var subCode12 = new List<XElement>();
 
             foreach (var file in files)
             {
@@ -58,7 +58,7 @@ namespace Diamond_ES
                 allElementsList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                string[] chaptersName = new[]
+                var chaptersName = new[]
                 {
                     "1. PATENTES", "2. MODELOS DE", "3. CERTIFICADOS",
                     "5. SOLICITUDES Y",
@@ -84,7 +84,7 @@ namespace Diamond_ES
 
                     if (startPos > -1 && endPos > -1)
                     {
-                        for (int i = startPos; i < endPos; i++)
+                        for (var i = startPos; i < endPos; i++)
                         {
                             subCode3.Add(allElementsList[i]);
                         }
@@ -108,7 +108,7 @@ namespace Diamond_ES
 
                     if (startPos > -1 && endPos > -1)
                     {
-                        for (int i = startPos; i < endPos; i++)
+                        for (var i = startPos; i < endPos; i++)
                         {
                             subCode11.Add(allElementsList[i]);
                         }
@@ -143,16 +143,16 @@ namespace Diamond_ES
 
                     if (startPos > -1 && endPos > -1)
                     {
-                        for (int i = startPos; i < endPos; i++)
+                        for (var i = startPos; i < endPos; i++)
                         {
                             subCode12.Add(allElementsList[i]);
                         }
                     }
                 }
 
-                List<LegalStatusEvent> resultSubCode3 = new List<LegalStatusEvent>();
-                List<LegalStatusEvent> resultSubCode11 = new List<LegalStatusEvent>();
-                List<LegalStatusEvent> resultSubCode12 = new List<LegalStatusEvent>();
+                var resultSubCode3 = new List<LegalStatusEvent>();
+                var resultSubCode11 = new List<LegalStatusEvent>();
+                var resultSubCode12 = new List<LegalStatusEvent>();
                 /*
                 if (subCode3 != null && subCode3.Count > 0)
                 {
@@ -199,14 +199,14 @@ namespace Diamond_ES
 
         static List<ElementForChecking> FindAllChapters(List<XElement> list, string[] allChaptersArr)
         {
-            List<ElementForChecking> outList = new List<ElementForChecking>();
+            var outList = new List<ElementForChecking>();
             ElementForChecking element;
 
-            int k = 0;
+            var k = 0;
             foreach (var item in allChaptersArr)
             {
-                int county = 0;
-                for (int i = 0; i < list.Count; i++)
+                var county = 0;
+                for (var i = 0; i < list.Count; i++)
                 {
                     if (list[i].Value.Contains(item) && !list[i].Value.Contains(" ......."))
                     {

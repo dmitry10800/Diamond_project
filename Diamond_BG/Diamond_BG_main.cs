@@ -15,7 +15,7 @@ namespace Diamond_BG
             var dir = new DirectoryInfo(@"D:\TET_DEV\Diamond\BG\20200311\BG_20200228_02(2)");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> applEuropeanPatents = null;
             List<XElement> grantedEuropeanPatents = null;
@@ -106,8 +106,8 @@ namespace Diamond_BG
                 /*Granted Patents For Inventions 3 subcode*/
                 if (grantedPatentsForInventions != null && grantedPatentsForInventions.Count() > 0)
                 {
-                    ProcessGrantedPatentsForInventions grantedEP = new ProcessGrantedPatentsForInventions();
-                    List<ProcessGrantedPatentsForInventions.ElementOut> el = grantedEP.OutputValue(grantedPatentsForInventions);
+                    var grantedEP = new ProcessGrantedPatentsForInventions();
+                    var el = grantedEP.OutputValue(grantedPatentsForInventions);
                     var legalStatusEvents = ConvertToDiamond.GrantedPatentsForInventionsConvertation(el);
                     try
                     {
@@ -123,8 +123,8 @@ namespace Diamond_BG
                 /*Granted Certificates for Register Utility Models 7 subcode*/
                 if (grantedCertForUM != null && grantedCertForUM.Count() > 0)
                 {
-                    ProcessGrantedCertificatesForRegUtilityModels grantedCertUM = new ProcessGrantedCertificatesForRegUtilityModels();
-                    List<ProcessGrantedCertificatesForRegUtilityModels.ElementOut> el = grantedCertUM.OutputValue(grantedCertForUM);
+                    var grantedCertUM = new ProcessGrantedCertificatesForRegUtilityModels();
+                    var el = grantedCertUM.OutputValue(grantedCertForUM);
                     var legalStatusEvents = ConvertToDiamond.GrantedCertificatesForRegUMConvertation(el);
                     try
                     {
@@ -140,8 +140,8 @@ namespace Diamond_BG
                 /*Granted European patents valid in the Republic of Bulgaria 5 subcode*/
                 if (grantedEuropeanPatents != null && grantedEuropeanPatents.Count() > 0)
                 {
-                    ProcessGrantedEuropeanPatents grantedEP = new ProcessGrantedEuropeanPatents();
-                    List<ProcessGrantedEuropeanPatents.ElementOut> el = grantedEP.OutputValue(grantedEuropeanPatents);
+                    var grantedEP = new ProcessGrantedEuropeanPatents();
+                    var el = grantedEP.OutputValue(grantedEuropeanPatents);
                     var legalStatusEvents = ConvertToDiamond.GrantedEuropeanPatentsConvertation(el);
                     try
                     {
@@ -157,8 +157,8 @@ namespace Diamond_BG
                 /*Granted European patents valid in the Republic of Bulgaria 1 subcode*/
                 if (publishedAppForInventions != null && publishedAppForInventions.Count() > 0)
                 {
-                    ProcessPublishedApplicationsForInventions publApp = new ProcessPublishedApplicationsForInventions();
-                    List<ProcessPublishedApplicationsForInventions.ElementOut> el = publApp.OutputValue(publishedAppForInventions);
+                    var publApp = new ProcessPublishedApplicationsForInventions();
+                    var el = publApp.OutputValue(publishedAppForInventions);
                     var legalStatusEvents = ConvertToDiamond.PublishedAppForInventionConvertation(el);
                     try
                     {

@@ -21,12 +21,12 @@ namespace Diamond_TR_Maksim_Excel
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
 
-            foreach (string xlsFiles in files)
+            foreach (var xlsFiles in files)
             {
                 CurrentFileName = xlsFiles;
 
@@ -36,9 +36,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -61,8 +61,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -70,7 +70,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -87,9 +87,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -112,8 +112,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -121,7 +121,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -145,9 +145,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -170,8 +170,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -179,7 +179,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -196,9 +196,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -221,8 +221,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -230,7 +230,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -249,9 +249,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -274,8 +274,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -295,9 +295,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -320,8 +320,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -329,7 +329,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -346,9 +346,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -371,8 +371,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -380,7 +380,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -397,9 +397,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -422,8 +422,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -431,7 +431,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -448,9 +448,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -473,8 +473,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -482,7 +482,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -499,9 +499,9 @@ namespace Diamond_TR_Maksim_Excel
 
                     OpenedDocument = new(xlsFiles);
 
-                    ISheet sheet = OpenedDocument.GetSheet("Sheet1");
+                    var sheet = OpenedDocument.GetSheet("Sheet1");
 
-                    for (int row = 0; row <= sheet.LastRowNum; row++)
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         if (sheet.GetRow(row) != null && sheet.GetRow(row).GetCell(0) != null)
                         {
@@ -524,8 +524,8 @@ namespace Diamond_TR_Maksim_Excel
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            List<string> applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            foreach (string applicant in applicants)
+                            var applicants = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), @"\\").Where(x => !string.IsNullOrEmpty(x)).ToList();
+                            foreach (var applicant in applicants)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
                                 {
@@ -533,7 +533,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            Match match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -553,7 +553,7 @@ namespace Diamond_TR_Maksim_Excel
         {
             foreach (var rec in events)
             {
-                    string tmpValue = JsonConvert.SerializeObject(rec);
+                    var tmpValue = JsonConvert.SerializeObject(rec);
                     string url;
                     if (SendToProduction == true)
                     {
@@ -567,8 +567,8 @@ namespace Diamond_TR_Maksim_Excel
                     httpClient.BaseAddress = new Uri(url);
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                    HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                    string answer = result.Content.ReadAsStringAsync().Result;
+                    var result = httpClient.PostAsync("", content).Result;
+                    var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

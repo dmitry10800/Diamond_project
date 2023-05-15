@@ -26,7 +26,7 @@ namespace BD_Diamond_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -35,7 +35,7 @@ namespace BD_Diamond_Maksim
 
             List<XElement> xElements = null;
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -48,9 +48,9 @@ namespace BD_Diamond_Maksim
                         .TakeWhile(val => !val.Value.StartsWith("Deputy Registrar."))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\s[0-9]{1,4}\/\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(" ")).ToList();
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\s[0-9]{1,4}\/\s)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(" ")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "AZ"));
                     }
@@ -62,7 +62,7 @@ namespace BD_Diamond_Maksim
         {
             string text = null;
 
-            foreach (XElement xElement in xElements)
+            foreach (var xElement in xElements)
             {
                 text += xElement.Value.Trim() + " ";
             }
@@ -85,14 +85,14 @@ namespace BD_Diamond_Maksim
             biblio.Applicants = new();
             biblio.Titles = new();
 
-            Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<appNum>[0-9]{1,5}\/\s?[0-9]{4})\s(?<appDate>[0-9]{2}.[0-9]{2}.[0-9]{4})\s(?<name>.+,\s?[A-Z]{2})\s(?<title>.+)");
+            var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<appNum>[0-9]{1,5}\/\s?[0-9]{4})\s(?<appDate>[0-9]{2}.[0-9]{2}.[0-9]{4})\s(?<name>.+,\s?[A-Z]{2})\s(?<title>.+)");
 
             if (match.Success)
             {
                 biblio.Application.Number = match.Groups["appNum"].Value.Trim();
                 biblio.Application.Date = DateTime.Parse(match.Groups["appDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
 
-                Match applicants = Regex.Match(match.Groups["name"].Value.Trim(), @"(?<name>.+)(?<code>[A-Z]{2}$)");
+                var applicants = Regex.Match(match.Groups["name"].Value.Trim(), @"(?<name>.+)(?<code>[A-Z]{2}$)");
                 if (applicants.Success)
                 {
                     biblio.Applicants.Add(new PartyMember
@@ -114,7 +114,7 @@ namespace BD_Diamond_Maksim
             }
             else
             {
-                Match match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<appNum>[0-9]{1,5}\/\s?[0-9]{4})\s(?<appDate>[0-9]{2}.[0-9]{2}.[0-9]{4})\s(?<name>.+\sand\s[A-Z]{2})\s(?<title>.+)");
+                var match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<appNum>[0-9]{1,5}\/\s?[0-9]{4})\s(?<appDate>[0-9]{2}.[0-9]{2}.[0-9]{4})\s(?<name>.+\sand\s[A-Z]{2})\s(?<title>.+)");
                 if (match1.Success)
                 {
                     biblio.Application.Number = match1.Groups["appNum"].Value.Trim();
@@ -129,11 +129,11 @@ namespace BD_Diamond_Maksim
                     List<string> codes = new();
                     List<string> applicants = new();
 
-                    List<string> temps = Regex.Split(match1.Groups["name"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var temps = Regex.Split(match1.Groups["name"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                    foreach (string temp in temps)
+                    foreach (var temp in temps)
                     {
-                        Match tmp = Regex.Match(temp, @"(?<gr>.+)and(?<gr2>.+)");
+                        var tmp = Regex.Match(temp, @"(?<gr>.+)and(?<gr2>.+)");
                         if (tmp.Success)
                         {
                             applicants.Add(tmp.Groups["gr"].Value.Trim());
@@ -141,11 +141,11 @@ namespace BD_Diamond_Maksim
                         }
                         else applicants.Add(temp.Trim());
                     }
-                    foreach (string applicant in applicants)
+                    foreach (var applicant in applicants)
                     {
                         if (applicant.Length > 2)
                         {
-                            Match applic = Regex.Match(applicant, @"(?<name>.+),\s?(?<code>[A-Z]{2})");
+                            var applic = Regex.Match(applicant, @"(?<name>.+),\s?(?<code>[A-Z]{2})");
                             if (applic.Success)
                             {
                                 names.Add(applic.Groups["name"].Value.Trim());
@@ -156,7 +156,7 @@ namespace BD_Diamond_Maksim
                         else codes.Add(applicant);
                     }
 
-                    for (int i = 0; i < codes.Count; i++)
+                    for (var i = 0; i < codes.Count; i++)
                     {
                         biblio.Applicants.Add(new PartyMember
                         {
@@ -175,15 +175,15 @@ namespace BD_Diamond_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

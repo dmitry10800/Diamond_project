@@ -8,10 +8,10 @@ namespace Diamond_IL
     {
         public static string GetDate(string tmpFileName)
         {
-            FileInfo fName = new FileInfo(tmpFileName);
-            string name = fName.Name;
-            string datePatternBig = @"^[A-Z]{2}_\d{8}_";
-            string datePatternSmall = @"(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})";
+            var fName = new FileInfo(tmpFileName);
+            var name = fName.Name;
+            var datePatternBig = @"^[A-Z]{2}_\d{8}_";
+            var datePatternSmall = @"(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})";
             if (Regex.IsMatch(name, datePatternBig))
                 return
                     Regex.Match(name, datePatternSmall).Groups["year"].Value + "-" +
@@ -28,15 +28,15 @@ namespace Diamond_IL
         public List<ElementOut> OutputValue(string elemList)
         {
             elemList = elemList.Replace("\r\n", "\n\t").Replace("\n\t", "\t");
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement = null;
             if (elemList != null)
             {
                 ElementsOut.Clear();
                 if (Regex.IsMatch(elemList, @"[\b,\n,^,\t]*\d{6}[\b,\n,$,\t]*"))
                 {
-                    Regex pattern = new Regex(@"[\b,\n,^,\t]*\d{6}[\b,\n,$,\t]*");
-                    MatchCollection numbers = pattern.Matches(elemList);
+                    var pattern = new Regex(@"[\b,\n,^,\t]*\d{6}[\b,\n,$,\t]*");
+                    var numbers = pattern.Matches(elemList);
                     if (numbers != null && numbers.Count > 0)
                     {
                         foreach (Match item in numbers)

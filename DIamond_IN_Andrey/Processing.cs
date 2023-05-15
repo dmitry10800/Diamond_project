@@ -32,9 +32,9 @@ namespace DIamond_IN_Andrey
             if (elements == null)
                 return null;
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                int tmpInc = i;
+                var tmpInc = i;
                 string tmpVal = null;
 
                 var value = elements[i].Value;
@@ -138,7 +138,7 @@ namespace DIamond_IN_Andrey
 
         public static List<Elements> BiblioProcess2(List<XElement> elements)
         {
-            List<Elements> elementsOut = new List<Elements>();
+            var elementsOut = new List<Elements>();
 
             var text = "";
 

@@ -33,21 +33,21 @@ namespace Diamond_ME
         }
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string[] splittedRecord = null;
                     int tmpInc;
                     if (value.StartsWith(I51))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        string tmpRecordValue = "";
+                        var tmpRecordValue = "";
                         tmpInc = i;
                         do
                         {

@@ -16,11 +16,11 @@ namespace Dimond_EE
     {
         public List<string> LoadAllFiles(string path)
         {
-            DirectoryInfo dir = new DirectoryInfo(path);
+            var dir = new DirectoryInfo(path);
 
-            List<string> files = new List<string>();
+            var files = new List<string>();
 
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -30,11 +30,11 @@ namespace Dimond_EE
 
         public string NameNewspaper(string path)
         {
-            DirectoryInfo dir = new DirectoryInfo(path);
+            var dir = new DirectoryInfo(path);
 
-            FileInfo[] files = dir.GetFiles("*.tetml", SearchOption.AllDirectories);
+            var files = dir.GetFiles("*.tetml", SearchOption.AllDirectories);
 
-            string tmp = files[0].ToString().Replace(".tetml", ".pdf");
+            var tmp = files[0].ToString().Replace(".tetml", ".pdf");
 
             return tmp;
         }
@@ -42,7 +42,7 @@ namespace Dimond_EE
         public string BuildAllWorkText(string path)
         {
 
-            List<string> files = LoadAllFiles(path);
+            var files = LoadAllFiles(path);
 
             XElement tet;
 
@@ -62,21 +62,21 @@ namespace Dimond_EE
                 }
             }
 
-            string allText = fullText.Trim();
+            var allText = fullText.Trim();
 
-            Regex regex = new Regex(@"(.+?)(\(51\).*)", RegexOptions.Singleline);
+            var regex = new Regex(@"(.+?)(\(51\).*)", RegexOptions.Singleline);
 
-            string[] workText = regex.Split(allText);
+            var workText = regex.Split(allText);
 
            workText = workText.Where(val => !string.IsNullOrEmpty(val)).ToArray();
 
-            Regex pattern = new Regex(@"\(51\)");
+            var pattern = new Regex(@"\(51\)");
 
-            string workLine = "";
+            var workLine = "";
             
             foreach (var item in workText)
             {
-                Match match = pattern.Match(item);
+                var match = pattern.Match(item);
 
                 if (match.Success)
                 {
@@ -90,7 +90,7 @@ namespace Dimond_EE
 
         public List<string> SplitByInid(string text, string inid)
         {
-            List<string> records = new List<string>();
+            var records = new List<string>();
 
             if (text.Contains(inid))
             {
@@ -107,12 +107,12 @@ namespace Dimond_EE
 
         public List<string> RecSplit(string record)
         {
-            string tmpRecordString = record;      
+            var tmpRecordString = record;      
             string I51Value = null;
-            string I51 = "(51)";
-            string I11 = "(11)";
+            var I51 = "(51)";
+            var I11 = "(11)";
       
-            List<string> splittedRecords = new List<string>();
+            var splittedRecords = new List<string>();
 
             if (record.Contains(I51))
             {
@@ -122,8 +122,8 @@ namespace Dimond_EE
 
             if (tmpRecordString != "")
             {
-                Regex pattern = new Regex(@"\(\d{2}\)\s*", RegexOptions.IgnoreCase);
-                MatchCollection matches = pattern.Matches(tmpRecordString);
+                var pattern = new Regex(@"\(\d{2}\)\s*", RegexOptions.IgnoreCase);
+                var matches = pattern.Matches(tmpRecordString);
                 if (matches.Count > 0)
                 {
                     foreach (Match match in matches)
@@ -145,12 +145,12 @@ namespace Dimond_EE
         public List<(string, string)> GetIpcs(string text)
         {
             var ipcs = new List<(string, string)>();
-            Regex pattern = new Regex(@"(?<Class>.*)\s*\((?<Edition>.*\d)");
-            Regex regex = new Regex(@"\)\s");
-            string[] values = regex.Split(text);
+            var pattern = new Regex(@"(?<Class>.*)\s*\((?<Edition>.*\d)");
+            var regex = new Regex(@"\)\s");
+            var values = regex.Split(text);
             foreach (var item in values)
             {
-                Match match = pattern.Match(item);
+                var match = pattern.Match(item);
                 if (match.Success)
                 {
                     var iClass = match.Groups["Class"].Value.Trim();
@@ -164,10 +164,10 @@ namespace Dimond_EE
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

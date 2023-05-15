@@ -25,7 +25,7 @@ namespace Diamond_MA_old
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("."))
             {
@@ -41,7 +41,7 @@ namespace Diamond_MA_old
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace("•", "").Trim();
+            var tempStrC = recString.Replace("•", "").Trim();
             string tempDesc = null;
             if (tempStrC.Contains(I57))
             {
@@ -54,8 +54,8 @@ namespace Diamond_MA_old
                 {
                     tempStrC = tempStrC.Replace("\n", " ");
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(tempStrC);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(tempStrC);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -81,7 +81,7 @@ namespace Diamond_MA_old
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\MA\Gaz\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -102,10 +102,10 @@ namespace Diamond_MA_old
                 sf = new StreamWriter(path);
                 /*TETML elements*/
                 var elements = tet.Descendants().Where(d => d.Name.LocalName == "Text").ToList();
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -247,11 +247,11 @@ namespace Diamond_MA_old
                                 {
                                     if (Regex.IsMatch(tmpRecValue, @".*\([A-Z]{2}\)"))
                                     {
-                                        Regex pat = new Regex(@".*?\([A-Z]{2}\)", RegexOptions.Singleline);
-                                        MatchCollection matchCollection = pat.Matches(tmpRecValue);
+                                        var pat = new Regex(@".*?\([A-Z]{2}\)", RegexOptions.Singleline);
+                                        var matchCollection = pat.Matches(tmpRecValue);
                                         foreach (Match item in matchCollection)
                                         {
-                                            string tmpSplValue = item.Value;
+                                            var tmpSplValue = item.Value;
                                             string tmpSplName = null;
                                             string tmpSplCC = null;
                                             string tmpSplAddr = null;
@@ -266,8 +266,8 @@ namespace Diamond_MA_old
                                                 {
                                                     if (tmpSplValue.Count(f => f == ',') >= 2)
                                                     {
-                                                        int firstIndex = tmpSplValue.IndexOf(",");
-                                                        int secondIndex = tmpSplValue.IndexOf(",", firstIndex + 1);
+                                                        var firstIndex = tmpSplValue.IndexOf(",");
+                                                        var secondIndex = tmpSplValue.IndexOf(",", firstIndex + 1);
                                                         tmpSplName = tmpSplValue.Remove(secondIndex).Trim();
                                                         tmpSplAddr = tmpSplValue.Substring(secondIndex).Trim(',').Trim();
                                                     }
@@ -370,7 +370,7 @@ namespace Diamond_MA_old
                         }
                         if (field.I51N != null)
                         {
-                            for (int i = 0; i < field.I51N.Count(); i++)
+                            for (var i = 0; i < field.I51N.Count(); i++)
                             {
                                 sf.WriteLine("51:\t{0}", field.I51N[i]);
                             }
@@ -379,7 +379,7 @@ namespace Diamond_MA_old
                         {
                             if (field.I71N.Count() == field.I71A.Count() && field.I71N.Count() == field.I71C.Count())
                             {
-                                for (int i = 0; i < field.I71N.Count(); i++)
+                                for (var i = 0; i < field.I71N.Count(); i++)
                                 {
                                     sf.WriteLine("71N:\t{0}", field.I71N[i]);
                                     sf.WriteLine("71A:\t{0}", field.I71A[i]);

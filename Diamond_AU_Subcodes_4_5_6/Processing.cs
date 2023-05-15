@@ -9,7 +9,7 @@ namespace AU
     {
         public static List<Elements.SubCode4> SubCode4(List<XElement> elements)
         {
-            List<Elements.SubCode4> sub4List = new List<Elements.SubCode4>();
+            var sub4List = new List<Elements.SubCode4>();
 
             foreach (var elem in elements)
             {
@@ -37,7 +37,7 @@ namespace AU
 
         public static List<Elements.SubCode5> SubCode5(List<XElement> elements)
         {
-            List<Elements.SubCode5> sub5List = new List<Elements.SubCode5>();
+            var sub5List = new List<Elements.SubCode5>();
 
             foreach (var elem in elements)
             {
@@ -65,7 +65,7 @@ namespace AU
 
         public static List<Elements.SubCode6> SubCode6(List<XElement> elements)
         {
-            List<Elements.SubCode6> sub6List = new List<Elements.SubCode6>();
+            var sub6List = new List<Elements.SubCode6>();
 
 
             foreach (var elem in elements)
@@ -94,7 +94,7 @@ namespace AU
 
         public static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             var date = Regex.Match(s, @"(?<month>\d{2})[^0-9]*(?<day>\d{1,2})[^0-9]*(?<year>\d{4})");
             var day = date.Groups["day"].Value;
             if (date.Groups["day"].Length == 1)

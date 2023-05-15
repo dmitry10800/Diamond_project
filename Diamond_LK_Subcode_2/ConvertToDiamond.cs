@@ -7,12 +7,12 @@ namespace Diamond_LK_Subcode_2
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub2Convert(List<Elements> elements)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 biblio.Assignees = new List<PartyMember>();
                 legalEvent.SubCode = "2";
                 legalEvent.SectionCode = "FG";

@@ -8,15 +8,15 @@ namespace BG
     {
         public static List<Subcode21> ProcessingSubCode21(List<string> elements, string nameGazette)
         {
-            List<Subcode21> outList = new List<Subcode21>();
+            var outList = new List<Subcode21>();
             Subcode21 currentElement = null;
             LegalStatusEvents legalStatus = null;
 
-            string fullStrWithPatents = "";
+            var fullStrWithPatents = "";
             if (elements.Count > 0)
             {
 
-                for (int i = 0; i < elements.Count; i++)
+                for (var i = 0; i < elements.Count; i++)
                 {
                     if (Regex.IsMatch(elements[i], @"^BG/EP"))
                         fullStrWithPatents += elements[i];

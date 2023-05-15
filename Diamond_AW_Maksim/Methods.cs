@@ -21,12 +21,12 @@ namespace Diamond_AW_Maksim
 
             if (subCode is "1")
             {
-                foreach (FileInfo file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
+                foreach (var file in directory.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {
                     files.Add(file.FullName);
                 }
 
-                foreach (string xlsxFile in files)
+                foreach (var xlsxFile in files)
                 {
                     CurrentFileName = xlsxFile;
 
@@ -41,7 +41,7 @@ namespace Diamond_AW_Maksim
 
                     sheet = OpenedDocument.GetSheet("qry_uitvinders");
 
-                    for (int row = 1; row <= sheet.LastRowNum; row++)
+                    for (var row = 1; row <= sheet.LastRowNum; row++)
                     {
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
@@ -58,11 +58,11 @@ namespace Diamond_AW_Maksim
 
                         if(sheet.GetRow(row).GetCell(0).ToString().Replace("OCT-", "").Trim() == sheet.GetRow(row+1).GetCell(0).ToString().Replace("OCT-", "").Trim())
                         {
-                            Match match = Regex.Match(sheet.GetRow(row+1).GetCell(2).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
+                            var match = Regex.Match(sheet.GetRow(row+1).GetCell(2).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
 
                             if (match.Success)
                             {
-                                string month = MakeMonth(match.Groups["month"].Value.Trim());
+                                var month = MakeMonth(match.Groups["month"].Value.Trim());
                                 if (month is not null)
                                 {
                                     statusEvent.Biblio.Application.Date = match.Groups["year"].Value.Trim() + "/"
@@ -72,7 +72,7 @@ namespace Diamond_AW_Maksim
                                 else Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
                             }
 
-                            for (int i = 3; i < sheet.GetRow(row).LastCellNum; i++)
+                            for (var i = 3; i < sheet.GetRow(row).LastCellNum; i++)
                             {
                                 if (sheet.GetRow(row).GetCell(i).ToString() is "")
                                 {
@@ -101,11 +101,11 @@ namespace Diamond_AW_Maksim
                                 Text = sheet.GetRow(row).GetCell(1).ToString()
                             });
 
-                            Match match = Regex.Match(sheet.GetRow(row).GetCell(2).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
+                            var match = Regex.Match(sheet.GetRow(row).GetCell(2).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
 
                             if (match.Success)
                             {
-                                string month = MakeMonth(match.Groups["month"].Value.Trim());
+                                var month = MakeMonth(match.Groups["month"].Value.Trim());
                                 if (month is not null)
                                 {
                                     statusEvent.Biblio.Application.Date = match.Groups["year"].Value.Trim() + "/"
@@ -115,7 +115,7 @@ namespace Diamond_AW_Maksim
                                 else Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
                             }
 
-                            for (int i = 3; i < sheet.GetRow(row).LastCellNum; i++)
+                            for (var i = 3; i < sheet.GetRow(row).LastCellNum; i++)
                             {
                                 if (sheet.GetRow(row).GetCell(i).ToString() is "")
                                 {
@@ -167,15 +167,15 @@ namespace Diamond_AW_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

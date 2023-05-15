@@ -4,8 +4,8 @@
     {
         public static Subcode3 ProcessSubCode3Element(string[] array)
         {
-            Subcode3 subcode3 = new Subcode3();
-            for (int i = 0; i < array.Length; i++)
+            var subcode3 = new Subcode3();
+            for (var i = 0; i < array.Length; i++)
             {
                 if (i == 0)
                     subcode3.PublicationNumber = array[0];

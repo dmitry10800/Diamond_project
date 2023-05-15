@@ -15,15 +15,15 @@ namespace Diamond_LK_Subcode_2
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> finalParaList = new List<XElement>();
-            List<XElement> paraList = new List<XElement>();
+            var finalParaList = new List<XElement>();
+            var paraList = new List<XElement>();
 
-            List<string> myList = new List<string>();
+            var myList = new List<string>();
 
             foreach (var file in files)
             {
@@ -32,7 +32,7 @@ namespace Diamond_LK_Subcode_2
                 paraList = elem.Descendants().Where(e => e.Name.LocalName == "Para").ToList();
                 var tmp = 0;
 
-                for (int i = 0; i < paraList.Count; i++)
+                for (var i = 0; i < paraList.Count; i++)
                 {
                     tmp = i;
                     if (paraList[i].Value.Contains("Patents Publication of Grant"))
@@ -49,7 +49,7 @@ namespace Diamond_LK_Subcode_2
                     }
                 }
 
-                for (int i = 0; i < finalParaList.Count; i++)
+                for (var i = 0; i < finalParaList.Count; i++)
                 {
                     if (pattern.Match(finalParaList[i].ToString()).Success)
                     {
@@ -81,7 +81,7 @@ namespace Diamond_LK_Subcode_2
                         {
                             var exp = Regex.Match(finalParaList[i].Value, @"\d{5} \d{2}(\.|\/)\d{2}(\.|\/)\d{4}");
                             var txt = Path.Combine(PathToTetml.FullName + $"{file.Split('\\').Last().Replace(".tetml", "")}_ErrorsLog.txt");
-                            using (StreamWriter sf = File.AppendText(txt))
+                            using (var sf = File.AppendText(txt))
                             {
                                 sf.WriteLineAsync($"{exp.Value.Split(' ').First()} is empty");
                                 sf.Flush();

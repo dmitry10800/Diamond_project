@@ -8,20 +8,20 @@ namespace Diamond_MK_Andrey
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> ConvertSub3(List<Subcodes.ElementsOut> elements)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
 
             var id = 1;
 
             foreach (var rec in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                 legalEvent.GazetteName = Path.GetFileName(MK_Processing._currentFileName.Replace(".tetml", ".pdf"));
                 legalEvent.SubCode = "3";
                 legalEvent.SectionCode = "FG";
                 legalEvent.CountryCode = "MK";
                 legalEvent.Id = id++;
-                Biblio biblio = new Biblio();
+                var biblio = new Biblio();
                 biblio.Assignees = new List<PartyMember>();
                 biblio.Priorities = new List<Priority>();
                 biblio.Inventors = new List<PartyMember>();

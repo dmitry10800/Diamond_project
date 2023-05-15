@@ -13,7 +13,7 @@ namespace LK
     {
         public static string DateNormalize(string tmpDate)
         {
-            Regex patternDate = new Regex(@"(?<day>\d+)\s*\.*\/*\-*(?<month>\d+)\s*\.*\/*\-*(?<year>\d{4})");
+            var patternDate = new Regex(@"(?<day>\d+)\s*\.*\/*\-*(?<month>\d+)\s*\.*\/*\-*(?<year>\d{4})");
             var a = patternDate.Match(tmpDate);
             if (a.Success)
             {
@@ -25,10 +25,10 @@ namespace LK
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
@@ -51,12 +51,12 @@ namespace LK
                 var firstSheet = xlPackage.Workbook.Worksheets.First(); //select sheet here
                 var totalRows = firstSheet.Dimension.End.Row;
                 var totalColumns = firstSheet.Dimension.End.Column;
-                Elements record = new Elements();
+                var record = new Elements();
                 if (totalColumns != 4)
                     Console.WriteLine("Ошибка заполнения xls файла, лишние данные (должно быть 4 столбца)");
 
                 var sb = new StringBuilder(); //this is your data
-                for (int rowNum = 1; rowNum <= totalRows; rowNum++) //select starting row here
+                for (var rowNum = 1; rowNum <= totalRows; rowNum++) //select starting row here
                 {
                     var row = firstSheet.Cells[rowNum, 1, rowNum, totalColumns]/*.Select(c => c.Value == null ? string.Empty : c.Value.ToString())*/.ToList();
                     if (row.Count != 4)

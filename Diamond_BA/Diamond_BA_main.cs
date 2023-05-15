@@ -16,7 +16,7 @@ namespace Diamond_BA
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\BA\20200104");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null; //Publication of Patent Application
             List<XElement> secondList = null; //Publication of European Patents Entered in Patent Register
@@ -71,8 +71,8 @@ namespace Diamond_BA
                 /*Publication of Patent Application**/
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessFirstList pubOfApp = new ProcessFirstList();
-                    List<ProcessFirstList.ElementOut> el = pubOfApp.OutputValue(firstList);
+                    var pubOfApp = new ProcessFirstList();
+                    var el = pubOfApp.OutputValue(firstList);
                     var legalStatusEvents = ConvertToDiamond.FirstlistConvertation(el);
                     try
                     {
@@ -88,8 +88,8 @@ namespace Diamond_BA
                 /*Publication of European Patents Entered in Patent Register 4 subcode*/
                 if (secondList != null && secondList.Count() > 0)
                 {
-                    ProcessSecondList grantedEP = new ProcessSecondList();
-                    List<ProcessSecondList.ElementOut> el = grantedEP.OutputValue(secondList);
+                    var grantedEP = new ProcessSecondList();
+                    var el = grantedEP.OutputValue(secondList);
                     var legalStatusEvents = ConvertToDiamond.SecondListConvertation(el);
                     try
                     {
@@ -105,8 +105,8 @@ namespace Diamond_BA
                 /*Consensual patent (Granted Consensual Patent)*/
                 if (thirdList != null && thirdList.Count() > 0)
                 {
-                    ProcessThirdList consPatent = new ProcessThirdList();
-                    List<ProcessThirdList.ElementOut> el = consPatent.OutputValue(thirdList);
+                    var consPatent = new ProcessThirdList();
+                    var el = consPatent.OutputValue(thirdList);
                     var legalStatusEvents = ConvertToDiamond.ThirdListConvertation(el);
                     try
                     {
@@ -122,8 +122,8 @@ namespace Diamond_BA
                 /*Patent Desicions (Article 44)*/
                 if (fourthList != null && fourthList.Count() > 0)
                 {
-                    ProcessFourthList patDesicion = new ProcessFourthList();
-                    List<ProcessFourthList.ElementOut> el = patDesicion.OutputValue(fourthList);
+                    var patDesicion = new ProcessFourthList();
+                    var el = patDesicion.OutputValue(fourthList);
                     var legalStatusEvents = ConvertToDiamond.FourthListConvertation(el);
                     try
                     {

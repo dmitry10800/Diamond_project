@@ -30,7 +30,7 @@ namespace Diamond_MK_Andrey
 
         public static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             var date = Regex.Match(s, @"(?<day>\d{2})[^0-9]*(?<month>\d{1,2})[^0-9]*(?<year>\d{4})");
             var day = date.Groups["day"].Value;
             if (date.Groups["day"].Length == 1)
@@ -49,10 +49,10 @@ namespace Diamond_MK_Andrey
         {
             foreach (var @event in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(@event);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
+                var tmpValue = JsonConvert.SerializeObject(@event);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //Staging
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //Production
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

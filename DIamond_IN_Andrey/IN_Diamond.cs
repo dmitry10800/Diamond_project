@@ -14,15 +14,15 @@ namespace DIamond_IN_Andrey
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTeml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTeml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> tmpList = new List<XElement>();
-            List<XElement> sub1 = new List<XElement>();
-            List<XElement> sub2 = new List<XElement>();
-            List<XElement> sub3 = new List<XElement>();
+            var tmpList = new List<XElement>();
+            var sub1 = new List<XElement>();
+            var sub2 = new List<XElement>();
+            var sub3 = new List<XElement>();
 
             foreach (var file in files)
             {
@@ -33,7 +33,7 @@ namespace DIamond_IN_Andrey
                 tmpList = elem.Descendants().Where(e => e.Name.LocalName == "Text" /*|| e.Name.LocalName == "PlacedImage" || e.Name.LocalName == "Page"*/)
                     .ToList();
 
-                for (int i = 0; i < tmpList.Count; i++)
+                for (var i = 0; i < tmpList.Count; i++)
                 {
                     var tmp = i;
                     if (currentFileName.Contains("(1)"))
@@ -61,7 +61,7 @@ namespace DIamond_IN_Andrey
                     }
                 }
 
-                for (int i = 0; i < tmpList.Count; i++)
+                for (var i = 0; i < tmpList.Count; i++)
                 {
                     var tmp = i;
                     if (tmpList[i].Value.Contains("Early Publication:"))

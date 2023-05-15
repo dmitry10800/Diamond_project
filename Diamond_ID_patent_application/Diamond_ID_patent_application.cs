@@ -49,15 +49,15 @@ namespace Diamond_ID_patent_application
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString/*.Replace("\n", " ")*/;
+            var tempStrC = recString/*.Replace("\n", " ")*/;
             if (recString != "")
             {
                 //if (recString.Contains("\n"))
                 //{
                 //    recString = recString.Replace("\n", " ");
                 //}
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -73,7 +73,7 @@ namespace Diamond_ID_patent_application
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             string month = null;
             if (tmpDate.Contains(" "))
@@ -159,34 +159,34 @@ namespace Diamond_ID_patent_application
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\ID\Gaz\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             foreach (var tetFile in files)
             {
                 ElementsOut.Clear();
-                string FileName = tetFile;
-                XElement tet = XElement.Load(FileName);
+                var FileName = tetFile;
+                var tet = XElement.Load(FileName);
                 var root = Directory.GetParent(FileName);
-                string folderPath = Path.Combine(root.FullName);
+                var folderPath = Path.Combine(root.FullName);
                 Directory.CreateDirectory(folderPath);
                 /*TXT file for output information*/
-                string path = Path.Combine(folderPath, FileName.Substring(0, FileName.IndexOf(".")) + ".txt"); //Output Filename
-                StreamWriter sf = new StreamWriter(path);
+                var path = Path.Combine(folderPath, FileName.Substring(0, FileName.IndexOf(".")) + ".txt"); //Output Filename
+                var sf = new StreamWriter(path);
                 /*TETML elements*/
                 var elements = tet.Descendants().Where(d => d.Name.LocalName == "Text")
                     .SkipWhile(e => !e.Value.StartsWith(I20))
                     .ToList();
                 ElementOut currentElement = null;
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     if (value.StartsWith(I20))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        int tmpInc = i;
+                        var tmpInc = i;
                         tmpRecordValue = "";
                         do
                         {
@@ -221,7 +221,7 @@ namespace Diamond_ID_patent_application
                                 }
                                 if (inidCode.StartsWith(I51))
                                 {
-                                    string tmpIPC = inidCode.Replace(I51, "").Replace("\n", " ").Trim();
+                                    var tmpIPC = inidCode.Replace(I51, "").Replace("\n", " ").Trim();
                                     //if (tmpIPC.Contains("/"))
                                     //{
                                     //    tmpIPC = inidCode.Substring(inidCode.IndexOf("/") + 1).Trim();
@@ -246,10 +246,10 @@ namespace Diamond_ID_patent_application
                                 }
                                 if (inidCode.StartsWith(I72))
                                 {
-                                    string tmpValue = inidCode.Replace(I72 + "\n", "").Trim();
+                                    var tmpValue = inidCode.Replace(I72 + "\n", "").Trim();
                                     if (tmpValue.Contains("\n"))
                                     {
-                                        string[] tmpValueSplitted = tmpValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                                        var tmpValueSplitted = tmpValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
                                         foreach (var item in tmpValueSplitted)
                                         {
                                             if (item.Contains(","))
@@ -271,13 +271,13 @@ namespace Diamond_ID_patent_application
                 /*Output*/
                 if (ElementsOut != null)
                 {
-                    int leCounter = 1;
+                    var leCounter = 1;
                     /*list of record for whole gazette chapter*/
-                    List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+                    var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
                     /*Create a new event to fill*/
                     foreach (var record in ElementsOut)
                     {
-                        Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                        var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                         legalEvent.GazetteName = Path.GetFileName(tetFile.Replace(".tetml", ".pdf"));
                         /*Setting subcode*/
@@ -288,7 +288,7 @@ namespace Diamond_ID_patent_application
                         legalEvent.CountryCode = "ID";
                         /*Setting File Name*/
                         legalEvent.Id = leCounter++; // creating uniq identifier
-                        Biblio biblioData = new Biblio();
+                        var biblioData = new Biblio();
                         /*Elements output*/
                         biblioData.Publication.Number = record.I11;
                         biblioData.Publication.Kind = record.I13;
@@ -301,7 +301,7 @@ namespace Diamond_ID_patent_application
                         };
                         /*---------------------*/
                         /*54 Title*/
-                        Title title = new Title()
+                        var title = new Title()
                         {
                             Language = "ID",
                             Text = record.I54
@@ -310,7 +310,7 @@ namespace Diamond_ID_patent_application
                         /*--------*/
                         /*57 description*/
                         biblioData.Abstracts = new List<Abstract>();
-                        Abstract description = new Abstract()
+                        var description = new Abstract()
                         {
                             Language = "ID",
                             Text = record.I57
@@ -319,7 +319,7 @@ namespace Diamond_ID_patent_application
                         /*--------------*/
                         /*71 name, address, country code*/
                         biblioData.Applicants = new List<PartyMember>();
-                        PartyMember applicants = new PartyMember()
+                        var applicants = new PartyMember()
                         {
                             Name = record.I71
                         };
@@ -329,9 +329,9 @@ namespace Diamond_ID_patent_application
                         if (record.I72C != null && record.I72N != null)
                         {
                             biblioData.Inventors = new List<PartyMember>();
-                            for (int i = 0; i < record.I72N.Count(); i++)
+                            for (var i = 0; i < record.I72N.Count(); i++)
                             {
-                                PartyMember inventor = new PartyMember()
+                                var inventor = new PartyMember()
                                 {
                                     Name = record.I72N[i],
                                     Country = record.I72C[i]
@@ -342,7 +342,7 @@ namespace Diamond_ID_patent_application
                         /*---------------------*/
                         /*74 name, address, cc*/
                         biblioData.Agents = new List<PartyMember>();
-                        PartyMember agent = new PartyMember()
+                        var agent = new PartyMember()
                         {
                             Name = record.I74
                         };
@@ -355,9 +355,9 @@ namespace Diamond_ID_patent_application
 
                     foreach (var rec in fullGazetteInfo)
                     {
-                        string tmpValue = JsonConvert.SerializeObject(rec);
-                        string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                        HttpClient httpClient = new HttpClient();
+                        var tmpValue = JsonConvert.SerializeObject(rec);
+                        var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                        var httpClient = new HttpClient();
                         httpClient.BaseAddress = new Uri(url);
                         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

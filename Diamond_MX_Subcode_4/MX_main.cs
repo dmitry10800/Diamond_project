@@ -14,13 +14,13 @@ namespace Diamond_MX_Subcode_4
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> textList = new List<XElement>();
-            List<XElement> subCode4List = new List<XElement>();
+            var textList = new List<XElement>();
+            var subCode4List = new List<XElement>();
 
             foreach (var file in files)
             {
@@ -30,7 +30,7 @@ namespace Diamond_MX_Subcode_4
                 var tmp = 0;
                 textList = elem.Descendants().Where(e => e.Name.LocalName == "Text").ToList();
 
-                for (int i = 0; i < textList.Count; i++)
+                for (var i = 0; i < textList.Count; i++)
                 {
                     tmp = i;
                     if (textList[i].Value == "Cambio de Razón Socia")

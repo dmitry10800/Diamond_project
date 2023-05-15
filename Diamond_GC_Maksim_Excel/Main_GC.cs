@@ -10,7 +10,7 @@
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
+            var patents = SubCode switch
             {
                 "14" => methods.Start(Path, SubCode),
                 "26" => methods.Start(Path, SubCode),

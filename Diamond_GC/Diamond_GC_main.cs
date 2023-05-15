@@ -15,7 +15,7 @@ namespace Diamond_GC
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\GC\20191118\3");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null;
             List<XElement> secondList = null; //List of Lapsed Patent Applications
@@ -65,8 +65,8 @@ namespace Diamond_GC
 
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessGrantedPatents grantedEP = new ProcessGrantedPatents();
-                    List<ProcessGrantedPatents.ElementOut> el = grantedEP.OutputValue(firstList);
+                    var grantedEP = new ProcessGrantedPatents();
+                    var el = grantedEP.OutputValue(firstList);
                     var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
                     try
                     {
@@ -80,8 +80,8 @@ namespace Diamond_GC
                 }
                 if (secondList != null && secondList.Count() > 0)
                 {
-                    ProcessLegalEvents lapsedPatents = new ProcessLegalEvents();
-                    List<ProcessLegalEvents.ElementOut> el = lapsedPatents.OutputValue(secondList);
+                    var lapsedPatents = new ProcessLegalEvents();
+                    var el = lapsedPatents.OutputValue(secondList);
                     var legalStatusEvents = ConvertToDiamond.LegalEventConvertation(el, "sub14");
                     try
                     {
@@ -95,8 +95,8 @@ namespace Diamond_GC
                 }
                 if (thirdList != null && thirdList.Count() > 0)
                 {
-                    ProcessLegalEvents lapsedPatents = new ProcessLegalEvents();
-                    List<ProcessLegalEvents.ElementOut> el = lapsedPatents.OutputValue(thirdList);
+                    var lapsedPatents = new ProcessLegalEvents();
+                    var el = lapsedPatents.OutputValue(thirdList);
                     var legalStatusEvents = ConvertToDiamond.LegalEventConvertation(el, "sub26");
                     try
                     {
@@ -127,8 +127,8 @@ namespace Diamond_GC
                 /*sub 6 v2*/
                 if (fifthList != null && fifthList.Count() > 0)
                 {
-                    ProcessLegalEvents lapsedPatents = new ProcessLegalEvents();
-                    List<ProcessLegalEvents.Sub06v2ElementOut> el = lapsedPatents.Sub06OutputValue(fifthList);
+                    var lapsedPatents = new ProcessLegalEvents();
+                    var el = lapsedPatents.Sub06OutputValue(fifthList);
                     var legalStatusEvents = ConvertToDiamond.Sub06LegalEventConvertation(el, "sub6");
                     try
                     {

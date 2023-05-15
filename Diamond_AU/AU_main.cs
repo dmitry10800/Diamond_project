@@ -15,7 +15,7 @@ namespace Diamond_AU
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AU\20200206");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null; // APPLICATIONS WITHDRAWN, REFUSED, TAKEN TO BE ABANDONED
 

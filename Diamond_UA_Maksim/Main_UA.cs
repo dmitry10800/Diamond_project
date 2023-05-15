@@ -7,12 +7,12 @@ namespace Diamond_UA_Maksim
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Work\UA\UA_20211110_45(1)";
-            string subCode = "2";
+            var path = @"C:\Work\UA\UA_20211110_45(1)";
+            var subCode = "2";
 
-            Methods methods = new Methods();
+            var methods = new Methods();
 
-            List<Diamond.Core.Models.LegalStatusEvent> patents = subCode switch
+            var patents = subCode switch
             {
                 "2" => methods.Start(path, subCode),
                 "8" => methods.Start(path, subCode),

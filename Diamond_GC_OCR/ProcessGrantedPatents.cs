@@ -64,21 +64,21 @@ namespace Diamond_GC_OCR
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     if (value.StartsWith(I19))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        int tmpInc = i;
+                        var tmpInc = i;
                         tmpRecordValue = "";
                         do
                         {
@@ -120,14 +120,14 @@ namespace Diamond_GC_OCR
                                 }
                                 if (inidCode.StartsWith(I45))
                                 {
-                                    string tmpValue = inidCode.Replace(I45Word, "").Replace(I45, "").Replace("\n", " ").Trim();
+                                    var tmpValue = inidCode.Replace(I45Word, "").Replace(I45, "").Replace("\n", " ").Trim();
                                     string tmpDate = null;
                                     string noteFirst = null;
                                     string noteSecond = null;
                                     if (Regex.IsMatch(tmpValue, @"\d+\/\d+\/\d{4}"))
                                     {
                                         tmpDate = Regex.Match(tmpValue, @"\d+\/\d+\/\d{4}").Value;
-                                        string[] tmpSplDate = tmpDate.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                                        var tmpSplDate = tmpDate.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
                                         if (tmpSplDate.Count() == 3)
                                         {
                                             currentElement.I45 = tmpSplDate[2] + "-" + tmpSplDate[1] + "-" + tmpSplDate[0];
@@ -150,7 +150,7 @@ namespace Diamond_GC_OCR
                                 }
                                 if (inidCode.StartsWith(I51))
                                 {
-                                    string tmpValue = inidCode.Replace("\n", "");
+                                    var tmpValue = inidCode.Replace("\n", "");
                                     tmpValue = Regex.Replace(tmpValue, @"\s+", " ");
                                     var tmpIPC = Methods.ClassificationInfoSplit(tmpValue.Replace(I51Word, "").Replace(I51, "").Trim());
                                     if (tmpIPC != null)
@@ -165,14 +165,14 @@ namespace Diamond_GC_OCR
                                 }
                                 if (inidCode.StartsWith(I56))
                                 {
-                                    string tmpValue = inidCode.Replace(I56Word, "").Replace(I56, "").Replace("\n", " ").Trim();
+                                    var tmpValue = inidCode.Replace(I56Word, "").Replace(I56, "").Replace("\n", " ").Trim();
                                     if (inidCode.Contains("Examiner:")) currentElement.I56 = tmpValue.Remove(tmpValue.IndexOf("Examiner:"));
                                     else currentElement.I56 = tmpValue;
 
                                 }
                                 if (inidCode.StartsWith(I57))
                                 {
-                                    string tmpValue = inidCode.Replace(I57Word, "").Replace(I57, "").Trim();
+                                    var tmpValue = inidCode.Replace(I57Word, "").Replace(I57, "").Trim();
 
                                     if (tmpValue.Contains("No. of claims:"))
                                     {
@@ -196,7 +196,7 @@ namespace Diamond_GC_OCR
                                 }
                                 if (inidCode.StartsWith(I73))
                                 {
-                                    string tmpValue = inidCode.Replace("[73] Owners:1-", "").Replace("[73] Owner:", "").Replace(I73Word, "").Replace(I73, "").Replace("\n", " ").Trim();
+                                    var tmpValue = inidCode.Replace("[73] Owners:1-", "").Replace("[73] Owner:", "").Replace(I73Word, "").Replace(I73, "").Replace("\n", " ").Trim();
                                     var owners = Methods.OwnerSplit(tmpValue);
                                     if (owners != null && owners.Name.Count > 0)
                                     {
@@ -207,7 +207,7 @@ namespace Diamond_GC_OCR
                                 }
                                 if (inidCode.StartsWith(I74))
                                 {
-                                    string tmpValue = inidCode.Replace(I74Word, "").Replace(I74, "").Trim();
+                                    var tmpValue = inidCode.Replace(I74Word, "").Replace(I74, "").Trim();
                                     currentElement.I74 = tmpValue;
                                 }
                             }

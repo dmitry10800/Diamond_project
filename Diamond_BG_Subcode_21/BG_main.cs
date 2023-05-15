@@ -15,9 +15,9 @@ namespace Diamond_BG_Subcode_21
         private static void Main(string[] args)
         {
             Console.WriteLine("Country:\t\t\tBG\n\n");
-            List<Subcode21> outListSubCode21 = new List<Subcode21>();
+            var outListSubCode21 = new List<Subcode21>();
             Console.WriteLine("Enter path to folder with PDF file");
-            string pathToPDF = Console.ReadLine();
+            var pathToPDF = Console.ReadLine();
             PathToTetml = new DirectoryInfo(pathToPDF);
             var countFiles = PathToTetml.GetFiles().Count();
 
@@ -41,28 +41,28 @@ namespace Diamond_BG_Subcode_21
             }
 
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
-            List<XElement> allElementsList = new List<XElement>(); // all elements in processing gazette
-            List<string> subCode21List = new List<string>();
+            var allElementsList = new List<XElement>(); // all elements in processing gazette
+            var subCode21List = new List<string>();
 
             foreach (var file in files)
             {
-                string nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
+                var nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
                 currentFile = new FileInfo(file);
                 elem = XElement.Load(file);
 
                 allElementsList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                string startChapterStr = "ПРЕКРАТИЛИ ДЕЙСТВИЕТО СИ ЕВРОПЕЙСКИ ПАТЕНТИ ПОРАДИ";
-                string endChapterStr = "ПРЕКРАТЯВАНЕ ДЕЙСТВИЕТО НА ЕВРОПЕЙСКИ ПАТЕНТ";
+                var startChapterStr = "ПРЕКРАТИЛИ ДЕЙСТВИЕТО СИ ЕВРОПЕЙСКИ ПАТЕНТИ ПОРАДИ";
+                var endChapterStr = "ПРЕКРАТЯВАНЕ ДЕЙСТВИЕТО НА ЕВРОПЕЙСКИ ПАТЕНТ";
 
                 int tempInc;
 
-                for (int i = 0; i < allElementsList.Count; i++)
+                for (var i = 0; i < allElementsList.Count; i++)
                 {
                     var value = allElementsList[i].Value;
 

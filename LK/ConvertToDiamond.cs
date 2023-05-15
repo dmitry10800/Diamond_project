@@ -10,14 +10,14 @@ namespace LK
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub2Convertation(List<ProcessXls.Elements> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                     legalEvent.GazetteName = Path.GetFileName(LK_main.CurrentFileName.Replace(".xlsx", ".pdf").Replace(".XLSX", ".pdf"));
                     /*Setting subcode*//*Setting Section Code*/
@@ -27,7 +27,7 @@ namespace LK
                     legalEvent.CountryCode = "LK";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     biblioData.Assignees = new List<PartyMember>();
                     /*Elements output*/
                     biblioData.Publication.Number = record.Number;

@@ -14,7 +14,7 @@ namespace Diamond_MK
         /*Date*/
         public static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("/"))
             {
@@ -30,7 +30,7 @@ namespace Diamond_MK
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             string tmpDescValue = null;
             if (recString != "")
             {
@@ -39,8 +39,8 @@ namespace Diamond_MK
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57)")).Trim();
                     tempStrC = tempStrC.Remove(recString.IndexOf("(57)")).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -62,9 +62,9 @@ namespace Diamond_MK
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

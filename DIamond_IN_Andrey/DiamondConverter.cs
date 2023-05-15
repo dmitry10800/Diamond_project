@@ -8,17 +8,17 @@ namespace DIamond_IN_Andrey
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> BiblioConvert1(List<Elements> elements)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 1;
             foreach (var rec in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                 legalEvent.GazetteName = IN_Diamond.currentFileName.Replace(".tetml", ".pdf");
                 legalEvent.SubCode = "1";
                 legalEvent.SectionCode = "BZ";
                 legalEvent.CountryCode = "IN";
                 legalEvent.Id = id++;
-                Biblio biblio = new Biblio();
+                var biblio = new Biblio();
 
                 biblio.Publication = new Publication
                 {
@@ -82,17 +82,17 @@ namespace DIamond_IN_Andrey
 
         public static List<Diamond.Core.Models.LegalStatusEvent> BiblioConvert3(List<Elements> elements)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 1;
             foreach (var rec in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                 legalEvent.GazetteName = IN_Diamond.currentFileName.Replace(".tetml", ".pdf");
                 legalEvent.SubCode = "3";
                 legalEvent.SectionCode = "BZ";
                 legalEvent.CountryCode = "IN";
                 legalEvent.Id = id++;
-                Biblio biblio = new Biblio();
+                var biblio = new Biblio();
 
                 biblio.Publication = new Publication
                 {
@@ -156,17 +156,17 @@ namespace DIamond_IN_Andrey
 
         public static List<Diamond.Core.Models.LegalStatusEvent> BiblioConvert2(List<Elements> elements)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 1;
             foreach (var rec in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                 legalEvent.GazetteName = IN_Diamond.currentFileName.Replace(".tetml", ".pdf");
                 legalEvent.SubCode = "2";
                 legalEvent.SectionCode = "FG";
                 legalEvent.CountryCode = "IN";
                 legalEvent.Id = id++;
-                Biblio biblio = new Biblio();
+                var biblio = new Biblio();
 
                 biblio.Application = new MediaTypeNames.Application
                 {

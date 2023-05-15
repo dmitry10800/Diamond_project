@@ -8,12 +8,12 @@ namespace Diamond_SI
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub3Convert(List<Subcode3> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 legalEvent.LegalEvent = new LegalEvent();
                 biblio.DOfPublication = new DOfPublication();
                 legalEvent.SubCode = "3";
@@ -32,12 +32,12 @@ namespace Diamond_SI
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub4Convert(List<Subcode4> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 legalEvent.LegalEvent = new LegalEvent();
                 biblio.DOfPublication = new DOfPublication();
                 legalEvent.SubCode = "4";
@@ -56,12 +56,12 @@ namespace Diamond_SI
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub20Convert(List<Subcode20> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 biblio.DOfPublication = new DOfPublication();
                 biblio.Titles = new List<Integration.Title>();
                 biblio.IntConvention = new IntConvention();
@@ -103,7 +103,7 @@ namespace Diamond_SI
                     biblio.IntConvention.PctPublCountry = elem.Field_87?.FirstOrDefault()?.Country;
                 }
 
-                int maxSizeList = elem.Field_96.Count;
+                var maxSizeList = elem.Field_96.Count;
                 if (elem.Field_97.Count > maxSizeList)
                 {
                     maxSizeList = elem.Field_97.Count;
@@ -116,7 +116,7 @@ namespace Diamond_SI
 
                 EuropeanPatent euPatent = null;
 
-                for (int i = 0; i < maxSizeList; i++)
+                for (var i = 0; i < maxSizeList; i++)
                 {
                     euPatent = new EuropeanPatent()
                     {

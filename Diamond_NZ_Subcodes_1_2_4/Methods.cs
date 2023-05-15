@@ -70,7 +70,7 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         internal static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             if (Regex.IsMatch(s, @"\d{2} \w+ \d{4}"))
             {
                 var date = Regex.Match(s, @"(?<day>\d{2}) (?<month>\w+) (?<year>\d{4})");
@@ -81,8 +81,8 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         internal static (AgentInformation, AgentInformation) AgentInformationNormalize(string s) //2-ой Item для (74) new 
         {
-            AgentInformation agentInf = new AgentInformation();
-            AgentInformation agentInfNEW = new AgentInformation();
+            var agentInf = new AgentInformation();
+            var agentInfNEW = new AgentInformation();
             string oldAgent = "", newAgent = "";
 
             var agentInfo = Regex.Match(s, @"(?<OldAgent>.+[^To:])\s*To:\s*(?<NewAgent>.*)");
@@ -103,13 +103,13 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         internal static AgentInformation GetAgentInformation(string str)    //string[] array)
         {
-            string tempStr = str;
+            var tempStr = str;
 
             var arrayNames = GetListNamesCompanies();
             foreach (var item in arrayNames)
             {
-                Regex regex = new Regex($", {item}", RegexOptions.IgnoreCase);
-                MatchCollection matches = regex.Matches(tempStr);
+                var regex = new Regex($", {item}", RegexOptions.IgnoreCase);
+                var matches = regex.Matches(tempStr);
 
                 if (matches.Count > 0)
                 {
@@ -120,7 +120,7 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
             var splittedAgent = tempStr.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-            AgentInformation agent = new AgentInformation();
+            var agent = new AgentInformation();
             if (splittedAgent.Length > 0 && !string.IsNullOrEmpty(splittedAgent[0]))
             {
                 agent.Name = splittedAgent[1].Trim();
@@ -128,9 +128,9 @@ namespace Diamond_NZ_Subcodes_1_2_4
                 if (agent.Country.Length > 2)
                     return null;
 
-                string tempAddress = "";
+                var tempAddress = "";
 
-                for (int i = 2; i < splittedAgent.Length - 1; i++)
+                for (var i = 2; i < splittedAgent.Length - 1; i++)
                 {
                     tempAddress += splittedAgent[i] + ", ";
                 }
@@ -143,8 +143,8 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         internal static (List<ApplicantInformation>, List<ApplicantInformation>) ApplicantInformationNormalize(string s) //2-ой Item для (74) new 
         {
-            List<ApplicantInformation> aplicantInf = new List<ApplicantInformation>();
-            List<ApplicantInformation> aplicantInfNEW = new List<ApplicantInformation>();
+            var aplicantInf = new List<ApplicantInformation>();
+            var aplicantInfNEW = new List<ApplicantInformation>();
             string oldApplicant = "", newApplicant = "";
 
             var applicantInfo = Regex.Match(s, @"(?<OldApp>.+[^To:])\s*To:\s*(?<NewApp>.*)");
@@ -164,14 +164,14 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         internal static List<ApplicantInformation> GetApplicantInformation(string str)    //string[] array)
         {
-            List<ApplicantInformation> outApplicants = new List<ApplicantInformation>();
-            string tempStr = str;
+            var outApplicants = new List<ApplicantInformation>();
+            var tempStr = str;
 
             var arrayNames = GetListNamesCompanies();
             foreach (var item in arrayNames)
             {
-                Regex regex = new Regex($", {item}", RegexOptions.IgnoreCase);
-                MatchCollection matches = regex.Matches(tempStr);
+                var regex = new Regex($", {item}", RegexOptions.IgnoreCase);
+                var matches = regex.Matches(tempStr);
 
                 if (matches.Count > 0)
                 {
@@ -196,9 +196,9 @@ namespace Diamond_NZ_Subcodes_1_2_4
                 if (applic.Country.Length > 2)
                     return null;
 
-                string tempAddress = "";
+                var tempAddress = "";
 
-                for (int i = 2; i < splittedAssign.Length - 1; i++)
+                for (var i = 2; i < splittedAssign.Length - 1; i++)
                 {
                     tempAddress += splittedAssign[i] + ", ";
                 }

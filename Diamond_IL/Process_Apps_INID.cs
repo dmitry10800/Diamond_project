@@ -51,7 +51,7 @@ namespace Diamond_IL
 
         public List<ElementOut> OutputValue(string elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement = null;
             if (elemList != null)
             {
@@ -66,7 +66,7 @@ namespace Diamond_IL
                     string tmpPrioValue = null;
                     foreach (var splittedRec in nSpl)
                     {
-                        string splittedRecClear = splittedRec.Replace("\n", " ").Trim().Trim('\t');
+                        var splittedRecClear = splittedRec.Replace("\n", " ").Trim().Trim('\t');
                         if (splittedRec.EndsWith(I21))
                         {
                             currentElement = new ElementOut();
@@ -112,10 +112,10 @@ namespace Diamond_IL
                         /*Title*/
                         if (splittedRecClear.EndsWith(I54))
                         {
-                            string tmpValue = splittedRec.Replace(I54, "").Trim();
+                            var tmpValue = splittedRec.Replace(I54, "").Trim();
                             if (tmpValue.Contains("\t"))
                             {
-                                string[] tmpSpl = tmpValue.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                var tmpSpl = tmpValue.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
                                 if (tmpSpl.Count() == 2)
                                 {
                                     currentElement.I54Eng = tmpSpl[1].Trim();
@@ -133,7 +133,7 @@ namespace Diamond_IL
                         }
                         if (splittedRec.EndsWith(I71))
                         {
-                            string tmpValue = splittedRec.Replace(I71, "").Trim();
+                            var tmpValue = splittedRec.Replace(I71, "").Trim();
                             string[] twoLangRecords = null;
                             /*delete excess comma*/
                             tmpValue = Regex.Replace(tmpValue, @", llc", " llc", RegexOptions.IgnoreCase);
@@ -184,7 +184,7 @@ namespace Diamond_IL
                             if (tmpValue.Contains(",") && !tmpValue.Contains("\t"))
                             {
                                 //string[] tstSpl = Regex.Split(tmpValue, @"(\,\s*[a-zA-Z]+=?)");
-                                string[] splittedOwners = Regex.Split(tmpValue, @"(?<=\,\s*[a-zA-Z]+(\n|\$))").Where(x => x != "\n").Select(x => x.Trim()).ToArray();
+                                var splittedOwners = Regex.Split(tmpValue, @"(?<=\,\s*[a-zA-Z]+(\n|\$))").Where(x => x != "\n").Select(x => x.Trim()).ToArray();
                                 if (splittedOwners != null && splittedOwners.Count() > 0)
                                 {
                                     foreach (var owner in splittedOwners)
@@ -214,9 +214,9 @@ namespace Diamond_IL
                         }
                         if (splittedRec.EndsWith(I72))
                         {
-                            string tmpValue = splittedRec.Replace(I72, "").Trim();
-                            List<string> listOfNamesEng = new List<string>();
-                            List<string> listOfNamesIL = new List<string>();
+                            var tmpValue = splittedRec.Replace(I72, "").Trim();
+                            var listOfNamesEng = new List<string>();
+                            var listOfNamesIL = new List<string>();
                             /*First case - only eng names without \t*/
                             if (!tmpValue.Contains("\t"))
                             {
@@ -234,7 +234,7 @@ namespace Diamond_IL
                             {
                                 string namesHebrew = null;
                                 string namesEng = null;
-                                string[] splittedNames = tmpValue.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                                var splittedNames = tmpValue.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
                                 if (splittedNames.Count() == 2)
                                 {
                                     namesHebrew = splittedNames[0].Trim();
@@ -275,7 +275,7 @@ namespace Diamond_IL
                         }
                         if (splittedRec.EndsWith(I74))
                         {
-                            string tmpValue = splittedRec.Replace(I74, "").Trim();
+                            var tmpValue = splittedRec.Replace(I74, "").Trim();
                             string recordEng = null;
                             string recordHeb = null;
                             string recEngName = null;
@@ -337,7 +337,7 @@ namespace Diamond_IL
                         }
                         if (splittedRec.EndsWith(I87))
                         {
-                            string tmpValue = splittedRec.Replace(I87, "").Trim();
+                            var tmpValue = splittedRec.Replace(I87, "").Trim();
                             currentElement.I87 = tmpValue;
                         }
                         /*Notes info*/
@@ -345,11 +345,11 @@ namespace Diamond_IL
                             splittedRec.Contains("The applications for division") ||
                             splittedRec.Contains("This specification was examined in"))
                         {
-                            string tmpInfo = splittedRec;
+                            var tmpInfo = splittedRec;
                             string hebNotes = null;
                             string engNotes = null;
                             string numbersNotes = null;
-                            string patternNotes = @"(?<hebrewPart>^.*)(\t(?<numbers>.*))*\t(?<engPart>.*$)";
+                            var patternNotes = @"(?<hebrewPart>^.*)(\t(?<numbers>.*))*\t(?<engPart>.*$)";
                             if (splittedRec.Contains("______")) tmpInfo = splittedRec.Remove(splittedRec.IndexOf("______")).Trim();
                             if (Regex.IsMatch(tmpInfo, patternNotes))
                             {
@@ -367,7 +367,7 @@ namespace Diamond_IL
                     /*Priority processing (3x inids)*/
                     if (tmpPrioValue != null && tmpPrioValue.Length > 10)
                     {
-                        List<string> prioLine = new List<string>();
+                        var prioLine = new List<string>();
                         if (tmpPrioValue.Contains("\n"))
                         {
                             prioLine = tmpPrioValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
@@ -380,7 +380,7 @@ namespace Diamond_IL
                         {
                             foreach (var line in prioLine)
                             {
-                                string tmpLineValue = line.Trim();
+                                var tmpLineValue = line.Trim();
                                 string country = null;
                                 string date = null;
                                 string number = null;

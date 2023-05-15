@@ -10,15 +10,15 @@ namespace Diamond_MX
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub1(List<OutElements.SubSecondThird> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(MX_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(MX_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(MX_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     if (record.AppNumber != null)
@@ -36,7 +36,7 @@ namespace Diamond_MX
                     legalEvent.CountryCode = "MX";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     /*73 name and address*/

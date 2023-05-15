@@ -20,22 +20,22 @@ namespace Diamond_UA_Maksim
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalStatusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalStatusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
 
-            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            var directoryInfo = new DirectoryInfo(path);
 
-            List<string> files = new List<string>();
+            var files = new List<string>();
 
-            foreach (FileInfo file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directoryInfo.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
 
             XElement tet;
 
-            List<XElement> xElements = new List<XElement>();
+            var xElements = new List<XElement>();
 
-            foreach (string tetFile in files)
+            foreach (var tetFile in files)
             {
                 CurrentFileName = tetFile;
 
@@ -49,9 +49,9 @@ namespace Diamond_UA_Maksim
                         && !val.Value.StartsWith("Заява володільця патенту про готовність надання будь-якій особі"))
                         .ToList();
 
-                    foreach (string note in BuildNotes(xElements))
+                    foreach (var note in BuildNotes(xElements))
                     {
-                        Diamond.Core.Models.LegalStatusEvent legalStatusEvent = SplitNote(note, subCode, "MM");
+                        var legalStatusEvent = SplitNote(note, subCode, "MM");
 
                         if(legalStatusEvent.Biblio.Publication.Number !=null) legalStatusEvents.Add(legalStatusEvent);
 
@@ -65,9 +65,9 @@ namespace Diamond_UA_Maksim
                         .TakeWhile(val => !val.Value.StartsWith("Передача виключних майнових прав інтелектуальної власності на" + "\n" + "корисну модель"))
                         .ToList();
 
-                    foreach (string note in BuildNotes(xElements))
+                    foreach (var note in BuildNotes(xElements))
                     {
-                        Diamond.Core.Models.LegalStatusEvent legalStatusEvent = SplitNote(note, subCode, "MM");
+                        var legalStatusEvent = SplitNote(note, subCode, "MM");
 
                         if (legalStatusEvent.Biblio.Publication.Number != null) legalStatusEvents.Add(legalStatusEvent);
                     }
@@ -80,7 +80,7 @@ namespace Diamond_UA_Maksim
         {
             string fullText = null;
 
-            foreach (XElement text in xElements)
+            foreach (var text in xElements)
             {
                 fullText += text.Value.Trim() + "\n";
             }
@@ -91,7 +91,7 @@ namespace Diamond_UA_Maksim
 
         internal Diamond.Core.Models.LegalStatusEvent SplitNote(string note, string sub, string sectionCode)
         {
-            Diamond.Core.Models.LegalStatusEvent legalStatus = new Diamond.Core.Models.LegalStatusEvent
+            var legalStatus = new Diamond.Core.Models.LegalStatusEvent
             {
                 GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
 
@@ -104,21 +104,21 @@ namespace Diamond_UA_Maksim
                 Id = id++
             };
 
-            Biblio biblioData = new Biblio();
+            var biblioData = new Biblio();
 
-            CultureInfo cultureInfo = new CultureInfo("ru-RU");
+            var cultureInfo = new CultureInfo("ru-RU");
 
-            foreach (string inid in SplitNoteToInid(note))
+            foreach (var inid in SplitNoteToInid(note))
             {
                 if (inid.StartsWith("(1)"))
                 {
-                    string text = inid.Replace("(1)", "").Trim();
+                    var text = inid.Replace("(1)", "").Trim();
 
                     biblioData.Publication.Number = text;
                 }
                 if (inid.StartsWith("(2)"))
                 {
-                    string text = inid.Replace("(2)", "").Trim();
+                    var text = inid.Replace("(2)", "").Trim();
 
                     legalStatus.LegalEvent = new LegalEvent
                     {
@@ -133,16 +133,16 @@ namespace Diamond_UA_Maksim
 
         internal List<string> SplitNoteToInid(string note)
         {
-            string text = note.Replace("\r", "").Replace("\n", " ").Trim();
+            var text = note.Replace("\r", "").Replace("\n", " ").Trim();
 
-            Match match = Regex.Match(text, @"(?<number>[0-9]+)\s(?<date>\d{2}.\d{2}.\d{4})");
+            var match = Regex.Match(text, @"(?<number>[0-9]+)\s(?<date>\d{2}.\d{2}.\d{4})");
 
-            List<string> notes = new List<string>();
+            var notes = new List<string>();
 
             if (match.Success)
             {
-                string number = "(1) " + match.Groups["number"].Value.Trim();
-                string date = "(2) " + match.Groups["date"].Value.Trim();
+                var number = "(1) " + match.Groups["number"].Value.Trim();
+                var date = "(2) " + match.Groups["date"].Value.Trim();
                 notes.Add(number);
                 notes.Add(date);
             }
@@ -158,10 +158,10 @@ namespace Diamond_UA_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

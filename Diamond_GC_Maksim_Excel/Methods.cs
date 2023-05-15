@@ -115,7 +115,7 @@ namespace Diamond_GC_Maksim_Excel
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
+                var result = httpClient.PostAsync("", content).Result;
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
         }

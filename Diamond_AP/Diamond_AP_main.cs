@@ -16,7 +16,7 @@ namespace Diamond_AP
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AP\20190829");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> applicationsFiled = null;
             List<XElement> applicationsPendingGrant = null;
@@ -83,8 +83,8 @@ namespace Diamond_AP
             /*Chapter Applications Filed processing*/
             if (applicationsFiled != null)
             {
-                ProcessAppFiled appFiled = new ProcessAppFiled();
-                List<ProcessAppFiled.ElementOut> el = appFiled.OutputValue(applicationsFiled);
+                var appFiled = new ProcessAppFiled();
+                var el = appFiled.OutputValue(applicationsFiled);
                 var legalStatusEvents = ConvertToDiamond.AppFiledConvertation(el);
                 try
                 {
@@ -99,8 +99,8 @@ namespace Diamond_AP
             /*Chapter Applications Pending Grant*/
             if (applicationsPendingGrant != null)
             {
-                ProcessAppPendingGrant appPendingGrand = new ProcessAppPendingGrant();
-                List<ProcessAppPendingGrant.ElementOut> el = appPendingGrand.OutputValue(applicationsPendingGrant);
+                var appPendingGrand = new ProcessAppPendingGrant();
+                var el = appPendingGrand.OutputValue(applicationsPendingGrant);
                 var legalStatusEvents = ConvertToDiamond.AppPendingGrantConvertation(el);
                 try
                 {
@@ -115,8 +115,8 @@ namespace Diamond_AP
             /*Chapter Utility Model Applications Filed*/
             if (utilityModelAppFiled != null)
             {
-                ProcessUtilityModelAppFiled umAppFiled = new ProcessUtilityModelAppFiled();
-                List<ProcessUtilityModelAppFiled.ElementOut> el = umAppFiled.OutputValue(utilityModelAppFiled);
+                var umAppFiled = new ProcessUtilityModelAppFiled();
+                var el = umAppFiled.OutputValue(utilityModelAppFiled);
                 var legalStatusEvents = ConvertToDiamond.UmAppFiledConvertation(el);
                 try
                 {
@@ -131,8 +131,8 @@ namespace Diamond_AP
             /*Chapter Patents Assigned*/
             if (patentsAssigned != null)
             {
-                ProcessPatentsAssigned patAssigned = new ProcessPatentsAssigned();
-                List<ProcessPatentsAssigned.ElementOut> el = patAssigned.OutputValue(patentsAssigned);
+                var patAssigned = new ProcessPatentsAssigned();
+                var el = patAssigned.OutputValue(patentsAssigned);
                 var legalStatusEvents = ConvertToDiamond.PatentAssignedConvertation(el);
                 try
                 {
@@ -147,8 +147,8 @@ namespace Diamond_AP
             /*Chapter Patent Applications Assigned*/
             if (patentAppAssigned != null)
             {
-                ProcessPatentAppAssigned patAppAssigned = new ProcessPatentAppAssigned();
-                List<ProcessPatentAppAssigned.ElementOut> el = patAppAssigned.OutputValue(patentAppAssigned);
+                var patAppAssigned = new ProcessPatentAppAssigned();
+                var el = patAppAssigned.OutputValue(patentAppAssigned);
                 var legalStatusEvents = ConvertToDiamond.PatentAppAssignedConvertation(el);
                 try
                 {
@@ -163,8 +163,8 @@ namespace Diamond_AP
             /*Chapter Utility Model Applications Pending Registration*/
             if (utilityModelAppPendingReg != null)
             {
-                ProcessUtilityModelAppPendingReg umAppPendingReg = new ProcessUtilityModelAppPendingReg();
-                List<ProcessUtilityModelAppPendingReg.ElementOut> el = umAppPendingReg.OutputValue(utilityModelAppPendingReg);
+                var umAppPendingReg = new ProcessUtilityModelAppPendingReg();
+                var el = umAppPendingReg.OutputValue(utilityModelAppPendingReg);
                 var legalStatusEvents = ConvertToDiamond.UmAppPendingRegConvertation(el);
                 try
                 {

@@ -10,7 +10,7 @@ namespace Diamond_ES
         internal static string[] RecSplit(string recString, string[] parametrs)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString;
+            var tempStrC = recString;
 
             if (tempStrC != "")
             {
@@ -90,12 +90,12 @@ namespace Diamond_ES
         internal static string[] RecSplitSubCode11(string s, string[] parametrs)
         {
             string[] outArr = null;
-            List<string> tempOutArr = new List<string>();
-            string tempStrC = s;
+            var tempOutArr = new List<string>();
+            var tempStrC = s;
 
             var tempArray = tempStrC.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-            for (int i = 0; i < tempArray.Length; i++)
+            for (var i = 0; i < tempArray.Length; i++)
             {
                 tempArray[i] = "**" + tempArray[i];
 
@@ -110,7 +110,7 @@ namespace Diamond_ES
                 }
             }
 
-            string tempStr = "";
+            var tempStr = "";
 
             foreach (var s1 in tempArray)
             {
@@ -141,7 +141,7 @@ namespace Diamond_ES
 
         internal static PubllicationInformation PublicationNumberNormalize(string s)
         {
-            PubllicationInformation publlicationInformation = new PubllicationInformation();
+            var publlicationInformation = new PubllicationInformation();
 
             var numberKind = Regex.Match(s, @"(?<Number>[A-Z]{2}\s*\d+)\s*(?<Kind>[A-Z]{1}\d{1,2}|Y)");
             if (numberKind.Success)
@@ -160,7 +160,7 @@ namespace Diamond_ES
 
         internal static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             if (Regex.IsMatch(s, @"\d{2}\/*\-*\.*\d{2}\/*\-*\.*\d{4}"))
             {
                 var date = Regex.Match(s, @"(?<day>\d{2})\/*\-*\.*(?<month>\d{2})\/*\-*\.*(?<year>\d{4})");
@@ -177,7 +177,7 @@ namespace Diamond_ES
 
         internal static List<string> GranteeAssigneeOwnerInformationNornalize(string s)
         {
-            List<string> outList = new List<string>();
+            var outList = new List<string>();
             var splittedRecord = s.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
             foreach (var record in splittedRecord)
@@ -190,8 +190,8 @@ namespace Diamond_ES
 
         internal static List<string> AgentNameNormalize(string s)
         {
-            List<string> outList = new List<string>();
-            string tempS = s;
+            var outList = new List<string>();
+            var tempS = s;
             tempS = Regex.Replace(tempS, @"LEY \d+/\d+", "").Trim();
 
             var splittedRecord = tempS.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
@@ -205,8 +205,8 @@ namespace Diamond_ES
 
         internal static List<RelatedPublicationInformation> RelatedPublicationInformationNormalize(string s)
         {
-            List<RelatedPublicationInformation> outList = new List<RelatedPublicationInformation>();
-            RelatedPublicationInformation outObject = new RelatedPublicationInformation();
+            var outList = new List<RelatedPublicationInformation>();
+            var outObject = new RelatedPublicationInformation();
             var relatedPubInf = Regex.Match(s, @"(?<InidNumber>\d{2})\s*(?<Number>[A-Z]{1}\d+)\s*(?<Date>\d{2}\/\d{2}\/\d{4})");
             outObject.InidNumber = relatedPubInf.Groups["InidNumber"].Value;
             outObject.Date = relatedPubInf.Groups["Date"].Value;
@@ -217,11 +217,11 @@ namespace Diamond_ES
 
         internal static List<LegalNote> NormalizeLegalNote(string s)
         {
-            List<LegalNote> outList = new List<LegalNote>();
+            var outList = new List<LegalNote>();
             LegalNote note;
-            string tempESValue = "";
+            var tempESValue = "";
 
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
                 if (i == 0)
                 {
@@ -236,13 +236,13 @@ namespace Diamond_ES
                 if (i == 1)
                 {
                     note = new LegalNote();
-                    string number = "";
+                    var number = "";
 
                     if (Regex.IsMatch(tempESValue, @"\d{1,2}"))
                     {
                         //есть цифры которые нужно извлечь
-                        Regex reg = new Regex(@"\d{1,2}");
-                        MatchCollection matches = reg.Matches(tempESValue);
+                        var reg = new Regex(@"\d{1,2}");
+                        var matches = reg.Matches(tempESValue);
 
                         if (matches.Count > 0)
                         {

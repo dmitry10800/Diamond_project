@@ -15,7 +15,7 @@ namespace Diamond_SM
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\SM\20200203");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null; // 
             List<XElement> secondList = null; //
@@ -54,8 +54,8 @@ namespace Diamond_SM
 
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessFirstList firstListValues = new ProcessFirstList();
-                    List<ProcessFirstList.ElementOut> el = firstListValues.OutputValue(firstList);
+                    var firstListValues = new ProcessFirstList();
+                    var el = firstListValues.OutputValue(firstList);
                     var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
                     try
                     {
@@ -71,8 +71,8 @@ namespace Diamond_SM
                 /*Utility models*/
                 if (secondList != null && secondList.Count() > 0)
                 {
-                    ProcessSecondtList grantedEP = new ProcessSecondtList();
-                    ProcessSecondtList.ElementOut el = grantedEP.OutputValue(secondList);
+                    var grantedEP = new ProcessSecondtList();
+                    var el = grantedEP.OutputValue(secondList);
                     var legalStatusEvents = ConvertToDiamond.SecondListConvertation(el);
                     try
                     {

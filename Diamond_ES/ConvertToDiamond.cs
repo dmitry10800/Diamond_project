@@ -7,12 +7,12 @@ namespace Diamond_ES
     {
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub3Convert(List<SubCode3> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 biblio.Assignees = new List<PartyMember>();
                 biblio.Agents = new List<PartyMember>();
                 biblio.Related = new List<RelatedDocument>();
@@ -41,7 +41,7 @@ namespace Diamond_ES
                         biblio.Agents.Add(new PartyMember { Name = item });
                     }
                 }
-                RelatedDocument related = new RelatedDocument();
+                var related = new RelatedDocument();
                 if (elem.RelatedPublicationInformation != null)
                 {
                     foreach (var relatedPublicationInformation in elem.RelatedPublicationInformation)
@@ -56,7 +56,7 @@ namespace Diamond_ES
                 legalEvent.LegalEvent.Date = elem.LegalStatusEvents_EventDate;
                 if (elem.LegalStatusEvents_Note != null)
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (var i = 0; i < 2; i++)
                     {
                         if (i == 0)
                         {
@@ -79,12 +79,12 @@ namespace Diamond_ES
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub11Convert(List<SubCode11> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 biblio.Assignees = new List<PartyMember>();
                 biblio.Agents = new List<PartyMember>();
                 legalEvent.LegalEvent = new LegalEvent();
@@ -115,7 +115,7 @@ namespace Diamond_ES
                 legalEvent.LegalEvent.Date = elem.LegalStatusEvents_EventDate;
                 if (elem.LegalStatusEvents_Note != null)
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (var i = 0; i < 2; i++)
                     {
                         if (i == 0)
                         {
@@ -139,12 +139,12 @@ namespace Diamond_ES
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub12Convert(List<SubCode12> elements, string gazetteName)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var legalEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
             var id = 0;
             foreach (var elem in elements)
             {
-                Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                Biblio biblio = new Biblio();
+                var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                var biblio = new Biblio();
                 biblio.Assignees = new List<PartyMember>();
                 biblio.Agents = new List<PartyMember>();
                 legalEvent.LegalEvent = new LegalEvent();
@@ -175,7 +175,7 @@ namespace Diamond_ES
                 legalEvent.LegalEvent.Date = elem.LegalStatusEvents_EventDate;
                 if (elem.LegalStatusEvents_Note != null)
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (var i = 0; i < 2; i++)
                     {
                         if (i == 0)
                         {

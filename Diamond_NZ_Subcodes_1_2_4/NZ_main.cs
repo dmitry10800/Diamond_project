@@ -15,7 +15,7 @@ namespace Diamond_NZ_Subcodes_1_2_4
         private static void Main(string[] args)
         {
             Console.WriteLine("Enter path to folder with PDF file");
-            string pathToPDF = Console.ReadLine();
+            var pathToPDF = Console.ReadLine();
             PathToTetml = new DirectoryInfo(pathToPDF);
             var countFiles = PathToTetml.GetFiles().Count();
 
@@ -39,46 +39,46 @@ namespace Diamond_NZ_Subcodes_1_2_4
             }
 
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
-            List<XElement> allElementsList = new List<XElement>(); // all elements in processing gazette
-            List<XElement> subCode1 = new List<XElement>();
-            List<XElement> subCode2 = new List<XElement>();
-            List<XElement> subCode4 = new List<XElement>();
-            List<SubCode1> resultSubcode1 = new List<SubCode1>();
-            List<SubCode2> resultSubcode2 = new List<SubCode2>();
-            List<SubCode4> resultSubcode4 = new List<SubCode4>();
+            var allElementsList = new List<XElement>(); // all elements in processing gazette
+            var subCode1 = new List<XElement>();
+            var subCode2 = new List<XElement>();
+            var subCode4 = new List<XElement>();
+            var resultSubcode1 = new List<SubCode1>();
+            var resultSubcode2 = new List<SubCode2>();
+            var resultSubcode4 = new List<SubCode4>();
 
             foreach (var file in files)
             {
-                string nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
+                var nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
                 currentFile = new FileInfo(file);
                 elem = XElement.Load(file);
 
                 allElementsList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                string startChapterSubcode1Str = "Patent Assignment";
-                string endChapterSubcode1Str = "Select all - Select None";
+                var startChapterSubcode1Str = "Patent Assignment";
+                var endChapterSubcode1Str = "Select all - Select None";
 
-                string startChapterSubcode2Str = "Patent Lapsed";
-                string endChapterSubcode2Str = "Select all - Select None";
+                var startChapterSubcode2Str = "Patent Lapsed";
+                var endChapterSubcode2Str = "Select all - Select None";
 
-                string startChapterSubcode4Str = "Patent Expired";
-                string endChapterSubcode4Str = "Select all - Select None";
+                var startChapterSubcode4Str = "Patent Expired";
+                var endChapterSubcode4Str = "Select all - Select None";
 
-                string startChapterSubCode3 = "Patent Restored";
-                string startChapterSubCode5 = "Patent Request to Restore";
+                var startChapterSubCode3 = "Patent Restored";
+                var startChapterSubCode5 = "Patent Request to Restore";
 
-                List<(int, int)> listPositionsSubCodes = new List<(int, int)>(); //(int - start position in Subcode, int - end position in Subcode)
+                var listPositionsSubCodes = new List<(int, int)>(); //(int - start position in Subcode, int - end position in Subcode)
 
                 int startSubCode1 = -1, startSubCode2 = -1, endSubCode2 = -1, startSubCode4 = -1, endSubCode4 = -1;
-                bool subcode1Start = false;
-                bool subcode2Start = false;
-                bool subcode4Start = false;
-                for (int i = 0; i < allElementsList.Count; i++)
+                var subcode1Start = false;
+                var subcode2Start = false;
+                var subcode4Start = false;
+                for (var i = 0; i < allElementsList.Count; i++)
                 {
                     if (allElementsList[i].Value.StartsWith(startChapterSubcode1Str) && !subcode1Start && startSubCode1 == -1)
                     {
@@ -120,17 +120,17 @@ namespace Diamond_NZ_Subcodes_1_2_4
                 if (startSubCode1 > -1 && startSubCode2 > -1 && startSubCode4 > -1 && endSubCode2 > -1 &&
                     endSubCode4 > -1)
                 {
-                    for (int i = startSubCode1; i < startSubCode2; i++)
+                    for (var i = startSubCode1; i < startSubCode2; i++)
                     {
                         subCode1.Add(allElementsList[i]);
                     }
 
-                    for (int i = startSubCode2; i < endSubCode2; i++)
+                    for (var i = startSubCode2; i < endSubCode2; i++)
                     {
                         subCode2.Add(allElementsList[i]);
                     }
 
-                    for (int i = startSubCode4; i < endSubCode4; i++)
+                    for (var i = startSubCode4; i < endSubCode4; i++)
                     {
                         subCode4.Add(allElementsList[i]);
                     }

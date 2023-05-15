@@ -16,14 +16,14 @@ namespace Diamond_BE
         private static readonly string EventDate = "(99)";
         public static List<Elements> SubCode4(List<XElement> elements)
         {
-            List<Elements> elementsOut = new List<Elements>();
+            var elementsOut = new List<Elements>();
 
             if (elements != null && elements.Count > 0)
             {
                 string[] splittedRecord = null;
                 string tmpRecordValue;
                 int tmpInc;
-                for (int i = 0; i < elements.Count; i++)
+                for (var i = 0; i < elements.Count; i++)
                 {
                     var value = elements[i].Value;
                     if (value.StartsWith(_21))
@@ -63,7 +63,7 @@ namespace Diamond_BE
                             if (record.StartsWith(_73))
                             {
                                 var split = record.Split('\n');
-                                Owner owner = new Owner();
+                                var owner = new Owner();
                                 owner.Name = split[0].Replace(_73, "").Trim();
                                 owner.Address = split[1].Trim() + " " + split[2].Trim();
                                 owner.Country = Methods.ToOWNC(split.Last());
@@ -71,7 +71,7 @@ namespace Diamond_BE
                             }
                             if (record.StartsWith(_74))
                             {
-                                Agent agent = new Agent();
+                                var agent = new Agent();
                                 agent.Name = record.Replace(_74, "").Replace("\n", " ").Trim();
                                 currentElement.Agent = agent;
                             }

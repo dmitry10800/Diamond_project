@@ -16,7 +16,7 @@ namespace Diamond_AP_LE
             //var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AP\20191121\RenewAppPat10");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> sub10 = null; // Applications Terminated before Publication under Section 16(1)
             List<XElement> sub7 = null; // Applications Terminated after Publication under Section 16(1)

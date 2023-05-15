@@ -11,7 +11,7 @@ namespace Diamond_NZ
         {
             public static List<OutElements.Subcode2Elements> Run(List<XElement> v)
             {
-                List<OutElements.Subcode2Elements> elements = new List<OutElements.Subcode2Elements>();
+                var elements = new List<OutElements.Subcode2Elements>();
                 var pattern = new System.Text.RegularExpressions.Regex(@".*Patent Lapsed:\s(?<Number>\d+)\s.*");
                 foreach (var item in v)
                 {

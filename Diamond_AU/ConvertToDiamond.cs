@@ -11,15 +11,15 @@ namespace Diamond_AU
         public static List<Diamond.Core.Models.LegalStatusEvent> FirstList(List<OutElements.FirstList> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(AU_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(AU_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(AU_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "2";
@@ -29,7 +29,7 @@ namespace Diamond_AU
                     legalEvent.CountryCode = "AU";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     /*73 name and address*/
@@ -45,7 +45,7 @@ namespace Diamond_AU
                         var splNamesNew = record.NameNew.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         if (splNamesNew.Count == splNamesOld.Count)
                         {
-                            for (int i = 0; i < splNamesNew.Count; i++)
+                            for (var i = 0; i < splNamesNew.Count; i++)
                             {
                                 biblioData.Assignees.Add(new PartyMember { Name = splNamesOld[i].Trim() });
                                 legalEvent.NewBiblio.Assignees.Add(new PartyMember { Name = splNamesNew[i].Trim() });

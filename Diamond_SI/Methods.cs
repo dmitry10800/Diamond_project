@@ -9,7 +9,7 @@ namespace Diamond_SI
     {
         internal static string[] RecordsSplit(string s)
         {
-            string tempS = s;
+            var tempS = s;
             tempS = tempS.Replace("****", "").Trim();
 
             var splittedRecord = tempS.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
@@ -22,10 +22,10 @@ namespace Diamond_SI
             var tempStr = s;
             var fields = new string[] { "\\(51\\)", "\\(11\\)", "\\(13\\)", "\\(46\\)", "\\(21\\)", "\\(22\\)", "\\(86\\)", "\\(96\\)", "\\(87\\)", "\\(97\\)", "\\(30\\)", "\\(72\\)", "\\(73\\)", "\\(74\\)", "\\(54\\)"};
 
-            string correct51Field = "(51) ";
+            var correct51Field = "(51) ";
 
-            Regex reg1 = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1} \d{1,3}/\d{1,2}");
-            MatchCollection matches51 = reg1.Matches(tempStr);
+            var reg1 = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1} \d{1,3}/\d{1,2}");
+            var matches51 = reg1.Matches(tempStr);
 
             if(matches51.Count > 0)
             {
@@ -39,8 +39,8 @@ namespace Diamond_SI
 
             foreach(var item in fields)
             {
-                Regex reg = new Regex(item);
-                MatchCollection matches = reg.Matches(tempStr);
+                var reg = new Regex(item);
+                var matches = reg.Matches(tempStr);
                 if(matches.Count > 0)
                 {
                     foreach(Match match in matches)
@@ -52,7 +52,7 @@ namespace Diamond_SI
 
             var splittedRecord = tempStr.Split(new string[] { "***" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-            for(int i = 0; i<splittedRecord.Length; i++)
+            for(var i = 0; i<splittedRecord.Length; i++)
             {
                 if (splittedRecord[i].Contains(@"(51)"))
                 {
@@ -76,7 +76,7 @@ namespace Diamond_SI
 
         internal static List<Fields_86_87_96_97> GetListField86_87_96_97(string str, int numberField)
         {
-            List<Fields_86_87_96_97> outList = new List<Fields_86_87_96_97>();
+            var outList = new List<Fields_86_87_96_97>();
             var list = GetClassificationArray(str);
             if (list.Length == 1)
                 list = list[0].Split(new string[] {";"}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
@@ -119,7 +119,7 @@ namespace Diamond_SI
 
         internal static List<PriorityInformation> GetPriorityList(string prioritiesStr)
         {
-            List<PriorityInformation> outList = new List<PriorityInformation>();
+            var outList = new List<PriorityInformation>();
             PriorityInformation priorityInformation = null;
             var list = GetPrioritiesArray(prioritiesStr);
 
@@ -138,7 +138,7 @@ namespace Diamond_SI
         internal static List<PersonInformation> GetInventors_Grantee_Assignee_Owner_AgentInformation(string personsInfoStr)
         {
             PersonInformation personInfo = null;
-            List<PersonInformation> outList = new List<PersonInformation>();
+            var outList = new List<PersonInformation>();
             personsInfoStr = personsInfoStr.Replace("\n", " ").Trim();
             var allPersons = GetPrioritiesArray(personsInfoStr);
 
@@ -151,8 +151,8 @@ namespace Diamond_SI
                     personInfo.Name = splittedPersonInfo[0];
                     personInfo.Country = splittedPersonInfo.Last();
 
-                    string address = "";
-                    for(int i = 0; i < splittedPersonInfo.Length; i++)
+                    var address = "";
+                    for(var i = 0; i < splittedPersonInfo.Length; i++)
                     {
                         if(!splittedPersonInfo[i].Contains(personInfo.Name) && !splittedPersonInfo[i].Contains(personInfo.Country))
                         {
@@ -186,7 +186,7 @@ namespace Diamond_SI
         }
         internal static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             if (Regex.IsMatch(s, @"\d{2}\/*\-*\.*\d{2}\/*\-*\.*\d{4}"))
             {
                 var date = Regex.Match(s, @"(?<day>\d{2})\/*\-*\.*(?<month>\d{2})\/*\-*\.*(?<year>\d{4})");

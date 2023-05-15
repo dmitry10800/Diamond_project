@@ -20,7 +20,7 @@ namespace Diamond_RS
 
         public static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             var date = Regex.Match(s, @"(?<day>\d{2})[^0-9]*(?<month>\d{1,2})[^0-9]*(?<year>\d{4})");
             var day = date.Groups["day"].Value;
             if (date.Groups["day"].Length == 1)

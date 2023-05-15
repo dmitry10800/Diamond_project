@@ -9,15 +9,15 @@ namespace Diamond_EA
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub5(List<OutElements.Subcode5> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
-            string dateFromName = Methods.GetDateFromGazette(EA_main.CurrentFileName);
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var dateFromName = Methods.GetDateFromGazette(EA_main.CurrentFileName);
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(EA_main.CurrentFileName.Replace(".txt", ".pdf").Replace(".TXT", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "5";
@@ -27,7 +27,7 @@ namespace Diamond_EA
                     legalEvent.CountryCode = "EA";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Application.Number = record.AppNumber;
                     biblioData.Publication.Kind = record.PubKind;
@@ -55,16 +55,16 @@ namespace Diamond_EA
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub12(List<OutElements.Subcode12> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
        //     string dateFromName = Methods.GetDateFromGazette(EA_main.CurrentFileName);
            
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = Path.GetFileName(EA_main.CurrentFileName.Replace(".txt", ".pdf").Replace(".TXT", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "12";
@@ -74,7 +74,7 @@ namespace Diamond_EA
                     legalEvent.CountryCode = "EA";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Publication.Number = record.PubNumber;
                     biblioData.Publication.Kind = record.PubKind;

@@ -47,21 +47,21 @@ namespace Diamond_AP
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     if (value.StartsWith(I21))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        int tmpInc = i;
+                        var tmpInc = i;
                         tmpRecordValue = "";
                         do
                         {
@@ -88,8 +88,8 @@ namespace Diamond_AP
                                 }
                                 if (inidCode.StartsWith(I51))
                                 {
-                                    string tmpValue = inidCode.Replace(I51, "").Trim();
-                                    string[] splittedIPC = Methods.IPCSplit(tmpValue, out string[] ipcYear);
+                                    var tmpValue = inidCode.Replace(I51, "").Trim();
+                                    var splittedIPC = Methods.IPCSplit(tmpValue, out var ipcYear);
                                     currentElement.I51Y = ipcYear;
                                     foreach (var item in splittedIPC)
                                     {
@@ -130,20 +130,20 @@ namespace Diamond_AP
                                 }
                                 if (inidCode.StartsWith(I84))
                                 {
-                                    string tmpValue = inidCode.Replace(I84, "").Trim();
+                                    var tmpValue = inidCode.Replace(I84, "").Trim();
                                     currentElement.I84 = Methods.OwnerSplit(tmpValue);
                                 }
                                 if (inidCode.StartsWith(I86))
                                 {
                                     string pctNumber = null;
-                                    string tmpValue = inidCode.Replace(I86, "").Trim();
+                                    var tmpValue = inidCode.Replace(I86, "").Trim();
                                     currentElement.I86D = Methods.PctSplit(tmpValue, out pctNumber);
                                     currentElement.I86N = pctNumber;
 
                                 }
                                 if (inidCode.StartsWith(I96))
                                 {
-                                    string tmpValue = inidCode.Replace(I96, "").Trim();
+                                    var tmpValue = inidCode.Replace(I96, "").Trim();
                                     string pctNumber = null;
                                     currentElement.I96D = Methods.PctSplit(tmpValue, out pctNumber);
                                     currentElement.I96N = pctNumber;

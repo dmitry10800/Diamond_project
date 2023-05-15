@@ -53,7 +53,7 @@ namespace Diamond_MK_international_Patents
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("/"))
             {
@@ -72,7 +72,7 @@ namespace Diamond_MK_international_Patents
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             string tmpDescValue = null;
             if (recString != "")
             {
@@ -81,8 +81,8 @@ namespace Diamond_MK_international_Patents
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf(I57)).Trim();
                     tempStrC = tempStrC.Remove(recString.IndexOf(I57)).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -105,7 +105,7 @@ namespace Diamond_MK_international_Patents
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\MK\Reg\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -138,10 +138,10 @@ namespace Diamond_MK_international_Patents
                     if (value != null)
                         Images.Add(value, item.Attribute("filename")?.Value);
                 }
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -198,11 +198,11 @@ namespace Diamond_MK_international_Patents
                                 /*Saving images*/
                                 if (imageNames != null)
                                 {
-                                    int imgCount = 1;
+                                    var imgCount = 1;
                                     foreach (var image in imageNames)
                                     {
-                                        string ext = Path.GetExtension(Images[image]);
-                                        string imageFileName = Path.Combine(root.FullName, Images[image]);
+                                        var ext = Path.GetExtension(Images[image]);
+                                        var imageFileName = Path.Combine(root.FullName, Images[image]);
                                         if (File.Exists(imageFileName))
                                             try
                                             {
@@ -242,18 +242,18 @@ namespace Diamond_MK_international_Patents
                             if (inidCode.StartsWith(I30))
                             {
                                 //string[] splPriorityRecord = null;
-                                List<string> prioInstance = new List<string>();
+                                var prioInstance = new List<string>();
                                 tmpRecValue = inidCode.Replace(I30, "").Trim();
                                 if (tmpRecValue.Contains("\n") && (tmpRecValue.Contains(" and ") || tmpRecValue.Contains(" and")))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var priority in tmpSplValue)
                                         {
                                             if (priority.Contains(" and"))
                                             {
-                                                string[] tmpSlpValueA = priority.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                                var tmpSlpValueA = priority.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                                 foreach (var item in tmpSlpValueA)
                                                 {
                                                     prioInstance.Add(item.Trim());
@@ -268,7 +268,7 @@ namespace Diamond_MK_international_Patents
                                 }
                                 if (tmpRecValue.Contains(" and") && !tmpRecValue.Contains("\n"))
                                 {
-                                    string[] tmpSlpValueA = tmpRecValue.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSlpValueA = tmpRecValue.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     foreach (var item in tmpSlpValueA)
                                     {
                                         prioInstance.Add(item.Trim());
@@ -349,7 +349,7 @@ namespace Diamond_MK_international_Patents
                             if (inidCode.StartsWith(I96))
                             {
                                 string tmpDateValue = null;
-                                string tmpAgentValue = inidCode.Replace(I96, "").Replace("\n", "").Trim();
+                                var tmpAgentValue = inidCode.Replace(I96, "").Replace("\n", "").Trim();
                                 if (tmpAgentValue.Contains("/"))
                                 {
                                     tmpDateValue = Regex.Match(tmpAgentValue, @"\d{2}\/\d{2}\/\d{4}").Value;
@@ -369,7 +369,7 @@ namespace Diamond_MK_international_Patents
                             if (inidCode.StartsWith(I97))
                             {
                                 string tmpDateValue = null;
-                                string tmpAgentValue = inidCode.Replace(I97, "").Replace("\n", "").Trim();
+                                var tmpAgentValue = inidCode.Replace(I97, "").Replace("\n", "").Trim();
                                 if (tmpAgentValue.Contains("/"))
                                 {
                                     tmpDateValue = Regex.Match(tmpAgentValue, @"\d{2}\/\d{2}\/\d{4}").Value;
@@ -391,7 +391,7 @@ namespace Diamond_MK_international_Patents
                                 tmpRecValue = inidCode.Replace(I45, "").Replace("\n", " ").Trim();
                                 if (tmpRecValue.Length > 12)
                                 {
-                                    string tmpValue = Regex.Match(tmpRecValue, @"\d{2}\/\d{2}\/\d{4}").Value;
+                                    var tmpValue = Regex.Match(tmpRecValue, @"\d{2}\/\d{2}\/\d{4}").Value;
                                     currentElement.I45 = DateNormalize(tmpValue);
                                     currentElement.I74A = tmpRecValue.Replace(tmpValue, "").Trim();
                                 }
@@ -415,18 +415,18 @@ namespace Diamond_MK_international_Patents
                             /*72 Inventor*/
                             if (inidCode.StartsWith(I72))
                             {
-                                List<string> nameInstance = new List<string>();
+                                var nameInstance = new List<string>();
                                 tmpRecValue = inidCode.Replace(I72, "").Replace("\n", " ");
                                 if (tmpRecValue.Contains(";") && tmpRecValue.Contains(" and "))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var inventor in tmpSplValue)
                                         {
                                             if (inventor.Contains(" and "))
                                             {
-                                                string[] tmpSlpValueA = inventor.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                                var tmpSlpValueA = inventor.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                                 foreach (var item in tmpSlpValueA)
                                                 {
                                                     nameInstance.Add(item.Trim());
@@ -442,7 +442,7 @@ namespace Diamond_MK_international_Patents
                                 }
                                 if (tmpRecValue.Contains(" and ") && !tmpRecValue.Contains(";"))
                                 {
-                                    string[] tmpSlpValueA = tmpRecValue.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSlpValueA = tmpRecValue.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     foreach (var item in tmpSlpValueA)
                                     {
                                         nameInstance.Add(item.Trim());
@@ -491,7 +491,7 @@ namespace Diamond_MK_international_Patents
                         sf.WriteLine("22:\t" + field.I22);
                         if (field.I30C != null && field.I30C.Count() == field.I30N.Count() && field.I30C.Count() == field.I30D.Count())
                         {
-                            for (int i = 0; i < field.I30C.Count(); i++)
+                            for (var i = 0; i < field.I30C.Count(); i++)
                             {
                                 sf.WriteLine("30C:\t" + field.I30C[i]);
                                 sf.WriteLine("30N:\t" + field.I30N[i]);

@@ -11,13 +11,13 @@ namespace Diamond_TR
 
         public static List<Elements> AllSubsProcess(List<XElement> elements)
         {
-            List<Elements> elementsOut = new List<Elements>();
+            var elementsOut = new List<Elements>();
 
-            int id = 1;
+            var id = 1;
             var ints = new List<int>();
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                int inc = i;
+                var inc = i;
                 string tmpVal = null;
                 var value = elements[i].Value;
                 if (pattern.Match(value).Success)

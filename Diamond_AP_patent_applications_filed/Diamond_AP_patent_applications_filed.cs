@@ -50,15 +50,15 @@ namespace Diamond_AP_patent_applications_filed
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
+            var tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
             if (recString != "")
             {
                 //if (recString.Contains("\n"))
                 //{
                 //    recString = recString.Replace("\n", " ");
                 //}
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -76,11 +76,11 @@ namespace Diamond_AP_patent_applications_filed
         {
             string[] splittedRecord = null;
             ipcYear = null;
-            string tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
+            var tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
             if (recString != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{4}\.\d{2}\)?", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{4}\.\d{2}\)?", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -122,8 +122,8 @@ namespace Diamond_AP_patent_applications_filed
         {
             pctNumber = null;
             string pctDate = null;
-            Regex pattern = new Regex(@"\d{2}\.\d{2}\.\d{4}", RegexOptions.IgnoreCase);
-            MatchCollection matchesClass = pattern.Matches(tmpPct);
+            var pattern = new Regex(@"\d{2}\.\d{2}\.\d{4}", RegexOptions.IgnoreCase);
+            var matchesClass = pattern.Matches(tmpPct);
             if (matchesClass.Count == 1)
             {
                 foreach (Match matchC in matchesClass)
@@ -137,7 +137,7 @@ namespace Diamond_AP_patent_applications_filed
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("."))
             {
@@ -157,7 +157,7 @@ namespace Diamond_AP_patent_applications_filed
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\AP\App\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -182,17 +182,17 @@ namespace Diamond_AP_patent_applications_filed
                     .SkipWhile(e => !e.Value.StartsWith(I21))
                     .ToList();
 
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     if (value.StartsWith(I21))
                     {
                         currentElement = new ElementOut();
                         ElementsOut.Add(currentElement);
-                        int tmpInc = i;
+                        var tmpInc = i;
                         tmpRecordValue = "";
                         do
                         {
@@ -219,8 +219,8 @@ namespace Diamond_AP_patent_applications_filed
                                 }
                                 if (inidCode.StartsWith(I51))
                                 {
-                                    string tmpValue = inidCode.Replace(I51, "").Trim();
-                                    string[] splittedIPC = IPCSplit(tmpValue, out string[] ipcYear);
+                                    var tmpValue = inidCode.Replace(I51, "").Trim();
+                                    var splittedIPC = IPCSplit(tmpValue, out var ipcYear);
                                     currentElement.I51Y = ipcYear;
                                     foreach (var item in splittedIPC)
                                     {
@@ -261,20 +261,20 @@ namespace Diamond_AP_patent_applications_filed
                                 }
                                 if (inidCode.StartsWith(I84))
                                 {
-                                    string tmpValue = inidCode.Replace(I84, "").Trim();
+                                    var tmpValue = inidCode.Replace(I84, "").Trim();
                                     currentElement.I84 = OwnerSplit(tmpValue);
                                 }
                                 if (inidCode.StartsWith(I86))
                                 {
                                     string pctNumber = null;
-                                    string tmpValue = inidCode.Replace(I86, "").Trim();
+                                    var tmpValue = inidCode.Replace(I86, "").Trim();
                                     currentElement.I86D = PctSplit(tmpValue, out pctNumber);
                                     currentElement.I86N = pctNumber;
 
                                 }
                                 if (inidCode.StartsWith(I96))
                                 {
-                                    string tmpValue = inidCode.Replace(I96, "").Trim();
+                                    var tmpValue = inidCode.Replace(I96, "").Trim();
                                     string pctNumber = null;
                                     currentElement.I96D = PctSplit(tmpValue, out pctNumber);
                                     currentElement.I96N = pctNumber;
@@ -297,7 +297,7 @@ namespace Diamond_AP_patent_applications_filed
                             /*31,32,33 Priority*/
                             if (elemOut.I31 != null && elemOut.I31.Count() == elemOut.I32.Count() && elemOut.I31.Count() == elemOut.I33.Count())
                             {
-                                for (int i = 0; i < elemOut.I31.Count(); i++)
+                                for (var i = 0; i < elemOut.I31.Count(); i++)
                                 {
                                     sf.WriteLine("31:\t" + elemOut.I31[i]);
                                     sf.WriteLine("32:\t" + elemOut.I32[i]);
@@ -306,7 +306,7 @@ namespace Diamond_AP_patent_applications_filed
                             }
                             if (elemOut.I51V.Count() == elemOut.I51Y.Count())
                             {
-                                for (int i = 0; i < elemOut.I51V.Count(); i++)
+                                for (var i = 0; i < elemOut.I51V.Count(); i++)
                                 {
                                     sf.WriteLine("51:\t" + elemOut.I51V[i] + "\t" + elemOut.I51Y[i]);
                                 }
@@ -315,7 +315,7 @@ namespace Diamond_AP_patent_applications_filed
                             sf.WriteLine("71:\t" + elemOut.I71);
                             if (elemOut.I72 != null)
                             {
-                                for (int i = 0; i < elemOut.I72.Count(); i++)
+                                for (var i = 0; i < elemOut.I72.Count(); i++)
                                 {
                                     sf.WriteLine("72:\t" + elemOut.I72[i]);
                                 }
@@ -325,7 +325,7 @@ namespace Diamond_AP_patent_applications_filed
                             {
                                 sf.WriteLine("75:\t" + elemOut.I75);
                             }
-                            for (int i = 0; i < elemOut.I84.Count(); i++)
+                            for (var i = 0; i < elemOut.I84.Count(); i++)
                             {
                                 sf.WriteLine("84:\t" + elemOut.I84[i]);
                             }

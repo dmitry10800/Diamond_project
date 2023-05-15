@@ -23,11 +23,11 @@ namespace Diamond_RS
 
         public static List<Elements> Sub3Process(List<XElement> elements)
         {
-            List<Elements> elementsOut = new List<Elements>();
+            var elementsOut = new List<Elements>();
 
-            for (int i = 0; i < elements.Count; i++)
+            for (var i = 0; i < elements.Count; i++)
             {
-                int inc = i;
+                var inc = i;
                 string val = null;
 
                 var value = elements[i].Value;

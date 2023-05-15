@@ -13,7 +13,7 @@ namespace EE
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\EE\Test");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.txt", SearchOption.AllDirectories)) { files.Add(file.FullName); }
 
             foreach (var textFile in files)
             {

@@ -16,8 +16,8 @@ namespace Diamond_BA
         {
             try
             {
-                string swapDate = "";
-                string[] splitDate = tmpDate.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
+                var swapDate = "";
+                var splitDate = tmpDate.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splitDate.Count() == 3)
                 {
                     swapDate = splitDate[2] + splitDate[1] + splitDate[0];
@@ -40,11 +40,11 @@ namespace Diamond_BA
         /*Name,country code split in 71,73,74 fields*/
         public static NameCountryStruct NameSpl(string tmpString)
         {
-            NameCountryStruct splittedValues = new NameCountryStruct();
-            string tmpValues = tmpString.Replace("(71)", "").Replace("(73)", "").Replace("(74)", "").Replace("\n", "****").Trim();
+            var splittedValues = new NameCountryStruct();
+            var tmpValues = tmpString.Replace("(71)", "").Replace("(73)", "").Replace("(74)", "").Replace("\n", "****").Trim();
             if (Regex.IsMatch(tmpValues, @"\*{4}[A-Z]{2}\*{4}"))
             {
-                string[] tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").ToArray();
+                var tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").ToArray();
                 foreach (var rec in tmpSplValues)
                 {
                     if (Regex.IsMatch(rec, @"\*{4}[A-Z]{2}\*{4}"))
@@ -62,17 +62,17 @@ namespace Diamond_BA
         /*Name, address and country code split in 72,75 fields*/
         public static NameCountryStruct NameSplWithAddress(string tmpString)
         {
-            NameCountryStruct splittedValues = new NameCountryStruct();
-            string tmpValues = tmpString.Replace("(72)", "").Replace("(75)", "").Replace("\n", "****").Trim();
+            var splittedValues = new NameCountryStruct();
+            var tmpValues = tmpString.Replace("(72)", "").Replace("(75)", "").Replace("\n", "****").Trim();
             if (Regex.IsMatch(tmpValues, @"\*{4}[A-Z]{2}\*{4}"))
             {
-                string[] tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").ToArray();
+                var tmpSplValues = Regex.Split(tmpValues, @"(?<=\*{4}[A-Z]{2}\*{4})").Where(d => d != "").ToArray();
                 foreach (var rec in tmpSplValues)
                 {
                     if (Regex.IsMatch(rec, @"\*{4}[A-Z]{2}\*{4}"))
                     {
                         splittedValues.Country = (splittedValues.Country ?? Enumerable.Empty<string>()).Concat(new string[] { Regex.Match(rec, @"\*{4}[A-Z]{2}\*{4}$").Value.Replace("****", " ").Trim().Trim(',').Trim() }).ToArray();
-                        string tmpName = rec.Remove(rec.IndexOf(Regex.Match(rec, @"\*{4}[A-Z]{2}\*{4}$").Value)).Trim().Trim(',').Trim();
+                        var tmpName = rec.Remove(rec.IndexOf(Regex.Match(rec, @"\*{4}[A-Z]{2}\*{4}$").Value)).Trim().Trim(',').Trim();
                         if (tmpName.Contains("****"))
                         {
                             splittedValues.Name = (splittedValues.Name ?? Enumerable.Empty<string>()).Concat(new string[] { tmpName.Remove(tmpName.IndexOf("****")).Trim() }).ToArray();
@@ -103,7 +103,7 @@ namespace Diamond_BA
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString
+            var tempStrC = recString
                 .Replace("(32)", "")
                 .Replace("(33)", "")
                 .Replace("Broj ostalih patentnih zahtjeva:", "(I99)")
@@ -116,8 +116,8 @@ namespace Diamond_BA
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57)")).Trim().Replace("�", "ti");
                     tempStrC = tempStrC.Remove(recString.IndexOf("(57)")).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -143,9 +143,9 @@ namespace Diamond_BA
         /*Classification Information 51 inid*/
         public static ClassificationStruct ClassificationInfoSplit(string tmpString)
         {
-            ClassificationStruct priority = new ClassificationStruct();
+            var priority = new ClassificationStruct();
             string[] splClass = null;
-            string tmpClass = tmpString.Replace("(51)", "").Replace(" ", "").Trim();
+            var tmpClass = tmpString.Replace("(51)", "").Replace(" ", "").Trim();
             if (tmpClass.Contains(","))
             {
                 splClass = tmpClass.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
@@ -182,11 +182,11 @@ namespace Diamond_BA
         }
         public static List<PriorityStruct> PrioritySplit(string prioString)
         {
-            List<PriorityStruct> priorityStruct = new List<PriorityStruct>();
-            string tmpPrio = prioString.Replace("(31)", "").Trim();
+            var priorityStruct = new List<PriorityStruct>();
+            var tmpPrio = prioString.Replace("(31)", "").Trim();
             string[] lineSplittedPrio = null;
-            string datePattern = @"\d{4}\-\d{2}\-\d{2}";
-            string countryPattern = @"[A-Z]{2}$";
+            var datePattern = @"\d{4}\-\d{2}\-\d{2}";
+            var countryPattern = @"[A-Z]{2}$";
             /*If more than one priority separated with new line*/
             if (tmpPrio.Contains("\n"))
             {
@@ -199,7 +199,7 @@ namespace Diamond_BA
                 foreach (var rec in lineSplittedPrio)
                 {
                     /*add found value to output*/
-                    PriorityStruct record = new PriorityStruct
+                    var record = new PriorityStruct
                     {
                         Date = Regex.Match(rec, datePattern).Value.Trim(),
                         Number = rec.Remove(rec.IndexOf(Regex.Match(rec, datePattern).Value.Trim())).Trim(),
@@ -216,10 +216,10 @@ namespace Diamond_BA
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

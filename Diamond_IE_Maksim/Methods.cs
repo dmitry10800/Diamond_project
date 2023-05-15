@@ -24,7 +24,7 @@ namespace Diamond_IE_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -33,7 +33,7 @@ namespace Diamond_IE_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -47,10 +47,10 @@ namespace Diamond_IE_Maksim
                         .TakeWhile(val => !val.Value.StartsWith("Application for Restoration of Lapsed Patents – Section 37"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=^S?\d{6,})", RegexOptions.Multiline).Where(val => !string.IsNullOrEmpty(val) && new Regex(@"^\d+.*").Match(val).Success)
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=^S?\d{6,})", RegexOptions.Multiline).Where(val => !string.IsNullOrEmpty(val) && new Regex(@"^\d+.*").Match(val).Success)
                         .ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "MK"));
                     }
@@ -79,7 +79,7 @@ namespace Diamond_IE_Maksim
 
             if(subCode == "52")
             {
-                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<pNum>\d+)\s(?<title>.+?)\.\s(?<assignee>.+)");
+                var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<pNum>\d+)\s(?<title>.+?)\.\s(?<assignee>.+)");
                 if (match.Success)
                 {
                     statusEvent.Biblio.Publication.Number = match.Groups["pNum"].Value.Trim();
@@ -89,7 +89,7 @@ namespace Diamond_IE_Maksim
                         Text = match.Groups["title"].Value.Trim()
                     });
 
-                    foreach (string assignee in Regex.Split(match.Groups["assignee"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList())
+                    foreach (var assignee in Regex.Split(match.Groups["assignee"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList())
                     {
                         statusEvent.Biblio.Assignees.Add(new Integration.PartyMember
                         {
@@ -97,7 +97,7 @@ namespace Diamond_IE_Maksim
                         });
                     }
 
-                    Match match1 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    var match1 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
 
                     if (match1.Success)
                     {
@@ -115,7 +115,7 @@ namespace Diamond_IE_Maksim
 
             if(subCode == "52")
             {
-                foreach (XElement xElement in xElements)
+                foreach (var xElement in xElements)
                 {
                     text += xElement.Value + "\n";
                 }             
@@ -126,7 +126,7 @@ namespace Diamond_IE_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -140,8 +140,8 @@ namespace Diamond_IE_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

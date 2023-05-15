@@ -78,9 +78,9 @@ namespace RU
             foreach (var rec in events)
             {
                 string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
@@ -98,7 +98,7 @@ namespace RU
         /*Получение нужных нодов из XML*/
         private static XmlFileRecords GetNodesFromXml(XDocument xmlFile)
         {
-            XmlFileRecords extractedNodes = new XmlFileRecords();
+            var extractedNodes = new XmlFileRecords();
             var xmlDocument = xmlFile.ToXmlDocument();
             extractedNodes.Sdopi = xmlDocument.SelectSingleNode("ru-patent-document/SDOBI");
             extractedNodes.RuNotification = xmlDocument.SelectNodes("ru-patent-document/ru-notification");
@@ -153,7 +153,7 @@ namespace RU
         public static void SubCodesProcessing()
         {
             PrepareSubCodesReport(RU_main.AllXmlDocs);
-            SubCode subCodes = new SubCode();
+            var subCodes = new SubCode();
             if (subCodes.Sub1.Count > 0)
                 SendToDiamond(ConvertToDiamondFormat.Sub2ToDiamond(Sub2Mapper(subCodes.Sub1)));
             if (subCodes.Sub2.Count > 0)
@@ -221,7 +221,7 @@ namespace RU
         }
         private static List<RecordElements.SudCode2> Sub2Mapper(List<XDocument> sub2Elements)
         {
-            List<RecordElements.SudCode2> sub2output = new List<RecordElements.SudCode2>();
+            var sub2output = new List<RecordElements.SudCode2>();
             foreach (var xmlFile in sub2Elements)
             {
                 var extractedNodes = GetNodesFromXml(xmlFile);
@@ -310,7 +310,7 @@ namespace RU
         }
         private static List<RecordElements.SudCode7> Sub7Mapper(List<XDocument> sub7Elements)
         {
-            List<RecordElements.SudCode7> sub7output = new List<RecordElements.SudCode7>();
+            var sub7output = new List<RecordElements.SudCode7>();
             foreach (var xmlFile in sub7Elements)
             {
                 var extractedNodes = GetNodesFromXml(xmlFile);

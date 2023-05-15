@@ -29,7 +29,7 @@ namespace Diamond_BG_Granted_European_patents
         /*Date*/
         static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("."))
             {
@@ -45,15 +45,15 @@ namespace Diamond_BG_Granted_European_patents
         static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             if (recString != "")
             {
                 //if (recString.Contains("\n"))
                 //{
                 //    recString = recString.Replace("\n", " ");
                 //}
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -79,7 +79,7 @@ namespace Diamond_BG_Granted_European_patents
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\BG\Grant\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             string fileName; //имя файла tetml
             string folderPath; //путь к папке с файлом tetml
             string path; //путь к файлу tetml
@@ -102,10 +102,10 @@ namespace Diamond_BG_Granted_European_patents
                 var elements = tet.Descendants().Where(d => d.Name.LocalName == "Text" /*&& d.Value != "РАЗДЕЛ А"*/)
                     .SkipWhile(e => !e.Value.StartsWith("РАЗДЕЛ А"))
                     .ToList();
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -152,7 +152,7 @@ namespace Diamond_BG_Granted_European_patents
                                 string[] tmpSplittedValue = null;
                                 string[] tmpIntClass = null;
                                 string[] tmpVersion = null;
-                                string datePattern = @"\(\d{4}\.\d{2}\)";
+                                var datePattern = @"\(\d{4}\.\d{2}\)";
                                 tmpRecValue = inidCode.Replace(I51, "").Trim('\n');
                                 if (tmpRecValue.Contains("\n"))
                                 {
@@ -186,7 +186,7 @@ namespace Diamond_BG_Granted_European_patents
                             /*97*/
                             if (inidCode.StartsWith(I97))
                             {
-                                string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+                                var datePattern = @"\d{2}\.\d{2}\.\d{4}";
                                 tmpRecValue = inidCode.Replace(I97, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
@@ -198,7 +198,7 @@ namespace Diamond_BG_Granted_European_patents
                             /*96*/
                             if (inidCode.StartsWith(I96))
                             {
-                                string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+                                var datePattern = @"\d{2}\.\d{2}\.\d{4}";
                                 tmpRecValue = inidCode.Replace(I96, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
@@ -222,7 +222,7 @@ namespace Diamond_BG_Granted_European_patents
                                 string[] tmpDate = null;
                                 string[] tmpNumber = null;
                                 string[] tmpSplittedValue = null;
-                                string recordPattern = @".*\s*\d{2}\.\d{2}\.\d{4}\s*[A-Z]{2}$";
+                                var recordPattern = @".*\s*\d{2}\.\d{2}\.\d{4}\s*[A-Z]{2}$";
                                 tmpRecValue = inidCode.Replace(I31, "").Replace(I32, "").Replace(I33, "").Trim();
                                 if (tmpRecValue.Contains("\n"))
                                 {
@@ -280,7 +280,7 @@ namespace Diamond_BG_Granted_European_patents
                             /*87*/
                             if (inidCode.StartsWith(I87))
                             {
-                                string datePattern = @"\d{2}\.\d{2}\.\d{4}";
+                                var datePattern = @"\d{2}\.\d{2}\.\d{4}";
                                 tmpRecValue = inidCode.Replace(I87, "").Replace("\n", "").Trim();
                                 if (Regex.IsMatch(tmpRecValue, datePattern))
                                 {
@@ -311,8 +311,8 @@ namespace Diamond_BG_Granted_European_patents
                                                 {
                                                     if (record.Count(f => f == ',') >= 2)
                                                     {
-                                                        int firstIndex = record.IndexOf(",");
-                                                        int secondIndex = record.IndexOf(",", firstIndex + 1);
+                                                        var firstIndex = record.IndexOf(",");
+                                                        var secondIndex = record.IndexOf(",", firstIndex + 1);
                                                         tmpSplName = record.Remove(secondIndex).Trim();
                                                         tmpSplAddr = record.Substring(secondIndex).Trim(',').Trim();
                                                     }
@@ -362,8 +362,8 @@ namespace Diamond_BG_Granted_European_patents
                                         {
                                             if (tmpRecValue.Count(f => f == ',') >= 2)
                                             {
-                                                int firstIndex = tmpRecValue.IndexOf(",");
-                                                int secondIndex = tmpRecValue.IndexOf(",", firstIndex + 1);
+                                                var firstIndex = tmpRecValue.IndexOf(",");
+                                                var secondIndex = tmpRecValue.IndexOf(",", firstIndex + 1);
                                                 tmpSplName = tmpRecValue.Remove(secondIndex).Trim();
                                                 tmpSplAddr = tmpRecValue.Substring(secondIndex).Trim(',').Trim();
                                             }
@@ -410,7 +410,7 @@ namespace Diamond_BG_Granted_European_patents
                                 tmpRecValue = inidCode.Replace(I72, "").Replace("\n", " ").Replace(",", " ").Replace("  ", " ").Trim();
                                 if (tmpRecValue.Contains(";"))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var inventor in tmpSplValue)
@@ -476,14 +476,14 @@ namespace Diamond_BG_Granted_European_patents
                         sf.WriteLine("24:\t" + field.I24);
                         if (field.I31 != null && field.I32 != null && field.I33 != null)
                         {
-                            for (int i = 0; i < field.I31.Count(); i++)
+                            for (var i = 0; i < field.I31.Count(); i++)
                             {
                                 sf.WriteLine("31:\t{0}\t{1}\t{2}", field.I31[i].Trim(), field.I32[i].Trim(), field.I33[i].Trim());
                             }
                         }
                         if (field.I51D != null && field.I51N != null)
                         {
-                            for (int i = 0; i < field.I51D.Count(); i++)
+                            for (var i = 0; i < field.I51D.Count(); i++)
                             {
                                 sf.WriteLine("51:\t{0}\t{1}", field.I51N[i], field.I51D[i]);
                             }
@@ -500,7 +500,7 @@ namespace Diamond_BG_Granted_European_patents
                         {
                             if (field.I73N.Count() == field.I73A.Count() && field.I73N.Count() == field.I73C.Count())
                             {
-                                for (int i = 0; i < field.I73N.Count(); i++)
+                                for (var i = 0; i < field.I73N.Count(); i++)
                                 {
                                     sf.WriteLine("73N:\t" + field.I73N[i]);
                                     sf.WriteLine("73A:\t" + field.I73A[i]);
@@ -510,7 +510,7 @@ namespace Diamond_BG_Granted_European_patents
                         }
                         if (field.I74N != null && field.I74A != null)
                         {
-                            for (int i = 0; i < field.I74N.Count(); i++)
+                            for (var i = 0; i < field.I74N.Count(); i++)
                             {
                                 sf.WriteLine("74N:\t" + field.I74N[i]);
                                 sf.WriteLine("74A:\t" + field.I74A[i]);

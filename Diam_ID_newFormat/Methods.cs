@@ -470,12 +470,12 @@ namespace Diamond_ID
             recString = Regex.Replace(recString, "Nama Inventor :", I72, RegexOptions.IgnoreCase);
             recString = Regex.Replace(recString, "Nama dan Alamat Konsultan Paten:", I74, RegexOptions.IgnoreCase);
             recString = Regex.Replace(recString, "Nama dan Alamat Konsultan Paten :", I74, RegexOptions.IgnoreCase);
-            string I57 = @"\(57\)\s*Abstrak\s*\:*";
-            string I31 = "(31) Nomor";
-            string I32 = "(32) Tanggal";
-            string I33 = "(33) Negara";
+            var I57 = @"\(57\)\s*Abstrak\s*\:*";
+            var I31 = "(31) Nomor";
+            var I32 = "(32) Tanggal";
+            var I33 = "(33) Negara";
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace(I31, "").Replace(I32, "").Replace(I33, "").Trim();
+            var tempStrC = recString.Replace(I31, "").Replace(I32, "").Replace(I33, "").Trim();
             string tmpDescValue = null;
             if (tempStrC != "")
             {
@@ -484,8 +484,8 @@ namespace Diamond_ID
                     tmpDescValue = tempStrC.Substring(tempStrC.IndexOf(Regex.Match(tempStrC, I57).Value)).Trim();
                     tempStrC = tempStrC.Remove(tempStrC.IndexOf(Regex.Match(tempStrC, I57).Value)).Trim();
                 }
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(tempStrC);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(tempStrC);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -520,12 +520,12 @@ namespace Diamond_ID
         /*Classification Information 51 inid*/
         public static ClassificationInfoStruct ClassificationInfoSplit(string tmpString)
         {
-            ClassificationInfoStruct classInfo = new ClassificationInfoStruct();
-            string patternClass = @"[A-Z]{1}\d{2}[A-Z]{1}(\d+)\/(\d+)";
-            string patternDate = @"\(\d{4}\.\d{2}\)";
-            string I51 = @"(51) I.P.C : Int.Cl.";
+            var classInfo = new ClassificationInfoStruct();
+            var patternClass = @"[A-Z]{1}\d{2}[A-Z]{1}(\d+)\/(\d+)";
+            var patternDate = @"\(\d{4}\.\d{2}\)";
+            var I51 = @"(51) I.P.C : Int.Cl.";
             string[] splittedRecords = null;
-            string tmpValue = tmpString.Replace(I51, "").Replace("\n", "").Trim();
+            var tmpValue = tmpString.Replace(I51, "").Replace("\n", "").Trim();
             /*Value after // going to Notes*/
             if (tmpValue.Contains("//"))
             {
@@ -572,11 +572,11 @@ namespace Diamond_ID
         }
         public static InventorStruct InventorSplit(string invString)
         {
-            InventorStruct inventors = new InventorStruct();
-            string I72 = @"(72) Nama Inventor :";
-            string patternCountry = @"\,\s*[A-Z]{2}$";
+            var inventors = new InventorStruct();
+            var I72 = @"(72) Nama Inventor :";
+            var patternCountry = @"\,\s*[A-Z]{2}$";
             string[] splInventors = null;
-            string tmpValue = invString.Replace(I72, "").Trim();
+            var tmpValue = invString.Replace(I72, "").Trim();
             if (tmpValue.Contains("\n"))
             {
                 splInventors = tmpValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -606,7 +606,7 @@ namespace Diamond_ID
         }
         public static string PrioDateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             string month = null;
             if (tmpDate.Contains("-"))
@@ -680,9 +680,9 @@ namespace Diamond_ID
         }
         public static PriorityStruct PrioritySplitNewFormat(string prioString)
         {
-            PriorityStruct priorities = new PriorityStruct();
+            var priorities = new PriorityStruct();
             var pattern = new Regex(@"(?<Number>.*)\s(?<Date>\b\d+-[A-Z]{3}-\d+\b)\s(?<Country>.*)");
-            string tmpPrio = prioString
+            var tmpPrio = prioString
                 .Replace("(30) Data Prioritas :", "")
                 .Replace("Prioritas", "").Trim();
 
@@ -707,10 +707,10 @@ namespace Diamond_ID
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

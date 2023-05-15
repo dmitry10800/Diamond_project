@@ -20,15 +20,15 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         public static List<SubCode1> ProcessSubCode1(List<XElement> elements, DirectoryInfo pathToTetml)
         {
-            List<SubCode1> outListSubCode1 = new List<SubCode1>();
+            var outListSubCode1 = new List<SubCode1>();
             if (elements != null && elements.Count > 0)
             {
                 string[] splittedValues = null;
                 SubCode1 currentElement;
-                int tempInk = 0;
-                for (int i = 0; i < elements.Count; i++)
+                var tempInk = 0;
+                for (var i = 0; i < elements.Count; i++)
                 {
-                    string recordValues = "";
+                    var recordValues = "";
                     var value = elements[i].Value;
                     tempInk = i;
 
@@ -104,8 +104,8 @@ namespace Diamond_NZ_Subcodes_1_2_4
                                 if (record.StartsWith(PATENT_ASSIGN))
                                 {
                                     var temp = record.Replace(PATENT_ASSIGN, "").Trim();
-                                    Regex reg = new Regex(@"^\d{6}\b");
-                                    MatchCollection matches = reg.Matches(temp);
+                                    var reg = new Regex(@"^\d{6}\b");
+                                    var matches = reg.Matches(temp);
 
                                     if (matches.Count > 0)
                                     {
@@ -126,7 +126,7 @@ namespace Diamond_NZ_Subcodes_1_2_4
         private static string[] SplitSubCode1(string s, string[] parametrs)
         {
             string[] splittedRecords;
-            string tempStrC = s;
+            var tempStrC = s;
 
             tempStrC = tempStrC.Replace("\n", " ").Trim();
 
@@ -135,8 +135,8 @@ namespace Diamond_NZ_Subcodes_1_2_4
                 tempStrC = Regex.Replace(tempStrC, parametr, "***" + parametr);
             }
 
-            Regex regex = new Regex(@"\d{2}\s+[A-Z]{1}[a-z]{1,9}\s+\d{4}");
-            MatchCollection matches = regex.Matches(tempStrC);
+            var regex = new Regex(@"\d{2}\s+[A-Z]{1}[a-z]{1,9}\s+\d{4}");
+            var matches = regex.Matches(tempStrC);
 
             if (matches.Count > 0)
                 tempStrC = tempStrC.Replace(matches[0].Value, "***" + matches[0].Value);

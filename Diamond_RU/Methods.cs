@@ -37,7 +37,7 @@ namespace Diamond_RU
 
         internal static string ReplaceNameOrganization(string s)
         {
-            string tempStr = s;
+            var tempStr = s;
             string abbriv = "", fullName = "";
             foreach (var name in GetListNames())
             {
@@ -52,7 +52,7 @@ namespace Diamond_RU
 
         internal static string GetDateFromNameArchive()
         {
-            string date = Regex.Match(RU_main.NameArchive, @"RU_(?<value>\d{8})_.*", RegexOptions.IgnoreCase)
+            var date = Regex.Match(RU_main.NameArchive, @"RU_(?<value>\d{8})_.*", RegexOptions.IgnoreCase)
                 ?.Groups["value"].Value;
             return date;
         }

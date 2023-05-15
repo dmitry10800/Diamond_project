@@ -15,13 +15,13 @@ namespace Dimond_EE
             switch (sub)
             {
                 case "5":
-                    Sub5 sub_5 = new Sub5();
+                    var sub_5 = new Sub5();
                     
-                    List<Patent> listPatents = sub_5.Start(path);
+                    var listPatents = sub_5.Start(path);
 
-                    List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = DiamondConverter.Sub5Convertor(listPatents);
+                    var convertedPatents = DiamondConverter.Sub5Convertor(listPatents);
 
-                    Methods methods = new Methods();
+                    var methods = new Methods();
 
                     methods.SendToDiamond(convertedPatents);
 

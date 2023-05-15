@@ -13,7 +13,7 @@ namespace Diamond_AR
     {
         public static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("/"))
             {
@@ -29,7 +29,7 @@ namespace Diamond_AR
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             string tmpDescValue = null;
             string tmpTitle = null;
             if (recString != "")
@@ -39,7 +39,7 @@ namespace Diamond_AR
                     if (Regex.IsMatch(recString, @"\n\(57\)\s"))
                     {
                         string tmpEndString = null;
-                        string tmpWholeString = recString.Remove(recString.IndexOf("(57) "));
+                        var tmpWholeString = recString.Remove(recString.IndexOf("(57) "));
                         if (Regex.IsMatch(recString, @"\n\(62\)\s"))
                         {
                             tmpEndString = recString.Substring(recString.LastIndexOf("\n(62)"));
@@ -55,8 +55,8 @@ namespace Diamond_AR
                         tempStrC = tmpWholeString;
                     }
                 }
-                Regex regexPatOne = new Regex(@"\n\(\d{2}\)\s");
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\n\(\d{2}\)\s");
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -76,10 +76,10 @@ namespace Diamond_AR
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
@@ -105,9 +105,9 @@ namespace Diamond_AR
             tmpRecValue = Regex.Replace(tmpRecValue, @"(\,)(\s*\blp\b)", " $2", RegexOptions.IgnoreCase);
             tmpRecValue = tmpRecValue.Replace("-\n", "");
 
-            ApplicantStruct applicant = new ApplicantStruct();
+            var applicant = new ApplicantStruct();
             string[] splittedString = null;
-            string pattern = @"(?<=\,\s*[A-Z]{2}\n|$)";
+            var pattern = @"(?<=\,\s*[A-Z]{2}\n|$)";
             //string wholeRecPattern = @"(?<Name>^.*)\n(?<Address>.*)(?<Country>\,\s*[A-Z]{2}$)";
             if (Regex.IsMatch(tmpRecValue, pattern))
             {
@@ -125,7 +125,7 @@ namespace Diamond_AR
                     //}
                     if (record.Contains("\n"))
                     {
-                        string tmp = record;
+                        var tmp = record;
                         try
                         {
                             applicant.CountryCode.Add(tmp.Substring(tmp.LastIndexOf(",")).Trim(',').Trim());

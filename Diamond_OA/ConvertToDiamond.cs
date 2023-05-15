@@ -11,15 +11,15 @@ namespace Diamond_OA
         public static List<Diamond.Core.Models.LegalStatusEvent> FirstListConvertation(List<ProcessFirstList.ElementOut> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
 
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                     legalEvent.GazetteName = Path.GetFileName(Diamond_OA_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
@@ -30,7 +30,7 @@ namespace Diamond_OA
                     legalEvent.CountryCode = "OA";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Publication.Number = record.I11;
                     biblioData.Application.Number = record.I21;
@@ -39,9 +39,9 @@ namespace Diamond_OA
                     if (record.I30N != null)
                     {
                         biblioData.Priorities = new List<Priority>();
-                        for (int i = 0; i < record.I30N.Count(); i++)
+                        for (var i = 0; i < record.I30N.Count(); i++)
                         {
-                            Priority prioValues = new Priority
+                            var prioValues = new Priority
                             {
                                 Number = record.I30N[i],
                                 Date = record.I30D[i],
@@ -54,9 +54,9 @@ namespace Diamond_OA
                     if (record.I51C != null)
                     {
                         biblioData.Ipcs = new List<Ipc>();
-                        for (int i = 0; i < record.I51C.Count(); i++)
+                        for (var i = 0; i < record.I51C.Count(); i++)
                         {
-                            Ipc ipcValue = new Ipc
+                            var ipcValue = new Ipc
                             {
                                 Class = record.I51C[i],
                                 Date = record.I51D[i]
@@ -66,7 +66,7 @@ namespace Diamond_OA
                     }
                     /*-------------------*/
                     /*54 Title*/
-                    Title title = new Title()
+                    var title = new Title()
                     {
                         //Language = "FR",
                         Text = record.I54
@@ -75,7 +75,7 @@ namespace Diamond_OA
                     /*--------*/
                     /*57 description*/
                     biblioData.Abstracts = new List<Abstract>();
-                    Abstract description = new Abstract()
+                    var description = new Abstract()
                     {
                         //Language = "FR",
                         Text = record.I57
@@ -86,9 +86,9 @@ namespace Diamond_OA
                     if (record.I72N != null)
                     {
                         biblioData.Inventors = new List<PartyMember>();
-                        for (int i = 0; i < record.I72N.Count(); i++)
+                        for (var i = 0; i < record.I72N.Count(); i++)
                         {
-                            PartyMember inventor = new PartyMember();
+                            var inventor = new PartyMember();
                             inventor.Name = record.I72N[i];
                             if (record.I72C != null)
                             {
@@ -102,9 +102,9 @@ namespace Diamond_OA
                     if (record.I73N != null)
                     {
                         biblioData.Assignees = new List<PartyMember>();
-                        for (int i = 0; i < record.I73N.Count(); i++)
+                        for (var i = 0; i < record.I73N.Count(); i++)
                         {
-                            PartyMember assignee = new PartyMember();
+                            var assignee = new PartyMember();
                             assignee.Name = record.I73N[i];
                             if (record.I73C != null)
                             {
@@ -122,7 +122,7 @@ namespace Diamond_OA
                     if (record.I74N != null)
                     {
                         biblioData.Agents = new List<PartyMember>();
-                        PartyMember agent = new PartyMember();
+                        var agent = new PartyMember();
                         agent.Name = record.I74N;
                         if (record.I74A != null)
                         {
@@ -138,7 +138,7 @@ namespace Diamond_OA
                     /*86*/
                     if (record.I86 != null)
                     {
-                        IntConvention intConvention = new IntConvention();
+                        var intConvention = new IntConvention();
                         intConvention.PctApplNumber = record.I86;
                         biblioData.IntConvention = intConvention;
                     }
@@ -154,14 +154,14 @@ namespace Diamond_OA
         public static List<Diamond.Core.Models.LegalStatusEvent> SecondListConvertation(List<ProcessSecondList.ElementOut> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                     legalEvent.GazetteName = Path.GetFileName(Diamond_OA_main.CurrentFileName.Replace(".tetml", ".pdf"));
                     /*Setting subcode*/
@@ -172,7 +172,7 @@ namespace Diamond_OA
                     legalEvent.CountryCode = "OA";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Publication.Number = record.I11;
                     biblioData.Application.Number = record.I21;
@@ -181,9 +181,9 @@ namespace Diamond_OA
                     if (record.I30N != null)
                     {
                         biblioData.Priorities = new List<Priority>();
-                        for (int i = 0; i < record.I30N.Count(); i++)
+                        for (var i = 0; i < record.I30N.Count(); i++)
                         {
-                            Priority prioValues = new Priority
+                            var prioValues = new Priority
                             {
                                 Number = record.I30N[i],
                                 Date = record.I30D[i],
@@ -196,9 +196,9 @@ namespace Diamond_OA
                     if (record.I51C != null)
                     {
                         biblioData.Ipcs = new List<Ipc>();
-                        for (int i = 0; i < record.I51C.Count(); i++)
+                        for (var i = 0; i < record.I51C.Count(); i++)
                         {
-                            Ipc ipcValue = new Ipc
+                            var ipcValue = new Ipc
                             {
                                 Class = record.I51C[i],
                                 Date = record.I51D[i]
@@ -208,7 +208,7 @@ namespace Diamond_OA
                     }
                     /*-------------------*/
                     /*54 Title*/
-                    Title title = new Title()
+                    var title = new Title()
                     {
                         //Language = "FR",
                         Text = record.I54
@@ -217,7 +217,7 @@ namespace Diamond_OA
                     /*--------*/
                     /*57 description*/
                     biblioData.Abstracts = new List<Abstract>();
-                    Abstract description = new Abstract()
+                    var description = new Abstract()
                     {
                         //Language = "FR",
                         Text = record.I57
@@ -228,9 +228,9 @@ namespace Diamond_OA
                     if (record.I72N != null)
                     {
                         biblioData.Inventors = new List<PartyMember>();
-                        for (int i = 0; i < record.I72N.Count(); i++)
+                        for (var i = 0; i < record.I72N.Count(); i++)
                         {
-                            PartyMember inventor = new PartyMember();
+                            var inventor = new PartyMember();
                             inventor.Name = record.I72N[i];
                             if (record.I72C != null)
                             {
@@ -244,9 +244,9 @@ namespace Diamond_OA
                     if (record.I73N != null)
                     {
                         biblioData.Assignees = new List<PartyMember>();
-                        for (int i = 0; i < record.I73N.Count(); i++)
+                        for (var i = 0; i < record.I73N.Count(); i++)
                         {
-                            PartyMember assignee = new PartyMember();
+                            var assignee = new PartyMember();
                             assignee.Name = record.I73N[i];
                             if (record.I73C != null)
                             {
@@ -264,7 +264,7 @@ namespace Diamond_OA
                     if (record.I74N != null)
                     {
                         biblioData.Agents = new List<PartyMember>();
-                        PartyMember agent = new PartyMember();
+                        var agent = new PartyMember();
                         agent.Name = record.I74N;
                         if (record.I74A != null)
                         {
@@ -280,7 +280,7 @@ namespace Diamond_OA
                     /*86*/
                     if (record.I86 != null)
                     {
-                        IntConvention intConvention = new IntConvention();
+                        var intConvention = new IntConvention();
                         intConvention.PctApplNumber = record.I86;
                         biblioData.IntConvention = intConvention;
                     }

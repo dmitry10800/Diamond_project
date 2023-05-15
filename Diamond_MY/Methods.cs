@@ -32,9 +32,9 @@ namespace Diamond_MY
         }
         public static string CountryCodeIdentification(string ccStr)
         {
-            string tmpStr = "";
-            List<string> ccFullNames = new List<string> { "afghanistan", "aland islands", "albania", "algeria", "american samoa", "andorra", "angola", "anguilla", "antarctica", "antigua and barbuda", "argentina", "armenia", "aruba", "australia", "austria", "azerbaijan", "bahamas", "bahrain", "bangladesh", "barbados", "belarus", "belgium", "belize", "benin", "bermuda", "bhutan", "bolivia", "bosnia and herzegovina", "botswana", "bouvet island", "brazil", "british virgin islands", "british indian ocean territory", "brunei darussalam", "bulgaria", "burkina faso", "burundi", "cambodia", "cameroon", "canada", "cape verde", "cayman islands", "central african republic", "chad", "chile", "china", "hong kong, sar china", "macao, sar china", "christmas island", "cocos (keeling) islands", "colombia", "comoros", "congo (brazzaville)", "congo, (kinshasa)", "cook islands", "costa rica", "côte d'ivoire", "croatia", "cuba", "cyprus", "czech republic", "denmark", "djibouti", "dominica", "dominican republic", "ecuador", "egypt", "el salvador", "equatorial guinea", "eritrea", "estonia", "ethiopia", "falkland islands (malvinas)", "faroe islands", "fiji", "finland", "france", "french guiana", "french polynesia", "french southern territories", "gabon", "gambia", "georgia", "germany", "ghana", "gibraltar", "greece", "greenland", "grenada", "guadeloupe", "guam", "guatemala", "guernsey", "guinea", "guinea-bissau", "guyana", "haiti", "heard and mcdonald islands", "holy see (vatican city state)", "honduras", "hungary", "iceland", "india", "indonesia", "iran, islamic republic of", "iraq", "ireland", "isle of man", "israel", "italy", "jamaica", "japan", "jersey", "jordan", "kazakhstan", "kenya", "kiribati", "korea (north)", "korea (south)", "kuwait", "kyrgyzstan", "lao pdr", "latvia", "lebanon", "lesotho", "liberia", "libya", "liechtenstein", "lithuania", "luxembourg", "macedonia, republic of", "madagascar", "malawi", "malaysia", "maldives", "mali", "malta", "marshall islands", "martinique", "mauritania", "mauritius", "mayotte", "mexico", "micronesia, federated states of", "moldova", "monaco", "mongolia", "montenegro", "montserrat", "morocco", "mozambique", "myanmar", "namibia", "nauru", "nepal", "netherlands", "netherlands antilles", "new caledonia", "new zealand", "nicaragua", "niger", "nigeria", "niue", "norfolk island", "northern mariana islands", "norway", "oman", "pakistan", "palau", "palestinian territory", "panama", "papua new guinea", "paraguay", "peru", "philippines", "pitcairn", "poland", "portugal", "puerto rico", "qatar", "réunion", "romania", "russian federation", "rwanda", "saint-barthélemy", "saint helena", "saint kitts and nevis", "saint lucia", "saint-martin (french part)", "saint pierre and miquelon", "saint vincent and grenadines", "samoa", "san marino", "sao tome and principe", "saudi arabia", "senegal", "serbia", "seychelles", "sierra leone", "singapore", "slovakia", "slovenia", "solomon islands", "somalia", "south africa", "south georgia and the south sandwich islands", "south sudan", "spain", "sri lanka", "sudan", "suriname", "svalbard and jan mayen islands", "swaziland", "sweden", "switzerland", "syrian arab republic (syria)", "taiwan, republic of china", "tajikistan", "tanzania, united republic of", "thailand", "timor-leste", "togo", "tokelau", "tonga", "trinidad and tobago", "tunisia", "turkey", "turkmenistan", "turks and caicos islands", "tuvalu", "uganda", "ukraine", "united arab emirates", "united kingdom", "united states of america", "us minor outlying islands", "uruguay", "uzbekistan", "vanuatu", "venezuela (bolivarian republic)", "viet nam", "virgin islands, us", "wallis and futuna islands", "western sahara", "yemen", "zambia", "zimbabwe", "p. r. china", "republic of korea", "korea", "republic of san marino", "u s a", "u.s.a", "united states", "uae", "u.a.e", "congo", "switzerland", "chile", "prc", "p.r.c.", "england", "london", "united kingdom", "hong kong", "india", "cayman", "méxico", "r.o.c.", "u.s.a", "united sates of america", "united state of america,", "vietnam", "russia", "european union", "benelux" };
-            List<string> ccShortNames = new List<string> { "AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BV", "BR", "VG", "IO", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "KY", "CF", "TD", "CL", "CN", "HK", "MO", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT", "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "AN", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN", "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN", "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN", "VI", "WF", "EH", "YE", "ZM", "ZW", "CN", "KR", "KR", "SM", "US", "US", "US", "AE", "AE", "CD", "CH", "CL", "CN", "CN", "GB", "GB", "GB", "HK", "IN", "KY", "MX", "TW", "US", "US", "US", "VN", "RU", "EM", "BX" };
+            var tmpStr = "";
+            var ccFullNames = new List<string> { "afghanistan", "aland islands", "albania", "algeria", "american samoa", "andorra", "angola", "anguilla", "antarctica", "antigua and barbuda", "argentina", "armenia", "aruba", "australia", "austria", "azerbaijan", "bahamas", "bahrain", "bangladesh", "barbados", "belarus", "belgium", "belize", "benin", "bermuda", "bhutan", "bolivia", "bosnia and herzegovina", "botswana", "bouvet island", "brazil", "british virgin islands", "british indian ocean territory", "brunei darussalam", "bulgaria", "burkina faso", "burundi", "cambodia", "cameroon", "canada", "cape verde", "cayman islands", "central african republic", "chad", "chile", "china", "hong kong, sar china", "macao, sar china", "christmas island", "cocos (keeling) islands", "colombia", "comoros", "congo (brazzaville)", "congo, (kinshasa)", "cook islands", "costa rica", "côte d'ivoire", "croatia", "cuba", "cyprus", "czech republic", "denmark", "djibouti", "dominica", "dominican republic", "ecuador", "egypt", "el salvador", "equatorial guinea", "eritrea", "estonia", "ethiopia", "falkland islands (malvinas)", "faroe islands", "fiji", "finland", "france", "french guiana", "french polynesia", "french southern territories", "gabon", "gambia", "georgia", "germany", "ghana", "gibraltar", "greece", "greenland", "grenada", "guadeloupe", "guam", "guatemala", "guernsey", "guinea", "guinea-bissau", "guyana", "haiti", "heard and mcdonald islands", "holy see (vatican city state)", "honduras", "hungary", "iceland", "india", "indonesia", "iran, islamic republic of", "iraq", "ireland", "isle of man", "israel", "italy", "jamaica", "japan", "jersey", "jordan", "kazakhstan", "kenya", "kiribati", "korea (north)", "korea (south)", "kuwait", "kyrgyzstan", "lao pdr", "latvia", "lebanon", "lesotho", "liberia", "libya", "liechtenstein", "lithuania", "luxembourg", "macedonia, republic of", "madagascar", "malawi", "malaysia", "maldives", "mali", "malta", "marshall islands", "martinique", "mauritania", "mauritius", "mayotte", "mexico", "micronesia, federated states of", "moldova", "monaco", "mongolia", "montenegro", "montserrat", "morocco", "mozambique", "myanmar", "namibia", "nauru", "nepal", "netherlands", "netherlands antilles", "new caledonia", "new zealand", "nicaragua", "niger", "nigeria", "niue", "norfolk island", "northern mariana islands", "norway", "oman", "pakistan", "palau", "palestinian territory", "panama", "papua new guinea", "paraguay", "peru", "philippines", "pitcairn", "poland", "portugal", "puerto rico", "qatar", "réunion", "romania", "russian federation", "rwanda", "saint-barthélemy", "saint helena", "saint kitts and nevis", "saint lucia", "saint-martin (french part)", "saint pierre and miquelon", "saint vincent and grenadines", "samoa", "san marino", "sao tome and principe", "saudi arabia", "senegal", "serbia", "seychelles", "sierra leone", "singapore", "slovakia", "slovenia", "solomon islands", "somalia", "south africa", "south georgia and the south sandwich islands", "south sudan", "spain", "sri lanka", "sudan", "suriname", "svalbard and jan mayen islands", "swaziland", "sweden", "switzerland", "syrian arab republic (syria)", "taiwan, republic of china", "tajikistan", "tanzania, united republic of", "thailand", "timor-leste", "togo", "tokelau", "tonga", "trinidad and tobago", "tunisia", "turkey", "turkmenistan", "turks and caicos islands", "tuvalu", "uganda", "ukraine", "united arab emirates", "united kingdom", "united states of america", "us minor outlying islands", "uruguay", "uzbekistan", "vanuatu", "venezuela (bolivarian republic)", "viet nam", "virgin islands, us", "wallis and futuna islands", "western sahara", "yemen", "zambia", "zimbabwe", "p. r. china", "republic of korea", "korea", "republic of san marino", "u s a", "u.s.a", "united states", "uae", "u.a.e", "congo", "switzerland", "chile", "prc", "p.r.c.", "england", "london", "united kingdom", "hong kong", "india", "cayman", "méxico", "r.o.c.", "u.s.a", "united sates of america", "united state of america,", "vietnam", "russia", "european union", "benelux" };
+            var ccShortNames = new List<string> { "AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BV", "BR", "VG", "IO", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "KY", "CF", "TD", "CL", "CN", "HK", "MO", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT", "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "AN", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN", "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN", "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN", "VI", "WF", "EH", "YE", "ZM", "ZW", "CN", "KR", "KR", "SM", "US", "US", "US", "AE", "AE", "CD", "CH", "CL", "CN", "CN", "GB", "GB", "GB", "HK", "IN", "KY", "MX", "TW", "US", "US", "US", "VN", "RU", "EM", "BX" };
             foreach (var country in ccFullNames)
             {
                 if (ccStr.ToLower().Contains(country))
@@ -48,7 +48,7 @@ namespace Diamond_MY
         /*Date*/
         public static string DateNormalize(string tmpDate)
         {
-            Regex patternDate = new Regex(@"(?<day>\d+)\s*\.*\/*\-*(?<month>[A-z]+)\s*\.*\/*\-*(?<year>\d{4})");
+            var patternDate = new Regex(@"(?<day>\d+)\s*\.*\/*\-*(?<month>[A-z]+)\s*\.*\/*\-*(?<year>\d{4})");
             var a = patternDate.Match(tmpDate);
             if (a.Success)
             {
@@ -60,7 +60,7 @@ namespace Diamond_MY
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace("(54) Title :", I54).Replace("(57) Abstract :", I57)
+            var tempStrC = recString.Replace("(54) Title :", I54).Replace("(57) Abstract :", I57)
                 .Replace("(21)", "")
                 .Replace("(22)", "")
                 .Replace("(47)", "")
@@ -88,9 +88,9 @@ namespace Diamond_MY
         {
             string[] splittedRecord = null;
             string tmpDescValue = null;
-            string tempStrC = recString.Trim();
-            string I32 = "(32) ";
-            string I33 = "(33) ";
+            var tempStrC = recString.Trim();
+            var I32 = "(32) ";
+            var I33 = "(33) ";
             if (tempStrC.Contains("(57) "))
             {
                 tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57) ")).Trim();
@@ -98,8 +98,8 @@ namespace Diamond_MY
             }
             if (recString != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -124,10 +124,10 @@ namespace Diamond_MY
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; //STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; //PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
@@ -138,7 +138,7 @@ namespace Diamond_MY
 
         internal static ElementOut.I11Struct I11Process(string v)
         {
-            ElementOut.I11Struct a = new ElementOut.I11Struct();
+            var a = new ElementOut.I11Struct();
             //Regex pattern = new Regex(@"(?<country>[A-Z]+\s*\-\s*)(?<number>\d+)\s*\-\s*(?<kind>[A-Z]+.*$)");
             //var b = pattern.Match(v);
             //if (b.Success)
@@ -158,10 +158,10 @@ namespace Diamond_MY
         }
         internal static List<ElementOut.PrioStruct> PriorityProcess(string v)
         {
-            List<ElementOut.PrioStruct> prioList = new List<ElementOut.PrioStruct>();
+            var prioList = new List<ElementOut.PrioStruct>();
             ElementOut.PrioStruct a;
-            List<string> tmp = new List<string>();
-            Regex pat = new Regex(@"(?<number>.*)\s*;\s*(?<date>(?<day>\d+)\/(?<month>\d+)\/(?<year>\d+))\s*;\s*(?<country>[A-Z]{2})");
+            var tmp = new List<string>();
+            var pat = new Regex(@"(?<number>.*)\s*;\s*(?<date>(?<day>\d+)\/(?<month>\d+)\/(?<year>\d+))\s*;\s*(?<country>[A-Z]{2})");
             if (v.Contains("\n"))
             {
                 tmp = v.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -183,13 +183,13 @@ namespace Diamond_MY
         }
         internal static List<ElementOut.IntClassStruct> IntClasProcess(string v)
         {
-            List<ElementOut.IntClassStruct> intList = new List<ElementOut.IntClassStruct>();
+            var intList = new List<ElementOut.IntClassStruct>();
             ElementOut.IntClassStruct a;
-            List<string> tmp = new List<string>();
-            Regex pat = new Regex(@"(?<value>[A-Z]\d{2}[A-Z]\s*\d+(\/\d+)+)\s*\(\s*(?<date>\d+\.\d+)\s*\)");
-            string tmpV = v;
+            var tmp = new List<string>();
+            var pat = new Regex(@"(?<value>[A-Z]\d{2}[A-Z]\s*\d+(\/\d+)+)\s*\(\s*(?<date>\d+\.\d+)\s*\)");
+            var tmpV = v;
             /*case first - Classification, INT CL(2006.01) :*/
-            Regex patOne = new Regex(@"\((?<date>\d{4}\.\d{2})\)");
+            var patOne = new Regex(@"\((?<date>\d{4}\.\d{2})\)");
 
             /*Split value on two by symbol ":"*/
             var values = v.Split(new string[] { ":" }, StringSplitOptions.None).Select(x => x.Trim()).ToList();
@@ -241,8 +241,8 @@ namespace Diamond_MY
         }
         internal static List<ElementOut.InventorsStruct> InventorsProcess(string v)
         {
-            List<ElementOut.InventorsStruct> invList = new List<ElementOut.InventorsStruct>();
-            List<string> tmp = new List<string>();
+            var invList = new List<ElementOut.InventorsStruct>();
+            var tmp = new List<string>();
             if (v.Contains("\n"))
             {
                 tmp = v.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -256,10 +256,10 @@ namespace Diamond_MY
         }
         internal static List<ElementOut.OwnersStruct> OwnersProcess(string v)
         {
-            List<ElementOut.OwnersStruct> ownList = new List<ElementOut.OwnersStruct>();
+            var ownList = new List<ElementOut.OwnersStruct>();
             ElementOut.OwnersStruct a;
-            List<string> tmpOwners = new List<string>();
-            Regex pat = new Regex(@"(?<name>^.*)\n(?<address>(.*\n.*)+)\n(?<country>.*$)", RegexOptions.Multiline);
+            var tmpOwners = new List<string>();
+            var pat = new Regex(@"(?<name>^.*)\n(?<address>(.*\n.*)+)\n(?<country>.*$)", RegexOptions.Multiline);
             if (Regex.Match(v, @"\d+\)").Success)
             {
                 tmpOwners = Regex.Split(v, @"\d+\)").Where(x => x != "").Select(x => x.Trim()).ToList();
@@ -283,7 +283,7 @@ namespace Diamond_MY
         }
         internal static ElementOut.AgentStruct AgentProcess(string v)
         {
-            ElementOut.AgentStruct agent = new ElementOut.AgentStruct();
+            var agent = new ElementOut.AgentStruct();
             if (v.Contains("\n"))
             {
                 agent.Name = v.Remove(v.IndexOf("\n")).Trim();

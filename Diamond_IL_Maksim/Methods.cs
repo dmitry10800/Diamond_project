@@ -25,7 +25,7 @@ namespace Diamond_IL_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -34,7 +34,7 @@ namespace Diamond_IL_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -44,11 +44,11 @@ namespace Diamond_IL_Maksim
                 {
                     using StreamReader textFromFile = new(tetml.Replace(".tetml",".txt"));
 
-                    List<string> notes = Regex.Split(textFromFile.ReadToEnd().Replace("\r", "").Replace("\t", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).Where(val => !val.StartsWith(" ")).ToList();
+                    var notes = Regex.Split(textFromFile.ReadToEnd().Replace("\r", "").Replace("\t", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).Where(val => !val.StartsWith(" ")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
-                        foreach (Diamond.Core.Models.LegalStatusEvent item in MakePatent(note, subCode, "BZ"))
+                        foreach (var item in MakePatent(note, subCode, "BZ"))
                         {
                             statusEvents.Add(item);
                         }
@@ -74,17 +74,17 @@ namespace Diamond_IL_Maksim
 
             Biblio biblio = new();
 
-            Match match = Regex.Match(note.Trim(), @"(?<gr1>\D+)\s?-\s?(?<gr2>.+)");
+            var match = Regex.Match(note.Trim(), @"(?<gr1>\D+)\s?-\s?(?<gr2>.+)");
 
             if (match.Success)
             {
-                List<string> numbers = Regex.Split(match.Groups["gr2"].Value.Trim(), ",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                var numbers = Regex.Split(match.Groups["gr2"].Value.Trim(), ",").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                foreach (string number in numbers)
+                foreach (var number in numbers)
                 {
                     biblio.Application.Number = number.Trim();
 
-                    Match match1 = Regex.Match(match.Groups["gr1"].Value.Trim(), @"[A-Z]");
+                    var match1 = Regex.Match(match.Groups["gr1"].Value.Trim(), @"[A-Z]");
                     if (match1.Success)
                     {
                         biblio.Applicants = new()
@@ -107,7 +107,7 @@ namespace Diamond_IL_Maksim
                             }
                         };
                     }                   
-                    Match date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".txt", "")), @"[0-9]{8}");
+                    var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".txt", "")), @"[0-9]{8}");
                     if (date.Success)
                     {
                         biblio.DOfPublication = new()
@@ -126,7 +126,7 @@ namespace Diamond_IL_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url = null;
                 if (SendToProduction == true)
                 {
@@ -140,8 +140,8 @@ namespace Diamond_IL_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

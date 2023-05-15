@@ -28,7 +28,7 @@ namespace IN
                     _sub3Elements = new List<string>();
                     _currentFileInProcess = textFile;
 
-                    string currentFileName = Path.GetFileNameWithoutExtension(textFile.FullName);
+                    var currentFileName = Path.GetFileNameWithoutExtension(textFile.FullName);
                     /*TETML elements*/
 
                     _sub1Elements = _txt
@@ -68,14 +68,14 @@ namespace IN
             {
                 if (sub == "2")
                 {
-                    string currentFileName = Path.GetFileNameWithoutExtension(xlsFile.FullName);
+                    var currentFileName = Path.GetFileNameWithoutExtension(xlsFile.FullName);
                     var sub2records = Subcodes.Process2SubCode(xlsFile.FullName, "2", "FG", currentFileName + ".pdf");
                     DiamondSender.SendToDiamond(sub2records, _isStaging);
                 }
 
                 if(sub == "10")
                 {
-                    string currentFileName = Path.GetFileNameWithoutExtension(xlsFile.FullName);
+                    var currentFileName = Path.GetFileNameWithoutExtension(xlsFile.FullName);
                     var sub10records = Subcodes.Process10SubCode(xlsFile.FullName, "10", "EC", currentFileName + ".pdf");
 
                     Methods.SendToDiamond(sub10records);

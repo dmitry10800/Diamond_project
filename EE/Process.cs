@@ -11,7 +11,7 @@ namespace EE
         public static void Sub5(string v)
         {
             /*Process data from TXT file*/
-            List<OutElements.Subcode5> elems = new List<OutElements.Subcode5>();
+            var elems = new List<OutElements.Subcode5>();
             //var pat = new Regex(@"(?=\d{6})");
             var getText = File.ReadAllText(v).Replace("\r\n", " ").Replace("\n", " ");
             //var splitText = pat.Split(getText).Where(x => x != "").Select(x => x.Trim()).ToList();
@@ -44,7 +44,7 @@ namespace EE
         public static void Sub12(string v)
         {
             /*Process data from TXT file*/
-            List<OutElements.Subcode12> elems = new List<OutElements.Subcode12>();
+            var elems = new List<OutElements.Subcode12>();
             var pat = new Regex(@"(?=\d{6})");
             var getText = File.ReadAllText(v).Replace("\r\n", " ").Replace("\n", " ");
             var splitText = pat.Split(getText).Where(x => x != "").Select(x => x.Trim()).ToList();

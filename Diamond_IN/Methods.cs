@@ -41,8 +41,8 @@ namespace Diamond_IN
         {
             if (s != null)
             {
-                ProcessFebTableData.ElementsForOutput.AgentStruct agent = new ProcessFebTableData.ElementsForOutput.AgentStruct();
-                string tmpValue = s.Trim();
+                var agent = new ProcessFebTableData.ElementsForOutput.AgentStruct();
+                var tmpValue = s.Trim();
                 if (tmpValue.Contains(","))
                 {
                     agent.Name = tmpValue.Remove(tmpValue.IndexOf(",")).Trim();
@@ -64,10 +64,10 @@ namespace Diamond_IN
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

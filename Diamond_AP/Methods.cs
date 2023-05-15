@@ -13,7 +13,7 @@ namespace Diamond_AP
     {
         public static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("."))
             {
@@ -29,11 +29,11 @@ namespace Diamond_AP
         public static string[] RecSplit(string recString)
         {
             string[] splittedRecord = null;
-            string tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
+            var tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
             if (recString != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -51,8 +51,8 @@ namespace Diamond_AP
         {
             pctNumber = null;
             string pctDate = null;
-            Regex pattern = new Regex(@"\d{2}\.\d{2}\.\d{4}", RegexOptions.IgnoreCase);
-            MatchCollection matchesClass = pattern.Matches(tmpPct);
+            var pattern = new Regex(@"\d{2}\.\d{2}\.\d{4}", RegexOptions.IgnoreCase);
+            var matchesClass = pattern.Matches(tmpPct);
             if (matchesClass.Count == 1)
             {
                 foreach (Match matchC in matchesClass)
@@ -69,11 +69,11 @@ namespace Diamond_AP
         {
             string[] splittedRecord = null;
             ipcYear = null;
-            string tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
+            var tempStrC = recString.Replace("\n", " ").Replace("●●", "").Trim();
             if (recString != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{4}\.\d{2}\)?", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{4}\.\d{2}\)?", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -121,10 +121,10 @@ namespace Diamond_AP
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // Staging
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // Staging
                 //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // Production
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

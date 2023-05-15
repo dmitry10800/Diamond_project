@@ -48,14 +48,14 @@ namespace Diamond_AR
 
         public List<ElementOut> OutputValue(List<XElement> elements)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elements != null)
             {
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string tmpRecValue;
                     string[] splittedRecord = null;
@@ -164,7 +164,7 @@ namespace Diamond_AR
                                 tmpRecValue = inidCode.Replace(I41, "").Replace("\n", " ").Trim();
                                 if (tmpRecValue.Contains("Bol. Nro.:"))
                                 {
-                                    string tRec = tmpRecValue.Substring(tmpRecValue.IndexOf("Bol. Nro.:")).Replace("Bol. Nro.:", "").Replace("SOLICITUDES E PATENTE", "").Trim();
+                                    var tRec = tmpRecValue.Substring(tmpRecValue.IndexOf("Bol. Nro.:")).Replace("Bol. Nro.:", "").Replace("SOLICITUDES E PATENTE", "").Trim();
                                     currentElement.I41B = tRec.Trim();
                                     currentElement.I41 = Methods.DateNormalize(tmpRecValue.Remove(tmpRecValue.IndexOf("Bol. Nro.:")).Trim());
                                 }
@@ -179,11 +179,11 @@ namespace Diamond_AR
                                 string[] tmpIntClass = null;
                                 string tmpCodeValue = null;
                                 tmpRecValue = inidCode.Replace(I51, "").Replace("\n", " ").Replace("//", ",").Trim();
-                                string ipcPattern = @"([A-Z]{1}\d{2}[A-Z]{1}).*?";
-                                string[] splIPC = Regex.Split(tmpRecValue, ipcPattern).Where(s => s != String.Empty).ToArray();
+                                var ipcPattern = @"([A-Z]{1}\d{2}[A-Z]{1}).*?";
+                                var splIPC = Regex.Split(tmpRecValue, ipcPattern).Where(s => s != String.Empty).ToArray();
                                 if (splIPC != null && splIPC.Count() % 2 == 0)
                                 {
-                                    for (int k = 0; k < splIPC.Count(); k++)
+                                    for (var k = 0; k < splIPC.Count(); k++)
                                     {
                                         if (Regex.IsMatch(splIPC[k].Trim(), @"[A-Z]{1}\d{2}[A-Z]{1}"))
                                         {
@@ -288,7 +288,7 @@ namespace Diamond_AR
                                 tmpRecValue = inidCode.Replace(I72, "").Replace("\n", " ");
                                 if (tmpRecValue.Contains(" - "))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { " - " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var inventor in tmpSplValue)

@@ -22,7 +22,7 @@ namespace Diamond_MA
             private static readonly string I86 = "(86) Données relatives à la demande internationale selon le PCT:";
             public static void Run(List<XElement> v)
             {
-                List<OutElements.Sub1> elements = new List<OutElements.Sub1>();
+                var elements = new List<OutElements.Sub1>();
             }
         }
         /*PATENTS RENEWED UNDER SECTION 36*/
@@ -30,7 +30,7 @@ namespace Diamond_MA
         {
             public static void Run(List<XElement> v)
             {
-                List<OutElements.Sub2> elements = new List<OutElements.Sub2>();
+                var elements = new List<OutElements.Sub2>();
             }
         }
     }

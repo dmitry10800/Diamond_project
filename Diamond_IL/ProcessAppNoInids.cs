@@ -26,7 +26,7 @@ namespace Diamond_IL
 
         public List<ElementOut> OutputValue(string elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement = null;
             if (elemList != null)
             {
@@ -41,19 +41,19 @@ namespace Diamond_IL
 
                     foreach (var splittedRec in nSpl)
                     {
-                        string splittedRecClear = splittedRec.Replace("\n", " ").Trim().Trim('\t');
-                        int pos = splittedRec.IndexOf(Regex.Match(splittedRec, @"\d{2}\/\d{2}\/\d{4}").Value) + 10;
-                        string tmpSplittedRec = splittedRec.Insert(pos, "\t");
+                        var splittedRecClear = splittedRec.Replace("\n", " ").Trim().Trim('\t');
+                        var pos = splittedRec.IndexOf(Regex.Match(splittedRec, @"\d{2}\/\d{2}\/\d{4}").Value) + 10;
+                        var tmpSplittedRec = splittedRec.Insert(pos, "\t");
                         /*Search and extract 51, 21, 22 fields with deleting from original string*/
-                        Regex groupPatternR = new Regex(@"\((?<classInfoDate>\d{4}\.\d{2})\)\s*(?<classInfoType>[A-Z]{1}\d{2}[A-Z]{1})\t(?<appNumber>\d{6})\n*(?<appDate>\d{2}\/\d{2}\/\d{4})\t");
-                        Match groupsMatch = groupPatternR.Match(tmpSplittedRec);
+                        var groupPatternR = new Regex(@"\((?<classInfoDate>\d{4}\.\d{2})\)\s*(?<classInfoType>[A-Z]{1}\d{2}[A-Z]{1})\t(?<appNumber>\d{6})\n*(?<appDate>\d{2}\/\d{2}\/\d{4})\t");
+                        var groupsMatch = groupPatternR.Match(tmpSplittedRec);
                         if (groupsMatch.Success)
                         {
                             currentElement = new ElementOut();
                             ElementsOut.Add(currentElement);
-                            List<string> priorityInfo = new List<string>();
-                            List<string> pctInfo = new List<string>();
-                            List<string> woInfo = new List<string>();
+                            var priorityInfo = new List<string>();
+                            var pctInfo = new List<string>();
+                            var woInfo = new List<string>();
                             /**/
                             currentElement.I51Version = groupsMatch.Groups["classInfoDate"].Value;
                             currentElement.I51Number = groupsMatch.Groups["classInfoType"].Value;
@@ -64,15 +64,15 @@ namespace Diamond_IL
                             /*Search and extract 30x fields if found with deleting from original string*/
                             if (Regex.IsMatch(tmpSplittedRec, @"\t{3}\d{2}\/\d{2}\/\d{4}.*(\n|$)"))
                             {
-                                Regex x = new Regex(@"\t{3}\d{2}\/\d{2}\/\d{4}.*(\n|$)");
-                                MatchCollection priorities = x.Matches(tmpSplittedRec);
+                                var x = new Regex(@"\t{3}\d{2}\/\d{2}\/\d{4}.*(\n|$)");
+                                var priorities = x.Matches(tmpSplittedRec);
                                 foreach (Match prio in priorities) { priorityInfo.Add(prio.Value.Trim()); }
                                 if (priorityInfo.Count > 0)
                                 {
-                                    Regex prioPattern = new Regex(@"(?<date>.*)\t(?<number>.*)\t(?<country>.*)");
+                                    var prioPattern = new Regex(@"(?<date>.*)\t(?<number>.*)\t(?<country>.*)");
                                     foreach (var prioLine in priorityInfo)
                                     {
-                                        Match prioMatch = prioPattern.Match(prioLine);
+                                        var prioMatch = prioPattern.Match(prioLine);
                                         if (prioMatch.Success)
                                         {
                                             currentElement.I31 = (currentElement.I31 ?? Enumerable.Empty<string>()).Concat(new string[] { prioMatch.Groups["number"].Value.Trim() }).ToArray();
@@ -90,8 +90,8 @@ namespace Diamond_IL
                             /*Search and extract 86 field if found with deleting from original string*/
                             if (Regex.IsMatch(tmpSplittedRec, "\n\tPCT.*\n"))
                             {
-                                Regex x = new Regex(@"\n\tPCT.*\n");
-                                MatchCollection pctValues = x.Matches(tmpSplittedRec);
+                                var x = new Regex(@"\n\tPCT.*\n");
+                                var pctValues = x.Matches(tmpSplittedRec);
                                 if (pctValues.Count == 1) currentElement.I86 = pctValues[0].Value.Trim();
                                 //foreach (Match pct in pctValues) {pctInfo.Add(pct.Value.Trim()); }
                                 tmpSplittedRec = Regex.Replace(tmpSplittedRec, @"\n\tPCT.*\n", "");
@@ -99,8 +99,8 @@ namespace Diamond_IL
                             /*Search and extract 87 field if found with deleting from original string*/
                             if (Regex.IsMatch(tmpSplittedRec, "\tWO.*$"))
                             {
-                                Regex x = new Regex(@"\tWO.*$");
-                                MatchCollection woValues = x.Matches(tmpSplittedRec);
+                                var x = new Regex(@"\tWO.*$");
+                                var woValues = x.Matches(tmpSplittedRec);
                                 if (woValues.Count == 1) currentElement.I87 = woValues[0].Value.Trim();
                                 //foreach (Match pct in pctValues) { pctInfo.Add(pct.Value.Trim()); }
                                 tmpSplittedRec = Regex.Replace(tmpSplittedRec, @"\tWO.*$", "");

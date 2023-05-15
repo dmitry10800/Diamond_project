@@ -23,22 +23,22 @@ namespace AR
         }
         public static List<string> RecSplit(string s)
         {
-            List<string> splittedRecord = new List<string>();
+            var splittedRecord = new List<string>();
 
-            string tmp = s.Replace("\r", "").Replace("\n", " ").Trim();
+            var tmp = s.Replace("\r", "").Replace("\n", " ").Trim();
 
-            string field57 = "";
+            var field57 = "";
 
 
             if (tmp.Contains("(62)"))
             {
                 field57 = tmp.Substring(tmp.IndexOf("(57)"), tmp.IndexOf("(62)") - tmp.IndexOf("(57)")).Trim();
 
-                Regex regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
+                var regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
 
-                Match match = regex.Match(field57);
+                var match = regex.Match(field57);
 
-                string note = "";
+                var note = "";
                 if (match.Success)
                 {
                     field57 = match.Groups["f57"].Value.Trim();
@@ -49,11 +49,11 @@ namespace AR
                     note = "<>";
                 }
 
-                string textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(62)")).Trim();
+                var textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(62)")).Trim();
                 if (s != "")
                 {
 
-                    Regex regexSplit = new Regex(@"(?=\(..\)\s)");
+                    var regexSplit = new Regex(@"(?=\(..\)\s)");
                     splittedRecord = regexSplit.Split(textWithOut57field).ToList();
                     splittedRecord.Add(field57);
                     splittedRecord.Add(note);
@@ -67,11 +67,11 @@ namespace AR
             {
                 field57 = tmp.Substring(tmp.IndexOf("(57)"), tmp.IndexOf("(71)") - tmp.IndexOf("(57)")).Trim();
 
-                Regex regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
+                var regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
 
-                Match match = regex.Match(field57);
+                var match = regex.Match(field57);
 
-                string note = "";
+                var note = "";
                 if (match.Success)
                 {
                     field57 = match.Groups["f57"].Value.Trim();
@@ -82,11 +82,11 @@ namespace AR
                     note = "<>";
                 }
 
-                string textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(71)")).Trim();
+                var textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(71)")).Trim();
                 if (s != "")
                 {
 
-                    Regex regexSplit = new Regex(@"(?=\(..\)\s)");
+                    var regexSplit = new Regex(@"(?=\(..\)\s)");
                     splittedRecord = regexSplit.Split(textWithOut57field).ToList();
                     splittedRecord.Add(field57);
                     splittedRecord.Add(note);
@@ -100,11 +100,11 @@ namespace AR
                 field57 = tmp.Substring(tmp.IndexOf("(57)"), tmp.IndexOf("(72)") - tmp.IndexOf("(57)")).Trim();
 
 
-                Regex regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
+                var regex = new Regex(@"(?<f57>.+)\s(?<note>Sigue.+)");
 
-                Match match = regex.Match(field57);
+                var match = regex.Match(field57);
 
-                string note = "";
+                var note = "";
                 if (match.Success)
                 {
                     field57 = match.Groups["f57"].Value.Trim();
@@ -115,11 +115,11 @@ namespace AR
                     note = "<>";
                 }
 
-                string textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(72)")).Trim();
+                var textWithOut57field = tmp.Substring(0, tmp.IndexOf("(57)")).Trim() + " " + tmp.Substring(tmp.IndexOf("(72)")).Trim();
                 if (s != "")
                 {
 
-                    Regex regexSplit = new Regex(@"(?=\(..\)\s)");
+                    var regexSplit = new Regex(@"(?=\(..\)\s)");
                     splittedRecord = regexSplit.Split(textWithOut57field).ToList();
                     splittedRecord.Add(field57);
                     splittedRecord.Add(note);

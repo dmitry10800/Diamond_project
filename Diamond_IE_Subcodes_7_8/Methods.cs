@@ -11,12 +11,12 @@ namespace Diamond_IE_Subcodes_7_8
         {
             string[] splittedRecords = null;
 
-            string tempStrC = recString;
+            var tempStrC = recString;
 
             if (!string.IsNullOrEmpty(tempStrC))
             {
-                Regex regexPatOne = new Regex(@"(\d{5,}\s*|S\d{5,}\s*)", RegexOptions.IgnoreCase);
-                MatchCollection matches = regexPatOne.Matches(tempStrC);
+                var regexPatOne = new Regex(@"(\d{5,}\s*|S\d{5,}\s*)", RegexOptions.IgnoreCase);
+                var matches = regexPatOne.Matches(tempStrC);
                 if (matches.Count > 0)
                 {
                     foreach (Match match in matches)
@@ -37,7 +37,7 @@ namespace Diamond_IE_Subcodes_7_8
 
         internal static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             if (Regex.IsMatch(s, @"\d{2}\/*\-*\.*\d{2}\/*\-*\.*\d{4}"))
             {
                 var date = Regex.Match(s, @"(?<year>\d{4})\/*\-*\.*(?<month>\d{2})\/*\-*\.*(?<day>\d{2})");
@@ -48,10 +48,10 @@ namespace Diamond_IE_Subcodes_7_8
 
         internal static List<IPC_Classification> IPCClassificationsNormalize(string ipcVersion, string ipcClassification)
         {
-            List<IPC_Classification> outList = new List<IPC_Classification>();
+            var outList = new List<IPC_Classification>();
             IPC_Classification _ipcClassification;
             var splittedIPCClass = ipcClassification.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-            for (int i = 0; i < splittedIPCClass.Length; i++)
+            for (var i = 0; i < splittedIPCClass.Length; i++)
             {
                 _ipcClassification = new IPC_Classification();
                 _ipcClassification.Classification = splittedIPCClass[i].Trim();
@@ -63,11 +63,11 @@ namespace Diamond_IE_Subcodes_7_8
 
         internal static List<string> AgentNameNormalize(string s)
         {
-            List<string> agentNamesList = new List<string>();
+            var agentNamesList = new List<string>();
 
-            string[] splittedNames = s.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            var splittedNames = s.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
-            for (int i = 0; i < splittedNames.Length; i++)
+            for (var i = 0; i < splittedNames.Length; i++)
             {
                 agentNamesList.Add(splittedNames[i]);
             }

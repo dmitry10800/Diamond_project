@@ -17,7 +17,7 @@ namespace Diamond_IE_Subcodes_7_8
         private static void Main(string[] args)
         {
             Console.WriteLine("Enter path to folder with PDF file");
-            string pathToPDF = Console.ReadLine();
+            var pathToPDF = Console.ReadLine();
             PathToTetml = new DirectoryInfo(pathToPDF);
             var countFiles = PathToTetml.GetFiles().Count();
             if (countFiles < 2)
@@ -40,29 +40,29 @@ namespace Diamond_IE_Subcodes_7_8
             }
 
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
-            List<XElement> allElementsList = new List<XElement>(); // all elements in processing gazette
-            List<XElement> subCode7_8 = new List<XElement>();
+            var allElementsList = new List<XElement>(); // all elements in processing gazette
+            var subCode7_8 = new List<XElement>();
 
             foreach (var file in files)
             {
-                string nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
+                var nameFile = file.Split(@"\".ToCharArray()).Last().Replace(".tetml", ".pdf").Trim();
                 currentFile = new FileInfo(file);
                 elem = XElement.Load(file);
 
                 allElementsList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                string startChapterStr = "Patents Expired";
-                string endChapterStr = "Request for Grant of Supplementary Protection Certificate";
+                var startChapterStr = "Patents Expired";
+                var endChapterStr = "Request for Grant of Supplementary Protection Certificate";
 
-                List<int> startsChapterList = new List<int>();
-                List<int> endsChapterList = new List<int>();
+                var startsChapterList = new List<int>();
+                var endsChapterList = new List<int>();
 
-                for (int i = 0; i < allElementsList.Count; i++)
+                for (var i = 0; i < allElementsList.Count; i++)
                 {
                     var value = allElementsList[i].Value;
 
@@ -74,31 +74,31 @@ namespace Diamond_IE_Subcodes_7_8
 
                 }
 
-                int startSubCode7_8 = startsChapterList.Max();
-                int endSubCode7_8 = endsChapterList.Max();
+                var startSubCode7_8 = startsChapterList.Max();
+                var endSubCode7_8 = endsChapterList.Max();
 
-                List<XElement> allElementsForSubCodes = new List<XElement>();
+                var allElementsForSubCodes = new List<XElement>();
 
                 if (startSubCode7_8 > 0 && endSubCode7_8 > 0)
                 {
-                    for (int i = startSubCode7_8; i < endSubCode7_8; i++)
+                    for (var i = startSubCode7_8; i < endSubCode7_8; i++)
                     {
                         allElementsForSubCodes.Add(allElementsList[i]);
                     }
                 }
 
-                string tempValue = "";
+                var tempValue = "";
 
-                for (int i = 0; i < allElementsForSubCodes.Count; i++)
+                for (var i = 0; i < allElementsForSubCodes.Count; i++)
                 {
                     tempValue += allElementsForSubCodes[i].Value + "\n";
                 }
 
                 var result = Methods.RecSplit(tempValue);
 
-                List<string> Subcodes7_8 = new List<string>();
-                List<string> Subcode7 = new List<string>();
-                List<string> Subcode8 = new List<string>();
+                var Subcodes7_8 = new List<string>();
+                var Subcode7 = new List<string>();
+                var Subcode8 = new List<string>();
 
                 Regex regex;
                 MatchCollection matches;
@@ -121,8 +121,8 @@ namespace Diamond_IE_Subcodes_7_8
                         Subcode7.Add(item);
                 }
 
-                List<LegalStatusEvent> legalEventsSubCode7 = new List<LegalStatusEvent>();
-                List<LegalStatusEvent> legalEventsSubCode8 = new List<LegalStatusEvent>();
+                var legalEventsSubCode7 = new List<LegalStatusEvent>();
+                var legalEventsSubCode8 = new List<LegalStatusEvent>();
                 if (Subcode7 != null && Subcode7.Count > 0)
                 {
                     var resultSubCode_7 = SubCodesProcessing.SubCodes7_8_Processing(Subcode7, nameFile);

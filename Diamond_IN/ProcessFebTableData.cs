@@ -25,12 +25,12 @@ namespace Diamond_IN
         }
         public List<ElementsForOutput> OutputValue(string file)
         {
-            List<ElementsForOutput> ListOfElements = new List<ElementsForOutput>();
+            var ListOfElements = new List<ElementsForOutput>();
             var fileData = Methods.ClearString(File.ReadAllLines(file));
             ElementsForOutput output = null;
             if (fileData.Count() > 0)
             {
-                for (int i = 0; i < fileData.Count(); i++)
+                for (var i = 0; i < fileData.Count(); i++)
                 {
                     if (Regex.IsMatch(fileData[i], @"^(\d{3}|\d{2}|\d{1})$"))
                     {

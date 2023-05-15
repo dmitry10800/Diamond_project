@@ -48,15 +48,15 @@ namespace Diamond_MK
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
 
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -157,18 +157,18 @@ namespace Diamond_MK
                             if (inidCode.StartsWith(I30))
                             {
                                 //string[] splPriorityRecord = null;
-                                List<string> prioInstance = new List<string>();
+                                var prioInstance = new List<string>();
                                 tmpRecValue = inidCode.Replace(I30, "").Trim();
                                 if (tmpRecValue.Contains("\n") && (tmpRecValue.Contains(" and ") || tmpRecValue.Contains(" and")))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var priority in tmpSplValue)
                                         {
                                             if (priority.Contains(" and"))
                                             {
-                                                string[] tmpSlpValueA = priority.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                                var tmpSlpValueA = priority.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                                 foreach (var item in tmpSlpValueA)
                                                 {
                                                     prioInstance.Add(item.Trim());
@@ -183,7 +183,7 @@ namespace Diamond_MK
                                 }
                                 if (tmpRecValue.Contains(" and") && !tmpRecValue.Contains("\n"))
                                 {
-                                    string[] tmpSlpValueA = tmpRecValue.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSlpValueA = tmpRecValue.Split(new string[] { " and" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     foreach (var item in tmpSlpValueA)
                                     {
                                         prioInstance.Add(item.Trim());
@@ -264,7 +264,7 @@ namespace Diamond_MK
                             if (inidCode.StartsWith(I96))
                             {
                                 string tmpDateValue = null;
-                                string tmpAgentValue = inidCode.Replace(I96, "").Replace("\n", "").Trim();
+                                var tmpAgentValue = inidCode.Replace(I96, "").Replace("\n", "").Trim();
                                 if (tmpAgentValue.Contains("/"))
                                 {
                                     tmpDateValue = Regex.Match(tmpAgentValue, @"\d{2}\/\d{2}\/\d{4}").Value;
@@ -284,7 +284,7 @@ namespace Diamond_MK
                             if (inidCode.StartsWith(I97))
                             {
                                 string tmpDateValue = null;
-                                string tmpAgentValue = inidCode.Replace(I97, "").Replace("\n", "").Trim();
+                                var tmpAgentValue = inidCode.Replace(I97, "").Replace("\n", "").Trim();
                                 if (tmpAgentValue.Contains("/"))
                                 {
                                     tmpDateValue = Regex.Match(tmpAgentValue, @"\d{2}\/\d{2}\/\d{4}").Value;
@@ -306,7 +306,7 @@ namespace Diamond_MK
                                 tmpRecValue = inidCode.Replace(I45, "").Replace("\n", " ").Trim();
                                 if (tmpRecValue.Length > 12)
                                 {
-                                    string tmpValue = Regex.Match(tmpRecValue, @"\d{2}\/\d{2}\/\d{4}").Value;
+                                    var tmpValue = Regex.Match(tmpRecValue, @"\d{2}\/\d{2}\/\d{4}").Value;
                                     currentElement.I45 = Methods.DateNormalize(tmpValue);
                                     currentElement.I74A = tmpRecValue.Replace(tmpValue, "").Trim();
                                 }
@@ -330,18 +330,18 @@ namespace Diamond_MK
                             /*72 Inventor*/
                             if (inidCode.StartsWith(I72))
                             {
-                                List<string> nameInstance = new List<string>();
+                                var nameInstance = new List<string>();
                                 tmpRecValue = inidCode.Replace(I72, "").Replace("\n", " ");
                                 if (tmpRecValue.Contains(";") && tmpRecValue.Contains(" and "))
                                 {
-                                    string[] tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSplValue = tmpRecValue.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     if (tmpSplValue.Count() > 0)
                                     {
                                         foreach (var inventor in tmpSplValue)
                                         {
                                             if (inventor.Contains(" and "))
                                             {
-                                                string[] tmpSlpValueA = inventor.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                                var tmpSlpValueA = inventor.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                                 foreach (var item in tmpSlpValueA)
                                                 {
                                                     nameInstance.Add(item.Trim());
@@ -357,7 +357,7 @@ namespace Diamond_MK
                                 }
                                 if (tmpRecValue.Contains(" and ") && !tmpRecValue.Contains(";"))
                                 {
-                                    string[] tmpSlpValueA = tmpRecValue.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                    var tmpSlpValueA = tmpRecValue.Split(new string[] { " and " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                                     foreach (var item in tmpSlpValueA)
                                     {
                                         nameInstance.Add(item.Trim());

@@ -14,7 +14,7 @@ namespace Diamond_BY
         /*Date*/
         public static string DateNormalize(string tmpDate)
         {
-            string swapDate = tmpDate;
+            var swapDate = tmpDate;
             string[] splitDate = null;
             if (tmpDate.Contains("."))
             {
@@ -31,7 +31,7 @@ namespace Diamond_BY
         {
             string[] splittedRecord = null;
             string tmpDescValue = null;
-            string tempStrC = recString.Trim();
+            var tempStrC = recString.Trim();
             if (tempStrC.Contains("(57) "))
             {
                 tmpDescValue = tempStrC.Substring(tempStrC.IndexOf("(57) ")).Trim();
@@ -39,8 +39,8 @@ namespace Diamond_BY
             }
             if (recString != "")
             {
-                Regex regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
-                MatchCollection matchesClass = regexPatOne.Matches(recString);
+                var regexPatOne = new Regex(@"\(\d{2}\)\s", RegexOptions.IgnoreCase);
+                var matchesClass = regexPatOne.Matches(recString);
                 if (matchesClass.Count > 0)
                 {
                     foreach (Match matchC in matchesClass)
@@ -62,9 +62,9 @@ namespace Diamond_BY
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new HttpClient();
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

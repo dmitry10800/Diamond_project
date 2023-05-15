@@ -48,23 +48,23 @@ namespace AR
 
         public static List<LegalStatusEvent> ProcessSubcode(List<XElement> elemList, string gazetteName)
         {
-            string datePattern = @"\d{4}\-\d{2}\-\d{2}";
-            List<LegalStatusEvent> processedRecords = new List<LegalStatusEvent>();
-            int patentCounter = 1;
+            var datePattern = @"\d{4}\-\d{2}\-\d{2}";
+            var processedRecords = new List<LegalStatusEvent>();
+            var patentCounter = 1;
             if (elemList != null && elemList.Count > 0)
             {
                 var records = GetRecordsFromTetml(elemList, StartKeyPattern).Where(x => !string.IsNullOrEmpty(x));
 
-                foreach (string record in records)
+                foreach (var record in records)
                 {
-                    List<string> splittedRecords = Methods.RecSplit(record);
+                    var splittedRecords = Methods.RecSplit(record);
                     if (splittedRecords.Count == 0)
                     {
                         Console.WriteLine($"Error splitting record by Inids: {record}");
                         continue;
                     }
 
-                    LegalStatusEvent legalEvent = new LegalStatusEvent();
+                    var legalEvent = new LegalStatusEvent();
 
                     legalEvent.CountryCode = "AR";
                     legalEvent.Id = patentCounter++;
@@ -72,28 +72,28 @@ namespace AR
                     legalEvent.SectionCode = "FG";
 
 
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
 
                     biblioData.EuropeanPatents = new List<EuropeanPatent>();
 
-                    EuropeanPatent europeanPatent = new EuropeanPatent();
+                    var europeanPatent = new EuropeanPatent();
 
-                    IntConvention intConvention = new IntConvention();
+                    var intConvention = new IntConvention();
 
-                    CultureInfo cultureInfo = new CultureInfo("ru-Ru");
+                    var cultureInfo = new CultureInfo("ru-Ru");
 
-                    LegalEvent legal = new LegalEvent();
+                    var legal = new LegalEvent();
 
-                    NoteTranslation noteTranslation = new NoteTranslation();
+                    var noteTranslation = new NoteTranslation();
 
-                    DOfPublication dOfPublication = new DOfPublication();
+                    var dOfPublication = new DOfPublication();
 
-                    foreach (string element in splittedRecords)
+                    foreach (var element in splittedRecords)
                     {
 
                         if (element.StartsWith(I10))
                         {
-                            string text = ReplaceInid(element, I10);
+                            var text = ReplaceInid(element, I10);
 
                             if (text.Contains("Patente "))
                             {
@@ -113,14 +113,14 @@ namespace AR
                         else
                         if (element.StartsWith(I11))
                         {
-                            string text = ReplaceInid(element, I11);
+                            var text = ReplaceInid(element, I11);
 
-                            Match match = Regex.Match(text, @"([A-Z]{2}\d+\D\d)");
+                            var match = Regex.Match(text, @"([A-Z]{2}\d+\D\d)");
 
                             if (match.Success)
                             {
-                                string tmp = match.Value.Trim();
-                                Match match1 = Regex.Match(tmp, @"(?<number>[A-Z]{2}\d+)(?<kind>[A-Z]\d+)");
+                                var tmp = match.Value.Trim();
+                                var match1 = Regex.Match(tmp, @"(?<number>[A-Z]{2}\d+)(?<kind>[A-Z]\d+)");
 
                                 if (match1.Success)
                                 {
@@ -135,9 +135,9 @@ namespace AR
                         else
                         if (element.StartsWith(I21))
                         {
-                            string text = ReplaceInid(element, I21);
+                            var text = ReplaceInid(element, I21);
 
-                            Match match = Regex.Match(text, @"[A-Z]\s\d+");
+                            var match = Regex.Match(text, @"[A-Z]\s\d+");
 
                             if (match.Success)
                             {
@@ -148,9 +148,9 @@ namespace AR
                         else
                         if (element.StartsWith(I22))
                         {
-                            string text = ReplaceInid(element, I22);
+                            var text = ReplaceInid(element, I22);
 
-                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+                            var match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
 
                             if (match.Success)
                             {
@@ -161,9 +161,9 @@ namespace AR
                         else
                         if (element.StartsWith(I24))
                         {
-                            string text = ReplaceInid(element, I24);
+                            var text = ReplaceInid(element, I24);
 
-                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+                            var match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
 
                             if (match.Success)
                             {
@@ -174,9 +174,9 @@ namespace AR
                         else
                         if (element.StartsWith(I24A))
                         {
-                            string text = ReplaceInid(element, I24A);
+                            var text = ReplaceInid(element, I24A);
 
-                            Match match = Regex.Match(text, @"(?<note>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
+                            var match = Regex.Match(text, @"(?<note>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
 
                             if (match.Success)
                             {
@@ -191,15 +191,15 @@ namespace AR
                         else
                         if (element.StartsWith(I30))
                         {
-                            string text = ReplaceInid(element, I30);
+                            var text = ReplaceInid(element, I30);
 
-                            List<string> notes = Regex.Split(text, @";").ToList();
+                            var notes = Regex.Split(text, @";").ToList();
 
                             biblioData.Priorities = new List<Priority>();
 
-                            foreach (string note in notes)
+                            foreach (var note in notes)
                             {
-                                Match match = Regex.Match(note, @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>\d{2}\/\d{2}\/\d{3,4})");
+                                var match = Regex.Match(note, @"(?<code>[A-Z]{2})\s(?<number>.+)\s(?<date>\d{2}\/\d{2}\/\d{3,4})");
 
                                 if (match.Success)
                                 {
@@ -216,9 +216,9 @@ namespace AR
                         else
                         if (element.StartsWith(I47))
                         {
-                            string text = ReplaceInid(element, I47);
+                            var text = ReplaceInid(element, I47);
 
-                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+                            var match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
 
                             if (match.Success)
                             {
@@ -229,26 +229,26 @@ namespace AR
                         else
                         if (element.StartsWith(I51))
                         {
-                            string text = ReplaceInid(element, I51).Replace("\r","").Replace("\n"," ").Trim();
+                            var text = ReplaceInid(element, I51).Replace("\r","").Replace("\n"," ").Trim();
 
                             biblioData.Ipcs = new List<Ipc>();
 
-                            Match match = Regex.Match(text, @"([A-Z]\d+[A-Z].+)");
+                            var match = Regex.Match(text, @"([A-Z]\d+[A-Z].+)");
 
-                            string temp = match.Value.Replace(",", " ").Replace(":", " ").Trim();
+                            var temp = match.Value.Replace(",", " ").Replace(":", " ").Trim();
 
-                            List<string> firstIpcs = Regex.Split(temp, @"\s").Where(val =>!string.IsNullOrEmpty(val)).ToList();
+                            var firstIpcs = Regex.Split(temp, @"\s").Where(val =>!string.IsNullOrEmpty(val)).ToList();
 
-                            List<string> secondIpcs = new List<string>();
+                            var secondIpcs = new List<string>();
 
-                            foreach (string firstIpc in firstIpcs)
+                            foreach (var firstIpc in firstIpcs)
                             {
-                                string tmp = firstIpc.TrimEnd(',').TrimEnd(';');
+                                var tmp = firstIpc.TrimEnd(',').TrimEnd(';');
 
 
                                 if(Regex.IsMatch(tmp, @"(?<gr1>[A-Z]\d+\D)(?<gr2>\d+\/\d+)"))
                                 {
-                                    Match match1 = Regex.Match(tmp, @"(?<gr1>[A-Z]\d+\D)(?<gr2>\d+\/\d+)");
+                                    var match1 = Regex.Match(tmp, @"(?<gr1>[A-Z]\d+\D)(?<gr2>\d+\/\d+)");
 
                                     secondIpcs.Add(match1.Groups["gr1"].Value.Trim());
 
@@ -258,15 +258,15 @@ namespace AR
 
                             }
 
-                            List<string> finalIpcs = new List<string>();
+                            var finalIpcs = new List<string>();
 
-                            foreach (string secondIpc in secondIpcs)
+                            foreach (var secondIpc in secondIpcs)
                             {
                                 if (secondIpc.Contains("/")) 
                                 {
                                     if(Regex.IsMatch(finalIpcs[finalIpcs.Count-1], @"(?<gr1>[A-Z]\d+\D)\s(?<gr2>\d+\/\d+)"))
                                     {
-                                        Match match1 = Regex.Match(finalIpcs[finalIpcs.Count - 1], @"(?<gr1>[A-Z]\d+\D)\s(?<gr2>\d+\/\d+)");
+                                        var match1 = Regex.Match(finalIpcs[finalIpcs.Count - 1], @"(?<gr1>[A-Z]\d+\D)\s(?<gr2>\d+\/\d+)");
 
                                         finalIpcs.Add(match1.Groups["gr1"].Value.Trim() + " " + secondIpc);
 
@@ -282,7 +282,7 @@ namespace AR
                                 }
                             }
 
-                            foreach (string item in finalIpcs)
+                            foreach (var item in finalIpcs)
                             {
                                 biblioData.Ipcs.Add(new Ipc
                                 {
@@ -293,9 +293,9 @@ namespace AR
                         else
                         if (element.StartsWith(I54))
                         {
-                            string text = ReplaceInid(element, I54);
+                            var text = ReplaceInid(element, I54);
 
-                            Match match = Regex.Match(text, @"([A-Z]{2}.+)");
+                            var match = Regex.Match(text, @"([A-Z]{2}.+)");
 
                             if (match.Success)
                             {
@@ -310,7 +310,7 @@ namespace AR
                         else
                         if (element.StartsWith(I57))
                         {
-                            string text = ReplaceInid(element, I57);
+                            var text = ReplaceInid(element, I57);
 
                             biblioData.Claims.Add(new DiamondProjectClasses.Claim
                             {
@@ -324,7 +324,7 @@ namespace AR
                         {
                             if (element != "<>")
                             {
-                                Match match = Regex.Match(element.Trim(), @"(?<gr1>.+)\s(?<gr2>.+)\s(?<gr3>.+)");
+                                var match = Regex.Match(element.Trim(), @"(?<gr1>.+)\s(?<gr2>.+)\s(?<gr3>.+)");
 
                                 legal.Note = legal.Note + " || REIVINDICACIONES | " + element.Trim();
 
@@ -342,16 +342,16 @@ namespace AR
                         else
                         if (element.StartsWith(I71))
                         {
-                            string text = ReplaceInid(element, I71);
+                            var text = ReplaceInid(element, I71);
 
-                            List<string> applicants = Regex.Split(text, @"(?<=,\s[A-Z]{2}\n?$)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var applicants = Regex.Split(text, @"(?<=,\s[A-Z]{2}\n?$)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                             biblioData.Applicants = new List<PartyMember>();
 
-                            foreach (string applicant in applicants)
+                            foreach (var applicant in applicants)
                             {
-                                string tmp = applicant.Replace("\r", "").Replace("\n", " ").Trim();
-                                Match match = Regex.Match(tmp, @"(?<adress>[A-Z]{2}.+)\s(?<code>[A-Z]{2}$)");
+                                var tmp = applicant.Replace("\r", "").Replace("\n", " ").Trim();
+                                var match = Regex.Match(tmp, @"(?<adress>[A-Z]{2}.+)\s(?<code>[A-Z]{2}$)");
 
                                 if (match.Success)
                                 {
@@ -374,39 +374,39 @@ namespace AR
                         else
                         if (element.StartsWith(I72))
                         {
-                            string text = ReplaceInid(element, I72).Replace("\r", "").Replace("\n", " ").Trim();
+                            var text = ReplaceInid(element, I72).Replace("\r", "").Replace("\n", " ").Trim();
 
-                            Match match = Regex.Match(text, @"([A-Z]{2}.+)");
+                            var match = Regex.Match(text, @"([A-Z]{2}.+)");
 
                             biblioData.Inventors = new List<PartyMember>();
 
-                            List<string> names = Regex.Split(match.Value, @"\s").ToList();
+                            var names = Regex.Split(match.Value, @"\s").ToList();
 
-                            List <string> inventors = new List<string>();
+                            var inventors = new List<string>();
 
-                            for (int i = 0; i < names.Count; i++)
+                            for (var i = 0; i < names.Count; i++)
                             {
                                 if (names[i].Contains(","))
                                 {
-                                    string tmp = names[i].TrimEnd('-');
+                                    var tmp = names[i].TrimEnd('-');
                                     inventors.Add(tmp);
                                 }
                                 else
                                 {
                                     if (inventors.Count != 0)
                                     {
-                                        string tmp = names[i].TrimEnd('-');
+                                        var tmp = names[i].TrimEnd('-');
                                         inventors[inventors.Count - 1] = inventors[inventors.Count - 1] + " " + tmp;
                                     }
                                     else
                                     {
-                                        string tmp = names[i].TrimEnd('-');
+                                        var tmp = names[i].TrimEnd('-');
                                         inventors.Add(tmp);
                                     }
 
                                 }
                             }
-                            foreach (string inventor in inventors)
+                            foreach (var inventor in inventors)
                             {
                                 biblioData.Inventors.Add(new PartyMember
                                 {
@@ -418,7 +418,7 @@ namespace AR
                         if (element.StartsWith(I74))
                         {
 
-                            Match match = Regex.Match(element, @"(?<inid>\(\d{2}\))\s(?<info>.+)\s(?<numbers>\d+)");
+                            var match = Regex.Match(element, @"(?<inid>\(\d{2}\))\s(?<info>.+)\s(?<numbers>\d+)");
 
                             if (match.Success)
                             {
@@ -433,9 +433,9 @@ namespace AR
                         else
                         if (element.StartsWith(I45))
                         {
-                            string text = ReplaceInid(element, I45);
+                            var text = ReplaceInid(element, I45);
 
-                            Match match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
+                            var match = Regex.Match(text, @"(\d{2}\/\d{2}\/\d{4})");
 
                             if (match.Success)
                             {
@@ -448,9 +448,9 @@ namespace AR
                         else
                         if (element.StartsWith(I62))
                         {
-                            string text = ReplaceInid(element, I62);
+                            var text = ReplaceInid(element, I62);
 
-                            Match match = Regex.Match(text, @"(?<number>[A-R]{2}\d+)(?<kind>[A-Z]\d+)");
+                            var match = Regex.Match(text, @"(?<number>[A-R]{2}\d+)(?<kind>[A-Z]\d+)");
 
                             biblioData.Related = new List<RelatedDocument>();
 

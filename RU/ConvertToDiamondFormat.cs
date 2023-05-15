@@ -34,14 +34,14 @@ namespace RU
         }
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub2ToDiamond(List<RecordElements.SudCode2> elementOuts)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = GetGazetteName(record.B460i, record.B405i);
                     /*Setting subcode*/
                     legalEvent.SubCode = "2";
@@ -51,7 +51,7 @@ namespace RU
                     legalEvent.CountryCode = record.B190;
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
+                    var biblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Publication.Number = record.B110;
                     biblioData.Publication.Kind = record.B130;
@@ -91,14 +91,14 @@ namespace RU
 
         public static List<Diamond.Core.Models.LegalStatusEvent> Sub7ToDiamond(List<RecordElements.SudCode7> elementOuts)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
                     legalEvent.GazetteName = GetGazetteName(record.B460i, record.B405i);
                     /*Setting subcode*/
                     legalEvent.SubCode = "7";
@@ -108,8 +108,8 @@ namespace RU
                     legalEvent.CountryCode = record.B190;
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    Biblio biblioData = new Biblio();
-                    Biblio newBiblioData = new Biblio();
+                    var biblioData = new Biblio();
+                    var newBiblioData = new Biblio();
                     /*Elements output*/
                     biblioData.Publication.Number = record.B110;
                     biblioData.Publication.Kind = record.B130;

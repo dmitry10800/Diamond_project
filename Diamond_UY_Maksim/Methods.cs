@@ -25,7 +25,7 @@ namespace Diamond_UY_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -34,7 +34,7 @@ namespace Diamond_UY_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -47,9 +47,9 @@ namespace Diamond_UY_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("RESOLUCIONES DE MODELOS DE UTILIDAD, ABANDONADAS"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements, subCode), @"(?=No\.\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("N")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=No\.\s)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("N")).ToList();
 
-                     foreach (string note in notes)
+                     foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "FA"));
                     }
@@ -73,10 +73,10 @@ namespace Diamond_UY_Maksim
                 LegalEvent = new()
             };
 
-            CultureInfo culture = new CultureInfo("ru-RU");
+            var culture = new CultureInfo("ru-RU");
             if(subCode == "8")
             {
-                Match match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+)\.\s(?<assigner>.+)\s(?<agent>\d+)");
+                var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+)\.\s(?<assigner>.+)\s(?<agent>\d+)");
 
                 if (match.Success)
                 {
@@ -104,7 +104,7 @@ namespace Diamond_UY_Maksim
                 }
                 else
                 {
-                    Match match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+?)\s(?<assigner>[A-Z][a-z].+)\s(?<agent>\d+)");
+                    var match1 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+?)\s(?<assigner>[A-Z][a-z].+)\s(?<agent>\d+)");
 
                     if (match1.Success)
                     {
@@ -132,7 +132,7 @@ namespace Diamond_UY_Maksim
                     }
                     else 
                     {
-                        Match match2 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+?)\s(?<agent>\d+)");
+                        var match2 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+?)\s(?<agent>\d+)");
 
                         if (match2.Success)
                         {
@@ -154,7 +154,7 @@ namespace Diamond_UY_Maksim
                             statusEvent.LegalEvent.Language = "EN";
                         }
                         else {
-                            Match match3 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+)");
+                            var match3 = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\.\s?(?<appNum>\d+)\s(?<leDate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+)");
 
                             if (match3.Success)
                             {
@@ -183,7 +183,7 @@ namespace Diamond_UY_Maksim
 
             if(subCode == "8")
             {
-                foreach (XElement xElement in xElements)
+                foreach (var xElement in xElements)
                 {
                     text += xElement.Value + " ";
                 }
@@ -195,7 +195,7 @@ namespace Diamond_UY_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 if (SendToProduction == true)
                 {
@@ -209,8 +209,8 @@ namespace Diamond_UY_Maksim
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

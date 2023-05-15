@@ -21,8 +21,8 @@ namespace IN
                 url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
             foreach (var iEvent in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(iEvent);
-                HttpClient httpClient = new HttpClient
+                var tmpValue = JsonConvert.SerializeObject(iEvent);
+                var httpClient = new HttpClient
                 {
                     BaseAddress = new Uri(url)
                 };
@@ -449,7 +449,7 @@ namespace IN
         }
         public static string GetKindValue(string subcode)
         {
-            Dictionary<string, string> pairs = new Dictionary<string, string> { ["12"] = "A", ["13"] = "U", ["14"] = "B", ["15"] = "Y" };
+            var pairs = new Dictionary<string, string> { ["12"] = "A", ["13"] = "U", ["14"] = "B", ["15"] = "Y" };
             return pairs[subcode];
         }
         static string DateZeroAdd(string s)
@@ -615,26 +615,26 @@ namespace IN
         {
             classificationInfo = Regex.Replace(classificationInfo, @"\.*\,*", "").ToUpper();
             var ips = new List<Integration.Ipc>();
-            int tmpEdition = 0;
+            var tmpEdition = 0;
             if (classificationInfo.Contains('/'))
             {
-                Regex typeTwo = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s*\d+\/\d+");
-                MatchCollection typeTwoMatches = typeTwo.Matches(classificationInfo);
+                var typeTwo = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s*\d+\/\d+");
+                var typeTwoMatches = typeTwo.Matches(classificationInfo);
                 if (typeTwoMatches.Count > 0)
                 {
                     foreach (Match value in typeTwoMatches)
                     {
 
-                        Regex regex = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+");
-                        Match match = regex.Match(value.Value);
+                        var regex = new Regex(@"[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+");
+                        var match = regex.Match(value.Value);
                         if (match.Success)
                         {
                             ips.Add(new Integration.Ipc { Class = value.Value });
                         }
                         else
                         {
-                            Regex regex1 = new Regex(@"(?<gr1>[A-Z]{1}\d{2}[A-Z]{1})(?<gr2>\d+\/\d{2})");
-                            Match match1 = regex1.Match(value.Value);
+                            var regex1 = new Regex(@"(?<gr1>[A-Z]{1}\d{2}[A-Z]{1})(?<gr2>\d+\/\d{2})");
+                            var match1 = regex1.Match(value.Value);
                             ips.Add(new Integration.Ipc { Class = match1.Groups["gr1"].Value.Trim() + " " + match1.Groups["gr2"].Value.Trim() });
                         }
                     }
@@ -642,11 +642,11 @@ namespace IN
             }
             else {
 
-                Regex typeOne = new Regex(@"(?<Value>[A-Z]{1}\d{2}[A-Z]{1}\d+\b)");
+                var typeOne = new Regex(@"(?<Value>[A-Z]{1}\d{2}[A-Z]{1}\d+\b)");
 
-                Regex typeOneAdditional = new Regex(@"(?<P1>[A-Z]{1}\d{2}[A-Z]{1})(?<P2>\d{4})(?<P3>\d+)");
+                var typeOneAdditional = new Regex(@"(?<P1>[A-Z]{1}\d{2}[A-Z]{1})(?<P2>\d{4})(?<P3>\d+)");
 
-                MatchCollection typeOneMatches = typeOne.Matches(classificationInfo);
+                var typeOneMatches = typeOne.Matches(classificationInfo);
 
                 if (typeOneMatches.Count > 0)
                 {
@@ -699,7 +699,7 @@ namespace IN
         {
             record = record.Replace("No. of Pages :", "(99) No. of Pages :");
             var tmpList = new List<string>();
-            Regex regex = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
             string tmpI57 = null;
             string tmpI99 = null;
 
@@ -715,7 +715,7 @@ namespace IN
             }
 
 
-            MatchCollection matches = regex.Matches(record);
+            var matches = regex.Matches(record);
             if (matches.Count > 0)
             {
                 foreach (Match match in matches)
@@ -752,10 +752,10 @@ namespace IN
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
          //       string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

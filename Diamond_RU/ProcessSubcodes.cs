@@ -103,7 +103,7 @@ namespace Diamond_RU
         /*Получение нужных нодов из XML*/
         private static XmlFileRecords GetNodesFromXml(XDocument xmlFile)
         {
-            XmlFileRecords extractedNodes = new XmlFileRecords();
+            var extractedNodes = new XmlFileRecords();
             var xmlDocument = xmlFile.ToXmlDocument();
             extractedNodes.Sdopi = xmlDocument.SelectSingleNode("ru-patent-document/SDOBI");
             extractedNodes.RuNotification = xmlDocument.SelectNodes("ru-patent-document/ru-notification");
@@ -244,7 +244,7 @@ namespace Diamond_RU
 
             if (Sub1Elements.Count > 0)
             {
-                List<RecordElements.SubCode> sub1outTEST = SubCodeMapper(Sub1Elements, 1, "HZ9A");
+                var sub1outTEST = SubCodeMapper(Sub1Elements, 1, "HZ9A");
                 var convertedTEST = ConvertToDiamondFormat.ConvertSubCodeToDiamondFormat(sub1outTEST, 1);
                 Console.WriteLine("Сабкод 1 конвертирвоан успешно.");
                 DiamondSender.SendToDiamond(convertedTEST);
@@ -308,7 +308,7 @@ namespace Diamond_RU
 
             if (Sub8Elements.Count > 0)
             {
-                List<RecordElements.SubCode> sub9outTEST = SubCodeMapper(Sub8Elements, 8, "HC9A");
+                var sub9outTEST = SubCodeMapper(Sub8Elements, 8, "HC9A");
                 var convertedTEST = ConvertToDiamondFormat.ConvertSubCodeToDiamondFormat(sub9outTEST, 8);
                 Console.WriteLine("Сабкод 8 конвертирвоан успешно.");
                 DiamondSender.SendToDiamond(convertedTEST);
@@ -534,7 +534,7 @@ namespace Diamond_RU
 
         private static List<RecordElements.SubCode> SubCodeMapper(List<XDocument> subCodeElements, int numberSubcode, string B903i_Value)
         {
-            List<RecordElements.SubCode> subCodeoutput = new List<RecordElements.SubCode>();
+            var subCodeoutput = new List<RecordElements.SubCode>();
             foreach (var xmlFile in subCodeElements)
             {
                 var extractedNodes = GetNodesFromXml(xmlFile);
@@ -551,8 +551,8 @@ namespace Diamond_RU
                 RecordElements.AgentInfo agentInfo;
                 RecordElements.TitleAndOwner titleAndOwner;
                 var bodyElements = new List<RecordElements.SubCode>();
-                List<string> outList = new List<string>();
-                List<string> AssigneeList = new List<string>();
+                var outList = new List<string>();
+                var AssigneeList = new List<string>();
                 foreach (XmlNode rec in extractedNodes.RuNotification)
                 {
                     agentInfo = new RecordElements.AgentInfo();
@@ -606,8 +606,8 @@ namespace Diamond_RU
                         B980i = agentInfo
                     });
 
-                    Regex reg = new Regex(@"<ru-b734i><ru-name-text>.*</ru-name-text></ru-b734i>");
-                    MatchCollection matches = reg.Matches(rec.InnerXml);
+                    var reg = new Regex(@"<ru-b734i><ru-name-text>.*</ru-name-text></ru-b734i>");
+                    var matches = reg.Matches(rec.InnerXml);
                     if (matches.Count > 0)
                     {
                         foreach (Match match in matches)
@@ -616,8 +616,8 @@ namespace Diamond_RU
                         }
                     }
 
-                    Regex reg2 = new Regex(@"<B731><ru-name-text>.*</ru-name-text></B731>");
-                    MatchCollection matches2 = reg2.Matches(rec.InnerXml);
+                    var reg2 = new Regex(@"<B731><ru-name-text>.*</ru-name-text></B731>");
+                    var matches2 = reg2.Matches(rec.InnerXml);
                     if (matches2.Count > 0)
                     {
                         foreach (Match match in matches2)
@@ -634,8 +634,8 @@ namespace Diamond_RU
                     {
                         if (outList.Count == 1)
                         {
-                            string[] splittedList = outList[0].Split(new string[] { "</ru-b734i>" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-                            for (int i = 0; i < splittedList.Length; i++)
+                            var splittedList = outList[0].Split(new string[] { "</ru-b734i>" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                            for (var i = 0; i < splittedList.Length; i++)
                             {
                                 splittedList[i] = splittedList[i].Replace("<ru-b734i>", "")
                                     .Replace("<ru-name-text>", "").Replace("</ru-name-text>", "")
@@ -654,8 +654,8 @@ namespace Diamond_RU
                     {
                         if (AssigneeList.Count == 1)
                         {
-                            string[] splittedList = AssigneeList[0].Split(new string[] { "</B731>" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-                            for (int i = 0; i < splittedList.Length; i++)
+                            var splittedList = AssigneeList[0].Split(new string[] { "</B731>" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                            for (var i = 0; i < splittedList.Length; i++)
                             {
                                 splittedList[i] = splittedList[i].Replace("<B731>", "")
                                     .Replace("<ru-name-text>", "").Replace("</ru-name-text>", "")
@@ -672,7 +672,7 @@ namespace Diamond_RU
 
                     if (completeRecord.Field12 == null)
                     {
-                        RecordElements.Field12 field12 = new RecordElements.Field12();
+                        var field12 = new RecordElements.Field12();
                         var result = Methods.GetNameChapterForName(B903i_Value);
                         field12.versionRU = result.Item1;
                         field12.versionEN = result.Item2;
@@ -852,10 +852,10 @@ namespace Diamond_RU
                     {
                         if (rec.B980i.Name == null && rec.B980i.Address != null)
                         {
-                            string fullStr = rec.B980i.Address;
+                            var fullStr = rec.B980i.Address;
 
                             RecordElements.AgentInfo agent;
-                            string[] splittedStr = fullStr.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                            var splittedStr = fullStr.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
                             if (splittedStr.Length > 0)
                             {
                                 agent = new RecordElements.AgentInfo();

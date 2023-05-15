@@ -30,22 +30,22 @@ namespace Diamond_ZA
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement = null;
             List<string> sortedElements = null;
             sortedElements = new List<string>();
             string I22Date = null;
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
 
                     if (Regex.IsMatch(value, @"\d{4}\/\d{5}\s*\~") /*&& !value.StartsWith("")*/)
                     {
-                        int tmpInc = i;
-                        string tmpRecordValue = "";
+                        var tmpInc = i;
+                        var tmpRecordValue = "";
                         do
                         {
                             tmpRecordValue += elemList[tmpInc].Value + " ";
@@ -66,10 +66,10 @@ namespace Diamond_ZA
                     {
                         if (Regex.IsMatch(record, @"\-\s*APPLIED\s*ON"))
                         {
-                            string tmpRec = record.Substring(record.IndexOf("APPLIED"));
+                            var tmpRec = record.Substring(record.IndexOf("APPLIED"));
                             I22Date = tmpRec.Replace("APPLIED ON", "").Replace("-", "").Replace(".", "").Replace("/", "-").Trim();
                         }
-                        string[] recordSplitted = Methods.RecSplit(record);
+                        var recordSplitted = Methods.RecSplit(record);
                         if (recordSplitted != null)
                         {
                             foreach (var item in recordSplitted)
@@ -128,7 +128,7 @@ namespace Diamond_ZA
                                 /*32*/
                                 if (item.StartsWith(I32))
                                 {
-                                    string tmpItem = item.Replace(I32, "").Replace(";", "").Trim();
+                                    var tmpItem = item.Replace(I32, "").Replace(";", "").Trim();
                                     if (Regex.IsMatch(tmpItem, @"\d{2}\/\d{2}\/\d{4}")) tmpItem = Regex.Match(tmpItem, @"\d{2}\/\d{2}\/\d{4}").Value;
                                     currentElement.I32 = (currentElement.I32 ?? Enumerable.Empty<string>()).Concat(new string[] { Methods.DateSwap(tmpItem) }).ToArray();
                                 }

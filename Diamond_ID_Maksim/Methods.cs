@@ -19,6 +19,19 @@ namespace Diamond_ID_Maksim
         private string CurrentFileName;
         private int Id = 1;
 
+        private const string I11 = "(11)";
+        private const string I13 = "(13)";
+        private const string I51 = "(51)";
+        private const string I21 = "(21)";
+        private const string I22 = "(22)";
+        private const string I30 = "(30)";
+        private const string I43 = "(43)";
+        private const string I71 = "(71)";
+        private const string I72 = "(72)";
+        private const string I74 = "(74)";
+        private const string I54 = "(54)";
+        private const string I57 = "(57)";
+
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
             List<Diamond.Core.Models.LegalStatusEvent> statusEvents = new();
@@ -27,7 +40,7 @@ namespace Diamond_ID_Maksim
 
             List<string> files = new();
 
-            foreach (FileInfo file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
@@ -36,7 +49,7 @@ namespace Diamond_ID_Maksim
 
             List<XElement> xElements = new();
 
-            foreach (string tetml in files)
+            foreach (var tetml in files)
             {
                 CurrentFileName = tetml;
 
@@ -48,7 +61,9 @@ namespace Diamond_ID_Maksim
                              .SkipWhile(val => !val.Value.Contains("(74) : Nama dan Alamat Konsultan Paten"))
                              .ToList();
 
-                    foreach (string note in Regex.Split(MakeText(xElements), @"(?=\(20\)\s\D)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20) R")).ToList())
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\s\D)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20)"+'\n'+"R")).ToList();
+
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
@@ -59,9 +74,9 @@ namespace Diamond_ID_Maksim
                              .SkipWhile(val => !val.Value.StartsWith ("(20) RI Permohonan Paten"))
                              .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\s\D)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20) R")).ToList();
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\s\D)").Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20) R")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "BZ"));
                     }
@@ -72,9 +87,9 @@ namespace Diamond_ID_Maksim
                         .SkipWhile(val => !val.Value.Contains("(74) : Nama dan Alamat Konsultan Paten"))
                         .ToList();
 
-                    List<string> notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\nR.+)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20)")).ToList();
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(20\)\nR.+)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith(@"(20)")).ToList();
 
-                    foreach (string note in notes)
+                    foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatent(note, subCode, "AB"));
                     }
@@ -87,7 +102,7 @@ namespace Diamond_ID_Maksim
         {
             string text = null;
 
-            foreach (XElement xElement in xElements)
+            foreach (var xElement in xElements)
             {
                 text += xElement.Value + "\n";
             }
@@ -107,11 +122,134 @@ namespace Diamond_ID_Maksim
                 LegalEvent = new()
             };
 
-            CultureInfo culture = new("RU-ru");
+            var culture = new CultureInfo("ru-Ru");
 
             if(subCode == "1")
             {
-                foreach (string inid in MakeInids(note))
+                foreach (var inid in MakeInids(note, subCode))
+                {
+                    var cleanNote = CleanInid(inid, subCode).Trim();
+
+                    if (inid.StartsWith(I11))
+                    {
+                        statusEvent.Biblio.Publication.Number = cleanNote;
+                    }
+                    else if (inid.StartsWith(I13))
+                    {
+                        statusEvent.Biblio.Publication.Kind = inid.Replace("\r", "").Replace("\n", " ").Replace("(13)", "").Trim();
+                    }
+                    else if (inid.StartsWith(I21))
+                    {
+                        statusEvent.Biblio.Application.Number = cleanNote;
+                    }
+                    else if (inid.StartsWith(I22))
+                    {
+                        var date = MakeRightDate(cleanNote, subCode);
+
+                        if (date != null)
+                            statusEvent.Biblio.Application.Date = date;
+                        else
+                            Console.WriteLine($"{inid} --- 22");
+                    }
+                    else if (inid.StartsWith(I43))
+                    {
+                        var date = MakeRightDate(cleanNote, subCode);
+                        if (date != null)
+                            statusEvent.Biblio.Publication.Date = date;
+                        else
+                            Console.WriteLine($"{inid} --- 43");
+                    }
+                    else if (inid.StartsWith(I71))
+                    {
+                        var name = string.Empty;
+                        var adress = string.Empty;
+                        var lines = Regex.Split(cleanNote.Trim(), @"\n").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                        if (lines.Count % 2 == 0)
+                        {
+                            for (int i = 0; i < lines.Count/2; i++)
+                            {
+                                name += lines[i].Trim() + " ";
+                            }
+
+                            for (int i = lines.Count / 2; i < lines.Count; i++)
+                            {
+                                adress += lines[i].Trim() + " ";
+                            }
+
+                            var adressMatch = Regex.Match(adress.Trim(), @"(?<adress>.+)\s(?<country>.+)");
+                            if (adressMatch.Success)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = name.Trim(),
+                                    Address1 = adressMatch.Groups["adress"].Value.Trim(),
+                                    Country = MakeCountry(adressMatch.Groups["country"].Value.Trim())
+                                });
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < 1; i++)
+                            {
+                                name = lines[i].Trim();
+                            }
+
+                            for (int i = 1; i < lines.Count; i++)
+                            {
+                                adress += lines[i].Trim() + " ";
+                            }
+
+                            var adressMatch = Regex.Match(adress.Trim(), @"(?<adress>.+)\s(?<country>.+)");
+                            if (adressMatch.Success)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = name.Trim(),
+                                    Address1 = adressMatch.Groups["adress"].Value.Trim(),
+                                    Country = MakeCountry(adressMatch.Groups["country"].Value.Trim())
+                                });
+                            }
+                        }
+                    }
+                }
+                /*
+                 *
+(51) I.P.C : F 26B 21/10,F 26B 21/08
+
+(30)
+Data Prioritas :
+(31) Nomor
+(32) Tanggal
+(33) Negara
+2014072.9
+08 September
+2020
+GB
+
+
+(72) Nama Inventor :
+DUCHEYNE, Wouter,BE
+(74) Nama dan Alamat Konsultan Paten :
+Maulitta Pramulasari S.Pd
+Mirandah Asia Indonesia Sudirman Plaza, Plaza Marein
+Lantai 10E Jalan Jenderal Sudirman Kavling 76-78
+(54)
+Judul
+Invensi :
+UNIT UNTUK PENGERINGAN SORPSI LANGSUNG DAN METODENYA
+(57)
+Abstrak :
+Invensi ini berhubungan dengan bidang unit pengering industri. Invensi ini menyediakan suatu unit untuk pengeringan dan metode
+untuk pengeringan sorpsi langsung dari zat seperti, tetapi tidak terbatas pada, pelet, bahan konstruksi, kayu, gas, pulp dan kertas,
+pengeringan bahan kimia dari reaksi sintesis atau asam anorganik dan organik produksi, makanan.
+                 */
+
+
+
+
+
+
+                foreach (var inid in MakeInids(note))
                 {
                     if (inid.StartsWith("(11)"))
                     {
@@ -130,7 +268,7 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(22)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(22) Tanggal Penerimaan Permohonan Paten :", "").Trim(), @"(?<date>\d{2}).(?<month>\D{3}).(?<year>\d{2})");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(22) Tanggal Penerimaan Permohonan Paten :", "").Trim(), @"(?<date>\d{2}).(?<month>\D{3}).(?<year>\d{2})");
 
                         if (match.Success)
                         {
@@ -147,11 +285,11 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(51)"))
                     {
-                        List<string> ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51) I.P.C :", "").Trim(), @"(?<=\.\d{2}\)?)").Where(val => !string.IsNullOrEmpty(val)).Where(val => !val.StartsWith(")")).ToList();
+                        var ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51) I.P.C :", "").Trim(), @"(?<=\.\d{2}\)?)").Where(val => !string.IsNullOrEmpty(val)).Where(val => !val.StartsWith(")")).ToList();
 
-                        foreach (string ipc in ipcs)
+                        foreach (var ipc in ipcs)
                         {
-                            Match match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\(?(?<edi>\d{4}.\d{2})\)?");
+                            var match = Regex.Match(ipc.Trim(), @"(?<class>.+)\s\(?(?<edi>\d{4}.\d{2})\)?");
 
                             if (match.Success)
                             {
@@ -173,11 +311,11 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(33)")|| inid.StartsWith("(30)"))
                     {
-                        List<string> priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(33) Negara", "").Replace("(30)", "").Trim(), @"(?=\d{2}\/?\d+)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(33) Negara", "").Replace("(30)", "").Trim(), @"(?=\d{2}\/?\d+)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (string priotity in priorities)
+                        foreach (var priotity in priorities)
                         {
-                            Match match = Regex.Match(priotity.Trim(), @"(?<num>.+)\s(?<day>\d{2}).(?<month>\D+).(?<year>\d{2})\s(?<code>.+)");
+                            var match = Regex.Match(priotity.Trim(), @"(?<num>.+)\s(?<day>\d{2}).(?<month>\D+).(?<year>\d{2})\s(?<code>.+)");
 
                             if (match.Success)
                             {
@@ -200,11 +338,11 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(74)"))
                     {
-                        Match match = Regex.Match(inid, @"(?<i71>Nama dan Alamat yang.+)\n(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
+                        var match = Regex.Match(inid, @"(?<i71>Nama dan Alamat yang.+)\n(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
 
                         if (match.Success)
                         {
-                            Match match71 = Regex.Match(match.Groups["i71"].Value.Replace("(74)", "").Replace("Nama dan Alamat yang mengajukan Permohonan Paten :", "").Trim(), @"(?<name>.+)\n(?<adress>.+),?\s(?<country>[A-Z].+)");
+                            var match71 = Regex.Match(match.Groups["i71"].Value.Replace("(74)", "").Replace("Nama dan Alamat yang mengajukan Permohonan Paten :", "").Trim(), @"(?<name>.+)\n(?<adress>.+),?\s(?<country>[A-Z].+)");
                             if (match71.Success)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
@@ -218,11 +356,11 @@ namespace Diamond_ID_Maksim
 
                             if (MakeCountry(match71.Groups["country"].Value.Trim()) == null) Console.WriteLine(" ======================================================== " + $"{match71.Groups["country"].Value.Trim()}");
 
-                            List<string> inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string inventor in inventors)
+                            foreach (var inventor in inventors)
                             {
-                                Match match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
+                                var match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
 
                                 if (match72.Success)
                                 {
@@ -235,7 +373,7 @@ namespace Diamond_ID_Maksim
                                 else Console.WriteLine($"{inventor} -- 72");
                             }
 
-                            Match match74 = Regex.Match(match.Groups["i74"].Value.Trim(), @"(?<name>.+?)\n(?<adress>.+)");
+                            var match74 = Regex.Match(match.Groups["i74"].Value.Trim(), @"(?<name>.+?)\n(?<adress>.+)");
 
                             if (match74.Success)
                             {
@@ -249,14 +387,14 @@ namespace Diamond_ID_Maksim
                         }
                         else 
                         {
-                            Match match1 = Regex.Match(inid, @"(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
+                            var match1 = Regex.Match(inid, @"(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
                             if (match1.Success)
                             {
-                                List<string> inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                                foreach (string inventor in inventors)
+                                foreach (var inventor in inventors)
                                 {
-                                    Match match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
+                                    var match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
 
                                     if (match72.Success)
                                     {
@@ -269,7 +407,7 @@ namespace Diamond_ID_Maksim
                                     else Console.WriteLine($"{inventor} -- 72");
                                 }
 
-                                Match match74 = Regex.Match(match.Groups["i74"].Value.Trim(), @"(?<name>.+?)\n(?<adress>.+)");
+                                var match74 = Regex.Match(match.Groups["i74"].Value.Trim(), @"(?<name>.+?)\n(?<adress>.+)");
 
                                 if (match74.Success)
                                 {
@@ -305,7 +443,7 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(43)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(43) Tanggal Pengumuman Paten :", ""), @"\d{2}.\d{2}.\d{4}");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(43) Tanggal Pengumuman Paten :", ""), @"\d{2}.\d{2}.\d{4}");
 
                         if (match.Success)
                         {
@@ -322,7 +460,7 @@ namespace Diamond_ID_Maksim
             }
             else if(subCode == "2")
             {
-                foreach (string inid in MakeInids(note))
+                foreach (var inid in MakeInids(note))
                 {
                     if (inid.StartsWith("(20)"))
                     {
@@ -352,7 +490,7 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(43)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(43) Tanggal Pengumuman Paten :", ""), @"\d{2}.\d{2}.\d{4}");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(43) Tanggal Pengumuman Paten :", ""), @"\d{2}.\d{2}.\d{4}");
 
                         if (match.Success)
                         {
@@ -382,11 +520,11 @@ namespace Diamond_ID_Maksim
                     else
                     if (inid.StartsWith("(74)"))
                     {
-                        Match match = Regex.Match(inid, @"(?<i71>Nama dan Alamat yang.+)\n(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
+                        var match = Regex.Match(inid, @"(?<i71>Nama dan Alamat yang.+)\n(?<i72>Nama Inventor.+)\n(?<i74>Nama dan Alamat.+)", RegexOptions.Singleline);
 
                         if (match.Success)
                         {
-                            Match match71 = Regex.Match(match.Groups["i71"].Value.Replace("(74)", "").Replace("Nama dan Alamat yang mengajukan Permohonan Paten :", "").Trim(), @"(?<name>.+)\n(?<adress>.+),?\s(?<country>[A-Z].+)");
+                            var match71 = Regex.Match(match.Groups["i71"].Value.Replace("(74)", "").Replace("Nama dan Alamat yang mengajukan Permohonan Paten :", "").Trim(), @"(?<name>.+)\n(?<adress>.+),?\s(?<country>[A-Z].+)");
                             if (match71.Success)
                             {
                                 statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
@@ -400,11 +538,11 @@ namespace Diamond_ID_Maksim
 
                             if (MakeCountry(match71.Groups["country"].Value.Trim()) == null) Console.WriteLine(" ======================================================== " + $"{match71.Groups["country"].Value.Trim()}");
 
-                            List<string> inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var inventors = Regex.Split(match.Groups["i72"].Value.Replace("Nama Inventor :", "").Trim(), @"\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string inventor in inventors)
+                            foreach (var inventor in inventors)
                             {
-                                Match match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
+                                var match72 = Regex.Match(inventor.Trim(), @"(?<name>.+),\s(?<country>[A-Z]{2})");
 
                                 if (match72.Success)
                                 {
@@ -417,7 +555,7 @@ namespace Diamond_ID_Maksim
                                 else Console.WriteLine($"{inventor} -- 72");
                             }
 
-                            Match match74 = Regex.Match(match.Groups["i74"].Value.Replace("Nama dan Alamat Konsultan Paten :","").Trim(), @"(?<name>.+?)\n(?<adress>.+)");
+                            var match74 = Regex.Match(match.Groups["i74"].Value.Replace("Nama dan Alamat Konsultan Paten :","").Trim(), @"(?<name>.+?)\n(?<adress>.+)");
 
                             if (match74.Success)
                             {
@@ -438,11 +576,11 @@ namespace Diamond_ID_Maksim
             }
             else if (subCode is "3")
             {
-                foreach (string inid in MakeInids(note.Trim()))
+                foreach (var inid in MakeInids(note.Trim()))
                 {
                     if (inid.StartsWith("(11)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<num>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<num>.+)");
 
                         if (match.Success)
                         {
@@ -452,7 +590,7 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(13)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"\)(?<kind>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"\)(?<kind>.+)");
 
                         if (match.Success)
                         {
@@ -462,15 +600,15 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(51)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<ipcs>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<ipcs>.+)");
 
                         if (match.Success)
                         {
-                            List<string> ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @",").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string ipc in ipcs)
+                            foreach (var ipc in ipcs)
                             {
-                                Match ipcMatch = Regex.Match(ipc.Trim(), @"(?<class>.+)\s(?<num>\d+\/\d+)");
+                                var ipcMatch = Regex.Match(ipc.Trim(), @"(?<class>.+)\s(?<num>\d+\/\d+)");
 
                                 if (ipcMatch.Success)
                                 {
@@ -486,7 +624,7 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(21)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<num>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<num>.+)");
 
                         if (match.Success)
                         {
@@ -496,15 +634,15 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(22)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<date>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<date>.+)");
 
                         if (match.Success)
                         {
-                            Match dateMatch = Regex.Match(match.Groups["date"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+                            var dateMatch = Regex.Match(match.Groups["date"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
 
                             if (dateMatch.Success)
                             {
-                                string month = MakeMonth(dateMatch.Groups["month"].Value.Trim());
+                                var month = MakeMonth(dateMatch.Groups["month"].Value.Trim());
                                 if (month is not null)
                                 {
                                     statusEvent.Biblio.Application.Date = dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + dateMatch.Groups["day"].Value.Trim();
@@ -517,19 +655,19 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(33)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"Negara(?<prio>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @"Negara(?<prio>.+)");
 
                         if (match.Success)
                         {
-                            List<string> priorities = Regex.Split(match.Groups["prio"].Value.Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var priorities = Regex.Split(match.Groups["prio"].Value.Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string priority in priorities)
+                            foreach (var priority in priorities)
                             {
-                                Match prioMatch = Regex.Match(priority.Trim(), @"(?<num>.+)\s(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})\s(?<code>\D{2})");
+                                var prioMatch = Regex.Match(priority.Trim(), @"(?<num>.+)\s(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})\s(?<code>\D{2})");
 
                                 if (prioMatch.Success)
                                 {
-                                    string month = MakeMonth(prioMatch.Groups["month"].Value.Trim());
+                                    var month = MakeMonth(prioMatch.Groups["month"].Value.Trim());
 
                                     if (month is not null)
                                     {
@@ -550,15 +688,15 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(43)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<date>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<date>.+)");
 
                         if (match.Success)
                         {
-                            Match dateMatch = Regex.Match(match.Groups["date"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
+                            var dateMatch = Regex.Match(match.Groups["date"].Value.Trim(), @"(?<day>\d+)\s(?<month>\D+)\s(?<year>\d{4})");
 
                             if (dateMatch.Success)
                             {
-                                string month = MakeMonth(dateMatch.Groups["month"].Value.Trim());
+                                var month = MakeMonth(dateMatch.Groups["month"].Value.Trim());
                                 if (month is not null)
                                 {
                                     statusEvent.Biblio.Publication.Date = dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + dateMatch.Groups["day"].Value.Trim();
@@ -571,11 +709,11 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(71)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @":\n(?<name>.+)\n(?<adress>.+\n?.+\s)(?<country>.+)");
+                        var match = Regex.Match(inid.Trim(), @":\n(?<name>.+)\n(?<adress>.+\n?.+\s)(?<country>.+)");
 
                         if (match.Success)
                         {
-                            string country = MakeCountry(match.Groups["country"].Value.Trim());
+                            var country = MakeCountry(match.Groups["country"].Value.Trim());
 
                             if (country is not null)
                             {
@@ -592,15 +730,15 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(72)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @":(?<inventors>.+)", RegexOptions.Singleline);
+                        var match = Regex.Match(inid.Trim(), @":(?<inventors>.+)", RegexOptions.Singleline);
 
                         if (match.Success)
                         {
-                            List <string> inventors = Regex.Split(match.Groups["inventors"].Value.Trim(), "\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                            var inventors = Regex.Split(match.Groups["inventors"].Value.Trim(), "\n").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                            foreach (string inventor in inventors)
+                            foreach (var inventor in inventors)
                             {
-                                Match inventorMatch = Regex.Match(inventor.Trim(), @"(?<name>.+),(?<code>[A-Z]{2})");
+                                var inventorMatch = Regex.Match(inventor.Trim(), @"(?<name>.+),(?<code>[A-Z]{2})");
 
                                 if (inventorMatch.Success)
                                 {
@@ -616,7 +754,7 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(74)"))
                     {
-                        Match match = Regex.Match(inid.Trim(), @":\n(?<name>.+?)\n(?<adress>.+)", RegexOptions.Singleline);
+                        var match = Regex.Match(inid.Trim(), @":\n(?<name>.+?)\n(?<adress>.+)", RegexOptions.Singleline);
 
                         if (match.Success)
                         {
@@ -631,7 +769,7 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(54)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<title>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<title>.+)");
 
                         if (match.Success)
                         {
@@ -645,7 +783,7 @@ namespace Diamond_ID_Maksim
                     }
                     else if (inid.StartsWith("(57)"))
                     {
-                        Match match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<abstract>.+)");
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Trim(), @":(?<abstract>.+)");
 
                         if (match.Success)
                         {
@@ -661,9 +799,62 @@ namespace Diamond_ID_Maksim
             }
             return statusEvent;
         }
+
+        private List<string> MakeInids(string note, string subcode)
+        {
+            var inids = new List<string>();
+
+            if (subcode == "1")
+            {
+                var match = Regex.Match(note, @"(?<FirstPart>\(20.+)(?<Inid30>\(30.+)(?<SecondPart>\(43.+)(?<Inid57>\(57.+)", RegexOptions.Singleline);
+
+                if (match.Success)
+                {
+                    inids = Regex.Split(match.Groups["FirstPart"].Value + match.Groups["SecondPart"].Value, @"(?=\(\d{2}\).+)", RegexOptions.Singleline).Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    inids.Add(match.Groups["Inid30"].Value.Trim());
+                    inids.Add(match.Groups["Inid57"].Value.Trim());
+                }
+            }
+            return inids;
+        }
+        private string CleanInid(string inid, string subCode)
+        {
+            var cleanInid = string.Empty;
+            var match = Regex.Match(inid.Trim(), @"\d{2}\).+?:(?<inid>.+)", RegexOptions.Singleline);
+            if (match.Success)
+            {
+                cleanInid = match.Groups["inid"].Value.Trim();
+            }
+            return cleanInid;
+        }
+
+        private string MakeRightDate(string inid, string subCode)
+        {
+            var date = string.Empty;
+            if (subCode == "1")
+            {
+                var match = Regex.Match(inid.Trim(), @"(?<day>\d{2})(?<month>.+)(?<year>\d{4})");
+                if (match.Success)
+                {
+                    date = match.Groups["year"].Value.Trim() + "/" + MakeMonth(match.Groups["month"].Value.Trim()) + "/" +
+                           match.Groups["day"].Value.Trim();
+                }
+            }
+            return date;
+        }
+
+
+
+
+
+
+
+
+
         internal List<string> MakeInids (string note)
         {
-            List<string> inids = Regex.Split(note.Substring(0, note.IndexOf("(57)")).Trim(), @"(?=\(\d{2}\)\s?)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+            var inids = Regex.Split(note.Substring(0, note.IndexOf("(57)")).Trim(), @"(?=\(\d{2}\)\s?)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
             inids.Add(note.Substring(note.IndexOf("(57)")).Trim());
 
@@ -776,15 +967,15 @@ namespace Diamond_ID_Maksim
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
                 url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                HttpResponseMessage result = httpClient.PostAsync("", content).Result;
-                string answer = result.Content.ReadAsStringAsync().Result;
+                var result = httpClient.PostAsync("", content).Result;
+                _ = result.Content.ReadAsStringAsync().Result;
             }
         }
     }

@@ -17,10 +17,10 @@ namespace Diamond_GC_OCR
 
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; i++)
+                for (var i = 0; i < elemList.Count; i++)
                 {
                     var value = elemList[i].Value;
                     var pattern = @"(?<Counter>\d+)\s(?<AppNumber>\d+)\s(?<FillingDate>\d{2}\/\d{2}\/\d{4})\s(?<DecisionNo>\d+\/*\d+)\s(?<EventDate>\d{2}\/\d{2}\/\d{4})";
@@ -108,10 +108,10 @@ namespace Diamond_GC_OCR
         }
         public List<Sub06ElementOut> Sub06OutputValue(List<XElement> elemList)
         {
-            List<Sub06ElementOut> ElementsOut = new List<Sub06ElementOut>();
+            var ElementsOut = new List<Sub06ElementOut>();
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; i++)
+                for (var i = 0; i < elemList.Count; i++)
                 {
                     var value = elemList[i].Value;
                     var pattern = @"(?<Counter>\d+)\s(?<PatNumber>[A-Z]+\d+)\s(?<DecisionNo>\d+\/*\d+)\s(?<DecisionDate>\d{2}\/\d{2}\/\d{4})";

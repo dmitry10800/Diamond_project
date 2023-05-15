@@ -38,8 +38,8 @@ namespace Diamond_BE
                 input = input.Trim() + "\n" + owner;
             }
 
-            Regex pattern = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
-            MatchCollection matchesClass = pattern.Matches(input);
+            var pattern = new Regex(@"\(\d{2}\)", RegexOptions.IgnoreCase);
+            var matchesClass = pattern.Matches(input);
             if (matchesClass.Count > 0)
             {
                 foreach (Match match in matchesClass)

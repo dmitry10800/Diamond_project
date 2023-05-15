@@ -13,7 +13,7 @@ namespace Diamond_TR_Maksim
         {
             var methods = new Methods();
 
-            List<Diamond.Core.Models.LegalStatusEvent> convertedPatents = Sub switch
+            var convertedPatents = Sub switch
             {
                 "10" => methods.Start(Path,Sub),
                 "13" => methods.Start(Path, Sub),

@@ -9,11 +9,11 @@ namespace Diamond_BG_Subcode_21
         internal static string[] SplitRecords(string s)
         {
             string[] splittedRecords = null;
-            string tempStr = s.Replace("\n", " ").Trim();
+            var tempStr = s.Replace("\n", " ").Trim();
             if (!string.IsNullOrEmpty(tempStr))
             {
-                Regex reg = new Regex(@"BG/EP \d{7}");
-                MatchCollection matches = reg.Matches(tempStr);
+                var reg = new Regex(@"BG/EP \d{7}");
+                var matches = reg.Matches(tempStr);
                 if(matches.Count == 0)
                 {
                     reg = new Regex(@"EP \d{7}");
@@ -44,7 +44,7 @@ namespace Diamond_BG_Subcode_21
 
         internal static string DateNormalize(string s)
         {
-            string dateNormalized = s;
+            var dateNormalized = s;
             if (Regex.IsMatch(s, @"\d{4}\/*\-*\.*\d{2}\/*\-*\.*\d{2}"))
             {
                 var date = Regex.Match(s, @"(?<year>\d{4})\/*\-*\.*(?<month>\d{2})\/*\-*\.*(?<day>\d{2})");

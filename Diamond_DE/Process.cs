@@ -13,11 +13,11 @@ namespace Diamond_DE
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub1 processing started");
-                List<OutElements.Sub1> elements = new List<OutElements.Sub1>();
+                var elements = new List<OutElements.Sub1>();
                 var I71Separator = "Anm:";
                 var I74Separator = "Vtr:";
                 var checkPattern = new Regex(@"(?<number>.*)\s(?<date>\d{2}\.\d{2}\.\d{4}).*");
-                for (int i = 0; i < v.Count; i++)
+                for (var i = 0; i < v.Count; i++)
                 {
                     var strValue = "";
                     do
@@ -77,11 +77,11 @@ namespace Diamond_DE
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub3 processing started");
-                List<OutElements.Sub3> elements = new List<OutElements.Sub3>();
+                var elements = new List<OutElements.Sub3>();
                 var I73Separator = "Inh:";
                 var I74Separator = "Vtr:";
                 var checkPattern = new Regex(@"(?<number>.*)\s(?<date>\d{2}\.\d{2}\.\d{4}).*");
-                for (int i = 0; i < v.Count; i++)
+                for (var i = 0; i < v.Count; i++)
                 {
                     var strValue = "";
                     do
@@ -142,8 +142,8 @@ namespace Diamond_DE
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub6 processing started");
-                List<OutElements.Sub6> elements = new List<OutElements.Sub6>();
-                Regex recordPattern = new Regex(@"(?<IPC>[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+)\s(?<AppNumber>.*)\s(?<Date>\d{2}\.\d{2}\.\d{4})");
+                var elements = new List<OutElements.Sub6>();
+                var recordPattern = new Regex(@"(?<IPC>[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+)\s(?<AppNumber>.*)\s(?<Date>\d{2}\.\d{2}\.\d{4})");
                 foreach (var record in v)
                 {
                     var match = recordPattern.Match(record.Value.Replace("\n", " "));
@@ -175,8 +175,8 @@ namespace Diamond_DE
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub7 processing started");
-                List<OutElements.Sub7> elements = new List<OutElements.Sub7>();
-                Regex recordPattern = new Regex(@"(?<IPC>[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+)\s(?<AppNumber>.*)\s(?<Date>\d{2}\.\d{2}\.\d{4})");
+                var elements = new List<OutElements.Sub7>();
+                var recordPattern = new Regex(@"(?<IPC>[A-Z]{1}\d{2}[A-Z]{1}\s\d+\/\d+)\s(?<AppNumber>.*)\s(?<Date>\d{2}\.\d{2}\.\d{4})");
                 foreach (var record in v)
                 {
                     var match = recordPattern.Match(record.Value.Replace("\n", " "));

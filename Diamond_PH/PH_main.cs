@@ -15,29 +15,29 @@ namespace Diamond_PH
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTetml.GetFiles("*.txt", SearchOption.AllDirectories))
+            foreach (var file in PathToTetml.GetFiles("*.txt", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> paraList = new List<XElement>();
-            List<string> subCode7List = new List<string>();
+            var paraList = new List<XElement>();
+            var subCode7List = new List<string>();
 
             foreach (var file in files)
             {
                 currentFile = new FileInfo(file);
                 currentFileName = Path.GetFileName(file);
-                string text = File.ReadAllText(file);
+                var text = File.ReadAllText(file);
 
-                Regex regex = new Regex(@"(?<=\[[A-Z]{2}\]\s?\r\n)");
-                List<string> splitText = regex.Split(text).Where(val => !string.IsNullOrEmpty(val)).ToList(); 
+                var regex = new Regex(@"(?<=\[[A-Z]{2}\]\s?\r\n)");
+                var splitText = regex.Split(text).Where(val => !string.IsNullOrEmpty(val)).ToList(); 
 
                 subCode7List = splitText;
             }
 
             if (subCode7List.Count > 0)
             {
-                List<Elements> processedRecords = Processing.SubCode7(subCode7List);
+                var processedRecords = Processing.SubCode7(subCode7List);
 
                 var legalEvents = DiamondConverter.Sub7Convert(processedRecords);
 

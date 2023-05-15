@@ -12,7 +12,7 @@ namespace Diamond_FR
         {
             public static void Run(List<XElement> v)
             {
-                List<OutElements.FirstList> elements = new List<OutElements.FirstList>();
+                var elements = new List<OutElements.FirstList>();
                 var pat = new Regex(@"(?<country>[A-Z]{2})\s*(?<appNum>\d+\b)\s*(?<noteNum>\d+)");
                 var patA = new Regex(@"(?<country>[A-Z]{2})\s*(?<appNum>\d+[A-Z]\d+\b)\s*(?<noteNum>\d+)");
                 foreach (var item in v)
@@ -50,7 +50,7 @@ namespace Diamond_FR
         {
             public static void Run(List<XElement> v)
             {
-                List<OutElements.SecondList> elements = new List<OutElements.SecondList>();
+                var elements = new List<OutElements.SecondList>();
                 var pattern = new Regex(@"(?<NatureOfApplication>[A-Z]{2})\s(?<AppNumber>\d+)\s(?<RegNumber>\d+)");
                 foreach (var record in v)
                 {
@@ -76,7 +76,7 @@ namespace Diamond_FR
         {
             public static void Run(List<XElement> v)
             {
-                List<OutElements.SecondList> elements = new List<OutElements.SecondList>();
+                var elements = new List<OutElements.SecondList>();
                 var pattern = new Regex(@"(?<NatureOfApplication>[A-Z]{2})\s(?<AppNumber>\d+)\s(?<RegNumber>\d+)");
                 foreach (var record in v)
                 {

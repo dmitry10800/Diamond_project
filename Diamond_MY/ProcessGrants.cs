@@ -45,14 +45,14 @@ namespace Diamond_MY
         }
         public List<ElementOut> OutputValue(List<XElement> elemList)
         {
-            List<ElementOut> ElementsOut = new List<ElementOut>();
+            var ElementsOut = new List<ElementOut>();
             ElementOut currentElement;
             if (elemList != null)
             {
-                for (int i = 0; i < elemList.Count; ++i)
+                for (var i = 0; i < elemList.Count; ++i)
                 {
                     var element = elemList[i];
-                    string value = element.Value;
+                    var value = element.Value;
                     string tmpRecordValue = null;
                     string[] splittedRecord = null;
                     int tmpInc;
@@ -75,7 +75,7 @@ namespace Diamond_MY
                         {
                             if (record.StartsWith(I12))
                             {
-                                string tmpValue = record.Trim();
+                                var tmpValue = record.Trim();
                                 if (tmpValue.Contains(I11))
                                 {
                                     currentElement.I11Values = Methods.I11Process(record.Substring(record.IndexOf(I11)).Replace(I11, "").Trim());

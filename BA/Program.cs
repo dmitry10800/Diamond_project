@@ -38,8 +38,8 @@ namespace BA
             var url = IsStaging ? StagingLensLink : ProductionLensLink;
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
-                HttpClient httpClient = new HttpClient{ BaseAddress = new Uri(url) };
+                var tmpValue = JsonConvert.SerializeObject(rec);
+                var httpClient = new HttpClient{ BaseAddress = new Uri(url) };
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var result = httpClient.PostAsync("", new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json")).Result;
                 if (!result.IsSuccessStatusCode)

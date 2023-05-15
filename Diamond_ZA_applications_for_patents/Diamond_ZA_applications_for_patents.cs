@@ -34,9 +34,9 @@ namespace Diamond_ZA_applications_for_patents
         }
         static string CcIdentification(string ccStr)
         {
-            string tmpStr = "";
-            List<string> ccFullNames = new List<string> { "afghanistan", "aland islands", "albania", "algeria", "american samoa", "andorra", "angola", "anguilla", "antarctica", "antigua and barbuda", "argentina", "armenia", "aruba", "australia", "austria", "azerbaijan", "bahamas", "bahrain", "bangladesh", "barbados", "belarus", "belgium", "belize", "benin", "bermuda", "bhutan", "bolivia", "bosnia and herzegovina", "botswana", "bouvet island", "brazil", "british virgin islands", "british indian ocean territory", "brunei darussalam", "bulgaria", "burkina faso", "burundi", "cambodia", "cameroon", "canada", "cape verde", "cayman islands", "central african republic", "chad", "chile", "china", "hong kong, sar china", "macao, sar china", "christmas island", "cocos (keeling) islands", "colombia", "comoros", "congo (brazzaville)", "congo, (kinshasa)", "cook islands", "costa rica", "côte d'ivoire", "croatia", "cuba", "cyprus", "czech republic", "denmark", "djibouti", "dominica", "dominican republic", "ecuador", "egypt", "el salvador", "equatorial guinea", "eritrea", "estonia", "ethiopia", "falkland islands (malvinas)", "faroe islands", "fiji", "finland", "france", "french guiana", "french polynesia", "french southern territories", "gabon", "gambia", "georgia", "germany", "ghana", "gibraltar", "greece", "greenland", "grenada", "guadeloupe", "guam", "guatemala", "guernsey", "guinea", "guinea-bissau", "guyana", "haiti", "heard and mcdonald islands", "holy see (vatican city state)", "honduras", "hungary", "iceland", "india", "indonesia", "iran, islamic republic of", "iraq", "ireland", "isle of man", "israel", "italy", "jamaica", "japan", "jersey", "jordan", "kazakhstan", "kenya", "kiribati", "korea (north)", "korea (south)", "kuwait", "kyrgyzstan", "lao pdr", "latvia", "lebanon", "lesotho", "liberia", "libya", "liechtenstein", "lithuania", "luxembourg", "macedonia, republic of", "madagascar", "malawi", "malaysia", "maldives", "mali", "malta", "marshall islands", "martinique", "mauritania", "mauritius", "mayotte", "mexico", "micronesia, federated states of", "moldova", "monaco", "mongolia", "montenegro", "montserrat", "morocco", "mozambique", "myanmar", "namibia", "nauru", "nepal", "netherlands", "netherlands antilles", "new caledonia", "new zealand", "nicaragua", "niger", "nigeria", "niue", "norfolk island", "northern mariana islands", "norway", "oman", "pakistan", "palau", "palestinian territory", "panama", "papua new guinea", "paraguay", "peru", "philippines", "pitcairn", "poland", "portugal", "puerto rico", "qatar", "réunion", "romania", "russian federation", "rwanda", "saint-barthélemy", "saint helena", "saint kitts and nevis", "saint lucia", "saint-martin (french part)", "saint pierre and miquelon", "saint vincent and grenadines", "samoa", "san marino", "sao tome and principe", "saudi arabia", "senegal", "serbia", "seychelles", "sierra leone", "singapore", "slovakia", "slovenia", "solomon islands", "somalia", "south africa", "south georgia and the south sandwich islands", "south sudan", "spain", "sri lanka", "sudan", "suriname", "svalbard and jan mayen islands", "swaziland", "sweden", "switzerland", "syrian arab republic (syria)", "taiwan, republic of china", "tajikistan", "tanzania, united republic of", "thailand", "timor-leste", "togo", "tokelau", "tonga", "trinidad and tobago", "tunisia", "turkey", "turkmenistan", "turks and caicos islands", "tuvalu", "uganda", "ukraine", "united arab emirates", "united kingdom", "united states of america", "us minor outlying islands", "uruguay", "uzbekistan", "vanuatu", "venezuela (bolivarian republic)", "viet nam", "virgin islands, us", "wallis and futuna islands", "western sahara", "yemen", "zambia", "zimbabwe", "p. r. china", "republic of korea", "korea", "republic of san marino", "u s a", "u.s.a", "united states", "uae", "u.a.e", "congo", "switzerland", "chile", "prc", "p.r.c.", "england", "london", "united kingdom", "hong kong", "india", "cayman", "méxico", "r.o.c.", "u.s.a", "united sates of america", "united state of america,", "vietnam", "russia", "european union", "benelux" };
-            List<string> ccShortNames = new List<string> { "AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BV", "BR", "VG", "IO", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "KY", "CF", "TD", "CL", "CN", "HK", "MO", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT", "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "AN", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN", "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN", "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN", "VI", "WF", "EH", "YE", "ZM", "ZW", "CN", "KR", "KR", "SM", "US", "US", "US", "AE", "AE", "CD", "CH", "CL", "CN", "CN", "GB", "GB", "GB", "HK", "IN", "KY", "MX", "TW", "US", "US", "US", "VN", "RU", "EM", "BX" };
+            var tmpStr = "";
+            var ccFullNames = new List<string> { "afghanistan", "aland islands", "albania", "algeria", "american samoa", "andorra", "angola", "anguilla", "antarctica", "antigua and barbuda", "argentina", "armenia", "aruba", "australia", "austria", "azerbaijan", "bahamas", "bahrain", "bangladesh", "barbados", "belarus", "belgium", "belize", "benin", "bermuda", "bhutan", "bolivia", "bosnia and herzegovina", "botswana", "bouvet island", "brazil", "british virgin islands", "british indian ocean territory", "brunei darussalam", "bulgaria", "burkina faso", "burundi", "cambodia", "cameroon", "canada", "cape verde", "cayman islands", "central african republic", "chad", "chile", "china", "hong kong, sar china", "macao, sar china", "christmas island", "cocos (keeling) islands", "colombia", "comoros", "congo (brazzaville)", "congo, (kinshasa)", "cook islands", "costa rica", "côte d'ivoire", "croatia", "cuba", "cyprus", "czech republic", "denmark", "djibouti", "dominica", "dominican republic", "ecuador", "egypt", "el salvador", "equatorial guinea", "eritrea", "estonia", "ethiopia", "falkland islands (malvinas)", "faroe islands", "fiji", "finland", "france", "french guiana", "french polynesia", "french southern territories", "gabon", "gambia", "georgia", "germany", "ghana", "gibraltar", "greece", "greenland", "grenada", "guadeloupe", "guam", "guatemala", "guernsey", "guinea", "guinea-bissau", "guyana", "haiti", "heard and mcdonald islands", "holy see (vatican city state)", "honduras", "hungary", "iceland", "india", "indonesia", "iran, islamic republic of", "iraq", "ireland", "isle of man", "israel", "italy", "jamaica", "japan", "jersey", "jordan", "kazakhstan", "kenya", "kiribati", "korea (north)", "korea (south)", "kuwait", "kyrgyzstan", "lao pdr", "latvia", "lebanon", "lesotho", "liberia", "libya", "liechtenstein", "lithuania", "luxembourg", "macedonia, republic of", "madagascar", "malawi", "malaysia", "maldives", "mali", "malta", "marshall islands", "martinique", "mauritania", "mauritius", "mayotte", "mexico", "micronesia, federated states of", "moldova", "monaco", "mongolia", "montenegro", "montserrat", "morocco", "mozambique", "myanmar", "namibia", "nauru", "nepal", "netherlands", "netherlands antilles", "new caledonia", "new zealand", "nicaragua", "niger", "nigeria", "niue", "norfolk island", "northern mariana islands", "norway", "oman", "pakistan", "palau", "palestinian territory", "panama", "papua new guinea", "paraguay", "peru", "philippines", "pitcairn", "poland", "portugal", "puerto rico", "qatar", "réunion", "romania", "russian federation", "rwanda", "saint-barthélemy", "saint helena", "saint kitts and nevis", "saint lucia", "saint-martin (french part)", "saint pierre and miquelon", "saint vincent and grenadines", "samoa", "san marino", "sao tome and principe", "saudi arabia", "senegal", "serbia", "seychelles", "sierra leone", "singapore", "slovakia", "slovenia", "solomon islands", "somalia", "south africa", "south georgia and the south sandwich islands", "south sudan", "spain", "sri lanka", "sudan", "suriname", "svalbard and jan mayen islands", "swaziland", "sweden", "switzerland", "syrian arab republic (syria)", "taiwan, republic of china", "tajikistan", "tanzania, united republic of", "thailand", "timor-leste", "togo", "tokelau", "tonga", "trinidad and tobago", "tunisia", "turkey", "turkmenistan", "turks and caicos islands", "tuvalu", "uganda", "ukraine", "united arab emirates", "united kingdom", "united states of america", "us minor outlying islands", "uruguay", "uzbekistan", "vanuatu", "venezuela (bolivarian republic)", "viet nam", "virgin islands, us", "wallis and futuna islands", "western sahara", "yemen", "zambia", "zimbabwe", "p. r. china", "republic of korea", "korea", "republic of san marino", "u s a", "u.s.a", "united states", "uae", "u.a.e", "congo", "switzerland", "chile", "prc", "p.r.c.", "england", "london", "united kingdom", "hong kong", "india", "cayman", "méxico", "r.o.c.", "u.s.a", "united sates of america", "united state of america,", "vietnam", "russia", "european union", "benelux" };
+            var ccShortNames = new List<string> { "AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BV", "BR", "VG", "IO", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "KY", "CF", "TD", "CL", "CN", "HK", "MO", "CX", "CC", "CO", "KM", "CG", "CD", "CK", "CR", "CI", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FK", "FO", "FJ", "FI", "FR", "GF", "PF", "TF", "GA", "GM", "GE", "DE", "GH", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GG", "GN", "GW", "GY", "HT", "HM", "VA", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IM", "IL", "IT", "JM", "JP", "JE", "JO", "KZ", "KE", "KI", "KP", "KR", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MD", "MC", "MN", "ME", "MS", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "AN", "NC", "NZ", "NI", "NE", "NG", "NU", "NF", "MP", "NO", "OM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PH", "PN", "PL", "PT", "PR", "QA", "RE", "RO", "RU", "RW", "BL", "SH", "KN", "LC", "MF", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "GS", "SS", "ES", "LK", "SD", "SR", "SJ", "SZ", "SE", "CH", "SY", "TW", "TJ", "TZ", "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN", "VI", "WF", "EH", "YE", "ZM", "ZW", "CN", "KR", "KR", "SM", "US", "US", "US", "AE", "AE", "CD", "CH", "CL", "CN", "CN", "GB", "GB", "GB", "HK", "IN", "KY", "MX", "TW", "US", "US", "US", "VN", "RU", "EM", "BX" };
             foreach (var country in ccFullNames)
             {
                 if (ccStr.ToLower().Contains(country))
@@ -52,7 +52,7 @@ namespace Diamond_ZA_applications_for_patents
         static string DateSwap(string tmpDate)
         {
             string swapDate;
-            string[] splitDate = tmpDate.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+            var splitDate = tmpDate.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
             return swapDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
         }
 
@@ -79,8 +79,8 @@ namespace Diamond_ZA_applications_for_patents
                             {
                                 if (record.Count(f => f == ',') >= 2)
                                 {
-                                    int firstIndex = record.IndexOf(",");
-                                    int secondIndex = record.IndexOf(",", firstIndex + 1);
+                                    var firstIndex = record.IndexOf(",");
+                                    var secondIndex = record.IndexOf(",", firstIndex + 1);
                                     tmpSplName = record.Remove(secondIndex).Trim();
                                     tmpSplAddr = record.Substring(secondIndex).Trim(',').Trim();
                                 }
@@ -105,8 +105,8 @@ namespace Diamond_ZA_applications_for_patents
                 {
                     if (tmpStr.Count(f => f == ',') >= 2)
                     {
-                        int firstIndex = tmpStr.IndexOf(",");
-                        int secondIndex = tmpStr.IndexOf(",", firstIndex + 1);
+                        var firstIndex = tmpStr.IndexOf(",");
+                        var secondIndex = tmpStr.IndexOf(",", firstIndex + 1);
                         tmpSplName = tmpStr.Remove(secondIndex).Trim();
                         tmpSplAddr = tmpStr.Substring(secondIndex).Trim(',').Trim();
                     }
@@ -150,7 +150,7 @@ namespace Diamond_ZA_applications_for_patents
             string[] splittedRecord = null;
             List<string> splittedRecordTrimed = null;
             splittedRecordTrimed = new List<string>();
-            string tempStrC = recString.Replace("\n", " ");
+            var tempStrC = recString.Replace("\n", " ");
             if (recString != "")
             {
                 if (recString.Contains("\n"))
@@ -176,18 +176,18 @@ namespace Diamond_ZA_applications_for_patents
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\ZA\App\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             foreach (var tetFile in files)
             {
                 ElementsOut.Clear();
-                string FileName = tetFile;
-                XElement tet = XElement.Load(FileName);
+                var FileName = tetFile;
+                var tet = XElement.Load(FileName);
                 var root = Directory.GetParent(FileName);
-                string folderPath = Path.Combine(root.FullName);
+                var folderPath = Path.Combine(root.FullName);
                 Directory.CreateDirectory(folderPath);
                 /*TXT file for output information*/
-                string path = Path.Combine(folderPath, FileName.Substring(0, FileName.IndexOf(".")) + ".txt"); //Output Filename
-                StreamWriter sf = new StreamWriter(path);
+                var path = Path.Combine(folderPath, FileName.Substring(0, FileName.IndexOf(".")) + ".txt"); //Output Filename
+                var sf = new StreamWriter(path);
                 /*TETML elements*/
                 var elements = tet.Descendants().Where(d => d.Name.LocalName == "Text"/* && !d.Value.StartsWith("- APPLIED ON")*/)
                     .SkipWhile(e => !e.Value.Contains("APPLICATIONS FOR PATENTS"))
@@ -196,15 +196,15 @@ namespace Diamond_ZA_applications_for_patents
                 ElementOut currentElement = null;
                 sortedElements = new List<string>();
                 string I22Date = null;
-                for (int i = 0; i < elements.Count; ++i)
+                for (var i = 0; i < elements.Count; ++i)
                 {
                     var element = elements[i];
-                    string value = element.Value;
+                    var value = element.Value;
 
                     if (Regex.IsMatch(value, @"\d{4}\/\d{5}\s*\~") /*&& !value.StartsWith("")*/)
                     {
-                        int tmpInc = i;
-                        string tmpRecordValue = "";
+                        var tmpInc = i;
+                        var tmpRecordValue = "";
                         do
                         {
                             tmpRecordValue += elements[tmpInc].Value + " ";
@@ -227,7 +227,7 @@ namespace Diamond_ZA_applications_for_patents
                         {
                             I22Date = record.Replace("APPLIED ON", "").Replace("-", "").Replace("/", "-").Trim();
                         }
-                        string[] recordSplitted = RecSplit(record);
+                        var recordSplitted = RecSplit(record);
                         if (recordSplitted != null)
                         {
                             foreach (var item in recordSplitted)
@@ -270,7 +270,7 @@ namespace Diamond_ZA_applications_for_patents
                                 /*32*/
                                 if (item.StartsWith(I32))
                                 {
-                                    string tmpItem = item.Replace(I32, "").Trim();
+                                    var tmpItem = item.Replace(I32, "").Trim();
                                     if (item.Contains(I33))
                                     {
                                         currentElement.I32 = (currentElement.I32 ?? Enumerable.Empty<string>()).Concat(new string[] { DateSwap(tmpItem.Remove(tmpItem.IndexOf(I33)).Replace(";", "").Trim()) }).ToArray();
@@ -293,13 +293,13 @@ namespace Diamond_ZA_applications_for_patents
                 /*Output*/
                 if (ElementsOut != null)
                 {
-                    int leCounter = 1;
+                    var leCounter = 1;
                     /*list of record for whole gazette chapter*/
-                    List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+                    var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
                     /*Create a new event to fill*/
                     foreach (var record in ElementsOut)
                     {
-                        Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                        var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
                         legalEvent.GazetteName = Path.GetFileName(tetFile.Replace(".tetml", ".pdf"));
                         /*Setting subcode*/
@@ -310,7 +310,7 @@ namespace Diamond_ZA_applications_for_patents
                         legalEvent.CountryCode = "ZA";
                         /*Setting File Name*/
                         legalEvent.Id = leCounter++; // creating uniq identifier
-                        Biblio biblioData = new Biblio();
+                        var biblioData = new Biblio();
                         /*Elements output*/
                         biblioData.Application.Number = record.I21;
                         biblioData.Application.Date = record.I22;
@@ -318,9 +318,9 @@ namespace Diamond_ZA_applications_for_patents
                         if (record.I31 != null && record.I32 != null && record.I33 != null)
                         {
                             biblioData.Priorities = new List<Priority>();
-                            for (int i = 0; i < record.I31.Count(); i++)
+                            for (var i = 0; i < record.I31.Count(); i++)
                             {
-                                Priority priority = new Priority();
+                                var priority = new Priority();
                                 priority.Country = record.I33[i];
                                 priority.Date = record.I32[i];
                                 priority.Number = record.I31[i];
@@ -330,7 +330,7 @@ namespace Diamond_ZA_applications_for_patents
                         }
                         /*---------------------*/
                         /*54 Title*/
-                        Title title = new Title()
+                        var title = new Title()
                         {
                             Language = "EN",
                             Text = record.I54
@@ -341,9 +341,9 @@ namespace Diamond_ZA_applications_for_patents
                         if (record.I71Adress != null && record.I71Name != null)
                         {
                             biblioData.Applicants = new List<PartyMember>();
-                            for (int i = 0; i < record.I71Name.Count(); i++)
+                            for (var i = 0; i < record.I71Name.Count(); i++)
                             {
-                                PartyMember applicants = new PartyMember()
+                                var applicants = new PartyMember()
                                 {
                                     Name = record.I71Name[i],
                                     Address1 = record.I71Adress[i],
@@ -357,9 +357,9 @@ namespace Diamond_ZA_applications_for_patents
                         if (record.I72 != null)
                         {
                             biblioData.Inventors = new List<PartyMember>();
-                            for (int i = 0; i < record.I72.Count(); i++)
+                            for (var i = 0; i < record.I72.Count(); i++)
                             {
-                                PartyMember inventor = new PartyMember()
+                                var inventor = new PartyMember()
                                 {
                                     Name = record.I72[i],
                                 };

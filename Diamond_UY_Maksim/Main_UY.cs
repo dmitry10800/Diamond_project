@@ -14,7 +14,7 @@ namespace Diamond_UY_Maksim
         {
             Methods methods = new();
 
-            List<Diamond.Core.Models.LegalStatusEvent> patents = SubCode switch
+            var patents = SubCode switch
             {
                 "8" => methods.Start(Path, SubCode),
                 _ => null

@@ -16,7 +16,7 @@ namespace Diamond_OA
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\OA\Reg\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> firstList = null; //Patent of invention
             List<XElement> secondList = null; //Utility models
@@ -51,8 +51,8 @@ namespace Diamond_OA
 
                 if (firstList != null && firstList.Count() > 0)
                 {
-                    ProcessFirstList grantedEP = new ProcessFirstList();
-                    List<ProcessFirstList.ElementOut> el = grantedEP.OutputValue(firstList);
+                    var grantedEP = new ProcessFirstList();
+                    var el = grantedEP.OutputValue(firstList);
                     var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
                     try
                     {

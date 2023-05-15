@@ -26,8 +26,8 @@ namespace Diamond_VN
             //char[] Unicode_char ={'\u0110','\u01a1','\u006e','\u0079','\u00ea','\u0075','\u0063','\u1ea7','\u0075','\u1ea5','\u0070','\u0042','\u1eb1','\u006e','\u0067','\u0111','\u1ed9','\u0063','\u0071','\u0075','\u0079','\u1ec1','\u006e','\u0073','\u00e1','\u0068','\u1ebf', '\u00ea', '\u1ea7', '\u0111', '\u1ed9', '\u00e0', '\u1ea9', '\u1ecb', '\u00f4' };
 
 
-            StringBuilder strB = new StringBuilder(str);
-            for (int i = 0; i < TCVN3_char.Length; i++)
+            var strB = new StringBuilder(str);
+            for (var i = 0; i < TCVN3_char.Length; i++)
             {
                 strB.Replace(TCVN3_char[i], Unicode_char[i]);
             }

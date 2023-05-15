@@ -10,15 +10,15 @@ namespace Diamond_NZ_Subcodes_1_2_4
     {
         public static List<SubCode2> ProcessSubCode2(List<XElement> elements)
         {
-            List<SubCode2> outList = new List<SubCode2>();
+            var outList = new List<SubCode2>();
             if (elements != null && elements.Count > 0)
             {
                 string[] splittedValues = null;
                 SubCode2 currentElement;
-                int tempInk = 0;
-                for (int i = 0; i < elements.Count; i++)
+                var tempInk = 0;
+                for (var i = 0; i < elements.Count; i++)
                 {
-                    string recordValues = "";
+                    var recordValues = "";
                     var value = elements[i].Value;
                     tempInk = i;
 
@@ -26,7 +26,7 @@ namespace Diamond_NZ_Subcodes_1_2_4
                     {
                         currentElement = new SubCode2();
                         outList.Add(currentElement);
-                        int k = 0;
+                        var k = 0;
                         do
                         {
                             recordValues += elements[tempInk].Value + "\n";
@@ -89,14 +89,14 @@ namespace Diamond_NZ_Subcodes_1_2_4
 
         public static string[] SplitSubCode2(string s)
         {
-            string tempStrC = s;
-            string[] splittedRecords = tempStrC.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            var tempStrC = s;
+            var splittedRecords = tempStrC.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
             return splittedRecords;
         }
 
         public static SubCode2 GetSubCode2Object(string s)
         {
-            SubCode2 sub = new SubCode2();
+            var sub = new SubCode2();
 
             var subCode2 = Regex.Match(s, @"Patent Lapsed \d{6} Patent Lapsed: (?<PublNumber>\d{6}) \d{4} (?<EventDate>\d{2} \w+ \d{4})");
 

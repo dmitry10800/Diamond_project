@@ -8,7 +8,7 @@ namespace Diamond_MX_Subcode_4
     {
         public static List<Elements> SubCode4(List<XElement> elements)
         {
-            List<Elements> elementsOut = new List<Elements>();
+            var elementsOut = new List<Elements>();
 
             if (elements != null && elements.Count > 0)
             {

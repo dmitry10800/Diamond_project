@@ -50,11 +50,11 @@ namespace Diamond_EP
         }
         public static List<OutElements.NameAddressCountry> NamesProcess(string s)
         {
-            List<OutElements.NameAddressCountry> values = new List<OutElements.NameAddressCountry>();
+            var values = new List<OutElements.NameAddressCountry>();
             var pattern = new Regex(@"(?<name>.*),\s*(?<address>[^,]+),\s*(?<country>[A-Z]{2})$");
             if (s != null)
             {
-                List<string> tmpValues = s.Replace("\n", " ").Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var tmpValues = s.Replace("\n", " ").Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 foreach (var item in tmpValues)
                 {
                     var match = pattern.Match(item);
@@ -75,7 +75,7 @@ namespace Diamond_EP
         }
         public static string DateNormalize(string tmpDate)
         {
-            Regex patternDate = new Regex(@"(?<day>\d+)\s*\.*\/*\-*(?<month>\d+)\s*\.*\/*\-*(?<year>\d{4})");
+            var patternDate = new Regex(@"(?<day>\d+)\s*\.*\/*\-*(?<month>\d+)\s*\.*\/*\-*(?<year>\d{4})");
             var a = patternDate.Match(tmpDate);
             if (a.Success)
             {
@@ -89,7 +89,7 @@ namespace Diamond_EP
         }
         public static string GetDateFromGazette(string v)
         {
-            Regex date = new Regex(@"[A-Z]_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})");
+            var date = new Regex(@"[A-Z]_(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})");
             var _ = date.Match(v);
             if (_.Success)
             {
@@ -101,10 +101,10 @@ namespace Diamond_EP
         {
             foreach (var rec in events)
             {
-                string tmpValue = JsonConvert.SerializeObject(rec);
+                var tmpValue = JsonConvert.SerializeObject(rec);
                 //string url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // STAGING
-                string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
-                HttpClient httpClient = new HttpClient();
+                var url = @"https://diamond.lighthouseip.online/external-api/import/legal-event"; // PRODUCTION
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");

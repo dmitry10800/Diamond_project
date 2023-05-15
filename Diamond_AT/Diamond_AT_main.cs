@@ -55,7 +55,7 @@ namespace Diamond_AT
                     {
                         var data = File.ReadAllText(file).Replace("\r\n", " ").Replace("\n", " ").Trim();
                         var pattern = new Regex(@"[A-Z]{1}\s*\b\d+\b");
-                        List<string> numbers = pattern.Matches(data).Cast<Match>().Select(x => x.Value).ToList();
+                        var numbers = pattern.Matches(data).Cast<Match>().Select(x => x.Value).ToList();
                         var exportData = ConvertToDiamond.SecondSubcode(numbers);
                         Methods.SendToDiamond(exportData);
                     }
@@ -64,7 +64,7 @@ namespace Diamond_AT
                     {
                         var data = File.ReadAllText(file).Replace("\r\n", " ").Replace("\n", " ").Trim();
                         var pattern = new Regex(@"[A-Z]{1}\s*\b\d+\b");
-                        List<string> numbers = pattern.Matches(data).Cast<Match>().Select(x => x.Value).ToList();
+                        var numbers = pattern.Matches(data).Cast<Match>().Select(x => x.Value).ToList();
                         var exportData = ConvertToDiamond.FifthSubcode(numbers);
                         Methods.SendToDiamond(exportData);
                     }
@@ -73,16 +73,16 @@ namespace Diamond_AT
                     {
                         var data = File.ReadAllText(file).Replace("\r\n", " ").Replace("\n", " ").Trim();
                         var pattern = new Regex(@"[A-Z]{1}\s*\b\d+\b");
-                        List<string> numbers = pattern.Matches(data).Cast<Match>().Select(x => x.Value).ToList();
+                        var numbers = pattern.Matches(data).Cast<Match>().Select(x => x.Value).ToList();
                         var exportData = ConvertToDiamond.FourthSubcode(numbers);
                         Methods.SendToDiamond(exportData);
                     }
                     else
                     if (Path.GetFileNameWithoutExtension(file).EndsWith("sub1"))
                     {
-                        List<Sub1Elements> elements = new List<Sub1Elements>();
-                        Regex patternMain = new Regex(@"((?<I51>[A-Z]{1}\d{2}[A-Z]{1})\s)*(?<I11>E*\s*\d+)\s((?<I21>.*\/\d{4})\s)*(?<I73new>.*\.)");
-                        Regex patternOnlyName = new Regex(@"(?<Name>^[^\d,]+),\s*.*\((?<Address>[A-Z]{2})\)\.");
+                        var elements = new List<Sub1Elements>();
+                        var patternMain = new Regex(@"((?<I51>[A-Z]{1}\d{2}[A-Z]{1})\s)*(?<I11>E*\s*\d+)\s((?<I21>.*\/\d{4})\s)*(?<I73new>.*\.)");
+                        var patternOnlyName = new Regex(@"(?<Name>^[^\d,]+),\s*.*\((?<Address>[A-Z]{2})\)\.");
                         var data = File.ReadAllText(file).Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Replace("\r", "").Trim()).ToList();
                         string tmp51Value = null;
                         foreach (var item in data)
@@ -93,7 +93,7 @@ namespace Diamond_AT
                                 var matchedValue = patternMain.Match(tmpItem);
                                 if (!string.IsNullOrEmpty(matchedValue.Groups["I51"].Value.Trim()))
                                     tmp51Value = matchedValue.Groups["I51"].Value.Trim();
-                                Sub1Elements record = new Sub1Elements
+                                var record = new Sub1Elements
                                 {
                                     I51 = matchedValue.Groups["I51"].Value.Trim(),
                                     I11 = matchedValue.Groups["I11"].Value.Trim(),

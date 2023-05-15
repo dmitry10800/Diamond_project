@@ -7,13 +7,13 @@ namespace Diamond_SI
     {
         public static List<Subcode20> Subcode20Process(List<XElement> allElements)
         {
-            List<Subcode20> allSubcode20Trademarks = new List<Subcode20>();
-            int tempInc = 0;
-            for(int i = 0; i < allElements.Count; i++)
+            var allSubcode20Trademarks = new List<Subcode20>();
+            var tempInc = 0;
+            for(var i = 0; i < allElements.Count; i++)
             {
                 tempInc = i;
-                string strValueOnePatent = "";
-                string valueStr = allElements[tempInc].Value;
+                var strValueOnePatent = "";
+                var valueStr = allElements[tempInc].Value;
 
                 if (valueStr.StartsWith(@"(51)"))
                 {
@@ -28,7 +28,7 @@ namespace Diamond_SI
 
                     if(splittedRecords != null && splittedRecords.Length > 0)
                     {
-                        Subcode20 currentTrademark = new Subcode20();
+                        var currentTrademark = new Subcode20();
 
                         foreach(var record in splittedRecords)
                         {
@@ -108,7 +108,7 @@ namespace Diamond_SI
 
                             if (record.StartsWith(@"(54)"))
                             {
-                                Title title = new Title();
+                                var title = new Title();
                                 title.Language = "SL";
                                 title.Text = record.Replace(@"(54)", "").Replace("\n"," ").Trim();
                                 currentTrademark.Title = title;

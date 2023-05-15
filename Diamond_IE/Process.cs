@@ -9,7 +9,7 @@ namespace Diamond_IE
         {
             public static List<OutElements.FirstList> Run(List<XElement> v)
             {
-                List<OutElements.FirstList> elements = new List<OutElements.FirstList>();
+                var elements = new List<OutElements.FirstList>();
                 var str = Methods.XElemToString(v);
                 var spl = Methods.SplitByNumberAndName(str);
                 return Methods.GetSplElements(spl);

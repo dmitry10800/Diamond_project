@@ -15,7 +15,7 @@ namespace Diamond_MK
             var dir = new DirectoryInfo(@"D:\_DFA_main\_Patents\MK\Full\");
             /*list of tetml files*/
             var files = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*.tetml", SearchOption.AllDirectories)) { files.Add(file.FullName); }
             XElement tet;
             List<XElement> nationalPatents = null; // National patents
 
@@ -39,8 +39,8 @@ namespace Diamond_MK
                 /*National Patents and International Patents*/
                 if (nationalPatents != null && nationalPatents.Count() > 0)
                 {
-                    ProcessNatAndInternatPatents grantedEP = new ProcessNatAndInternatPatents();
-                    List<ProcessNatAndInternatPatents.ElementOut> el = grantedEP.OutputValue(nationalPatents);
+                    var grantedEP = new ProcessNatAndInternatPatents();
+                    var el = grantedEP.OutputValue(nationalPatents);
                     var legalStatusEvents = ConvertToDiamond.NationalAndInternationalPatentsConvertation(el);
                     try
                     {

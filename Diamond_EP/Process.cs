@@ -13,11 +13,11 @@ namespace Diamond_EP
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub10 processing started");
-                List<OutElements.Sub10> elements = new List<OutElements.Sub10>();
-                List<string> splittedRecords = new List<string>();
+                var elements = new List<OutElements.Sub10>();
+                var splittedRecords = new List<string>();
                 foreach (var item in v)
                 {
-                    string value = item.Value;
+                    var value = item.Value;
                     string[] tmpSplValue = null;
                     if (value.Contains("\n"))
                     {
@@ -36,11 +36,11 @@ namespace Diamond_EP
                 {
                     foreach (var record in splittedRecords)
                     {
-                        string pattern = @"[A-Z]{2}\/[A-Z]{1}\/\d{4}\/\d{6}\s+\d{2}\.\d{2}\.\d{4}\s+\d{2}\.\d{2}\.\d{4}";
+                        var pattern = @"[A-Z]{2}\/[A-Z]{1}\/\d{4}\/\d{6}\s+\d{2}\.\d{2}\.\d{4}\s+\d{2}\.\d{2}\.\d{4}";
                         if (Regex.IsMatch(record, pattern))
                         {
-                            string tmpMatchedValue = Regex.Match(record, pattern).Value.Trim();
-                            string[] splittedMatchedValue = tmpMatchedValue.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                            var tmpMatchedValue = Regex.Match(record, pattern).Value.Trim();
+                            var splittedMatchedValue = tmpMatchedValue.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                             if (splittedMatchedValue.Count() == 3)
                             {
                                 elements.Add(new OutElements.Sub10
@@ -68,11 +68,11 @@ namespace Diamond_EP
             public static void Run(List<XElement> v)
             {
                 Console.WriteLine("Sub7 processing started");
-                List<OutElements.Sub7> elements = new List<OutElements.Sub7>();
-                List<string> splittedRecords = new List<string>();
+                var elements = new List<OutElements.Sub7>();
+                var splittedRecords = new List<string>();
                 foreach (var item in v)
                 {
-                    string value = item.Value;
+                    var value = item.Value;
                     string[] tmpSplValue = null;
                     if (value.Contains("\n"))
                     {

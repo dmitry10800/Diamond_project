@@ -13,20 +13,20 @@ namespace Diamond_TR
         static void Main(string[] args)
         {
             var files = new List<string>();
-            foreach (FileInfo file in PathToTeml.GetFiles("*.tetml", SearchOption.AllDirectories))
+            foreach (var file in PathToTeml.GetFiles("*.tetml", SearchOption.AllDirectories))
                 files.Add(file.FullName);
 
             XElement elem = null;
 
-            List<XElement> tmpList = new List<XElement>();
-            List<XElement> sub10 = new List<XElement>();
-            List<XElement> sub13 = new List<XElement>();
-            List<XElement> sub16 = new List<XElement>();
-            List<XElement> sub17 = new List<XElement>();
-            List<XElement> sub30 = new List<XElement>();
-            List<XElement> sub31 = new List<XElement>();
-            List<XElement> sub37 = new List<XElement>();
-            List<XElement> sub39 = new List<XElement>();
+            var tmpList = new List<XElement>();
+            var sub10 = new List<XElement>();
+            var sub13 = new List<XElement>();
+            var sub16 = new List<XElement>();
+            var sub17 = new List<XElement>();
+            var sub30 = new List<XElement>();
+            var sub31 = new List<XElement>();
+            var sub37 = new List<XElement>();
+            var sub39 = new List<XElement>();
 
             foreach (var file in files)
             {
@@ -37,7 +37,7 @@ namespace Diamond_TR
                 tmpList = elem.Descendants().Where(e => e.Name.LocalName == "Text")
                     .ToList();
 
-                for (int i = 0; i < tmpList.Count; i++)
+                for (var i = 0; i < tmpList.Count; i++)
                 {
                     var tmp = i;
 

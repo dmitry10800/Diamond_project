@@ -48,23 +48,23 @@ namespace Diamond_IL
             var filesF = new List<string>();
             var filesG = new List<string>();
             var filesH = new List<string>();
-            foreach (FileInfo file in dir.GetFiles("*_APPA.txt", SearchOption.AllDirectories)) { filesA.Add(file.FullName); } /*3 subcode from big file with other chapters*/
-            foreach (FileInfo file in dir.GetFiles("*_APPB.txt", SearchOption.AllDirectories)) { filesB.Add(file.FullName); } /*1 subcode from file with only */
-            foreach (FileInfo file in dir.GetFiles("*_APPNOINIDS.txt", SearchOption.AllDirectories)) { filesC.Add(file.FullName); }
-            foreach (FileInfo file in dir.GetFiles("*_NUM.txt", SearchOption.AllDirectories)) { filesD.Add(file.FullName); } // _REG_NUM, _EXP_NUM, _NONPAY_NUM, _REN_NUM, _REN20_NUM
+            foreach (var file in dir.GetFiles("*_APPA.txt", SearchOption.AllDirectories)) { filesA.Add(file.FullName); } /*3 subcode from big file with other chapters*/
+            foreach (var file in dir.GetFiles("*_APPB.txt", SearchOption.AllDirectories)) { filesB.Add(file.FullName); } /*1 subcode from file with only */
+            foreach (var file in dir.GetFiles("*_APPNOINIDS.txt", SearchOption.AllDirectories)) { filesC.Add(file.FullName); }
+            foreach (var file in dir.GetFiles("*_NUM.txt", SearchOption.AllDirectories)) { filesD.Add(file.FullName); } // _REG_NUM, _EXP_NUM, _NONPAY_NUM, _REN_NUM, _REN20_NUM
             /*Applications with INIDs processing, subcode 1*/
             if (filesA.Count > 0) foreach (var txtFile in filesA)
                 {
                     CurrentFileName = txtFile;
                     /**/
-                    string txtFileValue = File.ReadAllText(txtFile);
+                    var txtFileValue = File.ReadAllText(txtFile);
 
                     Console.WriteLine("Applications with INIDs processing, sub 3");
 
                     if (txtFileValue != null)
                     {
-                        Process_Apps_INID appWithInidThirdChapter = new Process_Apps_INID();
-                        List<Process_Apps_INID.ElementOut> el = appWithInidThirdChapter.OutputValue(txtFileValue);
+                        var appWithInidThirdChapter = new Process_Apps_INID();
+                        var el = appWithInidThirdChapter.OutputValue(txtFileValue);
                         var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
                         try
                         {
@@ -82,14 +82,14 @@ namespace Diamond_IL
                 {
                     CurrentFileName = txtFile;
                     /**/
-                    string txtFileValue = File.ReadAllText(txtFile);
+                    var txtFileValue = File.ReadAllText(txtFile);
 
                     Console.WriteLine("Applications with INIDs processing, sub 1");
 
                     if (txtFileValue != null)
                     {
-                        Process_Apps_INID appWithInidThirdChapter = new Process_Apps_INID();
-                        List<Process_Apps_INID.ElementOut> el = appWithInidThirdChapter.OutputValue(txtFileValue);
+                        var appWithInidThirdChapter = new Process_Apps_INID();
+                        var el = appWithInidThirdChapter.OutputValue(txtFileValue);
                         var legalStatusEvents = ConvertToDiamond.FirstListConvertation(el);
                         try
                         {
@@ -107,14 +107,14 @@ namespace Diamond_IL
                 {
                     CurrentFileName = txtFile;
                     /**/
-                    string txtFileValue = File.ReadAllText(txtFile);
+                    var txtFileValue = File.ReadAllText(txtFile);
 
                     Console.WriteLine("Applications without INIDs processing, sub 2");
 
                     if (txtFileValue != null)
                     {
-                        ProcessAppNoInids appNoInids = new ProcessAppNoInids();
-                        List<ProcessAppNoInids.ElementOut> el = appNoInids.OutputValue(txtFileValue);
+                        var appNoInids = new ProcessAppNoInids();
+                        var el = appNoInids.OutputValue(txtFileValue);
                         var legalStatusEvents = ConvertToDiamond.SecondListConvertation(el);
                         try
                         {
@@ -131,13 +131,13 @@ namespace Diamond_IL
             if (filesD.Count > 0) foreach (var txtFile in filesD)
                 {
                     CurrentFileName = txtFile;
-                    string txtFileValue = File.ReadAllText(txtFile);
+                    var txtFileValue = File.ReadAllText(txtFile);
                     Console.WriteLine("numbers processing, subs 4,5,6,7,8");
 
                     if (txtFileValue != null)
                     {
-                        ProcessNumbers numbers = new ProcessNumbers();
-                        List<ProcessNumbers.ElementOut> el = numbers.OutputValue(txtFileValue);
+                        var numbers = new ProcessNumbers();
+                        var el = numbers.OutputValue(txtFileValue);
                         var legalStatusEvents = ConvertToDiamond.FourthListConvertation(el);
                         try
                         {

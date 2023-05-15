@@ -9,15 +9,15 @@ namespace Diamond_IN
         public static List<Diamond.Core.Models.LegalStatusEvent> FerTableConvertation(List<ProcessFebTableData.ElementsForOutput> elementOuts)
         {
             /*list of record for whole gazette chapter*/
-            List<Diamond.Core.Models.LegalStatusEvent> fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
+            var fullGazetteInfo = new List<Diamond.Core.Models.LegalStatusEvent>();
             if (elementOuts != null)
             {
-                int leCounter = 1;
+                var leCounter = 1;
                 /*Create a new event to fill*/
                 foreach (var record in elementOuts)
                 {
-                    Diamond.Core.Models.LegalStatusEvent legalEvent = new Diamond.Core.Models.LegalStatusEvent();
-                    string tmpNote = "";
+                    var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
+                    var tmpNote = "";
                     legalEvent.GazetteName = Path.GetFileName(IN_main.CurrentFileName.Replace("*_TableFER.txt", ".pdf").Replace(".txt", ".pdf"));
                     /*Setting subcode*/
                     legalEvent.SubCode = "10";
@@ -27,8 +27,8 @@ namespace Diamond_IN
                     legalEvent.CountryCode = "IN";
                     /*Setting File Name*/
                     legalEvent.Id = leCounter++; // creating uniq identifier
-                    LegalEvent legal = new LegalEvent();
-                    Biblio biblioData = new Biblio();
+                    var legal = new LegalEvent();
+                    var biblioData = new Biblio();
                     biblioData.Application.Number = record.AppNumber;
                     legal.Number = record.AppNumber;
 
@@ -41,7 +41,7 @@ namespace Diamond_IN
                     if (record.agent != null)
                     {
                         biblioData.Agents = new List<PartyMember>();
-                        PartyMember agent = new PartyMember();
+                        var agent = new PartyMember();
                         agent.Name = record.agent.Name;
                         agent.Address1 = record.agent.Address;
                         agent.Country = record.agent.Country;
