@@ -5,7 +5,7 @@ namespace Diamond_TR_Maksim
 {
     class Main_TR
     {
-        private const string Path = @"D:\LENS\TR\TR_20220822_08";
+        private const string Path = @"D:\LENS\TET\TR\TR_20230424_04";
         private const string Sub = "27";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 

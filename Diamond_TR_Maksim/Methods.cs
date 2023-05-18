@@ -112,10 +112,10 @@ namespace Diamond_TR_Maksim
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
                         .SkipWhile(e => !e.Value.StartsWith("SUBCODE 27"))
-                        .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI SMK"))
+                        .TakeWhile(e => !e.Value.StartsWith("End subcode27"))
                         .ToList();
 
-                    var notes = Regex.Split(MakeText(xElements), @"(?=\(12\)\s[A-Z])").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(12)")).ToList();
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\)\s[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
 
                     foreach (var note in notes)
                     {
@@ -339,7 +339,6 @@ namespace Diamond_TR_Maksim
                             statusEvent.Biblio.Publication.Kind = match.Groups["pKind"].Value.Trim();
                         }
                         else Console.WriteLine($"{inid} --- 11");
-
                     }
                     else if (inid.StartsWith("(21)"))
                     {
@@ -585,21 +584,25 @@ namespace Diamond_TR_Maksim
         }
         public string MakeText(List<XElement> xElements)
         {
-            string fullText = null;
-
+            var sb = new StringBuilder();
+         
             foreach (var item in xElements)
             {
-                fullText += item.Value + "\n";
+                sb = sb.Append(item.Value + "\n");
             }
-
-            return fullText;
+            return sb.ToString();
         }
         internal List<string> MakeInids (string note)
         {
-            var inids = Regex.Split(note.Substring(0, note.IndexOf("(57)")).Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+            var inids = new List<string>();
 
-            inids.Add(note.Substring(note.IndexOf("(57)")));
+            var matchInids = Regex.Match(note.Trim(), @"(?<fPart>.+)(?<sPart>\(57\).+)", RegexOptions.Singleline);
 
+            if (matchInids.Success)
+            {
+                inids = Regex.Split(matchInids.Groups["fPart"].Value.Trim(), @"(?=\(\d{2}\).+)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                inids.Add(matchInids.Groups["sPart"].Value.Replace("\r","").Replace("\n"," ").Trim());
+            }
             return inids;
         }
         internal string MakeCountry(string country) => country switch
