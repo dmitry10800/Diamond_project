@@ -5,8 +5,8 @@ namespace Diamond_ID_Maksim
 {
     class Main_ID
     {
-        private const string Path = @"D:\LENS\TET\ID\ID_20230428_798";
-        private const string SubCode = "1";
+        private const string Path = @"D:\LENS\TET\ID\ID_20230428_798(2sub)";
+        private const string SubCode = "2";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
