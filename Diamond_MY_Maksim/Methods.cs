@@ -90,7 +90,6 @@ namespace Diamond_MY_Maksim
             }
             return statusEvents;
         }
-
         internal Diamond.Core.Models.LegalStatusEvent MakePatentNewStyle(string note, string subCode, string sectionCode)
         {
             var statusEvent = new Diamond.Core.Models.LegalStatusEvent()
@@ -107,7 +106,7 @@ namespace Diamond_MY_Maksim
                 }
             };
 
-            CultureInfo culture = new("ru-RU");
+            var culture = new CultureInfo("ru-RU");
 
             if (subCode is "1")
             {
@@ -186,21 +185,24 @@ namespace Diamond_MY_Maksim
                     if (inid.StartsWith(I74))
                     {
                         var cleanInid = CleanInid(inid, subCode);
-                        var match = Regex.Match(cleanInid, @"(?<Name>.+)(?<Adress>C\/O.+)");
-                        if (match.Success)
+                        if (cleanInid != null)
                         {
-                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            var match = Regex.Match(cleanInid, @"(?<Name>.+)(?<Adress>C\/O.+)");
+                            if (match.Success)
                             {
-                                Name = match.Groups["Name"].Value.Trim(),
-                                Address1 = match.Groups["Adress"].Value.Trim()
-                            });
-                        }
-                        else
-                        {
-                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                {
+                                    Name = match.Groups["Name"].Value.Trim(),
+                                    Address1 = match.Groups["Adress"].Value.Trim()
+                                });
+                            }
+                            else
                             {
-                                Name = cleanInid.Trim()
-                            });
+                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                {
+                                    Name = cleanInid.Trim()
+                                });
+                            }
                         }
                     }
                     if (inid.StartsWith(I54))
@@ -380,7 +382,14 @@ namespace Diamond_MY_Maksim
                 {
                     inidClean = match.Groups["Text"].Value.Trim();
                 }
-                else inidClean = inid.Trim();
+                else
+                {
+                    var match2 = Regex.Match(inid, @"\(\d{2}\).+:(?<Text>)");
+                    if (match2.Success && match2.Groups["Text"].Value == "")
+                    {
+                        inidClean = null;
+                    }
+                }
             }
             return inidClean;
         }
@@ -388,17 +397,20 @@ namespace Diamond_MY_Maksim
         private List<PartyMember> MakePartyMembers(string inid, string subcode)
         {
             var partyMembers = new List<PartyMember>();
-            if (subcode is "9" or "10")
+            if (inid != null)
             {
-                var partyMembersTmp = Regex.Split(inid, @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
-
-                foreach (var partyMember in partyMembersTmp)
+                if (subcode is "9" or "10")
                 {
-                    var partyMemberClass = new PartyMember()
+                    var partyMembersTmp = Regex.Split(inid, @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    foreach (var partyMember in partyMembersTmp)
                     {
-                        Name = partyMember.Trim()
-                    };
-                    partyMembers.Add(partyMemberClass);
+                        var partyMemberClass = new PartyMember()
+                        {
+                            Name = partyMember.Trim()
+                        };
+                        partyMembers.Add(partyMemberClass);
+                    }
                 }
             }
             return partyMembers;
