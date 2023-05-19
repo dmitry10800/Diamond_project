@@ -204,13 +204,13 @@ namespace Diamond_LV_Maksim
 
                             patent.Biblio.Titles.Add(new Title()
                             {
-                                Text = sbLV.ToString(),
+                                Text = sbLV.Replace("- ","").ToString(),
                                 Language = "LV",
                             });
 
                             patent.Biblio.Titles.Add(new Title()
                             {
-                                Text = sbEN.ToString(),
+                                Text = sbEN.Replace("- ", "").ToString(),
                                 Language = "EN",
                             });
                         }
@@ -228,13 +228,13 @@ namespace Diamond_LV_Maksim
 
                             patent.Biblio.Titles.Add(new Title()
                             {
-                                Text = sbLV.ToString(),
+                                Text = sbLV.Replace("- ", "").ToString(),
                                 Language = "LV",
                             });
 
                             patent.Biblio.Titles.Add(new Title()
                             {
-                                Text = sbEN.ToString(),
+                                Text = sbEN.Replace("- ", "").ToString(),
                                 Language = "EN",
                             });
                         }
