@@ -221,8 +221,7 @@ namespace Diamond_ID_Maksim
                             {
                                 statusEvent.Biblio.Ipcs.Add(new Ipc()
                                 {
-                                    Class = matchIpc.Groups["Class"].Value.Replace(" ", "").Trim(),
-                                    Date = matchIpc.Groups["Edition"].Value.Trim()
+                                    Class = matchIpc.Groups["Class"].Value.Replace(" ", "").Trim() + " " + matchIpc.Groups["Edition"].Value.Trim(),
                                 });
                             }
                             else Console.WriteLine(ipc + "----51");
