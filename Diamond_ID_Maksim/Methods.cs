@@ -267,7 +267,7 @@ namespace Diamond_ID_Maksim
                         {
                             statusEvent.Biblio.Titles.Add(new Title()
                             {
-                                Language = "EN",
+                                Language = "ID",
                                 Text = cleanNote.Replace("\r", "")
                                     .Replace("\n", " ")
                                     .Replace("(54)","")
@@ -279,7 +279,7 @@ namespace Diamond_ID_Maksim
                         {
                             statusEvent.Biblio.Titles.Add(new Title()
                             {
-                                Language = "EN",
+                                Language = "ID",
                                 Text = cleanNote.Replace("\r", "").Replace("\n", " ")
                             });
                         }
@@ -288,7 +288,7 @@ namespace Diamond_ID_Maksim
                     {
                         statusEvent.Biblio.Abstracts.Add(new Abstract()
                         {
-                            Language = "EN",
+                            Language = "ID",
                             Text = cleanNote.Replace("\r", "").Replace("\n", " ")
                         });
                     }
