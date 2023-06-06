@@ -5,8 +5,8 @@ namespace PL_Diamond_Maksim
 {
     class Main_PL
     {
-        private const string Path = @"D:\LENS\PL\PL_20230130_05W";
-        private const string SubCode = "33";
+        private const string Path = @"D:\LENS\TET\PL\PL_20230522_21W";
+        private const string SubCode = "25";
         private const string NewOrOld = "new"; // new / old
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 

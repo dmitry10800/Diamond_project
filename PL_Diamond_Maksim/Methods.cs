@@ -54,16 +54,11 @@ namespace PL_Diamond_Maksim
                              .TakeWhile(val => !val.Value.StartsWith("OGŁOSZENIA"))
                              .ToList();
 
-                        var notes = Regex.Split(BuildText(xElements), @"(?=\([0-9]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        if (!notes[0].StartsWith(@"("))
-                        {
-                            notes.RemoveAt(0);
-                        }
+                        var notes = Regex.Split(BuildText(xElements), @"(?=\([0-9]{2})").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(")).ToList();
 
                         foreach (var note in notes)
                         {
-                            convertedPatents.Add(SplitNoteNew(note, subCode, "BZ/RC"));
+                            convertedPatents.Add(SplitNoteNew(note, subCode, "PD"));
                         }
                     }
                     else if(subCode == "31")
@@ -454,7 +449,8 @@ namespace PL_Diamond_Maksim
                 SubCode = subCode,
                 SectionCode = sectionCode,
                 CountryCode = "PL",
-                Id = _id++
+                Id = _id++,
+                NewBiblio = new Biblio()
             };
 
             LegalEvent legal = new ();
@@ -465,7 +461,7 @@ namespace PL_Diamond_Maksim
 
             biblio.EuropeanPatents = new();
 
-            CultureInfo cultureInfo = new("RU-ru");
+            CultureInfo cultureInfo = new("ru-RU");
 
             if(subCode == "10")
             {
@@ -473,44 +469,77 @@ namespace PL_Diamond_Maksim
             }
             else if(subCode == "25")
             {
-                var match = Regex.Match(text, @"\([0-9]{2}\)\s(?<number>\d+)\s?.+?:(?<grant1>.+)\sW.+:\s(?<grant2>.+)");
+                var match = Regex.Match(text, @"\)\s(?<number>\d+).+:(?<grantOld>.+);.+:(?<grantNew>.+)", RegexOptions.Singleline);
 
                 if (match.Success)
                 {
                     biblio.Publication.Number = match.Groups["number"].Value.Trim();
 
-                    biblio.Assignees = new List<PartyMember>();
+                    var assigneersOld = Regex.Split(match.Groups["grantOld"].Value.Trim(), @";",
+                        RegexOptions.Singleline).Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
-                    var assigners = new List<string>
-                        {
-                            match.Groups["grant1"].Value.Trim(),
-                            match.Groups["grant2"].Value.Trim()
-                        };
-
-                    foreach (var assigner in assigners)
+                    foreach (var assigneer in assigneersOld)
                     {
-                        var match1 = Regex.Match(assigner, @"(?<name>.+?),\s(?<adress>.+),\s(?<country>\D+)");
+                        var matchOld = Regex.Match(assigneer, @"(?<name>.+),(?<adress>.+),(?<country>.+)", RegexOptions.Singleline);
 
-                        if (match1.Success)
+                        if (matchOld.Success)
                         {
-                            biblio.Assignees.Add(new PartyMember
+                            var country = MakeCountryCode(matchOld.Groups["country"].Value.Trim());
+                            if (country != null)
                             {
-                                Name = match1.Groups["name"].Value.Trim(),
-                                Address1 = match1.Groups["adress"].Value.Trim(),
-                                Country = MakeCountryCode( match1.Groups["country"].Value.Trim())
-                            });
-
-                            var proverka = MakeCountryCode(match1.Groups["country"].Value.Trim());
-
-                            if (proverka == null)
-                            {
-                                Console.WriteLine($"{match1.Groups["country"].Value.Trim()} --- {biblio.Publication.Number}");
+                                biblio.Assignees.Add(new PartyMember
+                                {
+                                    Name = matchOld.Groups["name"].Value.Trim(),
+                                    Address1 = matchOld.Groups["adress"].Value.Trim(),
+                                    Country = country
+                                });
                             }
+                            else
+                                Console.WriteLine(matchOld.Groups["country"].Value.Trim());
                         }
+                        else
+                            Console.WriteLine(assigneer + "--- old");
                     }
 
+                    var assigneersNew = Regex.Split(match.Groups["grantNew"].Value.Trim(), @";",
+                        RegexOptions.Singleline).Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    foreach (var assigneer in assigneersNew)
+                    {
+                        var matchNew = Regex.Match(assigneer, @"(?<name>.+),(?<adress>.+),(?<country>.+)", RegexOptions.Singleline);
+
+                        if (matchNew.Success)
+                        {
+                            var country = MakeCountryCode(matchNew.Groups["country"].Value.Trim());
+                            if (country != null)
+                            {
+                                legalEvent.NewBiblio.Assignees.Add(new PartyMember
+                                {
+                                    Name = matchNew.Groups["name"].Value.Trim(),
+                                    Address1 = matchNew.Groups["adress"].Value.Trim(),
+                                    Country = country
+                                });
+                            }
+                            else
+                                Console.WriteLine(matchNew.Groups["country"].Value.Trim());
+                        }
+                        else
+                            Console.WriteLine(assigneer + "--- new");
+                    }
+
+                    biblio.EuropeanPatents.Add(new EuropeanPatent()
+                    {
+                        PubNumber = match.Groups["number"].Value.Trim()
+                    });
+
+                    var leDate = Regex.Match(_currentFileName.Replace(".tetml", ""), @"\d{8}");
+                    if (leDate.Success)
+                    {
+                        legal.Date = leDate.Value.Insert(4,"/").Insert(7,"/");
+                    }
                 }
-                else Console.WriteLine($"Эта запись  не разбилась ---- {text}");
+                else 
+                    Console.WriteLine($"{text} --- not split");
 
                 legalEvent.LegalEvent = legal;
                 legalEvent.Biblio = biblio;
@@ -712,6 +741,7 @@ namespace PL_Diamond_Maksim
                 "Portugalia" => "PT",
                 "Szwajcaria" => "CH",
                 "Polska" => "PL",
+                "Polska 000042352" => "PL",
                 "Belgia" => "BE",
                 "Irlandia" => "IE",
                 "Luksemburg" => "LU",
@@ -725,6 +755,7 @@ namespace PL_Diamond_Maksim
                 "Słowacja" => "SK",
                 "Kanada" => "CA",
                 "Malezja" => "MY",
+                "Nowa Zelandia" => "NZ",
                 _ => null
             };
 
