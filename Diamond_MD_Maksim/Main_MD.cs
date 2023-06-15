@@ -5,24 +5,26 @@ namespace Diamond_MD_Maksim
 {
     class Main_MD
     {
-        private readonly static string path = @"C:\Work\MD\MD_20200331_03";
-        private readonly static string subCode = "2";
+        private const string Path = @"D:\LENS\TET\MD\MD_20230531_05";
+        private const string SubCode = "2";
+        private const bool SendToProd = false;
 
         static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
-            var convertedPatents = subCode switch
+            var convertedPatents = SubCode switch
             {
-                "2" => methods.Start(path, subCode),
+                "2" => methods.Start(Path, SubCode),
                 _ => null
             };
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
-            else Console.WriteLine("Wrong sub code");
-
+            if (convertedPatents != null) 
+                methods.SendToDiamond(convertedPatents, SendToProd);
+            else 
+                Console.WriteLine("Wrong sub code");
         }
     }
 }
