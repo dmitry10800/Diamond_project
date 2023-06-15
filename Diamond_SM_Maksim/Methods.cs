@@ -76,6 +76,7 @@ namespace Diamond_SM_Maksim
             if (subCode == "3")
             {
                 var appNumMatch = Regex.Match(note, @"Domanda:(?<appNum>.+?)\s", RegexOptions.Singleline);
+
                 if (appNumMatch.Success)
                 {
                     patent.Biblio.Application.Number = appNumMatch.Groups["appNum"].Value.Trim();
@@ -143,10 +144,10 @@ namespace Diamond_SM_Maksim
                 else
                     Console.WriteLine($"{note} --- priority");
 
-                var assignerMatch = Regex.Match(note, @"Applicants:(?<assigneers>.+?)\(", RegexOptions.Singleline);
+                var assignerMatch = Regex.Match(note, @"Applicants:(?<assigneers>.+?)\(\d", RegexOptions.Singleline);
                 if (assignerMatch.Success)
                 {
-                    var assigneersList = Regex.Split(assignerMatch.Groups["assigneers"].Value.Replace("\r", "").Replace("\n", " ").Trim(), @";|and").Where(_ => !string.IsNullOrWhiteSpace(_)).ToList();
+                    var assigneersList = Regex.Split(assignerMatch.Groups["assigneers"].Value.Replace("\r", "").Replace("\n", " ").Trim(), @";|\sand\s", RegexOptions.Singleline).Where(_ => !string.IsNullOrWhiteSpace(_)).ToList();
 
                     foreach (var assignner in assigneersList)
                     {
@@ -160,7 +161,7 @@ namespace Diamond_SM_Maksim
                             {
                                 patent.Biblio.Assignees.Add(new PartyMember()
                                 {
-                                    Name = assignerrsMatch.Groups["name"].Value.Replace("-","").Trim(),
+                                    Name = assignerrsMatch.Groups["name"].Value.Replace("- ","").Trim(),
                                     Address1 = assignerrsMatch.Groups["adress"].Value.Trim(),
                                     Country = country
                                 });
@@ -183,7 +184,7 @@ namespace Diamond_SM_Maksim
                     {
                         patent.Biblio.Agents.Add(new PartyMember()
                         {
-                            Name = agentMatch.Groups["name"].Value.Trim(),
+                            Name = agentMatch.Groups["name"].Value.Replace("- ", "").Trim(),
                             Address1 = agentMatch.Groups["adress"].Value.Trim(),
                             Country = "SM"
                         });
@@ -201,7 +202,7 @@ namespace Diamond_SM_Maksim
                     {
                         patent.Biblio.Inventors.Add(new PartyMember()
                         {
-                            Name = inventor.Trim()
+                            Name = inventor.Replace("- ", "").Trim()
                         });
                     }
                 }
