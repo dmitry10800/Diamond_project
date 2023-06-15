@@ -377,14 +377,14 @@ namespace Diamond_MY_Maksim
             var inidClean = string.Empty;
             if (subCode is "9" or "10")
             {
-                var match = Regex.Match(inid, @"\(\d{2}\).+:(?<Text>.+)");
+                var match = Regex.Match(inid, @"\(\d{2}\).+?:(?<Text>.+)");
                 if (match.Success)
                 {
                     inidClean = match.Groups["Text"].Value.Trim();
                 }
                 else
                 {
-                    var match2 = Regex.Match(inid, @"\(\d{2}\).+:(?<Text>)");
+                    var match2 = Regex.Match(inid, @"\(\d{2}\).+?:(?<Text>)");
                     if (match2.Success && match2.Groups["Text"].Value == "")
                     {
                         inidClean = null;
