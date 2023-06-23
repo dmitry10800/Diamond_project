@@ -66,7 +66,7 @@ namespace Diamond_MY_Maksim
                         .SkipWhile(val => !val.Value.StartsWith("18 MONTH PUBLICATION"))
                         .ToList();
 
-                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(12\).+)").Where(_ => !string.IsNullOrEmpty(_) && _.StartsWith("(12)") && _.Contains("(21) Application No. : PI")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(12\)\sM.+)").Where(_ => !string.IsNullOrEmpty(_) && _.StartsWith("(12)") && _.Contains("(21) Application No. : PI")).ToList();
 
                     foreach (var note in notes)
                     {
@@ -79,7 +79,7 @@ namespace Diamond_MY_Maksim
                         .SkipWhile(val => !val.Value.StartsWith("18 MONTH PUBLICATION"))
                         .ToList();
 
-                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(12\).+)").Where(_ => !string.IsNullOrEmpty(_) && _.StartsWith("(12)") && _.Contains("(21) Application No. : UI")).ToList();
+                    var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(12\)\sM.+)").Where(_ => !string.IsNullOrEmpty(_) && _.StartsWith("(12)") && _.Contains("(21) Application No. : UI")).ToList();
 
                     foreach (var note in notes)
                     {
@@ -377,6 +377,25 @@ namespace Diamond_MY_Maksim
             var inidClean = string.Empty;
             if (subCode is "9" or "10")
             {
+                if (inid.StartsWith("(57)"))
+                {
+                    var matchInid57 = Regex.Match(inid, @"\(\d{2}\).+?:(?<Text>.+)PAT");
+                    if (matchInid57.Success)
+                    {
+                        inidClean = matchInid57.Groups["Text"].Value.Trim();
+                        return inidClean;
+                    }
+                    else
+                    {
+                        var match2Inid57 = Regex.Match(inid, @"\(\d{2}\).+?:(?<Text>.+)");
+                        if (match2Inid57.Success)
+                        {
+                            inidClean = match2Inid57.Groups["Text"].Value.Trim();
+                            return inidClean;
+                        }
+                    }
+                }
+
                 var match = Regex.Match(inid, @"\(\d{2}\).+?:(?<Text>.+)");
                 if (match.Success)
                 {
@@ -393,7 +412,6 @@ namespace Diamond_MY_Maksim
             }
             return inidClean;
         }
-
         private List<PartyMember> MakePartyMembers(string inid, string subcode)
         {
             var partyMembers = new List<PartyMember>();
