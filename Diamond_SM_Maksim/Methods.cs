@@ -177,17 +177,51 @@ namespace Diamond_SM_Maksim
                 var agentsMatch = Regex.Match(note, @"Agent:(?<agents>.+?)(\(|Titolo)", RegexOptions.Singleline);
                 if (agentsMatch.Success)
                 {
-                    var agentMatch =
-                        Regex.Match(agentsMatch.Groups["agents"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
-                            @"(?<name>.+?),(?<adress>.+)");
-                    if (agentMatch.Success)
+                    var agentMatch1 = Regex.Match(agentsMatch.Groups["agents"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
+                            @"(?<name>.+?),(?<adress>.+RSM)(?<priority>.+\d{2}\/\d{2}\/\d{4}\s\D{2})");
+                    
+                    if (agentMatch1.Success)
                     {
                         patent.Biblio.Agents.Add(new PartyMember()
                         {
-                            Name = agentMatch.Groups["name"].Value.Replace("- ", "").Trim(),
-                            Address1 = agentMatch.Groups["adress"].Value.Trim(),
+                            Name = agentMatch1.Groups["name"].Value.Replace("- ", "").Trim(),
+                            Address1 = agentMatch1.Groups["adress"].Value.Trim(),
                             Country = "SM"
                         });
+
+                        var priorityList = Regex.Split(agentMatch1.Groups["priority"].Value.Trim(), @";|and", RegexOptions.Singleline).Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                        foreach (var priority in priorityList)
+                        {
+                            var priorityMatch = Regex.Match(priority.Trim(),
+                                @"(?<num>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})\s(?<kind>\D{2})", RegexOptions.Singleline);
+
+                            if (priorityMatch.Success)
+                            {
+                                patent.Biblio.Priorities.Add(new Priority()
+                                {
+                                    Number = priorityMatch.Groups["num"].Value.Trim(),
+                                    Date = DateTime.Parse(priorityMatch.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
+                                    Country = priorityMatch.Groups["kind"].Value.Trim()
+                                });
+                            }
+                            else
+                                Console.WriteLine($"{priority} ---- priority");
+                        }
+                    }
+                    else
+                    {
+                        var agentMatch2 = Regex.Match(agentsMatch.Groups["agents"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
+                                @"(?<name>.+?),(?<adress>.+)");
+                        if (agentMatch2.Success)
+                        {
+                            patent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = agentMatch2.Groups["name"].Value.Replace("- ", "").Trim(),
+                                Address1 = agentMatch2.Groups["adress"].Value.Trim(),
+                                Country = "SM"
+                            });
+                        }
                     }
                 }
                 else
@@ -215,7 +249,7 @@ namespace Diamond_SM_Maksim
                     patent.Biblio.Titles.Add(new Title()
                     {
                         Language = "IT",
-                        Text = titleMatch.Groups["title"].Value.Trim()
+                        Text = titleMatch.Groups["title"].Value.Replace("- ","").Trim()
                     });
                 }
                 else
