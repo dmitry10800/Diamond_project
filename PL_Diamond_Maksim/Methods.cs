@@ -756,6 +756,7 @@ namespace PL_Diamond_Maksim
                 "Kanada" => "CA",
                 "Malezja" => "MY",
                 "Nowa Zelandia" => "NZ",
+                "CURAÇAO" => "CW",
                 _ => null
             };
 
