@@ -13,16 +13,16 @@ using System.Xml.Linq;
 
 namespace Diamond_IN_Maksim
 {
-    class Methods
+    internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> statusEvents = new();
+            var statusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
 
-            DirectoryInfo directory = new(path);
+            var directory = new DirectoryInfo(path);
 
             List<string> files = new();
 
@@ -33,11 +33,11 @@ namespace Diamond_IN_Maksim
 
             XElement tet;
 
-            List<XElement> xElements = new();
+            var xElements = new List<XElement>();
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -90,13 +90,13 @@ namespace Diamond_IN_Maksim
                 CountryCode = "IN",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                Id = _id++,
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new(),
                 LegalEvent = new()
             };
 
-            CultureInfo culture = new("ru-RU");
+            var culture = new CultureInfo("ru-RU");
             if(subCode == "1")
             {
                 foreach (var inid in MakeInids(note, subCode))
@@ -152,31 +152,34 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(71)"))
                     {
-                        // todo: сделать нормальную регулярку и предусмотреть символы --------- и формат, в которой есть NA
-                        var applicants = Regex.Split(inid.Replace("\r","").Replace("\n"," ").Replace("(71)Name of Applicant :","").Trim(),
-                            @"(?>\d\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                       var applicants = Regex.Split(inid.Replace("(71)Name of Applicant :","").Trim(),
+                            @"(?>\d+\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (var applicant in applicants)
                         {
-                            var match = Regex.Match(applicant.Trim(), @"(?<name>.+)\sAddress\sof\sApplicant\s?:(?<adress>.+),\s?(?<code>.+?)\s");
+                            var match = Regex.Match(applicant.Trim(), @"(?<name>.+)\sAddr.+cant\s?:(?<adress>.+),(?<code>.+?)[\s--]", RegexOptions.Singleline);
 
                             if (match.Success)
                             {
-                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
-                                {
-                                    Name = match.Groups["name"].Value.Trim(),
-                                    Address1 = match.Groups["adress"].Value.Trim(),
-                                    Country = MakeCountryCode(match.Groups["code"].Value.Trim())
-                                });
+                                var countryCode = MakeCountryCode(match.Groups["code"].Value.Trim());
 
-                                if(MakeCountryCode(match.Groups["code"].Value.Trim()) == null)
+                                if (countryCode == null)
                                 {
                                     Console.WriteLine($"<=================== {match.Groups["code"].Value}");
+                                }
+                                else
+                                {
+                                    statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                    {
+                                        Name = match.Groups["name"].Value.Trim(),
+                                        Address1 = match.Groups["adress"].Value.Trim(),
+                                        Country = countryCode
+                                    });
                                 }
                             }
                             else
                             {
-                                var match1 = Regex.Match(applicant.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+");
+                                var match1 = Regex.Match(applicant.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+", RegexOptions.Singleline);
 
                                 if (match1.Success)
                                 {
@@ -197,30 +200,32 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(72)"))
                     {
-                        var inventors = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(72)Name of Inventor :", "").Trim(),
-                            @"(?>\d\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex.Split(inid.Replace("(72)Name of Inventor :", "").Trim(),
+                            @"(?>\d+\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (var inventor in inventors)
                         {
-                            var match = Regex.Match(inventor.Trim(), @"(?<name>.+)\sAddress\sof\sApplicant\s?:(?<adress>.+),\s?(?<code>.+?)\s");
+                            var match = Regex.Match(inventor.Trim(), @"(?<name>.+)\sAddr.+cant\s?:(?<adress>.+),(?<code>.+?)[\s--]", RegexOptions.Singleline);
 
                             if (match.Success)
                             {
+                                var countryCode = MakeCountryCode(match.Groups["code"].Value.Trim());
+
+                                if (countryCode == null)
+                                {
+                                    Console.WriteLine($"<=================== {match.Groups["code"].Value}");
+                                }
+
                                 statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
                                 {
                                     Name = match.Groups["name"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
-                                    Country = MakeCountryCode(match.Groups["code"].Value.Trim())
+                                    Country = countryCode
                                 });
-
-                                if (MakeCountryCode(match.Groups["code"].Value.Trim()) == null)
-                                {
-                                    Console.WriteLine($"<=================== {match.Groups["code"].Value}");
-                                }
                             }
                             else
                             {
-                                var match1 = Regex.Match(inventor.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+");
+                                var match1 = Regex.Match(inventor.Trim(), @"(?<name>.+)\sName\sof\sApplicant.+", RegexOptions.Singleline);
 
                                 if (match1.Success)
                                 {
@@ -271,13 +276,62 @@ namespace Diamond_IN_Maksim
                     }
                     else if (inid.StartsWith("(51)"))
                     {
-                        var ipcs = GetInternationalClassification(inid);
-                        if (ipcs.Any())
+                        var ipcsData = Regex.Match(inid.Trim(), @".+:(?<ipcs>.+)", RegexOptions.Singleline).Groups["ipcs"].Value.Replace("classification","").Trim();
+                        var ipcs = Regex.Split(ipcsData, @",", RegexOptions.Singleline).Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                        foreach (var ipc in ipcs)
                         {
-                            statusEvent.Biblio.Ipcs = ipcs;
+                            var typeOne = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d+\D)00(?<sPart>\d{2})(?<tPart>.+)");
+                            
+                            if (typeOne.Success)
+                            {
+                                var fPart = typeOne.Groups["fPart"].Value.Trim();
+                                var sPart = typeOne.Groups["sPart"].Value.Trim().TrimStart('0');
+                                var tPart = Regex.Match(typeOne.Groups["tPart"].Value.Trim(), @"(?<part>\d.+?)0").Groups["part"].Value.Trim();
+
+                                statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                {
+                                    Class = fPart + " " + sPart + "/" + tPart 
+                                });
+                            }
+                            else
+                            {
+                                var typeTwo = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d+\D)\s(?<sPart>\d{2})(?<tPart>\d+)");
+
+                                if (typeTwo.Success)
+                                {
+                                    var tPart = Regex.Match(typeTwo.Groups["tPart"].Value.Trim(), @"(?<part>\d.+?)0").Groups["part"].Value.Trim();
+                                    
+                                    statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                    {
+                                        Class = typeTwo.Groups["fPart"].Value.Trim()+ " " + typeTwo.Groups["sPart"].Value.Trim().TrimStart('0') + "/" + tPart
+                                    });
+                                }
+                                else
+                                {
+                                    var typeThree = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d+\D)0(?<sPart>\d{2})(?<tPart>.+)");
+                                    if (typeThree.Success)
+                                    {
+                                        var fPart = typeThree.Groups["fPart"].Value.Trim();
+                                        var sPart = typeThree.Groups["sPart"].Value.Trim().TrimStart('0');
+                                        var tPart = Regex.Match(typeThree.Groups["tPart"].Value.Trim(), @"(?<part>\d.+?)0").Groups["part"].Value.Trim();
+
+                                        statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                        {
+                                            Class = fPart + " " + sPart + "/" + tPart
+                                        });
+                                    }
+                                    else
+                                    {
+                                        statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                        {
+                                            Class = ipc
+                                        });
+                                    }
+                                }
+                            }
                         }
                     }
-
                 }
             }
             else if(subCode == "10")
@@ -302,157 +356,10 @@ namespace Diamond_IN_Maksim
                     Console.WriteLine($"{note}");
                 }
             }
-
             return statusEvent;
         }
 
-        private static List<Ipc> GetInternationalClassification(string inid)
-        {
-            inid = new Regex(@"\s").Replace(inid, "");
-            var results = new List<Ipc>();
-            try
-            {
-                var pattern = new Regex(@"(?<FirstPart>[A-Z]{1}\d+[A-Z]{1})(?<SecondPart>(?<FirstNumber>\d+)(\/(?<SecondNumber>\d+))*)"); //example: C07D0239420000, C12P0013000000, C22C 1/04, C22C 14/00
-                var matches = pattern.Matches(inid).Where(x => !string.IsNullOrWhiteSpace(x.Value)).ToList();
-                if (!matches.Any())
-                {
-                    return results.Any() ? results : null;
-                }
-                foreach (var match in matches)
-                {
-                    var firstPart = match.Groups["FirstPart"].Value;
-                    var secondPart = match.Groups["SecondPart"].Value;
-
-                    if (secondPart.Contains("/"))
-                    {
-                        var editionMatch = Regex.Match(secondPart.Trim(), @"(?<FirstPart>[0-9].+)/(?<SecondPart>[0-9]{2})");
-                        if (editionMatch.Success)
-                        {
-                            if (editionMatch.Groups["FirstPart"].Value.Length == 1)
-                            {
-                                secondPart = "0" + editionMatch.Groups["FirstPart"].Value + "/" + editionMatch.Groups["SecondPart"].Value;
-                                results.Add(new Ipc
-                                {
-                                    Class = $"{firstPart} {secondPart}"
-                                });
-                            }
-                            else
-                            {
-                                if (editionMatch.Groups["FirstPart"].Value.Length == 2)
-                                {
-                                    secondPart = editionMatch.Groups["FirstPart"].Value + "/" +
-                                                 editionMatch.Groups["SecondPart"].Value;
-                                    results.Add(new Ipc
-                                    {
-                                        Class = $"{firstPart} {secondPart}"
-                                    });
-                                }
-                                else Console.WriteLine($"{editionMatch.Groups["FirstPart"].Value}");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (secondPart.StartsWith("00"))
-                        {
-                            var editionMatch = Regex.Match(secondPart.Trim(), @"00(?<FirstPart>[0-9]{2})(?<SecondPart>[0-9]{2})");
-                            if (editionMatch.Success)
-                            {
-                                secondPart = editionMatch.Groups["FirstPart"].Value + "/" + editionMatch.Groups["SecondPart"].Value;
-                                results.Add(new Ipc
-                                {
-                                    Class = $"{firstPart} {secondPart}"
-                                });
-                            }
-                        }
-                        else
-                        {
-                            var editionMatch = Regex.Match(secondPart.Trim(), @"(?<FirstPart>[0-9]{2})(?<SecondPart>[0-9]{2})");
-                            if (editionMatch.Success)
-                            {
-                                secondPart = editionMatch.Groups["FirstPart"].Value + "/" + editionMatch.Groups["SecondPart"].Value;
-                                results.Add(new Ipc
-                                {
-                                    Class = $"{firstPart} {secondPart}"
-                                });
-                            }
-                        }
-                    }
-
-                    //if (secondPart.Contains("/"))
-                    //{
-                    //    var firstNumber = match.Groups["FirstNumber"].Value.TrimStart('0');
-                    //    var secondNumber = match.Groups["SecondNumber"].Value.TrimEnd('0');
-                    //    if (firstNumber.Length == 0)
-                    //    {
-                    //        firstNumber = "00";
-                    //    }
-                    //    if (secondNumber.Length == 0)
-                    //    {
-                    //        secondNumber = "00";
-                    //    }
-                    //    if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
-                    //    {
-                    //        if (secondNumber.Length == 1)
-                    //        {
-                    //            secondNumber = $"{secondNumber}0";
-                    //        }
-                    //        secondPart = $"{firstNumber}/{secondNumber}";
-                    //    }
-
-                    //    if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
-                    //    {
-                    //        results.Add(new Ipc
-                    //        {
-                    //            Class = $"{firstPart} {secondPart}"
-                    //        });
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    var pat = new Regex(@"(?<FirstNumber>\d{4})(?<SecondNumber>\d+)");
-                    //    var patMatch = pat.Match(secondPart);
-                    //    if (!patMatch.Success)
-                    //    {
-                    //        continue;
-                    //    }
-                    //    var firstNumber = patMatch.Groups["FirstNumber"].Value.TrimStart('0');
-                    //    var secondNumber = patMatch.Groups["SecondNumber"].Value.TrimEnd('0');
-                    //    if (firstNumber.Length == 0)
-                    //    {
-                    //        firstNumber = "00";
-                    //    }
-                    //    if (secondNumber.Length == 0)
-                    //    {
-                    //        secondNumber = "00";
-                    //    }
-                    //    if (!string.IsNullOrWhiteSpace(firstNumber) && !string.IsNullOrWhiteSpace(secondNumber))
-                    //    {
-                    //        if (secondNumber.Length == 1)
-                    //        {
-                    //            secondNumber = $"{secondNumber}0";
-                    //        }
-                    //        secondPart = $"{firstNumber}/{secondNumber}";
-                    //    }
-
-                    //    if (!string.IsNullOrWhiteSpace(firstPart) && !string.IsNullOrWhiteSpace(secondPart))
-                    //    {
-                    //        results.Add(new Ipc
-                    //        {
-                    //            Class = $"{firstPart} {secondPart}"
-                    //        });
-                    //    }
-                    //}
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Getting (51) International classification failed. Ex:{e.Message}");
-            }
-            return results.Any() ? results : null;
-        }
-
-        internal string MakeCountryCode(string code) => code switch
+        private string MakeCountryCode(string code) => code switch
         {
             "Tamilnadu" => "IN",
             "India." => "IN",
@@ -482,6 +389,29 @@ namespace Diamond_IN_Maksim
             "Andhra" => "IN",
             "Uttar" => "IN",
             "Tamil" => "IN",
+            "Gautam" => "IN",
+            "Jaipur" => "IN",
+            "Gurgaon" => "IN",
+            "Russian" => "RU",
+            "Rajasthan" => "IN",
+            "Guangdong" => "CN",
+            "Meerut" => "IN",
+            "Kurukshetra" => "IN",
+            "Ghaziabad" => "IN",
+            "Denmark" => "DK",
+            "Mumbai" => "IN",
+            "Amrvati" => "IN",
+            "Kanpur" => "IN",
+            "Maharashtra." => "IN",
+            "MUMBAI" => "IN",
+            "Vadodara" => "IN",
+            "Saitama" => "JP",
+            "Udupi" => "IN",
+            "Mangalore" => "IN",
+            "Germany" => "DE",
+            "Odisha" => "IN",
+            "Finland" => "FI",
+            "Itanagar" => "IN",
             "TAMIL" => "IN",
             "COIMBATORE" => "IN",
             "Coimbatore" => "IN",
@@ -518,33 +448,20 @@ namespace Diamond_IN_Maksim
             "Saudi" => "SA",
             _ => null
         };
-        internal List<string> MakeInids(string note, string subCode)
+        private List<string> MakeInids(string note, string subCode)
         {
-            List<string> inids = new();
+            var inids = new List<string>();
 
-            if(subCode == "1")
+            var inidsMatch = Regex.Match(note, @"(?<part1>.+)(?<inid57>\(57\).+)", RegexOptions.Singleline);
+
+            if (inidsMatch.Success)
             {
-                var match = Regex.Match(note.Trim(),
-                    @"(?<inid12>\(12.+)\s(?<inid21>\(21.+)\(19.+(?<inid22>\(22.+)\s(?<inid43>\(43.+)\s(?<inid54>\(54.+)\s(?<inids51all>\(51.+)\s(?<inid71>\(71.+)\s(?<inid72>\(72.+)\s(?<inid57>\(57.+)",
-                    RegexOptions.Singleline);
-
-                if (match.Success)
-                {
-                    inids.Add(match.Groups["inid12"].Value.Trim());
-                    inids.Add(match.Groups["inid21"].Value.Trim());
-                    inids.Add(match.Groups["inid22"].Value.Trim());
-                    inids.Add(match.Groups["inid43"].Value.Trim());
-                    inids.Add(match.Groups["inid54"].Value.Trim());
-                    inids.Add(match.Groups["inids51all"].Value.Trim());
-                    inids.Add(match.Groups["inid71"].Value.Trim());
-                    inids.Add(match.Groups["inid72"].Value.Trim());
-                    inids.Add(match.Groups["inid57"].Value.Trim());
-                }
-                else Console.WriteLine(note);
+                inids = Regex.Split(inidsMatch.Groups["part1"].Value.Trim(), @"(?=\(\d{2}\).+)", RegexOptions.Singleline).Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                inids.Add(inidsMatch.Groups["inid57"].Value.Trim());
             }
             return inids;
         }
-        internal string MakeText(List<XElement> xElements, string subCode)
+        private string MakeText(List<XElement> xElements, string subCode)
         {
             string text = null;
             if(subCode == "1")
@@ -574,18 +491,11 @@ namespace Diamond_IN_Maksim
             {
                 var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
-                HttpClient httpClient = new();
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
+                var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
+                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
                 var result = httpClient.PostAsync("", content).Result;
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
