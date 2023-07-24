@@ -279,6 +279,10 @@ namespace Diamond_SM_Maksim
             "Czech Republic" => "CZ",
             "Austria" => "AT",
             "Italy" => "IT",
+            "Greece" => "GR",
+            "Switzerland" => "CH",
+            "Luxembourg" => "LU",
+            "Sweden" => "SE",
             _ => null
         };
 
