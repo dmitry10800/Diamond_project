@@ -757,6 +757,8 @@ namespace PL_Diamond_Maksim
                 "Malezja" => "MY",
                 "Nowa Zelandia" => "NZ",
                 "CURAÇAO" => "CW",
+                "Indie" => "IN",
+                "Singapur" => "SG",
                 _ => null
             };
 
