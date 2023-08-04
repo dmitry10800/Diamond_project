@@ -1,27 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Diamond_UA_Maksim
 {
     class Main_UA
     {
+        private const string Path = @"D:\LENS\TET\UA\UA_20230802_31(1)";
+        private const string SubCode = "7";
+        private const bool SendToProd = false;
         static void Main(string[] args)
         {
-            var path = @"C:\Work\UA\UA_20211110_45(1)";
-            var subCode = "2";
-
             var methods = new Methods();
 
-            var patents = subCode switch
+            var patents = SubCode switch
             {
-                "2" => methods.Start(path, subCode),
-                "8" => methods.Start(path, subCode),
-                _ => null           
+                "2" => methods.Start(Path, SubCode),
+                "7" => methods.Start(Path, SubCode),
+                "8" => methods.Start(Path, SubCode),
+                _ => null
             };
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents);
+            if (patents != null) methods.SendToDiamond(patents, SendToProd);
             else Console.WriteLine("Wrong sub code");
         }
     }

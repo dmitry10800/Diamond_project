@@ -1,4 +1,5 @@
-﻿using Integration;
+﻿using Diamond.Core.Models;
+using Integration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace Diamond_UA_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-        private int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -37,15 +38,15 @@ namespace Diamond_UA_Maksim
 
             foreach (var tetFile in files)
             {
-                CurrentFileName = tetFile;
+                _currentFileName = tetFile;
 
                 tet = XElement.Load(tetFile);
 
-                if(subCode == "2")
+                if (subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на винахід" + "\n" + "у разі несплати річного збору"))
-                        .TakeWhile(val => !val.Value.StartsWith("Визнання прав на винахід недійсними в судовому порядку повністю") 
+                        .TakeWhile(val => !val.Value.StartsWith("Визнання прав на винахід недійсними в судовому порядку повністю")
                         && !val.Value.StartsWith("Заява володільця патенту про готовність надання будь-якій особі"))
                         .ToList();
 
@@ -53,27 +54,44 @@ namespace Diamond_UA_Maksim
                     {
                         var legalStatusEvent = SplitNote(note, subCode, "MM");
 
-                        if(legalStatusEvent.Biblio.Publication.Number !=null) legalStatusEvents.Add(legalStatusEvent);
+                        if (legalStatusEvent.Biblio.Publication.Number != null) legalStatusEvents.Add(legalStatusEvent);
 
                     }
                 }
 
-                if(subCode == "8")
+                if (subCode == "8")
                 {
-                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на" + "\n" + "корисну модель у разі несплати річного збору"))
-                        .TakeWhile(val => !val.Value.StartsWith("Передача виключних майнових прав інтелектуальної власності на" + "\n" + "корисну модель"))
-                        .ToList();
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                       .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на" + "\n" + "корисну модель у разі несплати річного збору"))
+                       .TakeWhile(val => !val.Value.StartsWith("Передача виключних майнових прав інтелектуальної власності на" + "\n" + "корисну модель"))
+                       .ToList();
 
                     foreach (var note in BuildNotes(xElements))
                     {
-                        var legalStatusEvent = SplitNote(note, subCode, "MM");
+                        var legalStatusEvent = SplitNote(note, subCode, "MK");
 
                         if (legalStatusEvent.Biblio.Publication.Number != null) legalStatusEvents.Add(legalStatusEvent);
                     }
-                }            
+                }
+
+                if (subCode == "7")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на" + "\n" + "корисну модель у зв'язку із закінч нням строку чинності"))
+                        .TakeWhile(val => !val.Value.StartsWith("Передача виключних майнових прав інтелектуальної власності на" + "\n" + "корисну модель"))
+                        .ToList();
+
+                    var notes = BuildNotes(xElements);
+
+                    foreach (var note in notes)
+                    {
+                        var legalStatusEvent = SplitNoteFor7Sub(note, subCode, "MK");
+
+                        if (legalStatusEvent.Biblio.Publication.Number != null) legalStatusEvents.Add(legalStatusEvent);
+                    }
+                }
             }
-                return legalStatusEvents;
+            return legalStatusEvents;
         }
 
         internal string BuildText(List<XElement> xElements)
@@ -93,7 +111,7 @@ namespace Diamond_UA_Maksim
         {
             var legalStatus = new Diamond.Core.Models.LegalStatusEvent
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
 
                 CountryCode = "UA",
 
@@ -101,7 +119,7 @@ namespace Diamond_UA_Maksim
 
                 SubCode = sub,
 
-                Id = id++
+                Id = _id++
             };
 
             var biblioData = new Biblio();
@@ -131,6 +149,31 @@ namespace Diamond_UA_Maksim
             return legalStatus;
         }
 
+        internal Diamond.Core.Models.LegalStatusEvent SplitNoteFor7Sub(string note, string sub, string sectionCode)
+        {
+            var legalStatusEvent = new Diamond.Core.Models.LegalStatusEvent()
+            {
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
+                CountryCode = "UA",
+                SectionCode = sectionCode,
+                SubCode = sub,
+                Id = _id++,
+                Biblio = new Biblio(),
+                LegalEvent = new LegalEvent()
+            };
+
+            var culture = new CultureInfo("ru-RU");
+            var noteMatch = Regex.Match(note.Trim(), @"(?<num>\d+)\s(?<date>\d{2}.\d{2}.\d{4})", RegexOptions.Singleline);
+            if (noteMatch.Success)
+            {
+                legalStatusEvent.Biblio.Publication.Number = noteMatch.Groups["num"].Value.Trim();
+                legalStatusEvent.LegalEvent.Date = DateTime.Parse(noteMatch.Groups["date"].Value.Trim(), culture)
+                    .ToString("yyyy/MM/dd").Replace(".", "/").Trim();
+            }
+
+            return legalStatusEvent;
+        }
+
         internal List<string> SplitNoteToInid(string note)
         {
             var text = note.Replace("\r", "").Replace("\n", " ").Trim();
@@ -148,19 +191,19 @@ namespace Diamond_UA_Maksim
             }
             else
             {
-                notes.Add("-");              
+                notes.Add("-");
             }
 
             return notes;
         }
 
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
+        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
         {
             foreach (var rec in events)
             {
                 var tmpValue = JsonConvert.SerializeObject(rec);
-                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+                string url;
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
                 var httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
