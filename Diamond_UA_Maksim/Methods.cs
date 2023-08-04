@@ -90,6 +90,23 @@ namespace Diamond_UA_Maksim
                         if (legalStatusEvent.Biblio.Publication.Number != null) legalStatusEvents.Add(legalStatusEvent);
                     }
                 }
+
+                if (subCode == "13")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Припинення чинності майнових прав інтелектуальної власності на" + "\n" + "винахід у зв'язку із закінченням ст оку чинності"))
+                        .TakeWhile(val => !val.Value.StartsWith("Передача виключних майнових прав інтелектуальної власності на" + "\n" + "винахід"))
+                        .ToList();
+
+                    var notes = BuildNotes(xElements);
+
+                    foreach (var note in notes)
+                    {
+                        var legalStatusEvent = SplitNoteFor13Sub(note, subCode, "MK");
+
+                        if (legalStatusEvent.Biblio.Publication.Number != null) legalStatusEvents.Add(legalStatusEvent);
+                    }
+                }
             }
             return legalStatusEvents;
         }
@@ -150,6 +167,31 @@ namespace Diamond_UA_Maksim
         }
 
         internal Diamond.Core.Models.LegalStatusEvent SplitNoteFor7Sub(string note, string sub, string sectionCode)
+        {
+            var legalStatusEvent = new Diamond.Core.Models.LegalStatusEvent()
+            {
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
+                CountryCode = "UA",
+                SectionCode = sectionCode,
+                SubCode = sub,
+                Id = _id++,
+                Biblio = new Biblio(),
+                LegalEvent = new LegalEvent()
+            };
+
+            var culture = new CultureInfo("ru-RU");
+            var noteMatch = Regex.Match(note.Trim(), @"(?<num>\d+)\s(?<date>\d{2}.\d{2}.\d{4})", RegexOptions.Singleline);
+            if (noteMatch.Success)
+            {
+                legalStatusEvent.Biblio.Publication.Number = noteMatch.Groups["num"].Value.Trim();
+                legalStatusEvent.LegalEvent.Date = DateTime.Parse(noteMatch.Groups["date"].Value.Trim(), culture)
+                    .ToString("yyyy/MM/dd").Replace(".", "/").Trim();
+            }
+
+            return legalStatusEvent;
+        }
+
+        internal Diamond.Core.Models.LegalStatusEvent SplitNoteFor13Sub(string note, string sub, string sectionCode)
         {
             var legalStatusEvent = new Diamond.Core.Models.LegalStatusEvent()
             {

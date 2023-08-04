@@ -5,7 +5,7 @@ namespace Diamond_UA_Maksim
     class Main_UA
     {
         private const string Path = @"D:\LENS\TET\UA\UA_20230802_31(1)";
-        private const string SubCode = "7";
+        private const string SubCode = "13";
         private const bool SendToProd = false;
         static void Main(string[] args)
         {
@@ -16,6 +16,7 @@ namespace Diamond_UA_Maksim
                 "2" => methods.Start(Path, SubCode),
                 "7" => methods.Start(Path, SubCode),
                 "8" => methods.Start(Path, SubCode),
+                "13" => methods.Start(Path, SubCode),
                 _ => null
             };
 
