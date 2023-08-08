@@ -759,6 +759,9 @@ namespace PL_Diamond_Maksim
                 "CURAÇAO" => "CW",
                 "Indie" => "IN",
                 "Singapur" => "SG",
+                "Rosja" => "RU",
+                "Brytyjskie Wyspy Dziewicze" => "VG",
+                "Saint Kitts i Nevis" => "KN",
                 _ => null
             };
 
