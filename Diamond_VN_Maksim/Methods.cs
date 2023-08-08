@@ -685,7 +685,7 @@ namespace Diamond_VN_Maksim
                         foreach (var applicant in applicants)
                         {
                             var match = Regex.Match(applicant.Trim(),
-                                @"(\d{1,3}\.\s)?(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+)");
+                                @"(\d{1,3}\.\s)?(?<name>.+)\((?<code>\D{2})\)\s(?<adress>.+),");
 
                             if (match.Success)
                             {
@@ -776,7 +776,7 @@ namespace Diamond_VN_Maksim
                         if (match.Success)
                         {
                             statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
-                                                          match.Groups["noteDate"].Value.Trim();
+                                                          DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                             statusEvent.LegalEvent.Language = "VI";
                             statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
                             {
@@ -810,8 +810,8 @@ namespace Diamond_VN_Maksim
                                         @"(?<note>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
                                     if (match1.Success)
                                     {
-                                        statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
-                                                                      match1.Groups["date"].Value.Trim();
+                                        statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " + 
+                                                                      DateTime.Parse(match1.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                                     }
                                     else Console.WriteLine($"{priority} --- 30");}
                             }
@@ -883,6 +883,8 @@ namespace Diamond_VN_Maksim
                         }
                     }
                     else Console.WriteLine($"{inid}");
+
+                    statusEvent.LegalEvent.Language = "VI";
                 }
             }
             else if (subCode is "14" or "15")
