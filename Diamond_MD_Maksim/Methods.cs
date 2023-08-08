@@ -193,7 +193,7 @@ namespace Diamond_MD_Maksim
                 }
                 else if (inid.StartsWith(_i71))
                 {
-                    var applicants = Regex.Split(inid.Replace(_i71, "").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var applicants = Regex.Split(inid.Replace(_i71, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (var applicant in applicants)
                     {
@@ -213,7 +213,7 @@ namespace Diamond_MD_Maksim
                 }
                 else if (inid.StartsWith(_i72))
                 {
-                    var inventors = Regex.Split(inid.Replace(_i72, "").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var inventors = Regex.Split(inid.Replace(_i72, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (var inventor in inventors)
                     {
@@ -233,7 +233,7 @@ namespace Diamond_MD_Maksim
                 }
                 else if (inid.StartsWith(_i712))
                 {
-                    var inventorsApplicants = Regex.Split(inid.Replace(_i712, "").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var inventorsApplicants = Regex.Split(inid.Replace(_i712, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (var inventorsApplicant in inventorsApplicants)
                     {
@@ -270,7 +270,7 @@ namespace Diamond_MD_Maksim
                                 legalStatus.Biblio.Titles.Add(new Title
                                 {
                                     Language = "RO",
-                                    Text = titleMatchList[i].Replace("\r","").Replace("\n", " ").Trim()
+                                    Text = titleMatchList[i].Replace("\r","").Replace("\n", " ").Replace("- ", "").Trim()
                                 });
                             }
                             if (i == 1)
@@ -278,7 +278,7 @@ namespace Diamond_MD_Maksim
                                 legalStatus.Biblio.Titles.Add(new Title
                                 {
                                     Language = "EN",
-                                    Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Trim()
+                                    Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
                                 });
                             }
                             if (i == 2)
@@ -286,7 +286,7 @@ namespace Diamond_MD_Maksim
                                 legalStatus.Biblio.Titles.Add(new Title
                                 {
                                     Language = "RU",
-                                    Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Trim()
+                                    Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
                                 });
                             }
                         }
@@ -305,7 +305,7 @@ namespace Diamond_MD_Maksim
                                     legalStatus.Biblio.Titles.Add(new Title
                                     {
                                         Language = "RO",
-                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Trim()
+                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
                                     });
                                 }
 
@@ -314,7 +314,7 @@ namespace Diamond_MD_Maksim
                                     legalStatus.Biblio.Titles.Add(new Title
                                     {
                                         Language = "EN",
-                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Trim()
+                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
                                     });
                                 }
 
@@ -323,7 +323,7 @@ namespace Diamond_MD_Maksim
                                     legalStatus.Biblio.Titles.Add(new Title
                                     {
                                         Language = "RU",
-                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Trim()
+                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
                                     });
                                 }
                             }

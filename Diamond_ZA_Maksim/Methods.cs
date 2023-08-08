@@ -132,9 +132,9 @@ namespace Diamond_ZA_Maksim
 
             if(subCode == "1")
             {
-                var formatedNote = Regex.Replace(note.Trim(), @"&#\d{3};", "");
+                var formatedNote = Regex.Replace(note.Trim(), @"&#\d{3};", "").Replace("\r", "").Replace("\n", " ").Trim();
 
-                var match = Regex.Match(formatedNote.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71:.+)(?<inventors>72:.+?)(?<priority>33:.+)(?<date22>\.\s?-\s?APP.+)");
+                var match = Regex.Match(formatedNote, @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71:.+)(?<inventors>72:.+?)(?<priority>33:.+)(?<date22>\.\s?-\s?APP.+)",RegexOptions.Singleline);
 
                 if (match.Success)
                 {
