@@ -24,27 +24,27 @@ namespace Diamond_PH_Maksim_Excel
 
             foreach (var xlsxFile in files)
             {
-                    CurrentFileName = xlsxFile;
+                CurrentFileName = xlsxFile;
 
-                    ISheet sheet;
+                ISheet sheet;
 
-                    XSSFWorkbook OpenedDocument;
+                XSSFWorkbook OpenedDocument;
 
-                    using (FileStream file = new(xlsxFile, FileMode.Open, FileAccess.Read))
+                using (FileStream file = new(xlsxFile, FileMode.Open, FileAccess.Read))
+                {
+                    OpenedDocument = new XSSFWorkbook(file);
+                }
+
+                sheet = OpenedDocument.GetSheet("Sheet1");
+
+                CultureInfo culture = new("ru-RU");
+
+                if (subCode is "7")
+                {
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
-                        OpenedDocument = new XSSFWorkbook(file);
-                    }
-
-                    sheet = OpenedDocument.GetSheet("Sheet1");
-
-                    CultureInfo culture = new("ru-RU");
-
-                    if (subCode is "7")
-                    {
-                        for (var row = 0; row <= sheet.LastRowNum; row++)
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
-                            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
-                            {
                             CountryCode = "PH",
                             SectionCode = "MK",
                             SubCode = subCode,
@@ -55,127 +55,131 @@ namespace Diamond_PH_Maksim_Excel
                                 DOfPublication = new()
                             },
                             LegalEvent = new()
-                            };
+                        };
 
-                            statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
 
-                            statusEvent.Biblio.Titles.Add(new Title()
-                            {
-                                Text = sheet.GetRow(row).GetCell(1).ToString(),
-                                Language = "EN"
-                            });
-
-                            statusEvent.Biblio.Application.Date = DateTime
-                                .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
-                                .Replace(".", "/").Trim();
-
-                            statusEvent.LegalEvent.Date = DateTime
-                                .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
-                                .Replace(".", "/").Trim();
-
-                            var assignersList = Regex.Split(sheet.GetRow(row).GetCell(4).ToString(), @"(?<=[A-Z]{2}\])")
-                                .Where(x => !string.IsNullOrEmpty(x)).ToList();
-
-                            foreach (var assigner in assignersList)
-                            {
-                                var match = Regex.Match(assigner.Trim(), @"(?<name>.+)\s\[(?<code>[A-Z]{2})", RegexOptions.Singleline);
-
-                                if (match.Success)
-                                {
-                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
-                                    {
-                                        Name = match.Groups["name"].Value.Trim().TrimStart(';').TrimStart(',').Trim(),
-                                        Country = match.Groups["code"].Value.Trim()
-                                    });
-                                }
-                            }
-                            legalStatusEvents.Add(statusEvent);
-                        }
-                    }
-                    else if (subCode == "5")
-                    {
-                        for (var row = 1; row <= sheet.LastRowNum; row++)
+                        statusEvent.Biblio.Titles.Add(new Title()
                         {
-                            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
-                            {
-                                CountryCode = "PH",
-                                SectionCode = "MM",
-                                SubCode = subCode,
-                                Id = Id++,
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
-                                Biblio = new()
-                                {
-                                    DOfPublication = new()
-                                },
-                                LegalEvent = new()
-                            };
+                            Text = sheet.GetRow(row).GetCell(1).ToString(),
+                            Language = "EN"
+                        });
 
-                            statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+                        statusEvent.Biblio.Application.Date = DateTime
+                            .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
+                            .Replace(".", "/").Trim();
 
-                            var aasigneers = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        statusEvent.LegalEvent.Date = DateTime
+                            .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
+                            .Replace(".", "/").Trim();
 
-                            foreach (var assigneer in aasigneers)
-                            {
-                                var match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
+                        var assignersList = Regex.Split(sheet.GetRow(row).GetCell(4).ToString(), @"(?<=[A-Z]{2}\])")
+                            .Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-                                if (match73.Success)
-                                {
-                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
-                                    {
-                                        Name = match73.Groups["name"].Value.Trim(),
-                                        Country = match73.Groups["code"].Value.Trim()
-                                    });
-                                }
-                                else
-                                {
-                                    var match73Second = Regex.Match(assigneer, @"(?<name>.+)\((?<code>\D{2})");
-                                    if (match73Second.Success)
-                                    {
-                                        statusEvent.Biblio.Assignees.Add(new PartyMember()
-                                        {
-                                            Name = match73Second.Groups["name"].Value.Trim(),
-                                            Country = match73Second.Groups["code"].Value.Trim()
-                                        });
-                                    }
-                                    else Console.WriteLine($"{assigneer} --- not process");
-                                }
-                            }
-
-                            var pubDate = sheet.GetRow(row).GetCell(2);
-                                
-                            if (pubDate != null)
-                            {
-                                statusEvent.Biblio.Publication.Date = DateTime
-                                    .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
-                                    .Replace(".", "/").Trim();
-                            }
-
-                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime
-                                .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
-                                .Replace(".", "/").Trim();
-
-                            statusEvent.Biblio.Titles.Add(new Title()
-                            {
-                                Language = "EN",
-                                Text = sheet.GetRow(row).GetCell(5).ToString()
-                            });
-
-                            var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+                        foreach (var assigner in assignersList)
+                        {
+                            var match = Regex.Match(assigner.Trim(), @"(?<name>.+)\s\[(?<code>[A-Z]{2})", RegexOptions.Singleline);
 
                             if (match.Success)
                             {
-                                statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = match.Groups["name"].Value.Trim().TrimStart(';').TrimStart(',').Trim(),
+                                    Country = match.Groups["code"].Value.Trim()
+                                });
                             }
-
-                            legalStatusEvents.Add(statusEvent);
-                        }   
+                        }
+                        legalStatusEvents.Add(statusEvent);
                     }
-                    else if (subCode is "12")
+                }
+                else if (subCode == "5")
+                {
+                    for (var row = 1; row <= sheet.LastRowNum; row++)
                     {
-                        for (var row = 1; row <= sheet.LastRowNum; row++)
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
-                            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                            CountryCode = "PH",
+                            SectionCode = "MM",
+                            SubCode = subCode,
+                            Id = Id++,
+                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                            Biblio = new()
                             {
+                                DOfPublication = new()
+                            },
+                            LegalEvent = new()
+                        };
+
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+                        var aasigneers = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (var assigneer in aasigneers)
+                        {
+                            var match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
+
+                            if (match73.Success)
+                            {
+                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = match73.Groups["name"].Value.Trim(),
+                                    Country = match73.Groups["code"].Value.Trim()
+                                });
+                            }
+                            else
+                            {
+                                var match73Second = Regex.Match(assigneer, @"(?<name>.+)\((?<code>\D{2})");
+                                if (match73Second.Success)
+                                {
+                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                    {
+                                        Name = match73Second.Groups["name"].Value.Trim(),
+                                        Country = match73Second.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else Console.WriteLine($"{assigneer} --- not process");
+                            }
+                        }
+
+                        var pubDate = sheet.GetRow(row).GetCell(2);
+
+                        if (pubDate != null)
+                        {
+                            statusEvent.Biblio.Publication.Date = DateTime
+                                .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim();
+                        }
+
+                        var pctPubDate = sheet.GetRow(row).GetCell(3);
+                        if (pctPubDate != null)
+                        {
+                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime
+                                .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
+                                .Replace(".", "/").Trim();
+                        }
+
+                        statusEvent.Biblio.Titles.Add(new Title()
+                        {
+                            Language = "EN",
+                            Text = sheet.GetRow(row).GetCell(5).ToString()
+                        });
+
+                        var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+
+                        if (match.Success)
+                        {
+                            statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                        }
+
+                        legalStatusEvents.Add(statusEvent);
+                    }
+                }
+                else if (subCode is "12")
+                {
+                    for (var row = 1; row <= sheet.LastRowNum; row++)
+                    {
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
                             CountryCode = "PH",
                             SectionCode = "KA",
                             SubCode = subCode,
@@ -186,7 +190,7 @@ namespace Diamond_PH_Maksim_Excel
                                 DOfPublication = new()
                             },
                             LegalEvent = new()
-                            };
+                        };
 
                         var countryCodeForCheck = string.Empty;
 
@@ -235,7 +239,7 @@ namespace Diamond_PH_Maksim_Excel
                             statusEvent.Biblio.Publication.Date = DateTime.Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         }
 
-                            statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
                         statusEvent.Biblio.Titles.Add(new Integration.Title
                         {
@@ -252,8 +256,8 @@ namespace Diamond_PH_Maksim_Excel
                             statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
                         }
                         legalStatusEvents.Add(statusEvent);
-                        }
                     }
+                }
             }
             return legalStatusEvents;
         }

@@ -2,7 +2,7 @@
 {
     internal class Main_PH
     {
-        private const string Path = @"D:\LENS\PH\PH_20230111_04";
+        private const string Path = @"D:\LENS\TET\PH\PH_20230816_89";
         private const string SubCode = "5";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
