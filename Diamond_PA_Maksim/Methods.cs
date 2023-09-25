@@ -15,19 +15,19 @@ namespace Diamond_PA_Maksim
     class Methods
     {
 
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
-        private readonly string I51 = "(51)";
-        private readonly string I12 = "(12)";
-        private readonly string I21 = "(21)";
-        private readonly string I22 = "(22)";
-        private readonly string I54 = "(54)";
-        private readonly string I30 = "(30)";
-        private readonly string I71 = "(71)";
-        private readonly string I72 = "(72)";
-        private readonly string I74 = "(74)";
-        private readonly string I57 = "(57)";
+        private const string _i51 = "(51)";
+        private const string _i12 = "(12)";
+        private const string _i21 = "(21)";
+        private const string _i22 = "(22)";
+        private const string _i54 = "(54)";
+        private const string _i30 = "(30)";
+        private const string _i71 = "(71)";
+        private const string _i72 = "(72)";
+        private const string _i74 = "(74)";
+        private const string _i57 = "(57)";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -48,7 +48,7 @@ namespace Diamond_PA_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -93,8 +93,8 @@ namespace Diamond_PA_Maksim
                 SubCode = subCode,
                 CountryCode = "PA",
                 SectionCode = sectionCode,
-                Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                Id = _id++,
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new(),
                 LegalEvent = new()
             };
@@ -104,11 +104,11 @@ namespace Diamond_PA_Maksim
             {
                 foreach (var inid in MakeInids(note, subCode))
                 {
-                    if (inid.StartsWith(I21))
+                    if (inid.StartsWith(_i21))
                     {
                         statusEvent.Biblio.Application.Number = inid.Replace("(21) Solicitud N?: ", "").Trim();
                     }
-                    else if (inid.StartsWith(I22))
+                    else if (inid.StartsWith(_i22))
                     {
                         var match = Regex.Match(inid.Replace("(22) Fecha de Solicitud : ", ""), @"(?<day>\d{2}).(?<month>.+).(?<year>\d{2})");
 
@@ -118,9 +118,8 @@ namespace Diamond_PA_Maksim
                         }
                         else Console.WriteLine($"{inid} -- 22");
                     }
-                    else if (inid.StartsWith(I71))
+                    else if (inid.StartsWith(_i71))
                     {
-
                         var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(71) Titular(es): ", "").Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<code>.+)");
 
                         if (match.Success)
@@ -136,11 +135,10 @@ namespace Diamond_PA_Maksim
                             {
                                 Console.WriteLine($"{match.Groups["code"].Value.Trim()}");
                             }
-
                         }
                         else Console.WriteLine($"{inid} -- 71");
                     }
-                    else if (inid.StartsWith(I72))
+                    else if (inid.StartsWith(_i72))
                     {
                         var inventors = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(72) Inventor(es): ", "").Trim(), @"(?<=\),)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -158,14 +156,14 @@ namespace Diamond_PA_Maksim
                             else Console.WriteLine($"{inventor} -- 72");
                         }
                     }
-                    else if (inid.StartsWith(I74))
+                    else if (inid.StartsWith(_i74))
                     {
                         statusEvent.Biblio.Agents.Add(new Integration.PartyMember
                         {
                             Name = inid.Replace("(74) Apoderado: ", "").Trim()
                         });
                     }
-                    else if (inid.StartsWith(I30))
+                    else if (inid.StartsWith(_i30))
                     {
                         var priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(30) Numero(s) prioridad: ", "").Trim(), @"(?<=[a-z||á],)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -190,7 +188,7 @@ namespace Diamond_PA_Maksim
                             else Console.WriteLine($"{priotity} --30");
                         }
                     }
-                    else if (inid.StartsWith(I54))
+                    else if (inid.StartsWith(_i54))
                     {
                         var match = Regex.Match(inid.Trim(), @"(?<field54>.+)\sMINISTERIO", RegexOptions.Singleline);
 
@@ -211,7 +209,7 @@ namespace Diamond_PA_Maksim
                             });
                         }
                     }
-                    else if (inid.StartsWith(I57))
+                    else if (inid.StartsWith(_i57))
                     {
                         var match = Regex.Match(inid.Trim(), @"(?<field57>.+)\sMINISTERIO", RegexOptions.Singleline);
 
@@ -232,7 +230,7 @@ namespace Diamond_PA_Maksim
                             });
                         }
                     }
-                    else if (inid.StartsWith(I51))
+                    else if (inid.StartsWith(_i51))
                     {
                         var ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51) Clasificacion Internacional de Patentes ", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -244,7 +242,7 @@ namespace Diamond_PA_Maksim
                             });
                         }
                     }
-                    else if (inid.StartsWith(I12))
+                    else if (inid.StartsWith(_i12))
                     {
                         statusEvent.Biblio.Publication.LanguageDesignation = inid.Replace("(12)", "").Replace("_", "").Replace("\r", "").Replace("\n", " ").Trim();
                     }
@@ -255,12 +253,12 @@ namespace Diamond_PA_Maksim
             {
                 foreach (var inid in MakeInids(note, subCode))
                 {
-                    if (inid.StartsWith(I21))
+                    if (inid.StartsWith(_i21))
                     {
                         statusEvent.Biblio.Application.Number = inid.Replace("(21) Solicitud N?: ", "").Trim();
                     }
                     else
-                    if (inid.StartsWith(I22))
+                    if (inid.StartsWith(_i22))
                     {
                         var match = Regex.Match(inid.Replace("(22) Fecha de Solicitud: ", ""), @"(?<day>\d{2}).(?<month>.+).(?<year>\d{2})");
 
@@ -271,7 +269,7 @@ namespace Diamond_PA_Maksim
                         else Console.WriteLine($"{inid} -- 22");
                     }
                     else
-                    if (inid.StartsWith(I30))
+                    if (inid.StartsWith(_i30))
                     {
                         var priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(30) Numero(s) prioridad: ", "").Trim(), @"(?<=[a-z||á],)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -297,7 +295,7 @@ namespace Diamond_PA_Maksim
                         }
                     }
                     else
-                    if (inid.StartsWith(I71))
+                    if (inid.StartsWith(_i71))
                     {
                         var applicants = Regex.Split(inid.Replace("(71) Titular(es): ", "").Trim(), @"(?<=[a-z]$)",RegexOptions.Multiline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -324,7 +322,7 @@ namespace Diamond_PA_Maksim
                         }                      
                     }
                     else
-                    if (inid.StartsWith(I74))
+                    if (inid.StartsWith(_i74))
                     {
                         statusEvent.Biblio.Agents.Add(new Integration.PartyMember
                         {
@@ -332,7 +330,7 @@ namespace Diamond_PA_Maksim
                         });
                     }
                     else
-                    if (inid.StartsWith(I54))
+                    if (inid.StartsWith(_i54))
                     {
                         statusEvent.Biblio.Titles.Add(new Integration.Title
                         {
@@ -341,7 +339,7 @@ namespace Diamond_PA_Maksim
                         });
                     }
                     else
-                    if (inid.StartsWith(I51))
+                    if (inid.StartsWith(_i51))
                     {
                         var ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51) Clasificacion Internacional de Patentes ", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -353,12 +351,10 @@ namespace Diamond_PA_Maksim
                             });
                         }
                     }
-                    else
-                    if (inid.StartsWith("(note)"))
+                    else if (inid.StartsWith("(note)"))
                     {
-                 //       Match match = Regex.Match()
+                        //       Match match = Regex.Match()
                     }
-
                 }
             }
 
@@ -413,6 +409,15 @@ namespace Diamond_PA_Maksim
             "DIC" => "12",
             "de enero de" => "01",
             "de mayo de" => "05",
+            "de septiembre de" => "09",
+            "de febrero de" => "02",
+            "de marzo de" => "03",
+            "de junio de" => "06",
+            "de julio de" => "07",
+            "de agosto de" => "08",
+            "de noviembre de" => "11",
+            "de abril de" => "04",
+            "de octubre de" => "10",
             _ => null
         };
         internal string MakeCountry(string country) => country switch
@@ -446,7 +451,12 @@ namespace Diamond_PA_Maksim
             "República de Corea" => "KR",
             "Corea" => "KR",
             "La Federación Rusa" => "RU",
-
+            "La Republica de Panama" => "PA",
+            "Colombia" => "CO",
+            "Corea del Sur" => "KR",
+            "Italia" => "IT",
+            "IRLANDA" => "IE",
+            "Estados Unidos de America" => "US",
             _ => null,
         };
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
