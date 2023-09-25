@@ -198,10 +198,13 @@ namespace Diamond_MY_Maksim
                             }
                             else
                             {
-                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                if (cleanInid.Trim() != "NONE")
                                 {
-                                    Name = cleanInid.Trim()
-                                });
+                                    statusEvent.Biblio.Agents.Add(new PartyMember()
+                                    {
+                                        Name = cleanInid.Trim()
+                                    });
+                                }
                             }
                         }
                     }
