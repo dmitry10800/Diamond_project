@@ -627,7 +627,7 @@ namespace PL_Diamond_Maksim
                 {
                     biblio.Publication.Kind = match.Groups["pubKind"].Value.Trim();
 
-                    europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Replace(" ", ".").Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "-").Trim();
+                    europeanPatent.PubDate = DateTime.Parse(match.Groups["date"].Value.Replace(" ", ".").Trim(), cultureInfo).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
                     legal.Note = "|| Rok wydania i numer Europejskiego Biuletynu Patentowego, w którym ogłoszono o udzieleniu patentu | " + match.Groups["note"].Value.Trim();
                     legal.Language = "PL";
@@ -651,7 +651,7 @@ namespace PL_Diamond_Maksim
                     Console.WriteLine($"{note}");
                 }
                 var match2 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")).Trim(), @"[0-9]{8}");
-                legal.Date = match2.Value.Insert(4, "-").Insert(7, "-").Trim();
+                legal.Date = match2.Value.Insert(4, "/").Insert(7, "/").Trim();
 
                 biblio.EuropeanPatents.Add(europeanPatent);
                 legalEvent.LegalEvent = legal;
