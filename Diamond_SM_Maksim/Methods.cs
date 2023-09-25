@@ -161,7 +161,7 @@ namespace Diamond_SM_Maksim
                             {
                                 patent.Biblio.Assignees.Add(new PartyMember()
                                 {
-                                    Name = assignerrsMatch.Groups["name"].Value.Replace("- ","").Trim(),
+                                    Name = assignerrsMatch.Groups["name"].Value.Replace("- ", "").Trim(),
                                     Address1 = assignerrsMatch.Groups["adress"].Value.Trim(),
                                     Country = country
                                 });
@@ -179,7 +179,7 @@ namespace Diamond_SM_Maksim
                 {
                     var agentMatch1 = Regex.Match(agentsMatch.Groups["agents"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
                             @"(?<name>.+?),(?<adress>.+RSM)(?<priority>.+\d{2}\/\d{2}\/\d{4}\s\D{2})");
-                    
+
                     if (agentMatch1.Success)
                     {
                         patent.Biblio.Agents.Add(new PartyMember()
@@ -230,7 +230,7 @@ namespace Diamond_SM_Maksim
                 var inventorsMatch = Regex.Match(note, @"Inventors:(?<inventors>.+?)(\(|Titolo)", RegexOptions.Singleline);
                 if (inventorsMatch.Success)
                 {
-                    var inventorsLIst = Regex.Split(inventorsMatch.Groups["inventors"].Value.Replace("\r","").Replace("\n"," ").Trim(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                    var inventorsLIst = Regex.Split(inventorsMatch.Groups["inventors"].Value.Replace("\r", "").Replace("\n", " ").Trim(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
                     foreach (var inventor in inventorsLIst)
                     {
@@ -249,7 +249,7 @@ namespace Diamond_SM_Maksim
                     patent.Biblio.Titles.Add(new Title()
                     {
                         Language = "IT",
-                        Text = titleMatch.Groups["title"].Value.Replace("- ","").Trim()
+                        Text = titleMatch.Groups["title"].Value.Replace("- ", "").Trim()
                     });
                 }
                 else
@@ -283,6 +283,16 @@ namespace Diamond_SM_Maksim
             "Switzerland" => "CH",
             "Luxembourg" => "LU",
             "Sweden" => "SE",
+            "Australia" => "AU",
+            "Malta" => "MT",
+            "Norway" => "NO",
+            "Israel" => "IL",
+            "India" => "IN",
+            "Portugal" => "PT",
+            "Turkey" => "TR",
+            "Slovak Republic" => "SK",
+            "Ireland" => "IE",
+            "Taiwan" => "TW",
             _ => null
         };
 
@@ -294,7 +304,7 @@ namespace Diamond_SM_Maksim
             {
                 foreach (var xElement in xElements)
                 {
-                        sb = sb.Append(xElement.Value + "\n");
+                    sb = sb.Append(xElement.Value + "\n");
                 }
             }
             return sb.ToString();
