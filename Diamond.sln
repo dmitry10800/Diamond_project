@@ -387,7 +387,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_TN_Maksim", "Diamon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_LV_Maksim", "Diamond_LV_Maksim\Diamond_LV_Maksim.csproj", "{1016CD30-FBD9-43EB-9AA3-C06303A09903}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_SM_Maksim", "Diamond_SM_Maksim\Diamond_SM_Maksim.csproj", "{C0AB47B9-85B5-445C-A1D1-E8DF4F2498C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Diamond_SM_Maksim", "Diamond_SM_Maksim\Diamond_SM_Maksim.csproj", "{C0AB47B9-85B5-445C-A1D1-E8DF4F2498C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_VE_Maksim_Excel", "Diamond_VE_Maksim_Excel\Diamond_VE_Maksim_Excel.csproj", "{322EBFB9-1521-41C2-8D1E-BF7787D122ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -895,6 +897,10 @@ Global
 		{C0AB47B9-85B5-445C-A1D1-E8DF4F2498C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0AB47B9-85B5-445C-A1D1-E8DF4F2498C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0AB47B9-85B5-445C-A1D1-E8DF4F2498C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{322EBFB9-1521-41C2-8D1E-BF7787D122ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{322EBFB9-1521-41C2-8D1E-BF7787D122ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{322EBFB9-1521-41C2-8D1E-BF7787D122ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{322EBFB9-1521-41C2-8D1E-BF7787D122ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1092,6 +1098,7 @@ Global
 		{ADFB237B-61DE-473A-BB31-534D1112F243} = {B5F90187-E1BB-4960-AFA3-6E737467C497}
 		{1016CD30-FBD9-43EB-9AA3-C06303A09903} = {E345485A-1232-402A-9691-7A409A112D46}
 		{C0AB47B9-85B5-445C-A1D1-E8DF4F2498C7} = {CB2A20B7-3BB7-4739-9977-8762763F9E0E}
+		{322EBFB9-1521-41C2-8D1E-BF7787D122ED} = {1F170898-FB91-4813-B7EC-F299CFAAD6C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D20EC653-9AB2-4390-80D0-3B8BEC2529F8}
