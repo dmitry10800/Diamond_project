@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Integration;
@@ -41,7 +42,7 @@ namespace Diamond_VE_Maksim_Excel
 
                 var culture = new CultureInfo("ru-RU");
 
-                if (subCode == "26")
+                if (subCode == "26" || subCode == "64")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
@@ -132,6 +133,10 @@ namespace Diamond_VE_Maksim_Excel
             "PAISES BAJOS" => "NL",
             "AUSTRALIA" => "AU",
             "REINO UNIDO" => "GB",
+            "INDIA" => "IN",
+            "RUSIA" => "RU",
+            "URUGUAY" => "UY",
+            "FINLANDIA" => "FI",
             _ => null
         };
 

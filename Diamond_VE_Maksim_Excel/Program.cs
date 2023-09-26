@@ -2,8 +2,8 @@
 {
     internal class Program
     {
-        private const string _path = @"D:\LENS\TET\VE\VE_20230822_623\26";
-        private const string _subCode = "26";
+        private const string _path = @"D:\LENS\TET\VE\VE_20230822_623\64";
+        private const string _subCode = "64";
         private const bool _sendToProd = false; // true - send to Prod ; false - send to Stag
         static void Main(string[] args)
         {
