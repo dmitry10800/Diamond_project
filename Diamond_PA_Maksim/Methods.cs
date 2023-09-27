@@ -418,6 +418,7 @@ namespace Diamond_PA_Maksim
             "de noviembre de" => "11",
             "de abril de" => "04",
             "de octubre de" => "10",
+            "de diciembre de" => "12",
             _ => null
         };
         internal string MakeCountry(string country) => country switch
