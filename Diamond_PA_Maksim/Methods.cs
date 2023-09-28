@@ -260,11 +260,18 @@ namespace Diamond_PA_Maksim
                     else
                     if (inid.StartsWith(_i22))
                     {
-                        var match = Regex.Match(inid.Replace("(22) Fecha de Solicitud: ", ""), @"(?<day>\d{2}).(?<month>.+).(?<year>\d{2})");
+                        var match = Regex.Match(inid.Replace("(22) Fecha de Solicitud: ", ""), @"(?<day>\d+).(?<month>.+).(?<year>\d{4})");
 
                         if (match.Success)
                         {
-                            statusEvent.Biblio.Application.Date = "20" + match.Groups["year"].Value.Trim() + "/" + MakeMonth(match.Groups["month"].Value.Trim()) + "/" + match.Groups["day"].Value.Trim();
+                            if (match.Groups["day"].Value.Trim().Length == 1)
+                            {
+                                statusEvent.Biblio.Application.Date = match.Groups["year"].Value.Trim() + "/" + MakeMonth(match.Groups["month"].Value.Trim()) + "/" + "0" + match.Groups["day"].Value.Trim();
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Application.Date = match.Groups["year"].Value.Trim() + "/" + MakeMonth(match.Groups["month"].Value.Trim()) + "/" + match.Groups["day"].Value.Trim();
+                            }
                         }
                         else Console.WriteLine($"{inid} -- 22");
                     }
@@ -458,6 +465,7 @@ namespace Diamond_PA_Maksim
             "Italia" => "IT",
             "IRLANDA" => "IE",
             "Estados Unidos de America" => "US",
+            "La República de Panamá" => "PA",
             _ => null,
         };
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
@@ -466,14 +474,8 @@ namespace Diamond_PA_Maksim
             {
                 var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : // продакшен
+                    @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // стейдж
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

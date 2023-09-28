@@ -5,10 +5,9 @@ namespace Diamond_PA_Maksim
 {
     class Main_PA
     {
-
-        private static readonly string Path = @"C:\!Work\PA\PA_20220125_390";
-        private static readonly string SubCode = "1";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"D:\LENS\TET\PA\PA_20230913_400";
+        private const string SubCode = "1";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
         {
@@ -23,8 +22,8 @@ namespace Diamond_PA_Maksim
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Wrong subcode");
+            if (patents != null) 
+                methods.SendToDiamond(patents, SendToProd);
         }
     }
 }
