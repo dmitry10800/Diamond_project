@@ -236,10 +236,14 @@ namespace Diamond_PA_Maksim
 
                         foreach (var ipc in ipcs)
                         {
-                            statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
+                            var ipcsMatch = Regex.Match(ipc.Trim(), @"(?<first>.+)\s(?<second>.+)");
+                            if (ipcsMatch.Success)
                             {
-                                Class = ipc.Trim()
-                            });
+                                statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
+                                {
+                                    Class = ipcsMatch.Groups["first"].Value.Replace("/","").Trim() + " " + ipcsMatch.Groups["second"].Value.Trim()
+                                });
+                            }
                         }
                     }
                     else if (inid.StartsWith(_i12))
@@ -352,10 +356,14 @@ namespace Diamond_PA_Maksim
 
                         foreach (var ipc in ipcs)
                         {
-                            statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
+                            var ipcsMatch = Regex.Match(ipc.Trim(), @"(?<first>.+)\s(?<second>.+)");
+                            if (ipcsMatch.Success)
                             {
-                                Class = ipc.Trim()
-                            });
+                                statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
+                                {
+                                    Class = ipcsMatch.Groups["first"].Value.Replace("/", "").Trim() + " " + ipcsMatch.Groups["second"].Value.Trim()
+                                });
+                            }
                         }
                     }
                     else if (inid.StartsWith("(note)"))
