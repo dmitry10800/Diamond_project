@@ -5,7 +5,7 @@ namespace Diamond_AL_Maksim
 {
     class Main_AL
     {
-        private const string Path = @"C:\Work\AL\AL_20211122_36";
+        private const string Path = @"D:\LENS\TET\AL";
         private const string SubCode = "3";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
