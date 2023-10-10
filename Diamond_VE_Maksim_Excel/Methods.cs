@@ -40,16 +40,22 @@ namespace Diamond_VE_Maksim_Excel
 
                 sheet = OpenedDocument.GetSheet("Sheet1") ?? OpenedDocument.GetSheet("Лист1");
 
-                var culture = new CultureInfo("ru-RU");
-
-                if (subCode == "26" || subCode == "64")
+                if (subCode == "26" || subCode == "64" || subCode == "65")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
+                        var sectionCode = subCode switch
+                        {
+                            "26" => "FD",
+                            "64" => "FD",
+                            "65" => "FC",
+                            _ => null
+                        };
+
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
                             CountryCode = "VE",
-                            SectionCode = "FD",
+                            SectionCode = sectionCode,
                             SubCode = subCode,
                             Id = _id++,
                             GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
@@ -146,6 +152,9 @@ namespace Diamond_VE_Maksim_Excel
             "REPUBLICA POPULAR DEMOCRATICA DE COREA" => "KP",
             "CHINA" => "CN",
             "CHILE" => "CL",
+            "DINAMARCA" => "DK",
+            "TURQUIA" => "TR",
+            "NORUEGA" => "NO",
             _ => null
         };
 
