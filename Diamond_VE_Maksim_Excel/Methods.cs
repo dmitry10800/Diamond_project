@@ -137,6 +137,15 @@ namespace Diamond_VE_Maksim_Excel
             "RUSIA" => "RU",
             "URUGUAY" => "UY",
             "FINLANDIA" => "FI",
+            "LUXEMBURGO" => "LU",
+            "REPUBLICA DE COREA" => "KR",
+            "SINGAPUR" => "SG",
+            "CUBA" => "CU",
+            "IRLANDA" => "IE",
+            "AUSTRIA" => "AT",
+            "REPUBLICA POPULAR DEMOCRATICA DE COREA" => "KP",
+            "CHINA" => "CN",
+            "CHILE" => "CL",
             _ => null
         };
 
