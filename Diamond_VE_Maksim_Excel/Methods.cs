@@ -155,6 +155,9 @@ namespace Diamond_VE_Maksim_Excel
             "DINAMARCA" => "DK",
             "TURQUIA" => "TR",
             "NORUEGA" => "NO",
+            "( SIN PAIS )" => "",
+            "(SIN PAIS)" => "",
+            "SIN PAIS" => "",
             _ => null
         };
 
