@@ -62,11 +62,11 @@ namespace Diamond_ME_Maksim
 
                 tet = XElement.Load(tetml);
 
-                if(subCode == "2")
+                if (subCode == "2")
                 {
 
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                          .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATENATA"+"\n"+"Publication of extended european patents"))
+                          .SkipWhile(val => !val.Value.StartsWith("OBJAVA PROŠIRENIH EVROPSKIH PATENATA" + "\n" + "Publication of extended european patents"))
                           .TakeWhile(val => !val.Value.StartsWith("OBJAVA ZAHTJEVA ZA PROŠIRENJE EVROPSKIH PRIJAVA PATENATA"))
                           .TakeWhile(val => !val.Value.StartsWith("OBJAVA UPISA PROMJENA"))
                           .ToList();
@@ -79,7 +79,7 @@ namespace Diamond_ME_Maksim
                     }
                 }
                 else
-                if(subCode == "3")
+                if (subCode == "3")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                          .SkipWhile(val => !val.Value.StartsWith("Publication of request for the extension of the effects of european patent applications"))
@@ -95,7 +95,7 @@ namespace Diamond_ME_Maksim
             return statusEvents;
         }
 
-        internal Diamond.Core.Models.LegalStatusEvent MakePatent (string note, string subCode, string sectionCode)
+        internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
             {
@@ -114,7 +114,7 @@ namespace Diamond_ME_Maksim
             IntConvention intConvention = new();
             Priority priority1 = new();
 
-            if(subCode == "2")
+            if (subCode == "2")
             {
                 foreach (var inid in MakeInids(note, subCode))
                 {
@@ -165,7 +165,7 @@ namespace Diamond_ME_Maksim
                     else
                     if (inid.StartsWith(I30))
                     {
-                        var priorities = Regex.Split(inid.Replace(I30, "").Replace("\r","").Replace("\n"," ").Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var priorities = Regex.Split(inid.Replace(I30, "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (var priority in priorities)
                         {
@@ -216,7 +216,7 @@ namespace Diamond_ME_Maksim
                                 intConvention.PctApplDate = DateTime.Parse(match1.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                             }
                             else Console.WriteLine($"{inid} --- 86");
-                        } 
+                        }
                     }
                     else
                     if (inid.StartsWith(I87))
@@ -267,7 +267,7 @@ namespace Diamond_ME_Maksim
                             statusEvent.Biblio.Titles.Add(new Title
                             {
                                 Language = "ME",
-                                Text = match.Groups["me"].Value.Trim()                               
+                                Text = match.Groups["me"].Value.Trim()
                             });
                             statusEvent.Biblio.Titles.Add(new Title
                             {
@@ -294,7 +294,7 @@ namespace Diamond_ME_Maksim
                                     Country = match.Groups["code"].Value.Trim()
                                 });
                             }
-                            else Console.WriteLine($"{assigny} --- 73");                           
+                            else Console.WriteLine($"{assigny} --- 73");
                         }
                     }
                     else
@@ -378,9 +378,9 @@ namespace Diamond_ME_Maksim
                 statusEvent.Biblio.IntConvention = intConvention;
             }
             else
-            if(subCode == "3")
+            if (subCode == "3")
             {
-                foreach (var inid in MakeInids(note,subCode))
+                foreach (var inid in MakeInids(note, subCode))
                 {
                     if (inid.StartsWith(I51))
                     {
@@ -406,7 +406,19 @@ namespace Diamond_ME_Maksim
                         if (match.Success)
                         {
                             europeanPatent.AppNumber = match.Groups["aNum"].Value.Trim();
-                            europeanPatent.AppDate = match.Groups["year"].Value.Trim() + "/" + match.Groups["month"].Value.Trim() + "/" + match.Groups["day"].Value.Trim();
+
+                            var day = match.Groups["day"].Value.Trim();
+                            var month = match.Groups["month"].Value.Trim();
+                            if (month.Length == 1)
+                            {
+                                month = "0" + month;
+                            }
+                            if (day.Length == 1)
+                            {
+                                day = "0" + day;
+                            }
+
+                            europeanPatent.AppDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + day;
                         }
                         else Console.WriteLine($"{inid} ---- 96");
                     }
@@ -418,7 +430,18 @@ namespace Diamond_ME_Maksim
                         if (match.Success)
                         {
                             europeanPatent.PubNumber = match.Groups["pNum"].Value.Trim();
-                            europeanPatent.PubDate = match.Groups["year"].Value.Trim() + "/" + match.Groups["month"].Value.Trim() + "/" + match.Groups["day"].Value.Trim();
+
+                            var day = match.Groups["day"].Value.Trim();
+                            var month = match.Groups["month"].Value.Trim();
+                            if (month.Length == 1)
+                            {
+                                month = "0" + month;
+                            }
+                            if (day.Length == 1)
+                            {
+                                day = "0" + day;
+                            }
+                            europeanPatent.PubDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + day;
                         }
                         else Console.WriteLine($"{inid} ---- 97");
                     }
@@ -486,13 +509,13 @@ namespace Diamond_ME_Maksim
                     else
                     if (inid.StartsWith(I33))
                     {
-                        var prior = Regex.Split(inid.Replace("(33)", "").Replace("\r","").Replace("\n"," ").Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var prior = Regex.Split(inid.Replace("(33)", "").Replace("\r", "").Replace("\n", " ").Trim(), @"(?<=[A-Z]{2})").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         for (var i = 0; i < prior.Count; i++)
                         {
-                            if(i == 0)
+                            if (i == 0)
                             {
-                                priority1.Country = prior[i].Trim();                               
+                                priority1.Country = prior[i].Trim();
                             }
                             else
                             {
@@ -509,7 +532,7 @@ namespace Diamond_ME_Maksim
                                 }
                                 else Console.WriteLine($"{prior[i]} --- 33 ");
                             }
-                            
+
 
                         }
                     }
@@ -528,7 +551,7 @@ namespace Diamond_ME_Maksim
         {
             List<string> inids = new();
 
-            if(subcode == "2")
+            if (subcode == "2")
             {
                 if (note.Contains("(57)"))
                 {
@@ -547,20 +570,20 @@ namespace Diamond_ME_Maksim
                 {
                     inids = Regex.Split(note.Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-               
+
             }
             else
-            if(subcode == "3")
+            if (subcode == "3")
             {
                 inids = Regex.Split(note.Substring(note.IndexOf("(96)")).Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                var match = Regex.Match(note.Substring(0, note.IndexOf("(96)")).Trim(), @"(?<f51>.+)\s(?<i97>\(97\)\s\D{2}\s\d+)\s(?<f51c>.+)",RegexOptions.Singleline);
+                var match = Regex.Match(note.Substring(0, note.IndexOf("(96)")).Trim(), @"(?<f51>.+)\s(?<i97>\(97\)\s\D{2}\s\d+)\s(?<f51c>.+)", RegexOptions.Singleline);
 
                 if (match.Success)
                 {
                     inids.Add(match.Groups["f51"].Value.Trim() + "\n" + match.Groups["f51c"].Value.Trim());
                 }
-                else 
+                else
                 {
                     var match1 = Regex.Match(note.Substring(0, note.IndexOf("(96)")).Trim(), @"(?<f51>.+)\s(?<i97>\(97\)\s\D{2}\s\d+)", RegexOptions.Singleline);
 
@@ -568,9 +591,9 @@ namespace Diamond_ME_Maksim
                     {
                         inids.Add(match.Groups["f51"].Value.Trim());
                     }
-                    else Console.WriteLine($"{note} --- inid 51 error");                
+                    else Console.WriteLine($"{note} --- inid 51 error");
                 }
-                
+
             }
 
             return inids;
@@ -579,7 +602,7 @@ namespace Diamond_ME_Maksim
         {
             string text = null;
 
-            if(subCode == "2")
+            if (subCode == "2")
             {
                 foreach (var xElement in xElements)
                 {
@@ -603,20 +626,14 @@ namespace Diamond_ME_Maksim
             {
                 var tmpValue = JsonConvert.SerializeObject(rec);
                 string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
+                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : // продакшен
+                    @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // стейдж
                 HttpClient httpClient = new();
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
                 var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
+                _ = result.Content.ReadAsStringAsync().Result;
             }
         }
     }
