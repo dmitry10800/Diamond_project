@@ -5,7 +5,7 @@ namespace Diamond_ME_Maksim
 {
     class Main_ME
     {
-        private const string Path = @"C:\1WORK\ME\ME_20210720_39";
+        private const string Path = @"D:\LENS\TET\ME";
         private const string SubCode = "2";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
