@@ -47,6 +47,7 @@ namespace Diamond_VE_Maksim_Excel
                         var sectionCode = subCode switch
                         {
                             "26" => "FD",
+                            "56" => "FD",
                             "64" => "FD",
                             "65" => "FC",
                             _ => null
@@ -115,6 +116,79 @@ namespace Diamond_VE_Maksim_Excel
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
+                else if (subCode == "56")
+                {
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
+                    {
+                        var sectionCode = subCode switch
+                        {
+                            "56" => "FD",
+                            _ => null
+                        };
+
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
+                            CountryCode = "VE",
+                            SectionCode = sectionCode,
+                            SubCode = subCode,
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
+                            Biblio = new Biblio(),
+                            LegalEvent = new LegalEvent()
+                        };
+
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+                        statusEvent.Biblio.Titles.Add(new Title()
+                        {
+                            Text = sheet.GetRow(row).GetCell(1).ToString(),
+                            Language = "ES"
+                        });
+
+
+                        var listApplicant = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(_ => !string.IsNullOrEmpty(_));
+
+                        foreach (var applicant in listApplicant)
+                        {
+                            var applicantMatch = Regex.Match(applicant, @"(?<name>.+)\sDomicilio:(?<adress>.+)\sPaís:(?<country>.+)", RegexOptions.Singleline);
+
+                            if (applicantMatch.Success)
+                            {
+                                var countryCode = MakeCountryCode(applicantMatch.Groups["country"].Value.Trim());
+
+                                if (countryCode != null)
+                                {
+                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                    {
+                                        Name = applicantMatch.Groups["name"].Value.Trim(),
+                                        Address1 = applicantMatch.Groups["adress"].Value.Trim(),
+                                        Country = countryCode
+                                    });
+                                }
+                                else
+                                    Console.WriteLine(applicantMatch.Groups["country"].Value.Trim());
+                            }
+                        }
+
+                        var listAgents = Regex.Split(sheet.GetRow(row).GetCell(3).ToString(), ";").Where(_ => !string.IsNullOrEmpty(_));
+
+                        foreach (var agent in listAgents)
+                        {
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = agent
+                            });
+                        }
+
+                        var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
+                        if (match.Success)
+                        {
+                            statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                        }
+
+                        legalStatusEvents.Add(statusEvent);
+                    }
+                }
             }
             return legalStatusEvents;
         }
@@ -158,6 +232,8 @@ namespace Diamond_VE_Maksim_Excel
             "( SIN PAIS )" => "",
             "(SIN PAIS)" => "",
             "SIN PAIS" => "",
+            "VIETNAM" => "VN",
+            "COLOMBIA" => "CL",
             _ => null
         };
 
