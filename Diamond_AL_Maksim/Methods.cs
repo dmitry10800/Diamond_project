@@ -173,7 +173,7 @@ namespace Diamond_AL_Maksim
                             }
                             else if (inid.StartsWith("(71)"))
                             {
-                                var applicants = Regex.Split(inid.Replace("(71)", "").Trim(), @"(?<=,\s\D{2}\n)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var applicants = Regex.Split(inid.Replace("(71)", "").Replace("/", "").Trim(), @"(?<=,\s\D{2}\n)").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                                 foreach (var applicant in applicants)
                                 {
@@ -206,7 +206,7 @@ namespace Diamond_AL_Maksim
                             }
                             else if (inid.StartsWith("(72)"))
                             {
-                                var inventors = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(72)", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                                var inventors = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(72)", "").Replace("/", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                                 if (inventors.Count % 2 != 0)
                                 {
@@ -253,7 +253,7 @@ namespace Diamond_AL_Maksim
                             }
                             else if (inid.StartsWith("(74)"))
                             {
-                                var match = Regex.Match(inid.Replace("(74)", "").Trim(), @"(?<name>.+)\n(?<adress>.+)");
+                                var match = Regex.Match(inid.Replace("(74)", "").Replace("/", "").Trim(), @"(?<name>.+)\n(?<adress>.+)");
 
                                 if (match.Success)
                                 {
