@@ -40,14 +40,14 @@ namespace Diamond_VE_Maksim_Excel
 
                 sheet = OpenedDocument.GetSheet("Sheet1") ?? OpenedDocument.GetSheet("Лист1");
 
-                if (subCode == "26" || subCode == "64" || subCode == "65")
+                if (subCode == "26" || subCode == "64" || subCode == "65" || subCode == "34")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         var sectionCode = subCode switch
                         {
                             "26" => "FD",
-                            "56" => "FD",
+                            "34" => "AZ",
                             "64" => "FD",
                             "65" => "FC",
                             _ => null
@@ -234,6 +234,10 @@ namespace Diamond_VE_Maksim_Excel
             "SIN PAIS" => "",
             "VIETNAM" => "VN",
             "COLOMBIA" => "CL",
+            "ISRAEL" => "IL",
+            "EMIRATOS ARABES UNIDOS" => "AE",
+            "TAIWAN" => "TW",
+            "ARABIA SAUDITA" => "SA",
             _ => null
         };
 
