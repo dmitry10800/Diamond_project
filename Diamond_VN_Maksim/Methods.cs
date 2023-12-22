@@ -1446,69 +1446,69 @@ namespace Diamond_VN_Maksim
             }
 
             //Add image to the record Abstract section
-            AddAbstractScreenShot(statusEvent, imagesDictionary);
+          //  AddAbstractScreenShot(statusEvent, imagesDictionary);
 
             return statusEvent;
         }
 
-        private void AddAbstractScreenShot(LegalStatusEvent statusEvent, Dictionary<string, string> imagesDictionary)
-        {
-            var patentKey = statusEvent.Biblio.Publication.Number;
-            if (patentKey == null || imagesDictionary == null)
-            {
-                return;
-            }
+        //private void AddAbstractScreenShot(LegalStatusEvent statusEvent, Dictionary<string, string> imagesDictionary)
+        //{
+        //    var patentKey = statusEvent.Biblio.Publication.Number;
+        //    if (patentKey == null || imagesDictionary == null)
+        //    {
+        //        return;
+        //    }
 
-            var patentImageInfo = imagesDictionary.FirstOrDefault(x => x.Key.Contains(patentKey)).Value;
-            if (!string.IsNullOrWhiteSpace(patentImageInfo))
-            {
-                var pathToFolder = Path.GetDirectoryName(_currentFileName);
-                if (pathToFolder != null)
-                {
-                    var pathToImageFile = Path.Combine(pathToFolder, patentImageInfo);
-                    var imageString = ConvertTiffToPngString(pathToImageFile);
-                    if (!string.IsNullOrWhiteSpace(imageString))
-                    {
-                        var imageValue = $"data:image/png;base64,{imageString}";
-                        var id = GetUniqueScreenShotId();
-                        var idText = $"<img id=\"{id}\">";
-                        if (string.IsNullOrWhiteSpace(statusEvent.Biblio.Abstracts.FirstOrDefault()?.Text))
-                        {
-                            return;
-                        }
-                        var tmpAbstract = statusEvent.Biblio.Abstracts.FirstOrDefault();
-                        if (tmpAbstract == null)
-                        {
-                            return;
-                        }
-                        tmpAbstract.Text += idText;
-                        statusEvent.Biblio.Abstracts = new List<Abstract> { tmpAbstract };
-                        statusEvent.Biblio.ScreenShots.Add(new ScreenShot()
-                        {
-                            Id = id,
-                            Data = imageValue
-                        });
-                    }
-                }
-            }
-        }
+        //    var patentImageInfo = imagesDictionary.FirstOrDefault(x => x.Key.Contains(patentKey)).Value;
+        //    if (!string.IsNullOrWhiteSpace(patentImageInfo))
+        //    {
+        //        var pathToFolder = Path.GetDirectoryName(_currentFileName);
+        //        if (pathToFolder != null)
+        //        {
+        //            var pathToImageFile = Path.Combine(pathToFolder, patentImageInfo);
+        //            var imageString = ConvertTiffToPngString(pathToImageFile);
+        //            if (!string.IsNullOrWhiteSpace(imageString))
+        //            {
+        //                var imageValue = $"data:image/png;base64,{imageString}";
+        //                var id = GetUniqueScreenShotId();
+        //                var idText = $"<img id=\"{id}\">";
+        //                if (string.IsNullOrWhiteSpace(statusEvent.Biblio.Abstracts.FirstOrDefault()?.Text))
+        //                {
+        //                    return;
+        //                }
+        //                var tmpAbstract = statusEvent.Biblio.Abstracts.FirstOrDefault();
+        //                if (tmpAbstract == null)
+        //                {
+        //                    return;
+        //                }
+        //                tmpAbstract.Text += idText;
+        //                statusEvent.Biblio.Abstracts = new List<Abstract> { tmpAbstract };
+        //                statusEvent.Biblio.ScreenShots.Add(new ScreenShot()
+        //                {
+        //                    Id = id,
+        //                    Data = imageValue
+        //                });
+        //            }
+        //        }
+        //    }
+        //}
 
-        private string ConvertTiffToPngString(string path)
-        {
-            using var image = SixLabors.ImageSharp.Image.Load(path);
-            // works for multi page tiff files
-            for (var frameIndex = 0; frameIndex < image.Frames.Count; frameIndex++)
-            {
-                var clonedImageFrame = image.Frames.CloneFrame(frameIndex);
-                using var extractedImageStream = new MemoryStream();
-                //await clonedImageFrame.SaveAsTiffAsync(extractedImageStream).ConfigureAwait(false);
-                //await clonedImageFrame.SaveAsJpegAsync(extractedImageStream, new JpegEncoder() { Quality = 80 }).ConfigureAwait(false);
-                clonedImageFrame.SaveAsPng(extractedImageStream);
-                var extractedImageFrameBytes = extractedImageStream.ToArray();
-                return Convert.ToBase64String(extractedImageFrameBytes);
-            }
-            return null;
-        }
+        //private string ConvertTiffToPngString(string path)
+        //{
+        //    using var image = SixLabors.ImageSharp.Image.Load(path);
+        //    // works for multi page tiff files
+        //    for (var frameIndex = 0; frameIndex < image.Frames.Count; frameIndex++)
+        //    {
+        //        var clonedImageFrame = image.Frames.CloneFrame(frameIndex);
+        //        using var extractedImageStream = new MemoryStream();
+        //        //await clonedImageFrame.SaveAsTiffAsync(extractedImageStream).ConfigureAwait(false);
+        //        //await clonedImageFrame.SaveAsJpegAsync(extractedImageStream, new JpegEncoder() { Quality = 80 }).ConfigureAwait(false);
+        //        clonedImageFrame.SaveAsPng(extractedImageStream);
+        //        var extractedImageFrameBytes = extractedImageStream.ToArray();
+        //        return Convert.ToBase64String(extractedImageFrameBytes);
+        //    }
+        //    return null;
+        //}
 
         private string GetImageString(string path)
         {
