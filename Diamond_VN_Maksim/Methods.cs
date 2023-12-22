@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Diamond.Core.Models;
 using Integration;
-using SixLabors.ImageSharp;
 
 namespace Diamond_VN_Maksim
 {
