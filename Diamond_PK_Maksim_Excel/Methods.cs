@@ -5,6 +5,7 @@ using Integration;
 using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using static NPOI.XSSF.UserModel.Charts.XSSFLineChartData<Tx, Ty>;
 
 
 namespace Diamond_PK_Maksim_Excel;
@@ -58,9 +59,11 @@ public class Methods
                         LegalEvent = new LegalEvent()
                     };
 
-                    if (sheet.GetRow(row).GetCell(0).ToString().Trim() != null)
+                    statusEvent.LegalEvent.Note = $"|| Series | " + sheet.GetRow(row).GetCell(1).ToString().Trim() + " || File No. | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
+
+                    if (sheet.GetRow(row).GetCell(3).ToString().Trim() != null)
                     {
-                        var appDateMatch = Regex.Match(sheet.GetRow(row).GetCell(0).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
+                        var appDateMatch = Regex.Match(sheet.GetRow(row).GetCell(3).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
                         if (appDateMatch.Success)
                         {
                             var day = appDateMatch.Groups["day"].Value.Trim();
@@ -77,14 +80,14 @@ public class Methods
                         }
                     }
 
-                    if (sheet.GetRow(row).GetCell(1).ToString().Trim() != null)
+                    if (sheet.GetRow(row).GetCell(4).ToString().Trim() != null)
                     {
-                        statusEvent.Biblio.Publication.Number = sheet.GetRow(row).GetCell(1).ToString();
+                        statusEvent.Biblio.Publication.Number = sheet.GetRow(row).GetCell(4).ToString();
                     }
                         
-                    if (sheet.GetRow(row).GetCell(2).ToString().Trim() != null)
+                    if (sheet.GetRow(row).GetCell(5).ToString().Trim() != null)
                     {
-                        var priorities = Regex.Split(sheet.GetRow(row).GetCell(2).ToString(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                        var priorities = Regex.Split(sheet.GetRow(row).GetCell(5).ToString(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
                         foreach (var priority in priorities)
                         {
@@ -107,9 +110,9 @@ public class Methods
                         }
                     }
 
-                    if (sheet.GetRow(row).GetCell(3).ToString().Trim() != null)
+                    if (sheet.GetRow(row).GetCell(6).ToString().Trim() != null)
                     {
-                        var dateMatch = Regex.Match(sheet.GetRow(row).GetCell(3).StringCellValue.Trim(), @"(?<month>\d+)\/(?<day>\d+)\/(?<year>\d{4})");
+                        var dateMatch = Regex.Match(sheet.GetRow(row).GetCell(6).StringCellValue.Trim(), @"(?<month>\d+)\/(?<day>\d+)\/(?<year>\d{4})");
                         if (dateMatch.Success)
                         {
                             var day = dateMatch.Groups["day"].Value.Trim();
