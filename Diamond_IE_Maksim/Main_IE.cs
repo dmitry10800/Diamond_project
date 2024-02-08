@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Diamond_IE_Maksim
 {
     class Main_IE
     {
+        private const string Path = @"D:\LENS\TET\IE\IE_20231220_2505";
+        private const string SubCode = "1";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        private static readonly string Path = @"C:\Work\IE\IE_20210623_2440";
-        private static readonly string SubCode = "52";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
-
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Methods methods = new();
 
             var patents = SubCode switch
             {
+                "1" => methods.Start(Path, SubCode),
+                "6" => methods.Start(Path, SubCode),
                 "52" => methods.Start(Path, SubCode),
                 _ => null
             };
