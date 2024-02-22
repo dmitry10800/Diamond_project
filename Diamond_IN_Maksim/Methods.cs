@@ -281,13 +281,17 @@ namespace Diamond_IN_Maksim
 
                         foreach (var ipc in ipcs)
                         {
-                            var typeOne = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d+\D)00(?<sPart>\d{2})(?<tPart>.+)");
+                            var typeOne = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d{2}\D)(?<sPart>\d{4})(?<tPart>.+)");
                             
                             if (typeOne.Success)
                             {
                                 var fPart = typeOne.Groups["fPart"].Value.Trim();
                                 var sPart = typeOne.Groups["sPart"].Value.Trim().TrimStart('0');
-                                var tPart = Regex.Match(typeOne.Groups["tPart"].Value.Trim(), @"(?<part>\d.+?)0").Groups["part"].Value.Trim();
+                                var tPart = typeOne.Groups["tPart"].Value.TrimEnd('0');
+                                if (tPart.Length == 0)
+                                {
+                                    tPart = "00";
+                                }
 
                                 statusEvent.Biblio.Ipcs.Add(new Ipc()
                                 {
@@ -314,7 +318,11 @@ namespace Diamond_IN_Maksim
                                     {
                                         var fPart = typeThree.Groups["fPart"].Value.Trim();
                                         var sPart = typeThree.Groups["sPart"].Value.Trim().TrimStart('0');
-                                        var tPart = Regex.Match(typeThree.Groups["tPart"].Value.Trim(), @"(?<part>\d.+?)0").Groups["part"].Value.Trim();
+                                        var tPart = typeOne.Groups["tPart"].Value.TrimEnd('0');
+                                        if (tPart.Length == 0)
+                                        {
+                                            tPart = "00";
+                                        }
 
                                         statusEvent.Biblio.Ipcs.Add(new Ipc()
                                         {
