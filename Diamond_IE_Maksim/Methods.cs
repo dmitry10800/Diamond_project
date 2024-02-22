@@ -147,10 +147,14 @@ namespace Diamond_IE_Maksim
                         Language = "EN"
                     });
 
-                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                    var people = Regex.Split(match.Groups["assignee"].Value.Trim(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                    foreach (var person in people)
                     {
-                        Name = match.Groups["assignee"].Value.Trim()
-                    });
+                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                        {
+                            Name = person
+                        });
+                    }
 
                     var ipcrMatch = Regex.Match(match.Groups["ipcr"].Value.Trim(), @".+\s\((?<version>\d+\.\d+)\)(?<classification>.+)");
                     if (ipcrMatch.Success)
@@ -179,10 +183,14 @@ namespace Diamond_IE_Maksim
                             Language = "EN"
                         });
 
-                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                        var people = Regex.Split(matchSecond.Groups["assignee"].Value.Trim(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                        foreach (var person in people)
                         {
-                            Name = matchSecond.Groups["assignee"].Value.Trim()
-                        });
+                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            {
+                                Name = person
+                            });
+                        }
                     }
                     else Console.WriteLine(note);
                 }
@@ -206,10 +214,14 @@ namespace Diamond_IE_Maksim
                         Language = "EN"
                     });
 
-                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                    var people = Regex.Split(match.Groups["assignee"].Value.Trim(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                    foreach (var person in people)
                     {
-                        Name = match.Groups["assignee"].Value.Trim()
-                    });
+                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                        {
+                            Name = person
+                        });
+                    }
 
                     var ipcrMatch = Regex.Match(match.Groups["ipcr"].Value.Trim(), @".+\s\((?<version>\d+\.\d+)\)(?<classification>.+)");
                     if (ipcrMatch.Success)
