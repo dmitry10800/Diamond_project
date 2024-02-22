@@ -761,6 +761,13 @@ namespace PL_Diamond_Maksim
                 "Singapur" => "SG",
                 "Rosja" => "RU",
                 "Brytyjskie Wyspy Dziewicze" => "VG",
+                "Kajmany" => "KY",
+                "Grecja" => "GR",
+                "Liechtenstein" => "LI",
+                "Turcja" => "TR",
+                "Mauritius" => "MU",
+                "Estonia" => "EE",
+                "Bahamy" => "BH",
                 "Saint Kitts i Nevis" => "KN",
                 _ => null
             };
