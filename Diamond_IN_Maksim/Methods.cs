@@ -300,12 +300,16 @@ namespace Diamond_IN_Maksim
                             }
                             else
                             {
-                                var typeTwo = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d+\D)\s(?<sPart>\d{2})(?<tPart>\d+)");
+                                var typeTwo = Regex.Match(ipc.Trim(), @"(?<fPart>\D\d{2}\D)\s(?<sPart>\d{2})(?<tPart>\d+)");
 
                                 if (typeTwo.Success)
                                 {
-                                    var tPart = Regex.Match(typeTwo.Groups["tPart"].Value.Trim(), @"(?<part>\d.+?)0").Groups["part"].Value.Trim();
-                                    
+                                    var tPart = typeOne.Groups["tPart"].Value.TrimEnd('0');
+                                    if (tPart.Length == 0)
+                                    {
+                                        tPart = "00";
+                                    }
+
                                     statusEvent.Biblio.Ipcs.Add(new Ipc()
                                     {
                                         Class = typeTwo.Groups["fPart"].Value.Trim()+ " " + typeTwo.Groups["sPart"].Value.Trim().TrimStart('0') + "/" + tPart
