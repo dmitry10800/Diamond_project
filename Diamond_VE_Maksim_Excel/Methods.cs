@@ -106,13 +106,8 @@ namespace Diamond_VE_Maksim_Excel
                                 Name = agent
                             });
                         }
-                        
-                        var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
-                        if (match.Success)
-                        {
-                            statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
-                        }
 
+                        statusEvent.LegalEvent.Date = DateTime.Parse(sheet.GetRow(row).GetCell(4).ToString()).ToString("yyyy/MM/dd");
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
@@ -180,12 +175,7 @@ namespace Diamond_VE_Maksim_Excel
                             });
                         }
 
-                        var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
-                        if (match.Success)
-                        {
-                            statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
-                        }
-
+                        statusEvent.LegalEvent.Date = DateTime.Parse(sheet.GetRow(row).GetCell(4).ToString()).ToString("yyyy/MM/dd");
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
@@ -233,7 +223,7 @@ namespace Diamond_VE_Maksim_Excel
             "(SIN PAIS)" => "",
             "SIN PAIS" => "",
             "VIETNAM" => "VN",
-            "COLOMBIA" => "CL",
+            "COLOMBIA" => "CO",
             "ISRAEL" => "IL",
             "EMIRATOS ARABES UNIDOS" => "AE",
             "TAIWAN" => "TW",
