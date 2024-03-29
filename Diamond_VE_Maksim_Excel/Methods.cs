@@ -228,6 +228,20 @@ namespace Diamond_VE_Maksim_Excel
             "EMIRATOS ARABES UNIDOS" => "AE",
             "TAIWAN" => "TW",
             "ARABIA SAUDITA" => "SA",
+            "ARGENTINA" => "AR",
+            "BULGARIA" => "BG",
+            "PANAMA" => "PA",
+            "MONACO" => "MC",
+            "SUDAFRICA" => "ZA",
+            "BIELORRUSIA (REPUBLICA DE BELARUS)" => "BY",
+            "ANDORRA" => "AD",
+            "HONG KONG" => "HK",
+            "MAURITANIA" => "MR",
+            "PERU" => "PE",
+            "BARBADOS" => "BB",
+            "ANTILLAS HOLANDESAS" => "AG",
+            "PORTUGAL" => "PT",
+            "REPUBLICA CHECA" => "CZ",
             _ => null
         };
 
