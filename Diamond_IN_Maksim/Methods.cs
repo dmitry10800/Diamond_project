@@ -262,6 +262,7 @@ namespace Diamond_IN_Maksim
                             {
                                 statusEvent.LegalEvent.Note = "|| " + match1.Groups["a1"].Value.Trim() + " | " + match1.Groups["p"].Value.Trim() + " || " + match1.Groups["a2"].Value.Trim()
                                     + " | " + match1.Groups["c"].Value.Trim();
+                                statusEvent.LegalEvent.Language = "EN";
                             }
                             else Console.WriteLine($"{match.Groups["note"].Value.Trim()} --- note57");
                         }
@@ -271,7 +272,6 @@ namespace Diamond_IN_Maksim
                                 Language = "EN",
                                 Text = inid.Replace("\r", "").Replace("\n", " ").Replace("(57)","").Replace("Abstract :","").Trim()
                             });
-
                         } 
                     }
                     else if (inid.StartsWith("(51)"))

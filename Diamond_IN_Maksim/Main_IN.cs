@@ -5,7 +5,7 @@ namespace Diamond_IN_Maksim
 {
     class Main_IN
     {
-        private const string Path = @"D:\LENS\TET\IN\IN_20230324_12";
+        private const string Path = @"D:\LENS\TET\INforMAX\test";
         private const string SubCode = "1";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
