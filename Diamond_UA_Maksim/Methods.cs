@@ -1,5 +1,4 @@
-﻿using Diamond.Core.Models;
-using Integration;
+﻿using Integration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

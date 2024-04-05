@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Http.Headers;
-using System.Security.Cryptography;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using Integration;

@@ -5,7 +5,6 @@ using Integration;
 using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using static NPOI.XSSF.UserModel.Charts.XSSFLineChartData<Tx, Ty>;
 
 
 namespace Diamond_PK_Maksim_Excel;

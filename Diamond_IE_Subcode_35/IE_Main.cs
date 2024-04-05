@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Diamond_IE_Subcode_35
+﻿namespace Diamond_IE_Subcode_35
 {
     class IE_Main
     {
