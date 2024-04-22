@@ -933,8 +933,8 @@ namespace Diamond_ID_Maksim
 
                                 if (priorityMatch.Success)
                                 {
-                                    string day = null;
-                                    if (priorityMatch.Groups["day"].Value.Trim().Length == 1)
+                                    var day = priorityMatch.Groups["day"].Value.Trim();
+                                    if (day.Length == 1)
                                     {
                                         day = "0" + priorityMatch.Groups["day"].Value.Trim();
                                     }
