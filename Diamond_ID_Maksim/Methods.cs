@@ -117,6 +117,20 @@ namespace Diamond_ID_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FG"));
                     }
                 }
+                if (subCode == "5")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .ToList();
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(12\)\sP.+)", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith(@"(12)"))
+                        .ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakePatent(note, subCode, "FG"));
+                    }
+                }
             }
             return statusEvents;
         }
@@ -559,7 +573,7 @@ namespace Diamond_ID_Maksim
                     }
                 }
             }
-            if (subCode == "4")
+            if (subCode == "4" || subCode == "5")
             {
                 var inids = MakeInids(note, subCode);
 
@@ -717,26 +731,35 @@ namespace Diamond_ID_Maksim
                     }
                     if (inid.StartsWith(I56))
                     {
-                        var listDoc = Regex.Split(CleanInid(inid, subCode).Replace("\r","").Replace("\n", " "), @"(?<=\s[A-Z]\d?\s)")
-                            .Where(_ => !string.IsNullOrEmpty(_))
-                            .ToList();
-
-                        foreach (var doc in listDoc)
+                        if (subCode == "5")
                         {
-                            var match = Regex.Match(doc.Trim(),
-                                @"(?<code>[A-Z]{2})\s?(?<num>.+)\s?(?<kind>[A-Z]\d?)",
-                                RegexOptions.Singleline);
+                            var inidClean = CleanInid(inid, subCode);
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            var listDoc = Regex.Split(CleanInid(inid, subCode).Replace("\r", "").Replace("\n", " "),
+                                    @"(?<=\s[A-Z]\d?\s)")
+                                .Where(_ => !string.IsNullOrEmpty(_))
+                                .ToList();
 
-                            if (match.Success)
+                            foreach (var doc in listDoc)
                             {
-                                statusEvent.Biblio.PatentCitations.Add(new PatentCitation()
+                                var match = Regex.Match(doc.Trim(),
+                                    @"(?<code>[A-Z]{2})\s?(?<num>.+)\s?(?<kind>[A-Z]\d?)",
+                                    RegexOptions.Singleline);
+
+                                if (match.Success)
                                 {
-                                    Kind = match.Groups["kind"].Value.Trim(),
-                                    Number = match.Groups["num"].Value.Trim(),
-                                    Authority = match.Groups["code"].Value.Trim()
-                                });
+                                    statusEvent.Biblio.PatentCitations.Add(new PatentCitation()
+                                    {
+                                        Kind = match.Groups["kind"].Value.Trim(),
+                                        Number = match.Groups["num"].Value.Trim(),
+                                        Authority = match.Groups["code"].Value.Trim()
+                                    });
+                                }
+                                else Console.WriteLine();
                             }
-                            else Console.WriteLine();
                         }
                     }
                     if (inid.StartsWith(I71))
@@ -868,11 +891,13 @@ namespace Diamond_ID_Maksim
                                     + "|| Jumlah Klaim | " + matchNote.Groups["group2"].Value.Trim();
                                 statusEvent.LegalEvent.Language = "ID";
 
+
                                 statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
                                 {
                                     Language = "EN",
                                     Tr = "|| Patent examiner | " + matchNote.Groups["group1"].Value.Trim() + '\n'
-                                         + "|| Number of claims | " + matchNote.Groups["group2"].Value.Trim()
+                                         + "|| Number of claims | " + matchNote.Groups["group2"].Value.Trim(),
+                                    Type = "INID"
                                 });
                             }
                         }
@@ -899,7 +924,8 @@ namespace Diamond_ID_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| Patent examiner | " + matchNote.Groups["group1"].Value.Trim() + '\n'
-                                             + "|| Number of claims | " + matchNote.Groups["group2"].Value.Trim()
+                                             + "|| Number of claims | " + matchNote.Groups["group2"].Value.Trim(),
+                                        Type = "INID"
                                     });
                                 }
                             }
@@ -984,7 +1010,7 @@ namespace Diamond_ID_Maksim
                 else
                     Console.WriteLine($"{note} -- not create inid");
             }
-            if (subcode == "4")
+            if (subcode == "4" || subcode == "5")
             {
                 var match = Regex.Match(note, @"(?<FirstPart>\(12.+)(?<Inid30>\(30.+)(?<SecondPart>\(43.+)(?<Inid57>\(57.+)", RegexOptions.Singleline);
 
