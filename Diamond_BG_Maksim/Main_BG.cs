@@ -4,13 +4,13 @@ namespace Diamond_BG_Maksim
 {
     class Main_BG
     {
-        private const string Path = @"D:\LENS\BG\BG_20220930_09(2)";
-        private const string SubCode = "1";
+        private const string Path = @"D:\LENS\TET\BG\BG_20240415_04(1)";
+        private const string SubCode = "7";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
         private static void Main()
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
