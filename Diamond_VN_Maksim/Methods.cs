@@ -12,7 +12,6 @@ using System.Xml.Linq;
 using Diamond.Core.Models;
 using Integration;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace Diamond_VN_Maksim
 {
@@ -77,7 +76,7 @@ namespace Diamond_VN_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                              .SkipWhile(val => !val.Value.StartsWith("thay ®æi chñ ®¬n"))
-                          //   .TakeWhile(val => !val.Value.StartsWith(""))
+                             //   .TakeWhile(val => !val.Value.StartsWith(""))
                              .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Th.ng\s?b.o\s?s.:\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Thông")).ToList();
@@ -91,7 +90,7 @@ namespace Diamond_VN_Maksim
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("b- Ghi nhËn thay ®æi chñ ®¬n yªu cÇu cÊp B»ng ®éc quyÒn Gi¶i ph¸p h÷u Ých"))
-                       // .TakeWhile(val => !val.Value.StartsWith(""))
+                        // .TakeWhile(val => !val.Value.StartsWith(""))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode).Trim(), @"(?=Th.ng\s?b.o\s?s.:\s?)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("Thông")).ToList();
@@ -286,9 +285,9 @@ namespace Diamond_VN_Maksim
             return statusEvents;
         }
 
-        private Dictionary<string,string> GetImages(XElement tet)
+        private Dictionary<string, string> GetImages(XElement tet)
         {
-            var result = new Dictionary<string,string>();
+            var result = new Dictionary<string, string>();
             try
             {
                 var iDAndFilenameInfo = new Dictionary<string, string>();
@@ -305,8 +304,9 @@ namespace Diamond_VN_Maksim
                 {
                     var numberPattern = new Regex(@"(?=\(11\)\s(?<Number>\d[^\(]+))");
                     var pageImage = page.Descendants()
-                        .FirstOrDefault(x => x.Name.LocalName == "PlacedImage");
-                    if (pageImage == null)
+                        .Where(x => x.Name.LocalName == "PlacedImage")
+                        .ToList();
+                    if (!pageImage.Any())
                     {
                         continue;
                     }
@@ -316,20 +316,23 @@ namespace Diamond_VN_Maksim
                     {
                         var patentNumberValue = numberPattern.Match(patentNumber.FirstOrDefault()?.Value).Groups["Number"]
                             .Value.Trim();
-                        if (!string.IsNullOrWhiteSpace(patentNumberValue) && !iDAndPatentKeyInfo.ContainsKey(pageImage.Attribute("image")?.Value))
+
+                        if (!string.IsNullOrWhiteSpace(patentNumberValue))
                         {
-                            var value = pageImage.Attribute("image")?.Value;
-                            if (value != null)
+                            foreach (var item in pageImage)
                             {
-                                iDAndPatentKeyInfo.Add(value, patentNumberValue);
+                                var value = item.Attribute("image")?.Value;
+                                if (value != null)
+                                {
+                                    iDAndPatentKeyInfo.Add(value, patentNumberValue);
+                                }
                             }
                         }
                     }
                 }
-
                 foreach (var pair in iDAndPatentKeyInfo.Where(pair => iDAndFilenameInfo.ContainsKey(pair.Key)))
                 {
-                    result.Add(iDAndPatentKeyInfo[pair.Key], iDAndFilenameInfo[pair.Key]);
+                    result.Add(iDAndFilenameInfo[pair.Key], iDAndPatentKeyInfo[pair.Key]);
                 }
             }
             catch (Exception e)
@@ -337,7 +340,7 @@ namespace Diamond_VN_Maksim
                 Console.WriteLine($"Getting images failed. {e.Message}");
                 throw;
             }
-            
+
             return result;
         }
 
@@ -385,7 +388,7 @@ namespace Diamond_VN_Maksim
                         }
                         else Console.WriteLine($"{item} --- application");
                     }
-                    
+
                     var match71 = Regex.Match(match.Groups["applicants"].Value.Trim(), @"(?<name>.+)\s\((?<code>\D{2})\)\s(?<adress>.+),\s");
                     if (match71.Success)
                     {
@@ -494,7 +497,7 @@ namespace Diamond_VN_Maksim
                             {
                                 statusEvent.LegalEvent.Note =
                                     "|| " + matchTmp.Groups["note1"].Value.Trim().TrimEnd(':').Trim() + " | " +
-                                    DateTime.Parse(matchTmp.Groups["date1"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".","/").Trim() + "\n" +
+                                    DateTime.Parse(matchTmp.Groups["date1"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n" +
                                     "|| " + matchTmp.Groups["note2"].Value.Trim().TrimEnd(':').Trim() + " | " +
                                     DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
                                 statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
@@ -508,7 +511,7 @@ namespace Diamond_VN_Maksim
                             else
                             {
                                 statusEvent.LegalEvent.Note = "|| " + match.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
-                                                              DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n"; 
+                                                              DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim() + "\n";
 
                                 statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
                                 {
@@ -700,7 +703,7 @@ namespace Diamond_VN_Maksim
                                         "VN" => "VI",
                                         _ => "EN"
                                     }
-                            });
+                                });
                             }
                             else Console.WriteLine($"{applicant} --- 71");
                         }
@@ -732,7 +735,7 @@ namespace Diamond_VN_Maksim
                     }
                     else if (inid.StartsWith("(74)"))
                     {
-                        var match = Regex.Match(inid.Replace("(74)", "").Trim(), @"(?<name>.+)\((?<english>\D+)\)");
+                        var match = Regex.Match(inid.Replace("(74)", "").Trim(), @"(?<name>.+)\((?<english>.+)\)");
 
                         if (match.Success)
                         {
@@ -758,7 +761,7 @@ namespace Diamond_VN_Maksim
                         statusEvent.Biblio.Titles.Add(new Title()
                         {
                             Language = "VI",
-                            Text = inid.Replace("(54)","").Trim()
+                            Text = inid.Replace("(54)", "").Trim()
                         });
                     }
                     else if (inid.StartsWith("(57)"))
@@ -803,7 +806,7 @@ namespace Diamond_VN_Maksim
                                         Number = prior.Groups["num"].Value.Trim(),
                                         Date = DateTime.Parse(prior.Groups["date"].Value.Trim(), culture)
                                             .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
-                                });
+                                    });
                                 }
                                 else
                                 {
@@ -811,15 +814,16 @@ namespace Diamond_VN_Maksim
                                         @"(?<note>.+)\s(?<date>\d{2}\/\d{2}\/\d{4})");
                                     if (match1.Success)
                                     {
-                                        statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " + 
+                                        statusEvent.LegalEvent.Note = "|| " + match1.Groups["note"].Value.Trim().TrimEnd(':').Trim() + " | " +
                                                                       DateTime.Parse(match1.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                                     }
-                                    else Console.WriteLine($"{priority} --- 30");}
+                                    else Console.WriteLine($"{priority} --- 30");
+                                }
                             }
                         }
                         else
                         {
-                            var priorities = Regex.Split(inid.Replace("(30)","").Trim(), @"(?<=\s[A-Z]{2}\s)")
+                            var priorities = Regex.Split(inid.Replace("(30)", "").Trim(), @"(?<=\s[A-Z]{2}\s)")
                                 .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                             foreach (var priority in priorities)
@@ -845,7 +849,7 @@ namespace Diamond_VN_Maksim
                         statusEvent.Biblio.Related.Add(new RelatedDocument()
                         {
                             Source = "62",
-                            Number = inid.Replace("(62)","").Trim()
+                            Number = inid.Replace("(62)", "").Trim()
                         });
                     }
                     else if (inid.StartsWith("(67)"))
@@ -945,7 +949,7 @@ namespace Diamond_VN_Maksim
                                 Language = "EN",
                                 Type = "INID",
                                 Tr = "|| (15) Date of grant | " + match.Groups["date"].Value.Trim() + "\n"
-                        });
+                            });
                         }
                         else Console.WriteLine($"{inid} ---- 15");
                     }
@@ -988,7 +992,7 @@ namespace Diamond_VN_Maksim
 
                             if (match2.Success)
                             {
-                                statusEvent.Biblio.Publication.Date = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim();
+                                statusEvent.Biblio.Publication.Date = DateTime.Parse(match2.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                             }
                             else Console.WriteLine($"{inid} -- 43");
                         }
@@ -1060,7 +1064,7 @@ namespace Diamond_VN_Maksim
                     }
                     else if (inid.StartsWith("(30)"))
                     {
-                        var priorities = Regex.Split(inid.Replace("(30)","").Trim(), @"(?<=\s[A-Z]{2}\s)")
+                        var priorities = Regex.Split(inid.Replace("(30)", "").Trim(), @"(?<=\s[A-Z]{2}\s)")
                             .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (var priority in priorities)
@@ -1213,14 +1217,14 @@ namespace Diamond_VN_Maksim
                 if (match.Success)
                 {
                     statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture).ToString("yyyy/MM/dd").Replace(".", "/").Trim();
-                    
-                    
-                    if(subCode is "16") statusEvent.Biblio.Publication.Number ="1-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
-                    else statusEvent.Biblio.Publication.Number ="2-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
+
+
+                    if (subCode is "16") statusEvent.Biblio.Publication.Number = "1-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
+                    else statusEvent.Biblio.Publication.Number = "2-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
 
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
-                        Name = match.Groups["name"].Value.Replace("Chủ văn bằng bảo hộ:","").Trim(),
+                        Name = match.Groups["name"].Value.Replace("Chủ văn bằng bảo hộ:", "").Trim(),
                         Country = match.Groups["code"].Value.Trim(),
                         Address1 = match.Groups["adress"].Value.Trim()
                     });
@@ -1257,8 +1261,8 @@ namespace Diamond_VN_Maksim
                     statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                    if(subCode is "18") statusEvent.Biblio.Publication.Number ="1-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
-                    else statusEvent.Biblio.Publication.Number ="2-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                    if (subCode is "18") statusEvent.Biblio.Publication.Number = "1-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
+                    else statusEvent.Biblio.Publication.Number = "2-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
 
                     var date = Regex.Match(match.Groups["noteDate"].Value.Trim(),
                         @"(?<day>\d+)\/(?<month>\d)\/(?<year>\d+)");
@@ -1269,21 +1273,21 @@ namespace Diamond_VN_Maksim
                                 "|| (15) Ngày bằng | " + date.Groups["year"].Value.Trim() + "/0" +
                                 date.Groups["month"].Value.Trim() + "/" + date.Groups["day"].Value.Trim() + "\n"
                                 + "|| Cấp lại lần thứ | " + match.Groups["note"].Value.Trim();
-                            statusEvent.LegalEvent.Language = "VI";
+                        statusEvent.LegalEvent.Language = "VI";
 
-                            statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
-                            {
-                                Language = "EN",
-                                Type = "INID",
-                                Tr = "|| (15) Grant date | " + date.Groups["year"].Value.Trim() + "/0" +
-                                     date.Groups["month"].Value.Trim() + "/" + date.Groups["day"].Value.Trim() + "\n"
-                                     + "|| Reissue № | " + match.Groups["note"].Value.Trim()
-                            });
+                        statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                        {
+                            Language = "EN",
+                            Type = "INID",
+                            Tr = "|| (15) Grant date | " + date.Groups["year"].Value.Trim() + "/0" +
+                                 date.Groups["month"].Value.Trim() + "/" + date.Groups["day"].Value.Trim() + "\n"
+                                 + "|| Reissue № | " + match.Groups["note"].Value.Trim()
+                        });
                     }
                     else
                     {
                         statusEvent.LegalEvent.Note =
-                            "|| (15) Ngày bằng | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".","/").Trim() + "\n"
+                            "|| (15) Ngày bằng | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim() + "\n"
                             + "|| Cấp lại lần thứ | " + match.Groups["note"].Value.Trim();
 
                         statusEvent.LegalEvent.Language = "VI";
@@ -1309,12 +1313,12 @@ namespace Diamond_VN_Maksim
                     statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                    statusEvent.Biblio.Publication.Number ="1-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                    statusEvent.Biblio.Publication.Number = "1-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
 
                     statusEvent.NewBiblio.Agents.Add(new PartyMember()
                     {
                         Name = match.Groups["name"].Value.Trim(),
-                        Address1 =match.Groups["adress"].Value.Trim(),
+                        Address1 = match.Groups["adress"].Value.Trim(),
                         Country = "VN",
                         Language = "VI"
                     });
@@ -1342,7 +1346,7 @@ namespace Diamond_VN_Maksim
                     statusEvent.LegalEvent.Date = DateTime.Parse(match.Groups["evDate"].Value.Trim(), culture)
                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
 
-                    statusEvent.Biblio.Publication.Number ="1-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                    statusEvent.Biblio.Publication.Number = "1-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
 
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
@@ -1356,7 +1360,7 @@ namespace Diamond_VN_Maksim
                         Country = MakeCountryCode(match.Groups["country"].Value.Trim())
                     });
 
-                    if(MakeCountryCode(match.Groups["country"].Value.Trim()) is null) Console.WriteLine(match.Groups["country"].Value.Trim());
+                    if (MakeCountryCode(match.Groups["country"].Value.Trim()) is null) Console.WriteLine(match.Groups["country"].Value.Trim());
 
                     statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
                         .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n'
@@ -1367,7 +1371,7 @@ namespace Diamond_VN_Maksim
                     {
                         Language = "EN",
                         Tr = "|| (15) Grant date | " + DateTime.Parse(match.Groups["noteDate"].Value.Trim(), culture)
-                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n' 
+                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim() + '\n'
                         + "|| Digital copy number | " + match.Groups["noteNum"].Value.Trim(),
                         Type = "INID"
                     });
@@ -1382,8 +1386,8 @@ namespace Diamond_VN_Maksim
                 if (match.Success)
                 {
                     statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Trim();
-                    statusEvent.Biblio.Publication.Number =match.Groups["pubNum"].Value.Trim();
-                   
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
+
 
                     statusEvent.Biblio.Ipcs.Add(new Integration.Ipc
                     {
@@ -1402,7 +1406,7 @@ namespace Diamond_VN_Maksim
 
                 if (match.Success)
                 {
-                    statusEvent.Biblio.Publication.Number ="2-" + match.Groups["pubNum"].Value.PadLeft(7,'0').Trim();
+                    statusEvent.Biblio.Publication.Number = "2-" + match.Groups["pubNum"].Value.PadLeft(7, '0').Trim();
 
                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                     {
@@ -1455,79 +1459,77 @@ namespace Diamond_VN_Maksim
 
         private void AddAbstractScreenShot(LegalStatusEvent statusEvent, Dictionary<string, string> imagesDictionary)
         {
-            var patentKey = statusEvent.Biblio.Publication.Number;
-            if (patentKey == null || imagesDictionary == null)
+            var kind = string.Empty;
+            if (statusEvent.SubCode is "12" or "13" or "14" or "15")
+            {
+                if (statusEvent.Biblio.Publication.Kind == "U")
+                {
+                    kind = "A";
+                }
+            }
+
+            var patentKey = statusEvent.Biblio.Publication.Number + " " + kind;
+            if (string.IsNullOrWhiteSpace(patentKey) || imagesDictionary == null)
             {
                 return;
             }
 
-            var patentImageInfo = imagesDictionary.FirstOrDefault(x => x.Key.Contains(patentKey)).Value;
-            if (!string.IsNullOrWhiteSpace(patentImageInfo))
+            var patentImageInfo = imagesDictionary.Where(pair => pair.Value == patentKey)
+                .Select(pair => pair.Key)
+                .ToList();
+
+            if (patentImageInfo.Any())
             {
                 var pathToFolder = Path.GetDirectoryName(_currentFileName);
                 if (pathToFolder != null)
                 {
-                    var pathToImageFile = Path.Combine(pathToFolder, patentImageInfo);
-                    var imageString = ConvertTiffToPngString(pathToImageFile);
-                    if (!string.IsNullOrWhiteSpace(imageString))
+                    foreach (var image in patentImageInfo)
                     {
-                        var imageValue = $"data:image/png;base64,{imageString}";
-                        var id = GetUniqueScreenShotId();
-                        var idText = $"<img id=\"{id}\">";
-                        if (string.IsNullOrWhiteSpace(statusEvent.Biblio.Abstracts.FirstOrDefault()?.Text))
+                        var pathToImageFile = Path.Combine(pathToFolder, image);
+                        var imageString = ConvertTiffToPngString(pathToImageFile);
+                        if (!string.IsNullOrWhiteSpace(imageString))
                         {
-                            return;
+                            var imageValue = $"data:image/png;base64,{imageString}";
+                            var id = GetUniqueScreenShotId();
+                            var idText = $"<img id=\"{id}\">";
+                            var tmpAbstract = statusEvent.Biblio.Abstracts.FirstOrDefault();
+                            if (tmpAbstract == null)
+                            {
+                                return;
+                            }
+                            tmpAbstract.Text += idText;
+                            statusEvent.Biblio.Abstracts = new List<Abstract> { tmpAbstract };
+                            statusEvent.Biblio.ScreenShots.Add(new ScreenShot()
+                            {
+                                Id = id,
+                                Data = imageValue
+                            });
                         }
-                        var tmpAbstract = statusEvent.Biblio.Abstracts.FirstOrDefault();
-                        if (tmpAbstract == null)
-                        {
-                            return;
-                        }
-                        tmpAbstract.Text += idText;
-                        statusEvent.Biblio.Abstracts = new List<Abstract> { tmpAbstract };
-                        statusEvent.Biblio.ScreenShots.Add(new ScreenShot()
-                        {
-                            Id = id,
-                            Data = imageValue
-                        });
                     }
                 }
             }
         }
-
         private string ConvertTiffToPngString(string path)
         {
             using var image = SixLabors.ImageSharp.Image.Load(path);
-            // works for multi page tiff files
-            for (var frameIndex = 0; frameIndex < image.Frames.Count; frameIndex++)
-            {
-                var clonedImageFrame = image.Frames.CloneFrame(frameIndex);
-                using var extractedImageStream = new MemoryStream();
-                clonedImageFrame.SaveAsTiffAsync(extractedImageStream).ConfigureAwait(false);
-                clonedImageFrame.SaveAsJpegAsync(extractedImageStream, new JpegEncoder() { Quality = 80 }).ConfigureAwait(false);
-                clonedImageFrame.SaveAsPng(extractedImageStream);
-                var extractedImageFrameBytes = extractedImageStream.ToArray();
-                return Convert.ToBase64String(extractedImageFrameBytes);
-            }
-            return null;
+            using var extractedImageStream = new MemoryStream();
+            image.SaveAsPng(extractedImageStream);
+            var extractedImageFrameBytes = extractedImageStream.ToArray();
+            return Convert.ToBase64String(extractedImageFrameBytes);
         }
-
-        private string GetImageString(string path)
+        internal static string GetUniqueScreenShotId()
         {
-            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            return $"{GetRandomString(4)}-{GetRandomString(12)}";
+        }
+        private static string GetRandomString(int stringLength)
+        {
+            var sb = new StringBuilder();
+            var guIds = (stringLength - 1) / 32 + 1;
+            for (var i = 1; i <= guIds; i++)
             {
-                return null;
+                sb.Append(Guid.NewGuid().ToString("N"));
             }
-            try
-            {
-                var data = File.ReadAllBytes(path);
-                return Convert.ToBase64String(data);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Reading image to string failed. {e.Message}");
-                throw;
-            }
+            return sb.ToString(0, stringLength);
         }
 
         internal string MakeText(List<XElement> xElements, string subCode)
@@ -1653,8 +1655,8 @@ namespace Diamond_VN_Maksim
                                 Text = info.Groups["f54"].Value.Trim()
                             });
 
-                            if(subCode is "3") statusEvent.Biblio.Publication.Number ="1-" + info.Groups["f11"].Value.PadLeft(7,'0').Trim();
-                            else statusEvent.Biblio.Publication.Number ="2-" + info.Groups["f11"].Value.PadLeft(7, '0').Trim();
+                            if (subCode is "3") statusEvent.Biblio.Publication.Number = "1-" + info.Groups["f11"].Value.PadLeft(7, '0').Trim();
+                            else statusEvent.Biblio.Publication.Number = "2-" + info.Groups["f11"].Value.PadLeft(7, '0').Trim();
 
                             statusEvent.LegalEvent.Note = "|| Ngày cấp | " + DateTime.Parse(info.Groups["note"].Value.Trim(), culture)
                                 .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
@@ -1720,7 +1722,7 @@ namespace Diamond_VN_Maksim
                                 {
                                     Name = applicants.Groups["name"].Value.Trim(),
                                     Country = applicants.Groups["code"].Value.Trim(),
-                                    Address1 = applicants.Groups["adress"].Value.Replace("_","").Trim(),
+                                    Address1 = applicants.Groups["adress"].Value.Replace("_", "").Trim(),
                                     Language = "VI"
                                 });
                             }
@@ -1795,20 +1797,22 @@ namespace Diamond_VN_Maksim
                 var answer = result.Content.ReadAsStringAsync().Result;
             }
         }
-
-        internal static string GetUniqueScreenShotId()
+        private string GetImageString(string path)
         {
-            return $"{GetRandomString(4)}-{GetRandomString(12)}";
-        }
-        private static string GetRandomString(int stringLength)
-        {
-            var sb = new StringBuilder();
-            var guIds = (stringLength - 1) / 32 + 1;
-            for (var i = 1; i <= guIds; i++)
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
             {
-                sb.Append(Guid.NewGuid().ToString("N"));
+                return null;
             }
-            return sb.ToString(0, stringLength);
+            try
+            {
+                var data = File.ReadAllBytes(path);
+                return Convert.ToBase64String(data);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Reading image to string failed. {e.Message}");
+                throw;
+            }
         }
     }
 }

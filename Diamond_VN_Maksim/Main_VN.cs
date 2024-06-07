@@ -4,8 +4,8 @@ namespace Diamond_VN_Maksim
 {
     class Main_VN
     {
-        private const string Path = @"D:\LENS\TET\VN\VN_20230626_423A";
-        private const string SubCode = "13";
+        private const string Path = @"D:\LENS\TET\VN\VN_20240527_434A";
+        private const string SubCode = "12";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
         static void Main(string[] args)
