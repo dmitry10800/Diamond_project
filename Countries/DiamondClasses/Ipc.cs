@@ -7,5 +7,6 @@
         public string Class { get; set; }
 
         public string Date { get; set; }
+        public string Domestic { get; set; }
     }
 }
