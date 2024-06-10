@@ -102,7 +102,6 @@ namespace Diamond_ID_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "AB"));
                     }
                 }
-
                 if (subCode == "4")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
