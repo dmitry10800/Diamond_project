@@ -394,6 +394,11 @@ namespace Diamond_CO_Maksim
             "VENEZUELA" => "VE",
             "TAIWAN - REPUBLICA DE CHINA" => "TW",
             "EUIPO (OFICINA DE PROPIEDAD INTELECTUAL DE LA UNIÓN EUROPEA)" => "EP",
+            "NUEVA ZELANDA" =>"NZ",
+            "UZBEKISTAN"=>"UZ",
+            "CHILE"=>"CL",
+            "BELGICA"=>"BE",
+            "AUSTRIA"=>"AT",
             _ => null,
         };
         internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
