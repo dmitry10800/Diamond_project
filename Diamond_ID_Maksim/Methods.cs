@@ -619,14 +619,15 @@ namespace Diamond_ID_Maksim
 
                         if (matchIpcs.Success)
                         {
-                            var listIpcs = Regex.Split(matchIpcs.Groups["data"].Value.Trim(), ";")
-                                .Where( _ => !string.IsNullOrEmpty(_))
-                                .ToList();
+                            var listIpcs = Regex.Split(matchIpcs.Groups["data"].Value.Trim(), @"((?<=\d{2},)|;|(?<=\d\),))")
+                                    .Where(_ => !string.IsNullOrEmpty(_) && _ != ";")
+                                    .ToList();
+
 
                             foreach (var ipc in listIpcs)
                             {
                                 var match = Regex.Match(ipc.Trim(),
-                                    @"(?<part1>.+)\s(?<part2>\d+\/\d+)\((?<ver>.+)\)",
+                                    @"(?<part1>.+)\s(?<part2>\d+\/\d+)\s?\((?<ver>.+)\)",
                                     RegexOptions.Singleline);
 
                                 if (match.Success)
