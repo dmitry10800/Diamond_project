@@ -322,7 +322,7 @@ namespace Diamond_VN_Maksim
                             foreach (var item in pageImage)
                             {
                                 var value = item.Attribute("image")?.Value;
-                                if (value != null)
+                                if (value != null && !iDAndPatentKeyInfo.ContainsKey(value))
                                 {
                                     iDAndPatentKeyInfo.Add(value, patentNumberValue);
                                 }
@@ -1465,6 +1465,15 @@ namespace Diamond_VN_Maksim
                 if (statusEvent.Biblio.Publication.Kind == "U")
                 {
                     kind = "A";
+                }
+
+                if (kind == "")
+                {
+                    kind = statusEvent.Biblio.Publication.Kind;
+                    if (statusEvent.SubCode == "15" && kind != "" && kind == "Y")
+                    {
+                        kind = "B";
+                    }
                 }
             }
 
