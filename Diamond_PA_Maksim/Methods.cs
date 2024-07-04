@@ -368,7 +368,31 @@ namespace Diamond_PA_Maksim
                     }
                     else if (inid.StartsWith("(note)"))
                     {
-                        //       Match match = Regex.Match()
+                        var matchPCTPubNum = Regex.Match(inid, @"EUROPEA DE PATENTES CON EL N°\s(?<num>.+)\.");
+                        if (matchPCTPubNum.Success)
+                        {
+                            statusEvent.Biblio.IntConvention.PctPublNumber = matchPCTPubNum.Groups["num"].Value.Trim();
+                        }
+
+                        var matchPctPublDate =
+                            Regex.Match(inid, @"Fecha de realizacion del informe:\s(?<date>\d+.+\d{4})");
+
+                        if (matchPctPublDate.Success)
+                        {
+                            var dateMatch = Regex.Match(matchPctPublDate.Groups["date"].Value.Trim(),
+                                @"(?<day>\d+)\s(?<month>.+)\s(?<year>\d{4})");
+
+
+                            statusEvent.Biblio.IntConvention.PctSearchDate = dateMatch.Groups["year"].Value.Trim() + "/"
+                                + MakeMonth(dateMatch.Groups["month"].Value.Trim()) + "/"
+                                + dateMatch.Groups["day"].Value.Trim();
+                        }
+
+                        var pubNumMatch = Regex.Match(inid, @"^PATENTES CON EL N°\s(?<num>.+)\.");
+                        if (pubNumMatch.Success)
+                        {
+                            statusEvent.Biblio.Publication.Number = pubNumMatch.Groups["num"].Value.Trim();
+                        }
                     }
                 }
             }

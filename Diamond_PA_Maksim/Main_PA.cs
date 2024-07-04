@@ -4,7 +4,7 @@ namespace Diamond_PA_Maksim
 {
     class Main_PA
     {
-        private const string Path = @"D:\LENS\TET\PA\PA_20230913_400";
+        private const string Path = @"D:\LENS\TET\PA\PA_20240426_405";
         private const string SubCode = "2";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
