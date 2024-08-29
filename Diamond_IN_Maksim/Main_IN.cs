@@ -8,9 +8,9 @@ namespace Diamond_IN_Maksim
         private const string SubCode = "1";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var convertedPatents = SubCode switch
             {
@@ -21,8 +21,7 @@ namespace Diamond_IN_Maksim
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

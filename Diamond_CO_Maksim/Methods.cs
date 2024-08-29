@@ -10,8 +10,8 @@ namespace Diamond_CO_Maksim
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -28,7 +28,7 @@ namespace Diamond_CO_Maksim
 
             foreach (var xlsx in files)
             {
-                CurrentFileName = xlsx;
+                _currentFileName = xlsx;
 
                 ISheet sheet;
 
@@ -94,8 +94,8 @@ namespace Diamond_CO_Maksim
                             CountryCode = "CO",
                             SectionCode = sectionCode,
                             SubCode = subCode,
-                            Id = Id++,
-                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                             Biblio = new(),
                             LegalEvent = new()
                         };
@@ -317,7 +317,7 @@ namespace Diamond_CO_Maksim
             }
             return statusEvents;
         }
-        internal string MakeMonth(string month) => month switch
+        internal string? MakeMonth(string month) => month switch
         {
             "ene." => "01",
             "feb." => "02",
@@ -333,7 +333,7 @@ namespace Diamond_CO_Maksim
             "dic." => "12",
             _ => null,
         };
-        internal string MakeCountry(string country) => country switch
+        internal string? MakeCountry(string country) => country switch
         {
             "ESTADOS UNIDOS DE AMÉRICA" => "US",
             "HUNGRIA" => "HU",
@@ -401,20 +401,5 @@ namespace Diamond_CO_Maksim
             "AUSTRIA"=>"AT",
             _ => null,
         };
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
-        }
     }
 }

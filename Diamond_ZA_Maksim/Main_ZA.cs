@@ -4,27 +4,26 @@ namespace Diamond_ZA_Maksim
 {
     class Main_ZA
     {
-        private const string path = @"D:\LENS\TET\ZA\ZA_20230726_07(2)";
-        private const string subCode = "1";
+        private const string Path = @"D:\LENS\TET\ZA\ZA_20230726_07(2)";
+        private const string SubCode = "1";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
-            var convertedPatents = subCode switch
+            var convertedPatents = SubCode switch
             {
-                "1" => methods.Start(path, subCode),
-                "3" => methods.Start(path, subCode),
-                "5" => methods.Start(path, subCode),
-                "6" => methods.Start(path, subCode),
+                "1" => methods.Start(Path, SubCode),
+                "3" => methods.Start(Path, SubCode),
+                "5" => methods.Start(Path, SubCode),
+                "6" => methods.Start(Path, SubCode),
                 _ => null
             };
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

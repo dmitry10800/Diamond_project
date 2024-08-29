@@ -1,13 +1,9 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -15,25 +11,24 @@ namespace Diamond_SI_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-        private int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
-        private readonly string I11 = "(11)";
-        private readonly string I13 = "(13)";
-        private readonly string I51 = "(51)";
-        private readonly string I21 = "(21)";
-        private readonly string I22 = "(22)";
-        private readonly string I46 = "(46)";
-        private readonly string I86 = "(86)";
-        private readonly string I87 = "(87)";
-        private readonly string I96 = "(96)";
-        private readonly string I97 = "(97)";
-        private readonly string I72 = "(72)";
-        private readonly string I73 = "(73)";
-        private readonly string I74 = "(74)";
-        private readonly string I30 = "(30)";
-        private readonly string I54 = "(54)";
-
+        private const string I11 = "(11)";
+        private const string I13 = "(13)";
+        private const string I51 = "(51)";
+        private const string I21 = "(21)";
+        private const string I22 = "(22)";
+        private const string I46 = "(46)";
+        private const string I86 = "(86)";
+        private const string I87 = "(87)";
+        private const string I96 = "(96)";
+        private const string I97 = "(97)";
+        private const string I72 = "(72)";
+        private const string I73 = "(73)";
+        private const string I74 = "(74)";
+        private const string I30 = "(30)";
+        private const string I54 = "(54)";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -54,7 +49,7 @@ namespace Diamond_SI_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -90,11 +85,11 @@ namespace Diamond_SI_Maksim
         {
             Diamond.Core.Models.LegalStatusEvent legalStatus = new()
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 CountryCode = "SI",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = id++
+                Id = _id++
             };
 
             Biblio biblio = new();
@@ -361,26 +356,6 @@ namespace Diamond_SI_Maksim
             else Console.WriteLine($"{note} --------- Не разбилась запись");
 
             return inids;
-        }
-
-
-
-
-
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

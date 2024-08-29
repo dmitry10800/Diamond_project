@@ -8,9 +8,9 @@ namespace Diamond_PA_Maksim
         private const string SubCode = "2";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
@@ -21,8 +21,7 @@ namespace Diamond_PA_Maksim
 
             Console.WriteLine();
 
-            if (patents != null) 
-                methods.SendToDiamond(patents, SendToProd);
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

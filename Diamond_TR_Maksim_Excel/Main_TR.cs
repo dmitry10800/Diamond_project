@@ -8,7 +8,7 @@
 
         private static void Main(string[] args)
         {           
-            Methods methods = new();
+            var methods = new Methods();
 
             var convertedPatents = SubCode switch
             {
@@ -28,13 +28,7 @@
 
             Console.WriteLine();
 
-            if (convertedPatents != null)
-            {
-                methods.SendToDiamond(convertedPatents, SendToProd);
-            }
-
-            else Console.WriteLine("SubCode must be 10, 13, 15, 16, 17, 19, 27, 30, 31, 39");
-
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

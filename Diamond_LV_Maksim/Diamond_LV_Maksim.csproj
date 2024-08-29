@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Countries\DiamondClasses\DiamondProjectClasses.csproj" />
+	  <ProjectReference Include="..\DiamondUtilities\DiamondUtilities.csproj" />
   </ItemGroup>
 
 </Project>

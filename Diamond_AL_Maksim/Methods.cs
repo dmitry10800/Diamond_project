@@ -1,13 +1,9 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -15,8 +11,8 @@ namespace Diamond_AL_Maksim
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -32,7 +28,7 @@ namespace Diamond_AL_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -87,9 +83,9 @@ namespace Diamond_AL_Maksim
             {
                 SectionCode = sectionCode,
                 SubCode = subCode,
-                Id = Id++,
+                Id = _id++,
                 CountryCode = "AL",
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new Biblio
                 {
                     DOfPublication = new DOfPublication(),
@@ -297,7 +293,7 @@ namespace Diamond_AL_Maksim
                             }
                             else Console.WriteLine($"{inid} - not process");
                         }
-                        var match11 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                        var match11 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                         if (match11.Success)
                         {
@@ -447,7 +443,7 @@ namespace Diamond_AL_Maksim
                     }
 
                     legal.Biblio.EuropeanPatents.Add(europeanPatent);
-                    var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"[0-9]{8}");
+                    var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"[0-9]{8}");
                     if (date.Success)
                     {
                         legal.LegalEvent.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -632,7 +628,7 @@ namespace Diamond_AL_Maksim
                             else Console.WriteLine($"{inid} =========== не обработан");
                         }
 
-                        var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"[0-9]{8}");
+                        var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"[0-9]{8}");
                         if (date.Success)
                         {
                             legal.LegalEvent.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -646,7 +642,7 @@ namespace Diamond_AL_Maksim
         }
         internal List<string> MakeInids(string note, string subCode)
         {
-            List<string> inids = new();
+            var inids = new List<string>();
 
             if (subCode == "3")
             {
@@ -669,23 +665,7 @@ namespace Diamond_AL_Maksim
                     .Where(s => !string.IsNullOrEmpty(s))
                     .ToList();
             }
-
             return inids;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                var url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : // продакшен
-                    @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event"; // стейдж
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                _ = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

@@ -4,12 +4,13 @@ namespace Diamond_UZ_Maksim
 {
     class Main_UZ
     {
-        private static readonly string Path = @"C:\!Work\UZ\UZ_20220228_02";
-        private static readonly string SubCode = "4";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
-        static void Main(string[] args)
+        private const string Path = @"C:\!Work\UZ\UZ_20220228_02";
+        private const string SubCode = "4";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
+
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
@@ -21,8 +22,7 @@ namespace Diamond_UZ_Maksim
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Wrong subcode");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

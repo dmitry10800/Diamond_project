@@ -1,13 +1,9 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -15,8 +11,8 @@ namespace IS_Diamond_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-        private int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         private string I11 = "(11)";
         private string I51 = "(51)";
@@ -47,7 +43,7 @@ namespace IS_Diamond_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -100,11 +96,11 @@ namespace IS_Diamond_Maksim
         {
             Diamond.Core.Models.LegalStatusEvent legalStatusEvent = new()
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 SubCode = subCode,
                 SectionCode = sectionCode,
                 CountryCode = "IS",
-                Id = id++,
+                Id = _id++,
                 Biblio = new(),
                 LegalEvent = new()
             };
@@ -278,7 +274,7 @@ namespace IS_Diamond_Maksim
                 {
                     legalStatusEvent.Biblio.Publication.Number = match.Value.Trim();
 
-                    var match1 = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    var match1 = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
 
                     if (match1.Success)
                     {
@@ -360,22 +356,6 @@ namespace IS_Diamond_Maksim
             };
 
             return code;
-        }
-
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

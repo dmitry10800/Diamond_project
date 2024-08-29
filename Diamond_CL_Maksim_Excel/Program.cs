@@ -6,14 +6,14 @@
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
         private static void Main()
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = methods.Start(Path);
 
             Console.WriteLine();
 
-            if (patents.Count != 0) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Empty list");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
+
         }
     }
 }

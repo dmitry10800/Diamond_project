@@ -1,16 +1,13 @@
-﻿using Newtonsoft.Json;
-using NPOI.SS.UserModel;
+﻿using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Diamond_AW_Maksim
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
             List<Diamond.Core.Models.LegalStatusEvent> legalStatuses = new();
@@ -28,7 +25,7 @@ namespace Diamond_AW_Maksim
 
                 foreach (var xlsxFile in files)
                 {
-                    CurrentFileName = xlsxFile;
+                    _currentFileName = xlsxFile;
 
                     ISheet sheet;
 
@@ -48,8 +45,8 @@ namespace Diamond_AW_Maksim
                             CountryCode = "AW",
                             SectionCode = "FG",
                             SubCode = subCode,
-                            Id = Id++,
-                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                             Biblio = new(),
                             LegalEvent = new()
                         };
@@ -135,7 +132,7 @@ namespace Diamond_AW_Maksim
             return legalStatuses;
         }
 
-        internal string MakeMonth(string month) => month switch
+        internal string? MakeMonth(string month) => month switch
         {
             "янв." => "01",
             "февр." => "02",
@@ -163,20 +160,5 @@ namespace Diamond_AW_Maksim
             "Dec" => "12",
             _ => null
         };
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
-        }
     }
 }

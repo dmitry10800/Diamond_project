@@ -9,8 +9,8 @@ namespace Diamond_SG_Maksim
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
@@ -29,7 +29,7 @@ namespace Diamond_SG_Maksim
 
                 foreach (var xlsxFile in files)
                 {
-                    CurrentFileName = xlsxFile;
+                    _currentFileName = xlsxFile;
 
                     ISheet sheet;
 
@@ -49,8 +49,8 @@ namespace Diamond_SG_Maksim
                             CountryCode = "SG",
                             SectionCode = "ND",
                             SubCode = subCode,
-                            Id = Id++,
-                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                             Biblio = new(),
                             LegalEvent = new()
                         };
@@ -70,7 +70,7 @@ namespace Diamond_SG_Maksim
                         statusEvent.LegalEvent.Note = "|| The year patents renewed for | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
                         statusEvent.LegalEvent.Language = "EN";
 
-                        var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+                        var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
 
                         if (match.Success)
                         {
@@ -90,7 +90,7 @@ namespace Diamond_SG_Maksim
 
                 foreach (var xlsxFile in files)
                 {
-                    CurrentFileName = xlsxFile;
+                    _currentFileName = xlsxFile;
 
                     ISheet sheet;
 
@@ -110,8 +110,8 @@ namespace Diamond_SG_Maksim
                             CountryCode = "SG",
                             SectionCode = "MK",
                             SubCode = subCode,
-                            Id = Id++,
-                            GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                             Biblio = new(),
                             LegalEvent = new()
                         };
@@ -128,7 +128,7 @@ namespace Diamond_SG_Maksim
                             });
                         }
 
-                        var match = Regex.Match(CurrentFileName, @"_(?<date>\d{8})_");
+                        var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
 
                         if (match.Success)
                         {
@@ -140,21 +140,6 @@ namespace Diamond_SG_Maksim
                 }
             }
             return legalStatusEvents;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

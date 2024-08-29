@@ -1,5 +1,8 @@
 {
   "profiles": {
+    "Diamond_AL_Maksim": {
+      "commandName": "Project"
+    },
     "WSL": {
       "commandName": "WSL2",
       "distributionName": ""

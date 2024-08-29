@@ -2,13 +2,13 @@
 {
     internal class Main_SG
     {
-        private static readonly string Path = @"D:\_work\TET\SG\SG_20220830_202209A";
-        private static readonly string SubCode = "6";
-        private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
+        private const string Path = @"D:\_work\TET\SG\SG_20220830_202209A";
+        private const string SubCode = "6";
+        private const bool SendToProd = false; //true - send to prod; false - send to stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var convertedPatents = SubCode switch
             {
@@ -20,8 +20,7 @@
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

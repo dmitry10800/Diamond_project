@@ -1,13 +1,9 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -15,9 +11,8 @@ namespace Diamond_RS_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-
-        private int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
@@ -38,7 +33,7 @@ namespace Diamond_RS_Maksim
 
             foreach (var tetFile in files)
             {
-                CurrentFileName = tetFile;
+                _currentFileName = tetFile;
 
                 tet = XElement.Load(tetFile);
 
@@ -84,11 +79,11 @@ namespace Diamond_RS_Maksim
         {
             var legalEvent = new Diamond.Core.Models.LegalStatusEvent();
 
-            legalEvent.GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"));
+            legalEvent.GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf"));
 
             legalEvent.CountryCode = "RS";
 
-            legalEvent.Id = id++;
+            legalEvent.Id = _id++;
 
             legalEvent.SectionCode = sectionCode;
 
@@ -520,24 +515,7 @@ namespace Diamond_RS_Maksim
                     ipcs.Add((match.Groups["number"].Value.Trim(), match.Groups["date"].Value.Trim()));
                 }
             }
-
             return ipcs;
-        }
-
-        internal  void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

@@ -7,7 +7,8 @@ namespace Diamond_UA_Maksim
         private const string Path = @"D:\LENS\TET\UA\UA_20230802_31(1)";
         private const string SubCode = "13";
         private const bool SendToProd = false;
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             var methods = new Methods();
 
@@ -22,8 +23,7 @@ namespace Diamond_UA_Maksim
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

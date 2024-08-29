@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -15,9 +12,9 @@ namespace Diamond_VE_Maksim
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
-        private string ResolutionDate;
+        private string _currentFileName;
+        private int _id = 1;
+        private string _resolutionDate;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -38,7 +35,7 @@ namespace Diamond_VE_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
                 if (subCode is "12")
@@ -69,7 +66,7 @@ namespace Diamond_VE_Maksim
                             Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
                             break;
                         }
-                        ResolutionDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
+                        _resolutionDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
                     }
                     else Console.WriteLine("Bad resolution date");
 
@@ -104,7 +101,7 @@ namespace Diamond_VE_Maksim
                             Console.WriteLine($"{match.Groups["month"].Value.Trim()}");
                             break;
                         }
-                        ResolutionDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
+                        _resolutionDate = match.Groups["year"].Value.Trim() + "/" + month + "/" + match.Groups["day"].Value.Trim();
                     }
                     else Console.WriteLine("Bad resolution date");
 
@@ -135,11 +132,11 @@ namespace Diamond_VE_Maksim
         {
             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
             {
-                Id = Id++,
+                Id = _id++,
                 CountryCode = "VE",
                 SectionCode = sectionCode,
                 SubCode = subCode,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new()
                 {
                     DOfPublication = new()
@@ -505,7 +502,7 @@ namespace Diamond_VE_Maksim
                     else Console.WriteLine($"{inid} --- not process");
                 }
 
-                statusEvent.Biblio.Application.EffectiveDate = ResolutionDate;
+                statusEvent.Biblio.Application.EffectiveDate = _resolutionDate;
             }
             else if (subCode is "19")
             {
@@ -607,7 +604,7 @@ namespace Diamond_VE_Maksim
                     else Console.WriteLine($"{inid} --- not process");
                 }
 
-                statusEvent.Biblio.Application.EffectiveDate = ResolutionDate;
+                statusEvent.Biblio.Application.EffectiveDate = _resolutionDate;
             }
             return statusEvent;
         }
@@ -660,21 +657,6 @@ namespace Diamond_VE_Maksim
             }
             var tmp = text.ToString();
             return tmp;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

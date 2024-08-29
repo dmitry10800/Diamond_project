@@ -22,7 +22,7 @@ namespace Dimond_EE
 
                     var methods = new Methods();
 
-                    methods.SendToDiamond(convertedPatents);
+                    DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents);
 
                     break;
 

@@ -1,14 +1,14 @@
 ﻿namespace Diamond_MY_Maksim
 {
-    class Main_PK
+    class Main_MY
     {
         private const string Path = @"D:\LENS\TET\MY\MY_20230419_05";
         private const string SubCode = "10";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var convertedPatents = SubCode switch
             {
@@ -20,8 +20,7 @@
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
-            else Console.WriteLine("wrong subcode");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

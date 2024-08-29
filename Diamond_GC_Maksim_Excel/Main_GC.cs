@@ -8,7 +8,7 @@
 
         private static void Main()
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
@@ -19,8 +19,7 @@
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Wrong subcode");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

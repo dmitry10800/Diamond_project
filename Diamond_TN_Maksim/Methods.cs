@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Globalization;
-using System.Net.Http.Headers;
+﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -12,11 +10,11 @@ namespace Diamond_TN_Maksim
     {
         private string _currentFileName;
         private int _id = 1;
-        private string I21 = "[21]";
-        private string I22 = "[22]";
-        private string I54 = "[54]";
-        private string I71 = "[71]";
-        private string I72 = "[72]";
+        private const string I21 = "[21]";
+        private const string I22 = "[22]";
+        private const string I54 = "[54]";
+        private const string I71 = "[71]";
+        private const string I72 = "[72]";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -174,21 +172,6 @@ namespace Diamond_TN_Maksim
                 else Console.WriteLine(inidResult + " wrong inid");
             }
             return inidResult;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

@@ -2,26 +2,27 @@
 {
     internal class Program
     {
-        private const string _path = @"D:\LENS\TET\VE\VE_20191220_01";
-        private const string _subCode = "34";
-        private const bool _sendToProd = false; // true - send to Prod ; false - send to Stag
-        static void Main(string[] args)
+        private const string Path = @"D:\LENS\TET\VE\VE_20191220_01";
+        private const string SubCode = "34";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
+
+        private static void Main(string[] args)
         {
             var methods = new Methods();
 
-            var convertedPatents = _subCode switch
+            var convertedPatents = SubCode switch
             {
-                "26" => methods.Start(_path, _subCode),
-                "34" => methods.Start(_path, _subCode),
-                "56" => methods.Start(_path, _subCode),
-                "64" => methods.Start(_path, _subCode),
-                "65" => methods.Start(_path, _subCode),
+                "26" => methods.Start(Path, SubCode),
+                "34" => methods.Start(Path, SubCode),
+                "56" => methods.Start(Path, SubCode),
+                "64" => methods.Start(Path, SubCode),
+                "65" => methods.Start(Path, SubCode),
                 _ => null
             };
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, _sendToProd);
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

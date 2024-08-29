@@ -8,7 +8,7 @@ namespace Diamond_MD_Maksim
         private const string SubCode = "2";
         private const bool SendToProd = false;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var methods = new Methods();
 
@@ -20,10 +20,7 @@ namespace Diamond_MD_Maksim
 
             Console.WriteLine();
 
-            if (convertedPatents != null) 
-                methods.SendToDiamond(convertedPatents, SendToProd);
-            else 
-                Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

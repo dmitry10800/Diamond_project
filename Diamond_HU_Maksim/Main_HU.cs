@@ -1,24 +1,22 @@
-﻿using System;
-
-namespace Diamond_HU_Maksim
+﻿namespace Diamond_HU_Maksim
 {
     class Main_HU
     {
-        static void Main(string[] args)
-        {
-            var path = @"C:\Work\HU";
-            var subCode = @"3";
+        private const string Path = @"C:\Work\HU";
+        private const string SubCode = "3";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
+        private static void Main(string[] args)
+        {
             var methods = new Methods();
 
-            var patents = subCode switch
+            var patents = SubCode switch
             {
-            "3" => methods.Start(path, subCode),
+            "3" => methods.Start(Path, SubCode),
             _ => null
             };
 
-            if (patents != null) methods.SendToDiamond(patents);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

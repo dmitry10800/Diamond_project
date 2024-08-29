@@ -7,11 +7,9 @@ namespace Diamond_AR_Maksim
         private const string Path = @"D:\LENS\TET\AR\AR_20230419_1283";
         private const string SubCode = "8";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
-
-
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
@@ -31,9 +29,9 @@ namespace Diamond_AR_Maksim
                 _ => null
             };
 
-             Console.WriteLine();
+            Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents,SendToProd);
+            if (patents != null) DiamondUtilities.DiamondSender.SendToDiamond(patents,SendToProd);
             else Console.WriteLine("Wrong subcode");
         }
     }

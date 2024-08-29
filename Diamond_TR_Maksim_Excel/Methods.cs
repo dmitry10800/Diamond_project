@@ -1,16 +1,13 @@
-﻿using Newtonsoft.Json;
-using NPOI.XSSF.UserModel;
+﻿using NPOI.XSSF.UserModel;
 using System.Globalization;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Diamond_TR_Maksim_Excel
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         public List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string sub)
         {
@@ -27,7 +24,7 @@ namespace Diamond_TR_Maksim_Excel
 
             foreach (var xlsFiles in files)
             {
-                CurrentFileName = xlsFiles;
+                _currentFileName = xlsFiles;
 
                 if (sub == "10")
                 {
@@ -43,11 +40,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "FD",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -69,7 +66,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -94,11 +91,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "MM",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -120,7 +117,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -152,11 +149,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = sectionCode,
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -178,7 +175,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -203,11 +200,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "FA",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -229,7 +226,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -256,11 +253,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "MK",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -302,11 +299,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "EZ",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -328,7 +325,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -353,11 +350,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "EZ",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -379,7 +376,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -404,11 +401,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "EZ",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -430,7 +427,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -455,11 +452,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "NB",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -481,7 +478,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -506,11 +503,11 @@ namespace Diamond_TR_Maksim_Excel
                         {
                             Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                             {
-                                GazetteName = Path.GetFileName(CurrentFileName.Replace(".xlsx", ".pdf")),
+                                GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
                                 CountryCode = "TR",
                                 SubCode = sub,
                                 SectionCode = "MA",
-                                Id = Id++,
+                                Id = _id++,
                                 LegalEvent = new(),
                                 Biblio = new()
                             };
@@ -532,7 +529,7 @@ namespace Diamond_TR_Maksim_Excel
                                 });
                             }
 
-                            var match = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
+                            var match = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"(?<date>\d{8})");
 
                             if (match.Success)
                             {
@@ -544,31 +541,7 @@ namespace Diamond_TR_Maksim_Excel
                     }
                 }
             }
-
             return statusEvents;
-        }
-
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                    var tmpValue = JsonConvert.SerializeObject(rec);
-                    string url;
-                    if (SendToProduction == true)
-                    {
-                        url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                    }
-                    else
-                    {
-                        url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                    }
-                    HttpClient httpClient = new();
-                    httpClient.BaseAddress = new Uri(url);
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                    var result = httpClient.PostAsync("", content).Result;
-                    var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

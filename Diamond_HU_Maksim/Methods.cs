@@ -1,12 +1,8 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -14,20 +10,20 @@ namespace Diamond_HU_Maksim
 {
     class Methods
     {
-        private readonly string I11 = "( 11 )";
-        private readonly string I21 = "( 21 )";
-        private readonly string I96 = "( 96 )";
-        private readonly string I97 = "( 97 )";
-        private readonly string I73 = "( 73 )";
-        private readonly string I72 = "( 72 )";
-        private readonly string I74 = "( 74 )";
-        private readonly string I54 = "( 54 )";
-        private readonly string I51 = "( 51 )";
-        private readonly string I13 = "( 13 )";
-        private readonly string I30 = "( 30 )";
+        private const string I11 = "( 11 )";
+        private const string I21 = "( 21 )";
+        private const string I96 = "( 96 )";
+        private const string I97 = "( 97 )";
+        private const string I73 = "( 73 )";
+        private const string I72 = "( 72 )";
+        private const string I74 = "( 74 )";
+        private const string I54 = "( 54 )";
+        private const string I51 = "( 51 )";
+        private const string I13 = "( 13 )";
+        private const string I30 = "( 30 )";
 
-        private string CurrentFileName;
-        private int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
@@ -48,7 +44,7 @@ namespace Diamond_HU_Maksim
 
             foreach (var tetFile in files)
             {
-                CurrentFileName = tetFile;
+                _currentFileName = tetFile;
 
                 tet = XElement.Load(tetFile);
 
@@ -94,7 +90,7 @@ namespace Diamond_HU_Maksim
         {
             var legalStatus = new Diamond.Core.Models.LegalStatusEvent();
 
-            legalStatus.GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"));
+            legalStatus.GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf"));
 
             legalStatus.CountryCode = "HU";
 
@@ -102,7 +98,7 @@ namespace Diamond_HU_Maksim
 
             legalStatus.SubCode = sub;
 
-            legalStatus.Id = id++;
+            legalStatus.Id = _id++;
 
             var biblioData = new Biblio();
 
@@ -305,21 +301,5 @@ namespace Diamond_HU_Maksim
         }
 
         internal List<string> SplitNoteToInid (string note) => Regex.Split(note, @"(?=\(\s?[0-9]{2}\s?\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
-        }
     }
 }

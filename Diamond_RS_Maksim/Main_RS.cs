@@ -1,27 +1,23 @@
-﻿using System;
-
-namespace Diamond_RS_Maksim
+﻿namespace Diamond_RS_Maksim
 {
     class Main_RS
     {
-
         // Прежде чем запускать необходимо извлечь из общего файла 3 саб в отдельный PDF файл
+        private const string Path = @"C:\Work\RS\RS_20200731_07";
+        private const string SubCode = "3";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var path = @"C:\Work\RS\RS_20200731_07";
-            var subCode = "3";
-
             var methods = new Methods();
 
-            var convertedPatents = subCode switch
+            var convertedPatents = SubCode switch
             {
-                "3" => methods.Start(path, subCode),
+                "3" => methods.Start(Path, SubCode),
                 _ => null
             };
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
-            else Console.WriteLine("Wrong SubCode");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

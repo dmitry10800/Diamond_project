@@ -1,13 +1,9 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -15,9 +11,8 @@ namespace Diamond_MK_Maksim
 {
     class Methods
     {
-        string CurrentFileName;
-
-        int id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         public List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -38,7 +33,7 @@ namespace Diamond_MK_Maksim
 
             foreach (var  tetFile in files)
             {
-                CurrentFileName = tetFile;
+                _currentFileName = tetFile;
 
                 tet = XElement.Load(tetFile);
 
@@ -78,7 +73,7 @@ namespace Diamond_MK_Maksim
         {
             var legalEvent = new Diamond.Core.Models.LegalStatusEvent
             {
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
 
                 SubCode = sub,
 
@@ -86,7 +81,7 @@ namespace Diamond_MK_Maksim
 
                 CountryCode = "MK",
 
-                Id = id++
+                Id = _id++
             };
 
             var biblioData = new Biblio
@@ -408,7 +403,6 @@ namespace Diamond_MK_Maksim
             biblioData.EuropeanPatents.Add(europeanPatent);
             legalEvent.Biblio = biblioData;
 
-
             return legalEvent;
         }
 
@@ -433,23 +427,7 @@ namespace Diamond_MK_Maksim
             {
                 inids.Add(field57);
             }
-
             return inids;
-        }
-        public void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                var url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                //string url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var content = new StringContent(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

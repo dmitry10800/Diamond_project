@@ -2,13 +2,13 @@
 {
     class Main_MA
     {
-        private static readonly string path = @"C:\!Work\MA\MA_20211231_12";
-        private static readonly string subCode = "1";
-        private static readonly bool SendToProd = false; //true - send to prod; false - send to stag
+        private const string path = @"C:\!Work\MA\MA_20211231_12";
+        private const string subCode = "1";
+        private const bool SendToProd = false; //true - send to prod; false - send to stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var convertedPatents = subCode switch
             {
@@ -19,8 +19,7 @@
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProd);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

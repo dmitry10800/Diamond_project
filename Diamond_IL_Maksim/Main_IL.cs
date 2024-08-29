@@ -4,14 +4,13 @@ namespace Diamond_IL_Maksim
 {
     class Main_IL
     {
+        private const string Path = @"C:\Work\IL\IL_20210325_03";
+        private const string SubCode = "19";
+        private const bool SendToProduction = false; // если false то отправляет на стейджинг - если true то отправляет на продакшен
 
-        private readonly static string Path = @"C:\Work\IL\IL_20210325_03";
-        private readonly static string SubCode = "19";
-        private readonly static bool SendToProduction = false;    // если false то отправляет на стейджинг - если true то отправляет на продакшен
-
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var convertedPatents = SubCode switch
             {
@@ -21,8 +20,7 @@ namespace Diamond_IL_Maksim
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents, SendToProduction);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProduction);
         }
     }
 }

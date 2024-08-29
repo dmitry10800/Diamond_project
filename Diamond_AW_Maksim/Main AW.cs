@@ -2,12 +2,13 @@
 {
     internal class Main_AW
     {
-        private static readonly string Path = @"D:\_work\TET\AW";
-        private static readonly string SubCode = "1";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
-        static void Main(string[] args)
+        private const string Path = @"D:\_work\TET\AW";
+        private const string SubCode = "1";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
+
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
@@ -17,8 +18,7 @@
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Wrong subcode");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System.Globalization;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Integration;
-using Newtonsoft.Json;
 
 namespace Diamond_LV_Maksim
 {
@@ -13,20 +11,20 @@ namespace Diamond_LV_Maksim
         private string _currentFileName;
         private int _id = 1;
 
-        private string I51 = "(51)";
-        private string I11 = "(11)";
-        private string I21 = "(21)";
-        private string I22 = "(22)";
-        private string I45 = "(45)";
-        private string I31 = "(31)";
-        private string I32 = "(32)";
-        private string I33 = "(33)";
-        private string I86 = "(86)";
-        private string I87 = "(87)";
-        private string I73 = "(73)";
-        private string I72 = "(72)";
-        private string I74 = "(74)";
-        private string I54 = "(54)";
+        private const string I51 = "(51)";
+        private const string I11 = "(11)";
+        private const string I21 = "(21)";
+        private const string I22 = "(22)";
+        private const string I45 = "(45)";
+        private const string I31 = "(31)";
+        private const string I32 = "(32)";
+        private const string I33 = "(33)";
+        private const string I86 = "(86)";
+        private const string I87 = "(87)";
+        private const string I73 = "(73)";
+        private const string I72 = "(72)";
+        private const string I74 = "(74)";
+        private const string I54 = "(54)";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -385,21 +383,6 @@ namespace Diamond_LV_Maksim
                 }
             }
             return sb.ToString();
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                _ = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

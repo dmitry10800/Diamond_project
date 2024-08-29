@@ -4,23 +4,24 @@ namespace BD_Diamond_Maksim
 {
     class Main_BD
     {
-        private static readonly string path = @"C:\Work\BD\BD_20210218_07";
-        private static readonly string subCode ="2";
+        private const string Path = @"C:\Work\BD\BD_20210218_07";
+        private const string SubCode = "2";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
-            var convertedPatents = subCode switch
+            var convertedPatents = SubCode switch
             {
-                "2" => methods.Start(path, subCode),
+                "2" => methods.Start(Path, SubCode),
                 _ => null
             };
 
             Console.WriteLine();
 
-            if (convertedPatents != null) methods.SendToDiamond(convertedPatents);
-            else Console.WriteLine("Wrong sub code");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
+
         }
     }
 }

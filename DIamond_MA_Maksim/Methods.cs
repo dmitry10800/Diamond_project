@@ -1,17 +1,14 @@
 ﻿using System.Globalization;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Integration;
-using Newtonsoft.Json;
 
 namespace Diamond_MA_Maksim
 {
     internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -33,7 +30,7 @@ namespace Diamond_MA_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -96,8 +93,8 @@ namespace Diamond_MA_Maksim
                 CountryCode = "MA",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                Id = _id++,
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new(),
                 LegalEvent = new(),
                 NewBiblio = new()
@@ -322,28 +319,6 @@ namespace Diamond_MA_Maksim
                 }
             }
             return null;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

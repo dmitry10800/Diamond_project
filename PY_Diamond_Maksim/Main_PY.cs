@@ -2,13 +2,13 @@
 {
     class Main_PY
     {
-        private static readonly string Path = @"C:\!Work\PY\PY_20220301_03";
-        private static readonly string SubCode = "1";
-        private static readonly bool SendToProd = false;   // true - send to Prod ; false - send to Stag
+        private const string Path = @"C:\!Work\PY\PY_20220301_03";
+        private const string SubCode = "1";
+        private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Methods methods = new();
+            var methods = new Methods();
 
             var patents = SubCode switch
             {
@@ -18,8 +18,7 @@
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
-            else Console.WriteLine("Wrong subcode");
+            DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
         }
     }
 }

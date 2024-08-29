@@ -6,7 +6,7 @@
         private const string SubCode = "3";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var methods = new Methods();
 
@@ -18,10 +18,7 @@
 
             Console.WriteLine();
 
-            if (convertedPatents != null) 
-                methods.SendToDiamond(convertedPatents, SendToProd);
-            else 
-                Console.WriteLine("wrong subcode");
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

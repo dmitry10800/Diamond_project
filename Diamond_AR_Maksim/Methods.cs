@@ -1,22 +1,18 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace Diamond_AR_Maksim
 {
-    class Methods
+    internal class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -37,7 +33,7 @@ namespace Diamond_AR_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -226,8 +222,8 @@ namespace Diamond_AR_Maksim
                 SectionCode = sectionCode,
                 SubCode = subCode,
                 CountryCode = "AR",
-                Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf")),
+                Id = _id++,
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new(),
             };
 
@@ -757,7 +753,7 @@ namespace Diamond_AR_Maksim
                     statusEvent.Biblio.Publication.Number = match.Groups["num"].Value.Trim();
                     statusEvent.Biblio.Publication.Kind = match.Groups["kind"].Value.Trim();
 
-                    var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                     if (date.Success)
                     {
                         legal.Date = date.Value.Insert(4,"/").Insert(7,"/").Trim();
@@ -845,7 +841,7 @@ namespace Diamond_AR_Maksim
                         });
                     }
 
-                    var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"\d{8}");
+                    var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"\d{8}");
                     if (date.Success)
                     {
                         legal.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -919,7 +915,7 @@ namespace Diamond_AR_Maksim
         }
         internal string MakeText(List<XElement> xElements, string subCode)
         {
-            string text = null;
+            string text = string.Empty;
 
                 foreach (var xElement in xElements)
                 {
@@ -927,21 +923,6 @@ namespace Diamond_AR_Maksim
                 }
 
             return subCode is "6" or "7" or "9" or "10" or "11" or "12" or "13" or "14" ? text.Replace("\r", "").Replace("\n", " ").Trim() : text;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

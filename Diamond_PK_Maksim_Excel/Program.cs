@@ -5,7 +5,8 @@
         private const string Path = @"D:\LENS\TET\PK";
         private const string SubCode = "13";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             var methods = new Methods();
 
@@ -17,8 +18,7 @@
 
             Console.WriteLine();
 
-            if (convertedPatents != null) 
-                methods.SendToDiamond(convertedPatents, SendToProd);
+            DiamondUtilities.DiamondSender.SendToDiamond(convertedPatents, SendToProd);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Diamond_BG_Maksim
 
             Console.WriteLine();
 
-            if (patents != null) methods.SendToDiamond(patents, SendToProd);
+            if (patents != null) DiamondUtilities.DiamondSender.SendToDiamond(patents, SendToProd);
             else Console.WriteLine("Wrong SubCode");
         }
     }

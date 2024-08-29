@@ -1,11 +1,8 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -17,19 +14,19 @@ namespace Diamond_MD_Maksim
         private string _currentFileName;
         private int _id = 1;
 
-        private const string _i21 = "(21)";
-        private const string _i13 = "(13)";
-        private const string _i51 = "(51)";
-        private const string _i96 = "(96)";
-        private const string _i97 = "(97)";
-        private const string _i87 = "(87)";
-        private const string _i31 = "(31)";
-        private const string _i32 = "(32)";
-        private const string _i33 = "(33)";
-        private const string _i71 = "(71)";
-        private const string _i712 = "(712)";
-        private const string _i72 = "(72)";
-        private const string _i54 = "(54)";
+        private const string I21 = "(21)";
+        private const string I13 = "(13)";
+        private const string I51 = "(51)";
+        private const string I96 = "(96)";
+        private const string I97 = "(97)";
+        private const string I87 = "(87)";
+        private const string I31 = "(31)";
+        private const string I32 = "(32)";
+        private const string I33 = "(33)";
+        private const string I71 = "(71)";
+        private const string I712 = "(712)";
+        private const string I72 = "(72)";
+        private const string I54 = "(54)";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
@@ -114,15 +111,15 @@ namespace Diamond_MD_Maksim
 
             foreach (var inid in MakeInids(note))
             {
-                if (inid.StartsWith(_i21))
+                if (inid.StartsWith(I21))
                 {
-                    legalStatus.Biblio.Application.Number = inid.Replace(_i21, "").Trim();
+                    legalStatus.Biblio.Application.Number = inid.Replace(I21, "").Trim();
                 }
-                else if (inid.StartsWith(_i13))
+                else if (inid.StartsWith(I13))
                 {
-                    legalStatus.Biblio.Publication.Kind = inid.Replace(_i13, "").Trim();
+                    legalStatus.Biblio.Publication.Kind = inid.Replace(I13, "").Trim();
                 }
-                else if (inid.StartsWith(_i51))
+                else if (inid.StartsWith(I51))
                 {
                     var inid51 = Regex.Replace(inid, @"(\(51\)\s?Int.\s?Cl.:)", "", RegexOptions.Singleline).Trim();
                     var inids = Regex.Split(inid51, @"(?<=\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -142,9 +139,9 @@ namespace Diamond_MD_Maksim
                             Console.WriteLine($"{iinid} in 51");
                     }
                 }
-                else if (inid.StartsWith(_i96))
+                else if (inid.StartsWith(I96))
                 {
-                    var match = Regex.Match(inid.Replace(_i96, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
+                    var match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
 
                     if (match.Success)
                     {
@@ -154,9 +151,9 @@ namespace Diamond_MD_Maksim
                     else 
                         Console.WriteLine($"{inid} in 96");
                 }
-                else if (inid.StartsWith(_i97))
+                else if (inid.StartsWith(I97))
                 {
-                    var match = Regex.Match(inid.Replace(_i97, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
+                    var match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
 
                     if (match.Success)
                     {
@@ -166,9 +163,9 @@ namespace Diamond_MD_Maksim
                     else 
                         Console.WriteLine($"{inid} in 97");
                 }
-                else if (inid.StartsWith(_i87))
+                else if (inid.StartsWith(I87))
                 {
-                    var match = Regex.Match(inid.Replace(_i87, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
+                    var match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
 
                     if (match.Success)
                     {
@@ -178,21 +175,21 @@ namespace Diamond_MD_Maksim
                     else 
                         Console.WriteLine($"{inid} in 87");
                 }
-                else if (inid.StartsWith(_i31))
+                else if (inid.StartsWith(I31))
                 {
-                    priorityNumbers = Regex.Split(inid.Replace(_i31, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    priorityNumbers = Regex.Split(inid.Replace(I31, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-                else if (inid.StartsWith(_i32))
+                else if (inid.StartsWith(I32))
                 {
-                    priorityDates = Regex.Split(inid.Replace(_i32, "").Replace(".", "/").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    priorityDates = Regex.Split(inid.Replace(I32, "").Replace(".", "/").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-                else if (inid.StartsWith(_i33))
+                else if (inid.StartsWith(I33))
                 {
-                    priorityCountries = Regex.Split(inid.Replace(_i33, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    priorityCountries = Regex.Split(inid.Replace(I33, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-                else if (inid.StartsWith(_i71))
+                else if (inid.StartsWith(I71))
                 {
-                    var applicants = Regex.Split(inid.Replace(_i71, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var applicants = Regex.Split(inid.Replace(I71, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (var applicant in applicants)
                     {
@@ -210,9 +207,9 @@ namespace Diamond_MD_Maksim
                             Console.WriteLine($"{applicant} in 71");
                     }
                 }
-                else if (inid.StartsWith(_i72))
+                else if (inid.StartsWith(I72))
                 {
-                    var inventors = Regex.Split(inid.Replace(_i72, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var inventors = Regex.Split(inid.Replace(I72, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (var inventor in inventors)
                     {
@@ -230,9 +227,9 @@ namespace Diamond_MD_Maksim
                             Console.WriteLine($"{inventor} in 72");
                     }
                 }
-                else if (inid.StartsWith(_i712))
+                else if (inid.StartsWith(I712))
                 {
-                    var inventorsApplicants = Regex.Split(inid.Replace(_i712, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var inventorsApplicants = Regex.Split(inid.Replace(I712, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                     foreach (var inventorsApplicant in inventorsApplicants)
                     {
@@ -256,9 +253,9 @@ namespace Diamond_MD_Maksim
                     }
 
                 }
-                else if (inid.StartsWith(_i54))
+                else if (inid.StartsWith(I54))
                 {
-                    var titleMatchList = Regex.Split(inid.Replace(_i54, "").Trim(), @"(?=\n[A-Z][a-z]|\n[А-Я][а-я])").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                    var titleMatchList = Regex.Split(inid.Replace(I54, "").Trim(), @"(?=\n[A-Z][a-z]|\n[А-Я][а-я])").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
                     if (titleMatchList.Count == 3)
                     {
@@ -292,7 +289,7 @@ namespace Diamond_MD_Maksim
                     }
                     else
                     {
-                        titleMatchList = Regex.Split(inid.Replace(_i54, "").Trim(), @"(?=\n[A-Z]{2,3}|\n[А-Я][а-я])")
+                        titleMatchList = Regex.Split(inid.Replace(I54, "").Trim(), @"(?=\n[A-Z]{2,3}|\n[А-Я][а-я])")
                             .Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
                         if (titleMatchList.Count == 3)
@@ -371,21 +368,6 @@ namespace Diamond_MD_Maksim
                 inids = Regex.Split(note.Trim(), @"(?=\([0-9]{2}\)\s)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
             }
             return inids;
-        }
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                url = SendToProduction == true ? @"https://diamond.lighthouseip.online/external-api/import/legal-event" : @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                _ = result.Content.ReadAsStringAsync().Result;
-            }
         }
     }
 }

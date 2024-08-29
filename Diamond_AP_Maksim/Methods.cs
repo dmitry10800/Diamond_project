@@ -1,13 +1,9 @@
 ﻿using Integration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -15,24 +11,24 @@ namespace Diamond_AP_Maksim
 {
     class Methods
     {
-        private string CurrentFileName;
-        private int Id = 1;
+        private string _currentFileName;
+        private int _id = 1;
 
-        private readonly string I21 = "(21)";
-        private readonly string I22 = "(22)";
-        private readonly string I23 = "(23)";
-        private readonly string I31 = "(31)";
-        private readonly string I32 = "(32)";
-        private readonly string I33 = "(33)";
-        private readonly string I54 = "(54)";
-        private readonly string I71 = "(71)";
-        private readonly string I72 = "(72)";
-        private readonly string I74 = "(74)";
-        private readonly string I84 = "(84)";
-        private readonly string I51 = "(51)";
-        private readonly string I75 = "(75)";
-        private readonly string I86 = "(86)";
-        private readonly string I96 = "(96)";
+        private const string I21 = "(21)";
+        private const string I22 = "(22)";
+        private const string I23 = "(23)";
+        private const string I31 = "(31)";
+        private const string I32 = "(32)";
+        private const string I33 = "(33)";
+        private const string I54 = "(54)";
+        private const string I71 = "(71)";
+        private const string I72 = "(72)";
+        private const string I74 = "(74)";
+        private const string I84 = "(84)";
+        private const string I51 = "(51)";
+        private const string I75 = "(75)";
+        private const string I86 = "(86)";
+        private const string I96 = "(96)";
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
@@ -53,7 +49,7 @@ namespace Diamond_AP_Maksim
 
             foreach (var tetml in files)
             {
-                CurrentFileName = tetml;
+                _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
 
@@ -180,8 +176,8 @@ namespace Diamond_AP_Maksim
                 CountryCode = "AP",
                 SubCode = subCode,
                 SectionCode = sectionCode,
-                Id = Id++,
-                GazetteName = Path.GetFileName(CurrentFileName.Replace(".tetml", ".pdf"))
+                Id = _id++,
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf"))
             };
 
             Biblio biblio = new();
@@ -853,7 +849,7 @@ namespace Diamond_AP_Maksim
                 else Console.WriteLine($"{inid}");    
             }
 
-                var date = Regex.Match(Path.GetFileName(CurrentFileName.Replace(".tetml", "")), @"[0-9]{8}");
+                var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".tetml", "")), @"[0-9]{8}");
 
                 if (date.Success)
                 {
@@ -1138,27 +1134,5 @@ namespace Diamond_AP_Maksim
             _ => null
         };
         internal List<string> MakeInids(string note) => Regex.Split(note.Trim(), @"(?=\(\s?[0-9]{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
-        internal void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool SendToProduction)
-        {
-            foreach (var rec in events)
-            {
-                var tmpValue = JsonConvert.SerializeObject(rec);
-                string url;
-                if (SendToProduction == true)
-                {
-                    url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";  // продакшен
-                }
-                else
-                {
-                    url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";     // стейдж
-                }
-                HttpClient httpClient = new();
-                httpClient.BaseAddress = new Uri(url);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                StringContent content = new(tmpValue.ToString(), Encoding.UTF8, "application/json");
-                var result = httpClient.PostAsync("", content).Result;
-                var answer = result.Content.ReadAsStringAsync().Result;
-            }
-        }
     }
 }
