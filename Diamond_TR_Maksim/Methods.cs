@@ -167,12 +167,43 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "EZ"));
                     }
                 }
-
                 if (sub == "54")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
                         .SkipWhile(e => !e.Value.StartsWith("Patent ile ilgili dosyalar, yapılan"))
                         .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI SMK"))
+                        .ToList();
+
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\)\sTR.+)", RegexOptions.Singleline)
+                        .Where(x => !string.IsNullOrEmpty(x) && x.StartsWith("(11)")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        convertedPatents.Add(MakePatent(note, sub, "FG"));
+                    }
+                }
+                if (sub == "55")
+                {
+                    xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
+                        .SkipWhile(e => !e.Value.StartsWith("Faydalı Model Belgeleri ile ilgili"))
+                        .TakeWhile(e => !e.Value.StartsWith("MÜLGA 551 SAYILI"))
+                        .ToList();
+
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\)\sTR.+)", RegexOptions.Singleline)
+                        .Where(x => !string.IsNullOrEmpty(x) && x.StartsWith("(11)")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        convertedPatents.Add(MakePatent(note, sub, "FG"));
+                    }
+                }
+                if (sub == "57")
+                {
+                    xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
+                        .SkipWhile(e => !e.Value.StartsWith("Faydalı Model Belgeleri ile ilgili"))
+                        .TakeWhile(e => !e.Value.StartsWith("MÜLGA 551 SAYILI"))
                         .ToList();
 
 
@@ -599,7 +630,7 @@ namespace Diamond_TR_Maksim
                 }
 
             }
-            if (subCode == "54")
+            if (subCode == "54" || subCode == "55" || subCode == "57")
             {
                 var dOfPublication = new DOfPublication();
 
@@ -684,7 +715,7 @@ namespace Diamond_TR_Maksim
 
                             foreach (var inventor in inventors)
                             {
-                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                statusEvent.Biblio.Inventors.Add(new PartyMember()
                                 {
                                     Name = inventor.Trim()
                                 });
@@ -811,6 +842,7 @@ namespace Diamond_TR_Maksim
                 .Replace("(21) Başvuru Numarası", "")
                 .Replace("(22) Başvuru Tarihi", "")
                 .Replace("(45) Patent Belgesinin Veriliş Tarihi", "")
+                .Replace("(45) Faydalı Model Belgesinin Veriliş Tarihi", "")
                 .Replace("(51) Buluşun tasnif sınıfları", "")
                 .Replace("(51) Buluşun tasnif sınıfı", "")
                 .Replace("(30) Rüçhan Bilgileri", "")
@@ -819,6 +851,7 @@ namespace Diamond_TR_Maksim
                 .Replace(I33, "")
                 .Replace("(74) Vekil", "")
                 .Replace("(73) Patent Sahibi", "")
+                .Replace("(73) Faydalı Model Sahibi", "")
                 .Replace("(72) Buluşu Yapan", "")
                 .Replace("(54) Buluş Başlığı", "")
                 .Replace("(57) Özet", "");
