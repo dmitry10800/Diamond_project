@@ -711,10 +711,10 @@ namespace Diamond_TR_Maksim
 
                         if (item.StartsWith(I73))
                         {
-                            statusEvent.Biblio.Assignees.Add(new PartyMember()
-                            {
-                                Name = cleanInid.Replace("\r", "").Replace("\n", " ").Trim()
-                            });
+                            //statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            //{
+                            //    Name = cleanInid.Replace("\r", "").Replace("\n", " ").Trim()
+                            //});
                         }
 
                         statusEvent.Biblio.DOfPublication = dOfPublication;
@@ -812,6 +812,7 @@ namespace Diamond_TR_Maksim
                 .Replace("(22) Başvuru Tarihi", "")
                 .Replace("(45) Patent Belgesinin Veriliş Tarihi", "")
                 .Replace("(51) Buluşun tasnif sınıfları", "")
+                .Replace("(51) Buluşun tasnif sınıfı", "")
                 .Replace("(30) Rüçhan Bilgileri", "")
                 .Replace(I31, "")
                 .Replace(I32, "")
