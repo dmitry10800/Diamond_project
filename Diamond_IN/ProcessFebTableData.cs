@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Diamond_IN
 {
-    class ProcessFebTableData
+    internal class ProcessFebTableData
     {
         public class ElementsForOutput
         {

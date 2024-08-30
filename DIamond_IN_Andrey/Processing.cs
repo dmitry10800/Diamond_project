@@ -61,14 +61,14 @@ namespace DIamond_IN_Andrey
                         }
 
                         if (record.StartsWith(PRIN))
-                            curElem.PRIN = record.Replace(PRIN, "").Replace("NA", "").Replace(":", "").Trim();
+                            curElem.PRIN = record.Replace(PRIN, "").Replace("NA", "").Trim();
 
                         if (record.StartsWith(PRID))
-                            curElem.PRID = record.Replace(PRID, "").Replace("NA", "").Replace(":", "").Trim();
+                            curElem.PRID = record.Replace(PRID, "").Replace("NA", "").Trim();
 
                         if (record.StartsWith(PRIC))
                         {
-                            var country = record.Replace(PRIC, "").Replace(":", "").Trim();
+                            var country = record.Replace(PRIC, "").Trim();
                             if (!country.Contains("NA") && !country.Contains("PCT"))
                             {
                                 curElem.PRIC = Methods.ToCountry(country);
