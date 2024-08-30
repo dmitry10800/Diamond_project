@@ -215,6 +215,22 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(MakePatent(note, sub, "FG"));
                     }
                 }
+                if (sub == "58")
+                {
+                    xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
+                        .SkipWhile(e => !e.Value.StartsWith("Patent ile ilgili dosyalar, yapılan"))
+                        .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI"))
+                        .ToList();
+
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\)\sTR.+)", RegexOptions.Singleline)
+                        .Where(x => !string.IsNullOrEmpty(x) && x.StartsWith("(11)")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        convertedPatents.Add(MakePatent(note, sub, "FG"));
+                    }
+                }
             }
             return convertedPatents;
         }
@@ -630,7 +646,7 @@ namespace Diamond_TR_Maksim
                 }
 
             }
-            if (subCode == "54" || subCode == "55" || subCode == "57")
+            if (subCode == "54" || subCode == "55" || subCode == "57" || subCode == "58")
             {
                 var dOfPublication = new DOfPublication();
 
