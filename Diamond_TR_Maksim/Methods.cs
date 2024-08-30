@@ -11,6 +11,24 @@ namespace Diamond_TR_Maksim
         private string _currentFileName;
         int _id = 1;
 
+        private const string I11 = "(11)";
+        private const string I12 = "(12)";
+        private const string I43 = "(43)";
+        private const string I10 = "(10)";
+        private const string I21 = "(21)";
+        private const string I22 = "(22)";
+        private const string I45 = "(45)";
+        private const string I51 = "(51)";
+        private const string I30 = "(30)";
+        private const string I31 = "(31)";
+        private const string I32 = "(32)";
+        private const string I33 = "(33)";
+        private const string I74 = "(74)";
+        private const string I73 = "(73)";
+        private const string I72 = "(72)";
+        private const string I54 = "(54)";
+        private const string I57 = "(57)";
+        
         public List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string sub)
         {
             var convertedPatents = new List<Diamond.Core.Models.LegalStatusEvent>();
@@ -46,7 +64,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "FD"));
                     }
                 }
-                else
                 if (sub == "13")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -59,7 +76,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "MM"));
                     }
                 }
-                else
                 if (sub == "16")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -72,7 +88,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "FD"));
                     }
                 }
-                else
                 if (sub == "17")
                 {
 
@@ -87,7 +102,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "FA"));
                     }
                 }
-                else
                 if (sub == "19")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -100,7 +114,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(MakePatent(note, sub, "MK"));
                     }
                 }
-                else
                 if (sub == "27")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -115,7 +128,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(MakePatent(note, sub, "HH/TH"));
                     }
                 }
-                else
                 if (sub == "30")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -129,7 +141,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "EZ"));
                     }
                 }
-                else
                 if (sub == "31")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -143,7 +154,6 @@ namespace Diamond_TR_Maksim
                         convertedPatents.Add(SplitNote(note, sub, "EZ"));
                     }
                 }
-                else
                 if (sub == "39")
                 {
                     xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
@@ -155,6 +165,23 @@ namespace Diamond_TR_Maksim
                     foreach (var note in BuildNotes(xElements))
                     {
                         convertedPatents.Add(SplitNote(note, sub, "EZ"));
+                    }
+                }
+
+                if (sub == "54")
+                {
+                    xElements = tet.Descendants().Where(value => value.Name.LocalName == "Text")
+                        .SkipWhile(e => !e.Value.StartsWith("Patent ile ilgili dosyalar, yapılan"))
+                        .TakeWhile(e => !e.Value.StartsWith("6769 SAYILI SMK"))
+                        .ToList();
+
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\)\sTR.+)", RegexOptions.Singleline)
+                        .Where(x => !string.IsNullOrEmpty(x) && x.StartsWith("(11)")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        convertedPatents.Add(MakePatent(note, sub, "FG"));
                     }
                 }
             }
@@ -316,7 +343,7 @@ namespace Diamond_TR_Maksim
 
                 else Console.WriteLine($"{note.Replace("\r", "").Replace("\n", " ").Trim()}");
             }
-            else if (subCode == "27")
+            if (subCode == "27")
             {
                 var europeanPatent = new EuropeanPatent();
 
@@ -572,7 +599,128 @@ namespace Diamond_TR_Maksim
                 }
 
             }
+            if (subCode == "54")
+            {
+                var dOfPublication = new DOfPublication();
 
+                var matchMain = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                    @"(?<group1>.+)(?<inid57>\(57\).+)", RegexOptions.Singleline);
+
+                if (matchMain.Success)
+                {
+                    var items = Regex.Split(matchMain.Groups["group1"].Value.Trim(), @"(?=\(\d{2}\).+)",
+                            RegexOptions.Singleline)
+                        .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                    items.Add(matchMain.Groups["inid57"].Value.Trim());
+
+                    foreach (var item in items)
+                    {
+                        var cleanInid = CleanInid(item);
+
+                        if (item.StartsWith(I11))
+                        {
+                            var inid = Regex.Match(cleanInid.Replace("\r", "").Replace("\n", " ").Trim(), @"TR\s(?<num>.+)\s(?<kind>\D.?)");
+                            if (!inid.Success) continue;
+                            statusEvent.Biblio.Publication.Number = inid.Groups["num"].Value.Trim();
+                            statusEvent.Biblio.Publication.Kind = inid.Groups["kind"].Value.Trim();
+                        }
+
+                        if (item.StartsWith(I12))
+                        {
+                            statusEvent.Biblio.Publication.LanguageDesignation = cleanInid.Replace("\r", "").Replace("\n", " ").Trim();
+                        }
+
+                        if (item.StartsWith(I43))
+                        {
+                            var match = Regex.Match(cleanInid.Replace("\r", "").Replace("\n", " ").Trim(),
+                                @"(?<date>\d{4}\/\d{2}\/\d{2})", RegexOptions.Singleline);
+
+                            if (match.Success)
+                            {
+                                statusEvent.Biblio.Publication.Date = match.Groups["date"].Value.Trim();
+                            }
+                        }
+
+                        if (item.StartsWith(I21))
+                        {
+                            statusEvent.Biblio.Application.Number = cleanInid.Replace("\r", "").Replace("\n", " ").Trim();
+                        }
+                        if (item.StartsWith(I22))
+                        {
+                            statusEvent.Biblio.Application.Date = cleanInid.Replace("\r", "").Replace("\n", " ").Trim();
+                        }
+
+                        if (item.StartsWith(I45))
+                        {
+                            dOfPublication.date_45 = cleanInid.Replace("\r", "").Replace("\n", " ").Trim();
+                        }
+
+                        if (item.StartsWith(I51))
+                        {
+                            var ipcs = Regex.Split(cleanInid.Trim(), @"(?<=\d+\/\d+\s)", RegexOptions.Singleline)
+                                .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                            foreach (var ipc in ipcs)
+                            {
+                                statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                {
+                                    Class = ipc
+                                });
+                            }
+                        }
+
+                        if (item.StartsWith(I74))
+                        {
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = cleanInid.Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+                        }
+
+                        if (item.StartsWith(I72))
+                        {
+                            var inventors = Regex.Split(cleanInid, @"\n").Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                            foreach (var inventor in inventors)
+                            {
+                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                {
+                                    Name = inventor.Trim()
+                                });
+                            }
+                        }
+
+                        if (item.StartsWith(I54))
+                        {
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "TR",
+                                Text = cleanInid.Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+                        }
+
+                        if (item.StartsWith(I57))
+                        {
+                            statusEvent.Biblio.Abstracts.Add(new Abstract()
+                            {
+                                Language = "TR",
+                                Text = cleanInid.Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+                        }
+
+                        if (item.StartsWith(I73))
+                        {
+                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            {
+                                Name = cleanInid.Replace("\r", "").Replace("\n", " ").Trim()
+                            });
+                        }
+
+                        statusEvent.Biblio.DOfPublication = dOfPublication;
+                    }
+                }
+            }
             return statusEvent;
         }
         public string MakeText(List<XElement> xElements)
@@ -598,7 +746,7 @@ namespace Diamond_TR_Maksim
             }
             return inids;
         }
-        internal string MakeCountry(string country) => country switch
+        internal string? MakeCountry(string country) => country switch
         {
             "İSVİÇRE" => "CH",
             "ÇİN" => "CN",
@@ -651,6 +799,28 @@ namespace Diamond_TR_Maksim
             notes.RemoveAt(0);
 
             return notes;
+        }
+
+        private static string CleanInid(string inid)
+        {
+            return inid
+                .Replace(I11, "")
+                .Replace(I12, "")
+                .Replace("(43) Başvuru Yayın Tarihi", "")
+                .Replace("(10) Başvuru Yayın No", "")
+                .Replace("(21) Başvuru Numarası", "")
+                .Replace("(22) Başvuru Tarihi", "")
+                .Replace("(45) Patent Belgesinin Veriliş Tarihi", "")
+                .Replace("(51) Buluşun tasnif sınıfları", "")
+                .Replace("(30) Rüçhan Bilgileri", "")
+                .Replace(I31, "")
+                .Replace(I32, "")
+                .Replace(I33, "")
+                .Replace("(74) Vekil", "")
+                .Replace("(73) Patent Sahibi", "")
+                .Replace("(72) Buluşu Yapan", "")
+                .Replace("(54) Buluş Başlığı", "")
+                .Replace("(57) Özet", "");
         }
     }
 }
