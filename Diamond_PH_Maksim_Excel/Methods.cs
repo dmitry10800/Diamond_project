@@ -23,8 +23,6 @@ namespace Diamond_PH_Maksim_Excel
             {
                 _currentFileName = xlsxFile;
 
-                ISheet sheet;
-
                 XSSFWorkbook OpenedDocument;
 
                 using (FileStream file = new(xlsxFile, FileMode.Open, FileAccess.Read))
@@ -32,11 +30,11 @@ namespace Diamond_PH_Maksim_Excel
                     OpenedDocument = new XSSFWorkbook(file);
                 }
 
-                sheet = OpenedDocument.GetSheet("Sheet1");
+                var sheet = OpenedDocument.GetSheet("Sheet1") ?? OpenedDocument.GetSheet("Лист1");
 
-                CultureInfo culture = new("ru-RU");
+                var culture = new CultureInfo("ru-RU");
 
-                if (subCode is "7")
+                if (subCode == "7")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
@@ -47,11 +45,11 @@ namespace Diamond_PH_Maksim_Excel
                             SubCode = subCode,
                             Id = _id++,
                             GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
-                            Biblio = new()
+                            Biblio = new Biblio
                             {
-                                DOfPublication = new()
+                                DOfPublication = new DOfPublication()
                             },
-                            LegalEvent = new()
+                            LegalEvent = new LegalEvent()
                         };
 
                         statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
@@ -89,7 +87,7 @@ namespace Diamond_PH_Maksim_Excel
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
-                else if (subCode == "5")
+                if (subCode == "5")
                 {
                     for (var row = 1; row <= sheet.LastRowNum; row++)
                     {
@@ -171,7 +169,7 @@ namespace Diamond_PH_Maksim_Excel
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
-                else if (subCode is "12")
+                if (subCode == "12")
                 {
                     for (var row = 1; row <= sheet.LastRowNum; row++)
                     {
@@ -248,6 +246,104 @@ namespace Diamond_PH_Maksim_Excel
 
                         var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
 
+                        if (match.Success)
+                        {
+                            statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                        }
+                        legalStatusEvents.Add(statusEvent);
+                    }
+                }
+                if (subCode == "22")
+                {
+                    for (var row = 1; row <= sheet.LastRowNum; row++)
+                    {
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
+                            CountryCode = "PH",
+                            SectionCode = "FA",
+                            SubCode = subCode,
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
+                            Biblio = new Biblio
+                            {
+                                DOfPublication = new DOfPublication()
+                            },
+                            LegalEvent = new LegalEvent()
+                        };
+
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        var originalDate = sheet.GetRow(row).GetCell(1).ToString();
+                        originalDate = originalDate?.Replace("Sept", "Sep");
+                        var parsedDate = DateTime.ParseExact(originalDate, "dd-MMM-yyyy", CultureInfo.InvariantCulture);
+                        var formattedDate = parsedDate.ToString("yyyy/MM/dd");
+                        statusEvent.Biblio.Application.Date = formattedDate;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        statusEvent.Biblio.Titles.Add(new Title()
+                        {
+                            Language = "EN",
+                            Text = sheet.GetRow(row).GetCell(2).ToString()
+                        });
+
+                        var applicants = Regex.Split(sheet.GetRow(row).GetCell(3).ToString(), ";")
+                            .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                        foreach (var applicant in applicants)
+                        {
+                            var matchApplicant = Regex.Match(applicant.Trim(), @"(?<name>.+)\((?<country>\D{2})\)");
+
+                            if (matchApplicant.Success)
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = matchApplicant.Groups["name"].Value.Trim(),
+                                    Country = matchApplicant.Groups["country"].Value.Trim()
+                                });
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                {
+                                    Name = applicant
+                                });
+                            }
+                        }
+
+                        var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
                         if (match.Success)
                         {
                             statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
