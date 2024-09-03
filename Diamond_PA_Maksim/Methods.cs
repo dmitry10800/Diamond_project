@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Diamond.Core.Models;
+using Integration;
 
 namespace Diamond_PA_Maksim
 {
@@ -24,28 +26,26 @@ namespace Diamond_PA_Maksim
         private const string I74 = "(74)";
         private const string I57 = "(57)";
 
-        internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
+        internal List<LegalStatusEvent> Start(string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> statusEvents = new();
+            var statusEvents = new List<LegalStatusEvent>();
 
-            DirectoryInfo directory = new(path);
+            var directory = new DirectoryInfo(path);
 
-            List<string> files = new();
+            var files = new List<string>();
 
             foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
                 files.Add(file.FullName);
             }
 
-            XElement tet;
-
-            List<XElement> xElements = new();
+            var xElements = new List<XElement>();
 
             foreach (var tetml in files)
             {
                 _currentFileName = tetml;
 
-                tet = XElement.Load(tetml);
+                var tet = XElement.Load(tetml);
 
                 if (subCode == "1")
                 {
@@ -61,7 +61,7 @@ namespace Diamond_PA_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "AZ"));
                     }
                 }
-                else
+                
                 if(subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -81,20 +81,20 @@ namespace Diamond_PA_Maksim
             return statusEvents;
         }
 
-        internal Diamond.Core.Models.LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
+        internal LegalStatusEvent MakePatent(string note, string subCode, string sectionCode)
         {
-            Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+            var statusEvent = new LegalStatusEvent()
             {
                 SubCode = subCode,
                 CountryCode = "PA",
                 SectionCode = sectionCode,
                 Id = _id++,
                 GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
-                Biblio = new(),
-                LegalEvent = new()
+                Biblio = new Biblio(),
+                LegalEvent = new LegalEvent()
             };
 
-            CultureInfo culture = new("RU-ru");
+            var culture = new CultureInfo("RU-ru");
             if(subCode == "1") 
             {
                 foreach (var inid in MakeInids(note, subCode))
@@ -247,7 +247,7 @@ namespace Diamond_PA_Maksim
                     }
                 }
             }
-            else
+            
             if(subCode == "2")
             {
                 foreach (var inid in MakeInids(note, subCode))
@@ -256,7 +256,7 @@ namespace Diamond_PA_Maksim
                     {
                         statusEvent.Biblio.Application.Number = inid.Replace("(21) Solicitud N?: ", "").Trim();
                     }
-                    else
+                    
                     if (inid.StartsWith(I22))
                     {
                         var match = Regex.Match(inid.Replace("(22) Fecha de Solicitud: ", ""), @"(?<day>\d+).(?<month>.+).(?<year>\d{4})");
@@ -274,7 +274,7 @@ namespace Diamond_PA_Maksim
                         }
                         else Console.WriteLine($"{inid} -- 22");
                     }
-                    else
+                    
                     if (inid.StartsWith(I30))
                     {
                         var priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(30) Numero(s) prioridad: ", "").Trim(), @"(?<=[a-z||á],)").Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -300,7 +300,7 @@ namespace Diamond_PA_Maksim
                             else Console.WriteLine($"{priotity} --30");
                         }
                     }
-                    else
+                    
                     if (inid.StartsWith(I71))
                     {
                         var applicants = Regex.Split(inid.Replace("(71) Titular(es): ", "").Trim(), @"(?<=[a-z]$)",RegexOptions.Multiline).Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -327,7 +327,7 @@ namespace Diamond_PA_Maksim
                             else Console.WriteLine($"{inid} -- 71");
                         }                      
                     }
-                    else
+                    
                     if (inid.StartsWith(I74))
                     {
                         statusEvent.Biblio.Agents.Add(new Integration.PartyMember
@@ -335,7 +335,7 @@ namespace Diamond_PA_Maksim
                             Name = inid.Replace("(74) Apoderado: ", "").Trim()
                         });
                     }
-                    else
+                    
                     if (inid.StartsWith(I54))
                     {
                         statusEvent.Biblio.Titles.Add(new Integration.Title
@@ -344,7 +344,7 @@ namespace Diamond_PA_Maksim
                             Text = inid.Replace("(54) Titulo: ", "").Trim()
                         });
                     }
-                    else
+                    
                     if (inid.StartsWith(I51))
                     {
                         var ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51) Clasificacion Internacional de Patentes ", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -361,12 +361,12 @@ namespace Diamond_PA_Maksim
                             }
                         }
                     }
-                    else if (inid.StartsWith("(note)"))
+                    if (inid.StartsWith("(note)"))
                     {
-                        var matchPCTPubNum = Regex.Match(inid, @"EUROPEA DE PATENTES CON EL N°\s(?<num>.+)\.");
-                        if (matchPCTPubNum.Success)
+                        var matchPctPubNum = Regex.Match(inid, @"EUROPEA DE PATENTES CON EL N°\s(?<num>.+)\.");
+                        if (matchPctPubNum.Success)
                         {
-                            statusEvent.Biblio.IntConvention.PctPublNumber = matchPCTPubNum.Groups["num"].Value.Trim();
+                            statusEvent.Biblio.IntConvention.PctPublNumber = matchPctPubNum.Groups["num"].Value.Trim();
                         }
 
                         var matchPctPublDate =
@@ -396,14 +396,14 @@ namespace Diamond_PA_Maksim
         }
         internal List<string> MakeInids(string note, string subCode)
         {
-            List<string> inids = new();
+            var inids = new List<string>();
 
             if(subCode == "1")
             {
                 inids = Regex.Split(note.Substring(0, note.IndexOf(@"(57)")).Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 inids.Add(note.Substring(note.IndexOf("(57)")).Trim());
             }
-            else
+            
             if(subCode == "2")
             {
                 var field51 = note.Substring(note.IndexOf("(51)"));
@@ -419,7 +419,7 @@ namespace Diamond_PA_Maksim
         }
         internal string MakeText(List<XElement> xElements)
         {
-            string text = null;
+            var text = string.Empty;
 
             foreach (var xElement in xElements)
             {

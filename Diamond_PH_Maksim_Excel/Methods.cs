@@ -273,45 +273,11 @@ namespace Diamond_PH_Maksim_Excel
 
                         statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         var originalDate = sheet.GetRow(row).GetCell(1).ToString();
                         originalDate = originalDate?.Replace("Sept", "Sep");
                         var parsedDate = DateTime.ParseExact(originalDate, "dd-MMM-yyyy", CultureInfo.InvariantCulture);
                         var formattedDate = parsedDate.ToString("yyyy/MM/dd");
                         statusEvent.Biblio.Application.Date = formattedDate;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         statusEvent.Biblio.Titles.Add(new Title()
                         {
