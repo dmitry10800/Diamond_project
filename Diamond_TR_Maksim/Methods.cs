@@ -650,7 +650,7 @@ namespace Diamond_TR_Maksim
             {
                 var dOfPublication = new DOfPublication();
 
-                var matchMain = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(),
+                var matchMain = Regex.Match(note.Trim(),
                     @"(?<group1>.+)(?<inid57>\(57\).+)", RegexOptions.Singleline);
 
                 if (matchMain.Success)
@@ -866,8 +866,9 @@ namespace Diamond_TR_Maksim
                 .Replace(I32, "")
                 .Replace(I33, "")
                 .Replace("(74) Vekil", "")
-                .Replace("(73) Patent Sahibi", "")
                 .Replace("(73) Faydalı Model Sahibi", "")
+                .Replace("(73) Patent Sahibi", "")
+                .Replace("(72) Buluşu Yapanlar", "")
                 .Replace("(72) Buluşu Yapan", "")
                 .Replace("(54) Buluş Başlığı", "")
                 .Replace("(57) Özet", "");
