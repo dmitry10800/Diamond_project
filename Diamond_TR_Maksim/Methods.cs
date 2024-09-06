@@ -764,6 +764,40 @@ namespace Diamond_TR_Maksim
                             //});
                         }
 
+                        //if (item.StartsWith(I30))
+                        //{
+
+                        //}
+                        //if (item.StartsWith(I32))
+                        //{
+
+                        //}
+                        //if (item.StartsWith(I33))
+                        //{
+
+                        //}
+                        if (item.StartsWith(I31))
+                        {
+                            var priorities = Regex.Split(cleanInid, @"\n").Where(val => !string.IsNullOrEmpty(val))
+                                .ToList();
+
+                            foreach (var priority in priorities)
+                            {
+                                var matchPrior = Regex.Match(priority.Replace("\r", "").Replace("\n", " ").Trim(),
+                                    @"(?<date>.+)\s(?<code>\D{2})\s(?<num>.+)");
+
+                                if (matchPrior.Success)
+                                {
+                                    statusEvent.Biblio.Priorities.Add(new Priority()
+                                    {
+                                        Country = matchPrior.Groups["code"].Value.Trim(),
+                                        Number = matchPrior.Groups["num"].Value.Trim(),
+                                        Date = matchPrior.Groups["date"].Value.Trim()
+                                    });
+                                }
+                            }
+                        }
+
                         statusEvent.Biblio.DOfPublication = dOfPublication;
                     }
                 }

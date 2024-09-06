@@ -3,7 +3,7 @@
     internal class Program
     {
         private const string Path = @"D:\LENS\TET\TR\TR_20240621_06";
-        private const string Sub = "58";
+        private const string Sub = "57";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
