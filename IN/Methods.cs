@@ -10,15 +10,11 @@ using System.Text.RegularExpressions;
 
 namespace IN
 {
-    class DiamondSender
+    internal class DiamondSender
     {
         public static void SendToDiamond(List<Diamond.Core.Models.LegalStatusEvent> events, bool isStaging)
         {
-            string url;
-            if (isStaging)
-                url = @"https://staging.diamond.lighthouseip.online/external-api/import/legal-event";
-            else
-                url = @"https://diamond.lighthouseip.online/external-api/import/legal-event";
+            var url = isStaging ? @"https://lens-staging.lighthouseip.online/external-api/import/legal-event" : @"https://lens.lighthouseip.online/external-api/import/legal-event";
             foreach (var iEvent in events)
             {
                 var tmpValue = JsonConvert.SerializeObject(iEvent);
@@ -33,7 +29,8 @@ namespace IN
             }
         }
     }
-    class Methods
+
+    internal class Methods
     {
         public static List<Integration.PartyMember> ConvertInventors(string inventors, string type) // 72
         {

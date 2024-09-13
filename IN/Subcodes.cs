@@ -30,7 +30,7 @@ namespace IN
         public static readonly string I99 = "(99) No. of Pages";
 
 
-        private static Regex _sub1Regex = new Regex(@"(?=\(12\)\sPATENT)");
+        private static readonly Regex Sub1Regex = new Regex(@"(?=\(12\)\sPATENT)");
         private static Regex _sub2Regex = new Regex(@"(?=\b\d+\b\n\b\d{5,8}\b\n)");
         public static List<Diamond.Core.Models.LegalStatusEvent> _patentRecordsList;
         public static Diamond.Core.Models.LegalStatusEvent _patentRecord;
@@ -38,24 +38,30 @@ namespace IN
         public static List<Diamond.Core.Models.LegalStatusEvent> Process1SubCode(List<string> elements, string subcode, string sectionCode, string gazetteName)
         {
             _patentRecordsList = new List<Diamond.Core.Models.LegalStatusEvent>();
-            var tmpID = 0;
-            var totalRecords = Methods.SplitStringByRegex(elements, _sub1Regex);
+            var tmpId = 0;
+            var totalRecords = Methods.SplitStringByRegex(elements, Sub1Regex);
             foreach (var record in totalRecords)
             {
                 var splittedRecord = Methods.SplitRecordsByInids(record);
-
+               
                 if (splittedRecord.Count > 0)
                 {
-                    _patentRecord = new Diamond.Core.Models.LegalStatusEvent();
-                    _patentRecord.GazetteName = gazetteName;
-                    _patentRecord.Biblio = new Integration.Biblio();
-                    _patentRecord.Biblio.IntConvention = new Integration.IntConvention();
-                    _patentRecord.LegalEvent = new Integration.LegalEvent();
-                    _patentRecord.LegalEvent.Translations = new List<Integration.NoteTranslation>();
-                    _patentRecord.SubCode = subcode;
-                    _patentRecord.SectionCode = sectionCode;
-                    _patentRecord.CountryCode = "IN";
-                    _patentRecord.Id = tmpID++;
+                    _patentRecord = new Diamond.Core.Models.LegalStatusEvent
+                    {
+                        GazetteName = gazetteName,
+                        Biblio = new Integration.Biblio
+                        {
+                            IntConvention = new Integration.IntConvention()
+                        },
+                        LegalEvent = new Integration.LegalEvent
+                        {
+                            Translations = new List<Integration.NoteTranslation>()
+                        },
+                        SubCode = subcode,
+                        SectionCode = sectionCode,
+                        CountryCode = "IN",
+                        Id = tmpId++
+                    };
                     _patentRecord.Biblio.Publication.Kind = subcode;
 
                     foreach (var inid in splittedRecord)
@@ -123,7 +129,7 @@ namespace IN
                         {
                             _patentRecord.Biblio.Abstracts.Add(new Integration.Abstract
                             {
-                                Text = inidValue.Replace(I57, "").Trim(),
+                                Text = inid.Replace(I57, "").Replace("ABSTRACT","").Trim().TrimStart(':').Trim(),
                                 Language = "EN"
                             });
                         }
@@ -181,6 +187,7 @@ namespace IN
                         {
                             Console.WriteLine($"Inid missed in specification {inid}");
                         }
+                        
                     }
                     _patentRecordsList.Add(_patentRecord);
                 }
