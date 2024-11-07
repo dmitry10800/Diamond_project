@@ -2,8 +2,8 @@
 {
     internal class Program
     {
-        private const string Path = @"D:\LENS\TET\VE\VE_20191220_01";
-        private const string SubCode = "34";
+        private const string Path = @"D:\LENS\TET\VE\VE_20240219_627";
+        private const string SubCode = "55";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
@@ -14,6 +14,7 @@
             {
                 "26" => methods.Start(Path, SubCode),
                 "34" => methods.Start(Path, SubCode),
+                "55" => methods.Start(Path, SubCode),
                 "56" => methods.Start(Path, SubCode),
                 "64" => methods.Start(Path, SubCode),
                 "65" => methods.Start(Path, SubCode),

@@ -105,12 +105,13 @@ namespace Diamond_VE_Maksim_Excel
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
-                else if (subCode == "56")
+                else if (subCode == "56" || subCode == "55")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
                         var sectionCode = subCode switch
                         {
+                            "55" => "FD",
                             "56" => "FD",
                             _ => null
                         };
@@ -134,39 +135,47 @@ namespace Diamond_VE_Maksim_Excel
                             Language = "ES"
                         });
 
-
-                        var listApplicant = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(_ => !string.IsNullOrEmpty(_));
-
-                        foreach (var applicant in listApplicant)
+                        var cellAssignees = sheet.GetRow(row)?.GetCell(2);
+                        if (cellAssignees != null && !string.IsNullOrEmpty(cellAssignees.ToString()))
                         {
-                            var applicantMatch = Regex.Match(applicant, @"(?<name>.+)\sDomicilio:(?<adress>.+)\sPaís:(?<country>.+)", RegexOptions.Singleline);
 
-                            if (applicantMatch.Success)
+                            var listAssignees = Regex.Split(cellAssignees.ToString().Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(_ => !string.IsNullOrEmpty(_));
+
+                            foreach (var assignee in listAssignees)
                             {
-                                var countryCode = MakeCountryCode(applicantMatch.Groups["country"].Value.Trim());
+                                var assigneeMatch = Regex.Match(assignee, @"(?<name>.+)\sDomicilio:(?<adress>.+)\sPaís:(?<country>.+)", RegexOptions.Singleline);
 
-                                if (countryCode != null)
+                                if (assigneeMatch.Success)
                                 {
-                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                    var countryCode = MakeCountryCode(assigneeMatch.Groups["country"].Value.Trim());
+
+                                    if (countryCode != null)
                                     {
-                                        Name = applicantMatch.Groups["name"].Value.Trim(),
-                                        Address1 = applicantMatch.Groups["adress"].Value.Trim(),
-                                        Country = countryCode
-                                    });
+                                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                        {
+                                            Name = assigneeMatch.Groups["name"].Value.Trim(),
+                                            Address1 = assigneeMatch.Groups["adress"].Value.Trim(),
+                                            Country = countryCode
+                                        });
+                                    }
+                                    else
+                                        Console.WriteLine(assigneeMatch.Groups["country"].Value.Trim());
                                 }
-                                else
-                                    Console.WriteLine(applicantMatch.Groups["country"].Value.Trim());
                             }
                         }
 
-                        var listAgents = Regex.Split(sheet.GetRow(row).GetCell(3).ToString(), ";").Where(_ => !string.IsNullOrEmpty(_));
-
-                        foreach (var agent in listAgents)
+                        var cellAgent = sheet.GetRow(row)?.GetCell(3);
+                        if (cellAgent != null && !string.IsNullOrEmpty(cellAgent.ToString()))
                         {
-                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            var listAgents = Regex.Split(cellAgent.ToString(), ";").Where(_ => !string.IsNullOrEmpty(_));
+
+                            foreach (var agent in listAgents)
                             {
-                                Name = agent
-                            });
+                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                {
+                                    Name = agent
+                                });
+                            }
                         }
 
                         statusEvent.LegalEvent.Date = DateTime.Parse(sheet.GetRow(row).GetCell(4).ToString()).ToString("yyyy/MM/dd");
@@ -178,7 +187,7 @@ namespace Diamond_VE_Maksim_Excel
         }
 
 
-        private string? MakeCountryCode (string country) => country switch
+        private string? MakeCountryCode(string country) => country switch
         {
             "ESTADOS UNIDOS DE AMÉRICA" => "US",
             "JAPON" => "JP",
