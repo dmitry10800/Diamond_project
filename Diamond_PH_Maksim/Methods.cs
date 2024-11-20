@@ -195,7 +195,7 @@ namespace Diamond_PH_Maksim
                 }
                 else Console.WriteLine($"{note}");
             }
-            else if(subCode == "22")
+            if(subCode == "22")
             {
                 var match = Regex.Match(note.Replace("\r","").Replace("\n", " ").Trim(), @"(?<appNum>\d\/\d{4}\/\d{6,7})\s?(?<day>\d+)\s(?<month>.+)\s(?<year>\d{4})\s?(?<title>.+)\s?\[(?<code>\D{2})");
 
@@ -225,14 +225,14 @@ namespace Diamond_PH_Maksim
                 }
                 else Console.WriteLine($"{note} - wrong match");
             }
-            else if(subCode == "29")
+            if(subCode == "29")
             {
                 var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<PCTAppNum>PCT.+?)\s(?<appNum>.+)\s(?<PCTdate>\d{2}\/\d{2}\/\d{4})\s(?<title>.+?)\s(?<ipcs>[A-Z]\d.+)");
 
                 if (match.Success)
                 {
                     statusEvent.Biblio.IntConvention.PctApplNumber = match.Groups["PCTAppNum"].Value.Trim();
-                    statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                     statusEvent.Biblio.Application.Number = match.Groups["appNum"].Value.Replace(" ","").Trim();
 
                     var ipcs = Regex.Split(match.Groups["ipcs"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val) && new Regex(@"[A-Z]\d{2}[A-Z]\s\d{1,4}\/\d+").Match(val).Success).ToList();
@@ -297,7 +297,7 @@ namespace Diamond_PH_Maksim
                     if (match1.Success)
                     {
                         statusEvent.Biblio.IntConvention.PctApplNumber = match1.Groups["PCTAppNum"].Value.Trim();
-                        statusEvent.Biblio.IntConvention.PctNationalDate = DateTime.Parse(match1.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        statusEvent.Biblio.Application.Date = DateTime.Parse(match1.Groups["PCTdate"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
                         statusEvent.Biblio.Application.Number = match1.Groups["appNum"].Value.Replace(" ", "").Trim();
 
                         var applicants = Regex.Split(match1.Groups["title"].Value.Trim(), @"(?<=])").Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -349,7 +349,7 @@ namespace Diamond_PH_Maksim
                     else Console.WriteLine($"{note}");
                 }
             }
-            else if(subCode == "35")
+            if(subCode == "35")
             {
                 var match = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<num>.+?)\s(?<assigner>.+)[\]|\)]\s(?<title>.+)\s(?<appDate>\d{2}.\d{2}.\d{4})");
 
@@ -381,7 +381,7 @@ namespace Diamond_PH_Maksim
                     Console.WriteLine($"{note}");
                 }
             }
-            else if (subCode is "12")
+            if (subCode is "12")
             {
                 var checkMatch = Regex.Match(note.Replace("\r", "").Replace("\n", " ").Trim(), @"\[(?<code>[A-Z]{2})\]");
 
@@ -560,11 +560,11 @@ namespace Diamond_PH_Maksim
                     }
                 }
             }
-            else if (subCode is "7")
+            if (subCode is "7")
             {
 
             }
-
+            
             return statusEvent;
         }
 

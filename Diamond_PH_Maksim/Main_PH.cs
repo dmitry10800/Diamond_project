@@ -4,8 +4,8 @@ namespace Diamond_PH_Maksim
 {
     class Main_PH
     {
-        private const string Path = @"D:\LENS\PH\PH_20230120_08";
-        private const string SubCode = "35";
+        private const string Path = @"D:\LENS\TET\PH\PH_20241111_125";
+        private const string SubCode = "29";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
