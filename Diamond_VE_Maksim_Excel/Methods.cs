@@ -201,6 +201,7 @@ namespace Diamond_VE_Maksim_Excel
             "BELGICA" => "BE",
             "SUIZA" => "CH",
             "MÉXICO" => "MX",
+            "VENEZUELA" => "VE",
             "BERMUDA" => "BM",
             "SUECIA" => "SE",
             "PAISES BAJOS" => "NL",
