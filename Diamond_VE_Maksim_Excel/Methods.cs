@@ -105,7 +105,7 @@ namespace Diamond_VE_Maksim_Excel
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
-                else if (subCode == "56" || subCode == "55")
+                else if (subCode == "56" || subCode == "55" || subCode == "72")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
@@ -245,6 +245,11 @@ namespace Diamond_VE_Maksim_Excel
             "BARBADOS" => "BB",
             "ANTILLAS HOLANDESAS" => "AG",
             "PORTUGAL" => "PT",
+            "LIECHTENSTEIN" => "LI",
+            "FILIPINAS" => "PH",
+            "UGANDA" => "UG",
+            "LITUANIA" => "LT",
+            "NUEVA ZELANDA" => "NZ",
             "REPUBLICA CHECA" => "CZ",
             _ => null
         };
