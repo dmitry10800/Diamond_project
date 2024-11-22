@@ -4,8 +4,8 @@ namespace Diamond_VE_Maksim
 {
     class Main_VE
     {
-        private const string Path = @"D:\LENS\VE\VE_20221125_619";
-        private const string SubCode = "19";
+        private const string Path = @"D:\LENS\TET\VE\VE_20240912_634";
+        private const string SubCode = "71";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
@@ -17,6 +17,7 @@ namespace Diamond_VE_Maksim
                 "12" => methods.Start(Path, SubCode),
                 "19" => methods.Start(Path, SubCode),
                 "24" => methods.Start(Path, SubCode),
+                "71" => methods.Start(Path, SubCode),
                 _ => null
             };
 
