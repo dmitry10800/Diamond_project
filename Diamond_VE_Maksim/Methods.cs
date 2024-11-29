@@ -687,8 +687,12 @@ namespace Diamond_VE_Maksim
                     }
                     if (inid.StartsWith("(22)"))
                     {
-                        statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("(22)", ""))
-                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        var match = Regex.Match(inid.Replace("(22)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim())
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
                     }
                     if (inid.StartsWith("(11)"))
                     {
@@ -696,8 +700,12 @@ namespace Diamond_VE_Maksim
                     }
                     if (inid.StartsWith("(45)"))
                     {
-                        statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(inid.Replace("(45)",""))
-                            .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        var match = Regex.Match(inid.Replace("(45)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(match.Groups["date"].Value.Trim().Trim())
+                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                        }
                     }
                     if (inid.StartsWith("(73)"))
                     {
@@ -852,14 +860,8 @@ namespace Diamond_VE_Maksim
                 }
                 var iDAndPatentKeyInfo = new Dictionary<string, string>();
                 var pages = tet.Descendants().Elements().Where(x => x.Name.LocalName == "Page").ToList();
-                var count = 1;
                 foreach (var page in pages)
                 {
-                    count++;
-                    if (count == 1585)
-                    {
-
-                    }
                     var numberPattern = GetNumberPattern(subCode);
 
                     var pageImage = page.Descendants()
