@@ -138,7 +138,6 @@ namespace Diamond_VE_Maksim_Excel
                         var cellAssignees = sheet.GetRow(row)?.GetCell(2);
                         if (cellAssignees != null && !string.IsNullOrEmpty(cellAssignees.ToString()))
                         {
-
                             var listAssignees = Regex.Split(cellAssignees.ToString().Replace("\r", "").Replace("\n", " ").Trim(), ";").Where(_ => !string.IsNullOrEmpty(_));
 
                             foreach (var assignee in listAssignees)
@@ -151,12 +150,24 @@ namespace Diamond_VE_Maksim_Excel
 
                                     if (countryCode != null)
                                     {
-                                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                        if (subCode == "72")
                                         {
-                                            Name = assigneeMatch.Groups["name"].Value.Trim(),
-                                            Address1 = assigneeMatch.Groups["adress"].Value.Trim(),
-                                            Country = countryCode
-                                        });
+                                            statusEvent.Biblio.Applicants.Add(new PartyMember()
+                                            {
+                                                Name = assigneeMatch.Groups["name"].Value.Trim(),
+                                                Address1 = assigneeMatch.Groups["adress"].Value.Trim(),
+                                                Country = countryCode
+                                            });
+                                        }
+                                        else
+                                        {
+                                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                            {
+                                                Name = assigneeMatch.Groups["name"].Value.Trim(),
+                                                Address1 = assigneeMatch.Groups["adress"].Value.Trim(),
+                                                Country = countryCode
+                                            });
+                                        }
                                     }
                                     else
                                         Console.WriteLine(assigneeMatch.Groups["country"].Value.Trim());
