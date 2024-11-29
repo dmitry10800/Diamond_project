@@ -714,10 +714,17 @@ namespace Diamond_VE_Maksim
                     }
                     if (inid.StartsWith("(74)"))
                     {
-                        statusEvent.Biblio.Agents.Add(new PartyMember()
+                        var agentsList = Regex.Split(inid.Replace("(74)", "").Trim(), @"\s-\s", RegexOptions.Singleline)
+                            .Where(val => !string.IsNullOrEmpty(val))
+                            .ToList();
+
+                        foreach (var agent in agentsList)
                         {
-                            Name = inid.Replace("(74)","").Trim()
-                        });
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = agent.Trim()
+                            });
+                        }
                     }
                     if (inid.StartsWith("(51)"))
                     {
@@ -979,7 +986,7 @@ namespace Diamond_VE_Maksim
                 }
             }
         }
-        private string ConvertTiffToPngString(string path)
+        private static string ConvertTiffToPngString(string path)
         {
             using var image = SixLabors.ImageSharp.Image.Load(path);
             using var extractedImageStream = new MemoryStream();
