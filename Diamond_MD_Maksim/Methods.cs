@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Diamond_MD_Maksim
 {
-    class Methods
+    internal class Methods
     {
         private string _currentFileName;
         private int _id = 1;
@@ -51,7 +51,7 @@ namespace Diamond_MD_Maksim
 
                 tet = XElement.Load(tetml);
 
-                if(subCode == "2")
+                if (subCode == "2")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                         .SkipWhile(val => !val.Value.StartsWith("GEPI publică fiecare solicitare de validare după informarea de către OEB privind achitarea taxei"))
@@ -115,11 +115,11 @@ namespace Diamond_MD_Maksim
                 {
                     legalStatus.Biblio.Application.Number = inid.Replace(I21, "").Trim();
                 }
-                else if (inid.StartsWith(I13))
+                if (inid.StartsWith(I13))
                 {
                     legalStatus.Biblio.Publication.Kind = inid.Replace(I13, "").Trim();
                 }
-                else if (inid.StartsWith(I51))
+                if (inid.StartsWith(I51))
                 {
                     var inid51 = Regex.Replace(inid, @"(\(51\)\s?Int.\s?Cl.:)", "", RegexOptions.Singleline).Trim();
                     var inids = Regex.Split(inid51, @"(?<=\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
@@ -135,11 +135,11 @@ namespace Diamond_MD_Maksim
                                 Date = match.Groups["date"].Value.Replace(".", "/").Trim()
                             });
                         }
-                        else 
+                        else
                             Console.WriteLine($"{iinid} in 51");
                     }
                 }
-                else if (inid.StartsWith(I96))
+                if (inid.StartsWith(I96))
                 {
                     var match = Regex.Match(inid.Replace(I96, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
 
@@ -148,10 +148,10 @@ namespace Diamond_MD_Maksim
                         euroPatent.AppNumber = match.Groups["number"].Value.Trim();
                         euroPatent.AppDate = match.Groups["date"].Value.Replace(".", "/").Trim();
                     }
-                    else 
+                    else
                         Console.WriteLine($"{inid} in 96");
                 }
-                else if (inid.StartsWith(I97))
+                if (inid.StartsWith(I97))
                 {
                     var match = Regex.Match(inid.Replace(I97, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
 
@@ -160,10 +160,10 @@ namespace Diamond_MD_Maksim
                         euroPatent.PubNumber = match.Groups["number"].Value.Trim();
                         euroPatent.PubDate = match.Groups["date"].Value.Replace(".", "/").Trim();
                     }
-                    else 
+                    else
                         Console.WriteLine($"{inid} in 97");
                 }
-                else if (inid.StartsWith(I87))
+                if (inid.StartsWith(I87))
                 {
                     var match = Regex.Match(inid.Replace(I87, "").Trim(), @"(?<number>.+),\s(?<date>[0-9]{4}.[0-9]{2}.[0-9]{2})", RegexOptions.Singleline);
 
@@ -172,22 +172,22 @@ namespace Diamond_MD_Maksim
                         legalStatus.Biblio.IntConvention.PctPublNumber = match.Groups["number"].Value.Trim();
                         legalStatus.Biblio.IntConvention.PctPublDate = match.Groups["date"].Value.Replace(".", "/").Trim();
                     }
-                    else 
+                    else
                         Console.WriteLine($"{inid} in 87");
                 }
-                else if (inid.StartsWith(I31))
+                if (inid.StartsWith(I31))
                 {
                     priorityNumbers = Regex.Split(inid.Replace(I31, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-                else if (inid.StartsWith(I32))
+                if (inid.StartsWith(I32))
                 {
                     priorityDates = Regex.Split(inid.Replace(I32, "").Replace(".", "/").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-                else if (inid.StartsWith(I33))
+                if (inid.StartsWith(I33))
                 {
                     priorityCountries = Regex.Split(inid.Replace(I33, "").Trim(), ";").Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
-                else if (inid.StartsWith(I71))
+                if (inid.StartsWith(I71))
                 {
                     var applicants = Regex.Split(inid.Replace(I71, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -199,15 +199,15 @@ namespace Diamond_MD_Maksim
                         {
                             legalStatus.Biblio.Applicants.Add(new PartyMember
                             {
-                                Name = match.Groups["name"].Value.Replace("- ","").Trim().TrimEnd(','),
+                                Name = match.Groups["name"].Value.Replace("- ", "").Trim().TrimEnd(','),
                                 Country = match.Groups["country"].Value.Trim()
                             });
                         }
-                        else 
+                        else
                             Console.WriteLine($"{applicant} in 71");
                     }
                 }
-                else if (inid.StartsWith(I72))
+                if (inid.StartsWith(I72))
                 {
                     var inventors = Regex.Split(inid.Replace(I72, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -223,11 +223,11 @@ namespace Diamond_MD_Maksim
                                 Country = match.Groups["country"].Value.Trim()
                             });
                         }
-                        else 
+                        else
                             Console.WriteLine($"{inventor} in 72");
                     }
                 }
-                else if (inid.StartsWith(I712))
+                if (inid.StartsWith(I712))
                 {
                     var inventorsApplicants = Regex.Split(inid.Replace(I712, "").Replace("\r", "").Replace("\n", " ").Trim(), ";", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -253,38 +253,38 @@ namespace Diamond_MD_Maksim
                     }
 
                 }
-                else if (inid.StartsWith(I54))
+                if (inid.StartsWith(I54))
                 {
                     var titleMatchList = Regex.Split(inid.Replace(I54, "").Trim(), @"(?=\n[A-Z][a-z]|\n[А-Я][а-я])").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
                     if (titleMatchList.Count == 3)
                     {
-                        for (int i = 0; i < titleMatchList.Count; i++)
+                        for (var i = 0; i < titleMatchList.Count; i++)
                         {
                             if (i == 0)
                             {
                                 legalStatus.Biblio.Titles.Add(new Title
                                 {
                                     Language = "RO",
-                                    Text = titleMatchList[i].Replace("\r","").Replace("\n", " ").Replace("- ", "").Trim()
-                                });
-                            }
-                            if (i == 1)
-                            {
-                                legalStatus.Biblio.Titles.Add(new Title
-                                {
-                                    Language = "EN",
                                     Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
                                 });
                             }
-                            if (i == 2)
-                            {
-                                legalStatus.Biblio.Titles.Add(new Title
-                                {
-                                    Language = "RU",
-                                    Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                });
-                            }
+                            //if (i == 1)
+                            //{
+                            //    legalStatus.Biblio.Titles.Add(new Title
+                            //    {
+                            //        Language = "EN",
+                            //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                            //    });
+                            //}
+                            //if (i == 2)
+                            //{
+                            //    legalStatus.Biblio.Titles.Add(new Title
+                            //    {
+                            //        Language = "RU",
+                            //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                            //    });
+                            //}
                         }
                     }
                     else
@@ -294,7 +294,7 @@ namespace Diamond_MD_Maksim
 
                         if (titleMatchList.Count == 3)
                         {
-                            for (int i = 0; i < titleMatchList.Count; i++)
+                            for (var i = 0; i < titleMatchList.Count; i++)
                             {
                                 if (i == 0)
                                 {
@@ -305,30 +305,30 @@ namespace Diamond_MD_Maksim
                                     });
                                 }
 
-                                if (i == 1)
-                                {
-                                    legalStatus.Biblio.Titles.Add(new Title
-                                    {
-                                        Language = "EN",
-                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                    });
-                                }
+                                //if (i == 1)
+                                //{
+                                //    legalStatus.Biblio.Titles.Add(new Title
+                                //    {
+                                //        Language = "EN",
+                                //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                                //    });
+                                //}
 
-                                if (i == 2)
-                                {
-                                    legalStatus.Biblio.Titles.Add(new Title
-                                    {
-                                        Language = "RU",
-                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                    });
-                                }
+                                //if (i == 2)
+                                //{
+                                //    legalStatus.Biblio.Titles.Add(new Title
+                                //    {
+                                //        Language = "RU",
+                                //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                                //    });
+                                //}
                             }
                         }
                         else
                             Console.WriteLine($"{inid} --- 54");
                     }
                 }
-                else 
+                else
                     Console.WriteLine($"{inid} don't processed");
             }
 
@@ -357,7 +357,7 @@ namespace Diamond_MD_Maksim
                 if (match.Success)
                 {
                     inids = Regex.Split(match.Groups["part1"].Value.Trim(), @"(?=\([0-9]{2}\)\s)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
-                    inids.Add(match.Groups["inid7172"].Value.Replace("(71)(72)","(712)").Trim());
+                    inids.Add(match.Groups["inid7172"].Value.Replace("(71)(72)", "(712)").Trim());
                     inids.Add(match.Groups["part2"].Value.Trim());
                 }
                 else
