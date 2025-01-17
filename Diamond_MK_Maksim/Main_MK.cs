@@ -2,10 +2,10 @@
 
 namespace Diamond_MK_Maksim
 {
-    class Main_MK
+    internal class Main_MK
     {
-        private const string Path = @"C:\Work\MK\MK_20210531_05";
-        private const string SubCode = "3";
+        private const string Path = @"D:\LENS\TET\MK\MK_20241231_12";
+        private const string SubCode = "7";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
@@ -15,6 +15,7 @@ namespace Diamond_MK_Maksim
             var convertedPatents = SubCode switch
             {
                 "3" => methods.Start(Path,SubCode),
+                "7" => methods.Start(Path,SubCode),
                 _=> null
             };
 
