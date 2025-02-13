@@ -106,7 +106,8 @@ namespace Diamond_MK_Maksim
                 SubCode = sub,
                 SectionCode = sectionCode,
                 CountryCode = "MK",
-                Id = _id++
+                Id = _id++,
+                LegalEvent = new LegalEvent()
             };
 
             var biblioData = new Biblio
@@ -439,7 +440,7 @@ namespace Diamond_MK_Maksim
                 {
                     biblioData.Publication.Number = match.Groups["num"].Value.Replace("(11)", "").Trim();
 
-                    var owners = Regex.Split(match.Groups["owner"].Value.Replace("(73)", "").Trim(), @"\sand\s")
+                    var owners = Regex.Split(match.Groups["owner"].Value.Replace("(73)", "").Trim(), @"(?:\s+and|\s*;)\s*")
                         .Where(val => !string.IsNullOrEmpty(val))
                         .ToList();
 
@@ -516,7 +517,11 @@ namespace Diamond_MK_Maksim
                             lastAdded.Address1 = null;             
                         }
                     }
-
+                    var matchEventDate = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
+                    if (matchEventDate.Success)
+                    {
+                        legalEvent.LegalEvent.Date = matchEventDate.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
                     legalEvent.Biblio = biblioData;
                 }
             }
