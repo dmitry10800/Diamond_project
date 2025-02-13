@@ -2375,7 +2375,7 @@ namespace Diamond_UZ_Maksim
                 }
             }
 
-            if (subCode == "17")
+            if (subCode == "17" || subCode == "20")
             {
                 var generalMatch = Regex.Match(note, @"\(11\).+raqami(?<sub11>.+)");
                 if (generalMatch.Success)
