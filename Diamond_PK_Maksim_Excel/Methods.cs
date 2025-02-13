@@ -28,123 +28,141 @@ public class Methods
 
             ISheet sheet;
 
-            XSSFWorkbook OpenedDocument;
+            XSSFWorkbook openedDocument;
 
             using (FileStream file = new(xlsxFile, FileMode.Open, FileAccess.Read))
             {
-                OpenedDocument = new XSSFWorkbook(file);
+                openedDocument = new XSSFWorkbook(file);
             }
 
-            sheet = OpenedDocument.GetSheet("Sheet1") ?? OpenedDocument.GetSheet("Лист1");
+            sheet = openedDocument.GetSheet("Sheet1") ?? openedDocument.GetSheet("Лист1");
 
             if (subCode == "13")
             {
+                var series = string.Empty;
+                var fileNumber = string.Empty;
+
                 for (var row = 1; row <= sheet.LastRowNum; row++)
                 {
-                    if(row == 1) continue;
+                    var statusEvent = new Diamond.Core.Models.LegalStatusEvent()
+                    {
+                        CountryCode = "PK",
+                        SectionCode = "MK",
+                        SubCode = subCode,
+                        Id = _id++,
+                        GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
+                        Biblio = new Biblio(),
+                        LegalEvent = new LegalEvent()
+                    };
 
-                    const string sectionCode = "MK";
-                    
+                    var priority = new Priority();
 
+                    var cellValueFileNumber = sheet.GetRow(row).GetCell(0)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValueFileNumber))
+                    {
+                        fileNumber = cellValueFileNumber;
+                    }
+
+                    var cellValueSeries = sheet.GetRow(row).GetCell(1)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValueSeries))
+                    {
+                        series = cellValueSeries;
+                    }
+
+                    var cellValuePublicationNumber = sheet.GetRow(row).GetCell(2)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValuePublicationNumber))
+                    {
+                        statusEvent.Biblio.Publication.Number = cellValuePublicationNumber;
+                    }
+
+                    var cellValueApplicationDate = sheet.GetRow(row).GetCell(3)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValueApplicationDate))
+                    {
+                        try
+                        {
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(cellValueApplicationDate)
+                                .ToString("yyyy/MM/dd")
+                                .Trim();
+                        }
+                        catch
+                        {
+                            var matchDate = Regex.Match(cellValueApplicationDate,
+                                @"(?<day>\d{2}).?(?<month>\d{2}).?(?<year>\d{4})");
+
+                            statusEvent.Biblio.Application.Date = matchDate.Groups["year"].Value.Trim() + "/" +
+                                                                  matchDate.Groups["month"].Value.Trim() + "/" +
+                                                                  matchDate.Groups["day"].Value.Trim();
+                        }
+                    }
+
+                    var cellValuePriorityDate = sheet.GetRow(row).GetCell(4)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValuePriorityDate))
+                    {
+                        try
+                        {
+                            priority.Date = DateTime.Parse(cellValuePriorityDate)
+                                .ToString("yyyy/MM/dd")
+                                .Trim();
+                        }
+                        catch
+                        {
+                            var matchDate = Regex.Match(cellValuePriorityDate,
+                                @"(?<day>\d{2}).?(?<month>\d{2}).?(?<year>\d{4})");
+
+                            priority.Date = matchDate.Groups["year"].Value.Trim() + "/" +
+                                            matchDate.Groups["month"].Value.Trim() + "/" +
+                                            matchDate.Groups["day"].Value.Trim();
+                        }
+                    }
+
+                    var cellValuePriorityCountry = sheet.GetRow(row).GetCell(5)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValuePriorityCountry))
+                    {
+                        priority.Country = cellValuePriorityCountry;
+                    }
+
+                    var cellValueLegalEventDate = sheet.GetRow(row).GetCell(6)?.ToString()?.Trim();
+                    if (!string.IsNullOrEmpty(cellValueLegalEventDate))
+                    {
+                        try
+                        {
+                            statusEvent.LegalEvent.Date = DateTime.Parse(cellValueLegalEventDate)
+                                .ToString("yyyy/MM/dd")
+                                .Trim();
+                        }
+                        catch
+                        {
+                            var matchDate = Regex.Match(cellValueLegalEventDate,
+                                @"(?<day>\d{2}).?(?<month>\d{2}).?(?<year>\d{4})");
+
+                            statusEvent.LegalEvent.Date = matchDate.Groups["year"].Value.Trim() + "/" +
+                                                          matchDate.Groups["month"].Value.Trim() + "/" +
+                                                          matchDate.Groups["day"].Value.Trim();
+                        }
+                    }
+
+                    if (priority.Date == null && priority.Country == null)
+                    {
+                        statusEvent.LegalEvent.Note = "|| Series | " + series + '\n'
+                                                      + "|| File No | " + fileNumber + '\n'
+                                                      + "|| Priorities | None";
+                    }
+                    else
+                    {
+                        statusEvent.LegalEvent.Note = "|| Series | " + series + '\n'
+                                                      + "|| File No | " + fileNumber;
+                    }
+
+                    if (priority.Country != null || priority.Date != null)
+                    {
+                        statusEvent.Biblio.Priorities.Add(priority);
+                    }
+
+                    fileNumber = string.Empty;
+                    legalStatusEvents.Add(statusEvent);
                 }
-
-
-                //for (var row = 1; row <= sheet.LastRowNum; row++)
-                //{
-                //    const string sectionCode = "MK";
-
-                    //    Diamond.Core.Models.LegalStatusEvent statusEvent = new()
-                    //    {
-                    //        CountryCode = "PK",
-                    //        SectionCode = sectionCode,
-                    //        SubCode = subCode,
-                    //        Id = _id++,
-                    //        GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
-                    //        Biblio = new Biblio(),
-                    //        LegalEvent = new LegalEvent()
-                    //    };
-
-                    //    statusEvent.LegalEvent.Note = $"|| Series | " + sheet.GetRow(row).GetCell(1).ToString().Trim() + " || File No. | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
-
-                    //    if (sheet.GetRow(row).GetCell(3).ToString().Trim() != null)
-                    //    {
-                    //        var appDateMatch = Regex.Match(sheet.GetRow(row).GetCell(3).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
-                    //        if (appDateMatch.Success)
-                    //        {
-                    //            var day = appDateMatch.Groups["day"].Value.Trim();
-                    //            if (day.Length == 1)
-                    //            {
-                    //                day = "0" + day;
-                    //            }
-
-                    //            Console.WriteLine(appDateMatch.Groups["month"].Value.Trim());
-                    //            var month = MakeMonth(appDateMatch.Groups["month"].Value.Trim());
-                    //            if (month == null) Console.WriteLine(appDateMatch.Groups["month"].Value.Trim());
-
-                    //            //tatusEvent.LegalEvent.Date = appDateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + day;
-                    //        }
-                    //    }
-
-                    //    if (sheet.GetRow(row).GetCell(4).ToString().Trim() != null)
-                    //    {
-                    //        statusEvent.Biblio.Publication.Number = sheet.GetRow(row).GetCell(4).ToString();
-                    //    }
-
-                    //    if (sheet.GetRow(row).GetCell(5).ToString().Trim() != null)
-                    //    {
-                    //        var priorities = Regex.Split(sheet.GetRow(row).GetCell(5).ToString(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
-
-                    //        foreach (var priority in priorities)
-                    //        {
-                    //            var matchPriority = Regex.Match(priority.Trim(), @"(?<num>.+?)\s\s?(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})\s\s?(?<code>\D{2})");
-
-                    //            if (matchPriority.Success)
-                    //            {
-                    //                var code = matchPriority.Groups["code"].Value.Trim();
-                    //                if (code == "UK")
-                    //                {
-                    //                    code = "GB";
-                    //                }
-                    //                statusEvent.Biblio.Priorities.Add(new Priority()
-                    //                {
-                    //                    Country = code,
-                    //                    Number = matchPriority.Groups["num"].Value.Trim(),
-                    //                    Date = matchPriority.Groups["year"].Value.Trim() + "/" + matchPriority.Groups["month"].Value.Trim() + "/" + matchPriority.Groups["day"].Value.Trim()
-                    //                });
-                    //            }
-                    //        }
-                    //    }
-
-                    //    if (sheet.GetRow(row).GetCell(6).ToString().Trim() != null)
-                    //    {
-                    //        var dateMatch = Regex.Match(sheet.GetRow(row).GetCell(6).StringCellValue.Trim(), @"(?<month>\d+)\/(?<day>\d+)\/(?<year>\d{4})");
-                    //        if (dateMatch.Success)
-                    //        {
-                    //            var day = dateMatch.Groups["day"].Value.Trim();
-                    //            if (day.Length == 1)
-                    //            {
-                    //                day = "0" + day;
-                    //            }
-
-                    //            var month = dateMatch.Groups["month"].Value.Trim();
-                    //            if (month.Length == 1)
-                    //            {
-                    //                month = "0" + month;
-                    //            }
-
-                    //            statusEvent.LegalEvent.Date = dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + day;
-                    //        }
-                    //    }
-                    //    legalStatusEvents.Add(statusEvent);
-                    //}
             }
         }
         return legalStatusEvents;
     }
-
-    private string? MakeMonth(string month) => month switch
-    {
-        "Feb" => "02",
-        _ => null
-    };
 }

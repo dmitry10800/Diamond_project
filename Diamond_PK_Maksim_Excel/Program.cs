@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        private const string Path = @"D:\LENS\TET\PK";
+        private const string Path = @"D:\LENS\TET\PK\PK_20241231_expired";
         private const string SubCode = "13";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
