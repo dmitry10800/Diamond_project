@@ -16,8 +16,8 @@ public class Methods
 
         var directory = new DirectoryInfo(path);
 
-        var files = directory.GetFiles("*.xlsx", SearchOption.AllDirectories).Select(file => file.FullName); 
-        if(!files.Any())
+        var files = directory.GetFiles("*.xlsx", SearchOption.AllDirectories).Select(file => file.FullName);
+        if (!files.Any())
         {
             files = directory.GetFiles("*.xls", SearchOption.AllDirectories).Select(file => file.FullName);
         }
@@ -41,93 +41,102 @@ public class Methods
             {
                 for (var row = 1; row <= sheet.LastRowNum; row++)
                 {
+                    if(row == 1) continue;
+
                     const string sectionCode = "MK";
+                    
 
-                    Diamond.Core.Models.LegalStatusEvent statusEvent = new()
-                    {
-                        CountryCode = "PK",
-                        SectionCode = sectionCode,
-                        SubCode = subCode,
-                        Id = _id++,
-                        GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
-                        Biblio = new Biblio(),
-                        LegalEvent = new LegalEvent()
-                    };
-
-                    statusEvent.LegalEvent.Note = $"|| Series | " + sheet.GetRow(row).GetCell(1).ToString().Trim() + " || File No. | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
-
-                    if (sheet.GetRow(row).GetCell(3).ToString().Trim() != null)
-                    {
-                        var appDateMatch = Regex.Match(sheet.GetRow(row).GetCell(3).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
-                        if (appDateMatch.Success)
-                        {
-                            var day = appDateMatch.Groups["day"].Value.Trim();
-                            if (day.Length == 1)
-                            {
-                                day = "0" + day;
-                            }
-
-                            Console.WriteLine(appDateMatch.Groups["month"].Value.Trim());
-                            var month = MakeMonth(appDateMatch.Groups["month"].Value.Trim());
-                            if (month == null) Console.WriteLine(appDateMatch.Groups["month"].Value.Trim());
-
-                            //tatusEvent.LegalEvent.Date = appDateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + day;
-                        }
-                    }
-
-                    if (sheet.GetRow(row).GetCell(4).ToString().Trim() != null)
-                    {
-                        statusEvent.Biblio.Publication.Number = sheet.GetRow(row).GetCell(4).ToString();
-                    }
-                        
-                    if (sheet.GetRow(row).GetCell(5).ToString().Trim() != null)
-                    {
-                        var priorities = Regex.Split(sheet.GetRow(row).GetCell(5).ToString(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
-
-                        foreach (var priority in priorities)
-                        {
-                            var matchPriority = Regex.Match(priority.Trim(), @"(?<num>.+?)\s\s?(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})\s\s?(?<code>\D{2})");
-
-                            if (matchPriority.Success)
-                            {
-                                var code = matchPriority.Groups["code"].Value.Trim();
-                                if (code == "UK")
-                                {
-                                    code = "GB";
-                                }
-                                statusEvent.Biblio.Priorities.Add(new Priority()
-                                {
-                                    Country = code,
-                                    Number = matchPriority.Groups["num"].Value.Trim(),
-                                    Date = matchPriority.Groups["year"].Value.Trim() + "/" + matchPriority.Groups["month"].Value.Trim() + "/" + matchPriority.Groups["day"].Value.Trim()
-                                });
-                            }
-                        }
-                    }
-
-                    if (sheet.GetRow(row).GetCell(6).ToString().Trim() != null)
-                    {
-                        var dateMatch = Regex.Match(sheet.GetRow(row).GetCell(6).StringCellValue.Trim(), @"(?<month>\d+)\/(?<day>\d+)\/(?<year>\d{4})");
-                        if (dateMatch.Success)
-                        {
-                            var day = dateMatch.Groups["day"].Value.Trim();
-                            if (day.Length == 1)
-                            {
-                                day = "0" + day;
-                            }
-
-                            var month = dateMatch.Groups["month"].Value.Trim();
-                            if (month.Length == 1)
-                            {
-                                month = "0" + month;
-                            }
-
-                            statusEvent.LegalEvent.Date =dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + day;
-                        }
-                    }
-
-                    legalStatusEvents.Add(statusEvent);
                 }
+
+
+                //for (var row = 1; row <= sheet.LastRowNum; row++)
+                //{
+                //    const string sectionCode = "MK";
+
+                    //    Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                    //    {
+                    //        CountryCode = "PK",
+                    //        SectionCode = sectionCode,
+                    //        SubCode = subCode,
+                    //        Id = _id++,
+                    //        GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
+                    //        Biblio = new Biblio(),
+                    //        LegalEvent = new LegalEvent()
+                    //    };
+
+                    //    statusEvent.LegalEvent.Note = $"|| Series | " + sheet.GetRow(row).GetCell(1).ToString().Trim() + " || File No. | " + sheet.GetRow(row).GetCell(2).ToString().Trim();
+
+                    //    if (sheet.GetRow(row).GetCell(3).ToString().Trim() != null)
+                    //    {
+                    //        var appDateMatch = Regex.Match(sheet.GetRow(row).GetCell(3).ToString(), @"(?<day>\d{2})-(?<month>.+)-(?<year>\d{4})");
+                    //        if (appDateMatch.Success)
+                    //        {
+                    //            var day = appDateMatch.Groups["day"].Value.Trim();
+                    //            if (day.Length == 1)
+                    //            {
+                    //                day = "0" + day;
+                    //            }
+
+                    //            Console.WriteLine(appDateMatch.Groups["month"].Value.Trim());
+                    //            var month = MakeMonth(appDateMatch.Groups["month"].Value.Trim());
+                    //            if (month == null) Console.WriteLine(appDateMatch.Groups["month"].Value.Trim());
+
+                    //            //tatusEvent.LegalEvent.Date = appDateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + day;
+                    //        }
+                    //    }
+
+                    //    if (sheet.GetRow(row).GetCell(4).ToString().Trim() != null)
+                    //    {
+                    //        statusEvent.Biblio.Publication.Number = sheet.GetRow(row).GetCell(4).ToString();
+                    //    }
+
+                    //    if (sheet.GetRow(row).GetCell(5).ToString().Trim() != null)
+                    //    {
+                    //        var priorities = Regex.Split(sheet.GetRow(row).GetCell(5).ToString(), @";").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                    //        foreach (var priority in priorities)
+                    //        {
+                    //            var matchPriority = Regex.Match(priority.Trim(), @"(?<num>.+?)\s\s?(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})\s\s?(?<code>\D{2})");
+
+                    //            if (matchPriority.Success)
+                    //            {
+                    //                var code = matchPriority.Groups["code"].Value.Trim();
+                    //                if (code == "UK")
+                    //                {
+                    //                    code = "GB";
+                    //                }
+                    //                statusEvent.Biblio.Priorities.Add(new Priority()
+                    //                {
+                    //                    Country = code,
+                    //                    Number = matchPriority.Groups["num"].Value.Trim(),
+                    //                    Date = matchPriority.Groups["year"].Value.Trim() + "/" + matchPriority.Groups["month"].Value.Trim() + "/" + matchPriority.Groups["day"].Value.Trim()
+                    //                });
+                    //            }
+                    //        }
+                    //    }
+
+                    //    if (sheet.GetRow(row).GetCell(6).ToString().Trim() != null)
+                    //    {
+                    //        var dateMatch = Regex.Match(sheet.GetRow(row).GetCell(6).StringCellValue.Trim(), @"(?<month>\d+)\/(?<day>\d+)\/(?<year>\d{4})");
+                    //        if (dateMatch.Success)
+                    //        {
+                    //            var day = dateMatch.Groups["day"].Value.Trim();
+                    //            if (day.Length == 1)
+                    //            {
+                    //                day = "0" + day;
+                    //            }
+
+                    //            var month = dateMatch.Groups["month"].Value.Trim();
+                    //            if (month.Length == 1)
+                    //            {
+                    //                month = "0" + month;
+                    //            }
+
+                    //            statusEvent.LegalEvent.Date = dateMatch.Groups["year"].Value.Trim() + "/" + month + "/" + day;
+                    //        }
+                    //    }
+                    //    legalStatusEvents.Add(statusEvent);
+                    //}
             }
         }
         return legalStatusEvents;

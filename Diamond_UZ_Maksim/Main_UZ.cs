@@ -4,8 +4,8 @@ namespace Diamond_UZ_Maksim
 {
     class Main_UZ
     {
-        private const string Path = @"C:\!Work\UZ\UZ_20220228_02";
-        private const string SubCode = "4";
+        private const string Path = @"D:\LENS\TET\UZ\UZ_20241231_12";
+        private const string SubCode = "20";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
@@ -17,6 +17,10 @@ namespace Diamond_UZ_Maksim
                 "1" => methods.Start(Path, SubCode),
                 "3" => methods.Start(Path, SubCode),
                 "4" => methods.Start(Path, SubCode),
+                "13" => methods.Start(Path, SubCode),
+                "16" => methods.Start(Path, SubCode),
+                "17" => methods.Start(Path, SubCode),
+                "20" => methods.Start(Path, SubCode),
                 _ => null
             };
 

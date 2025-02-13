@@ -17,11 +17,11 @@ namespace Diamond_UZ_Maksim
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> statusEvents = new();
+            var statusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
 
-            DirectoryInfo directory = new(path);
+            var directory = new DirectoryInfo(path);
 
-            List<string> files = new();
+            var files = new List<string>();
 
             foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
@@ -52,7 +52,7 @@ namespace Diamond_UZ_Maksim
                         statusEvents.Add(MakePatentNewStyle(note, subCode, "BZ1A"));
                     }
                 }
-                else if (subCode == "3")
+                if (subCode == "3")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                        .SkipWhile(val => !val.Value.StartsWith("1.2. 4A"))
@@ -67,7 +67,7 @@ namespace Diamond_UZ_Maksim
                         statusEvents.Add(MakePatentNewStyle(note, subCode, "FG4A"));
                     }
                 }
-                else if (subCode == "4")
+                if (subCode == "4")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                        .SkipWhile(val => !val.Value.StartsWith("I. FOYDАLI ODELLАR"))
@@ -80,6 +80,64 @@ namespace Diamond_UZ_Maksim
                     foreach (var note in notes)
                     {
                         statusEvents.Add(MakePatentNewStyle(note, subCode, "FG4K"));
+                    }
+                }
+
+                if (subCode == "13")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("ND4K"))
+                        .TakeWhile(val => !val.Value.StartsWith("Досрочное прекращение срока действия патента Республики Узбекистан на"))
+                        .ToList();
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=ND4K)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakePatentNewStyle(note, subCode, "ND4K"));
+                    }
+                }
+                if (subCode == "16")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("ND4А"))
+                        .TakeWhile(val => !val.Value.StartsWith("Досрочное прекращение срока действия патента Республики Узбекистан на"))
+                        .ToList();
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=ND4А)").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakePatentNewStyle(note, subCode, "ND4А"));
+                    }
+                }
+
+                if (subCode == "17")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Досрочное прекращение срока действия патента Республики Узбекистан на\nизобретение в связи с неуплатой патентной пошлины в установленный срок"))
+                        .TakeWhile(val => !val.Value.StartsWith("(30) конвенционный приоритет"))
+                        .ToList();
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\))").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakePatentNewStyle(note, subCode, "MM"));
+                    }
+                }
+
+                if (subCode == "20")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("Досрочное прекращение срока действия патента Республики Узбекистан на\nполезную модель в связи с неуплатой патентной пошлины в установленный\nсрок"))
+                        .ToList();
+
+                    var notes = Regex.Split(MakeText(xElements), @"(?=\(11\))").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakePatentNewStyle(note, subCode, "MM"));
                     }
                 }
             }
@@ -1090,13 +1148,13 @@ namespace Diamond_UZ_Maksim
                 SubCode = subCode,
                 SectionCode = sectionCode,
                 Id = _id++,
-                LegalEvent = new(),
-                Biblio = new()
+                LegalEvent = new LegalEvent(),
+                Biblio = new Biblio()
             };
 
-            CultureInfo culture = new("ru-RU");
+            var culture = new CultureInfo("ru-RU");
 
-            if (subCode is "1")
+            if (subCode == "1")
             {
                 foreach (var inid in MakeInids(note, subCode))
                 {
@@ -1507,7 +1565,7 @@ namespace Diamond_UZ_Maksim
                     else Console.WriteLine($"{inid}");
                 }
             }
-            else if (subCode is "3" or "4")
+            if (subCode == "3" || subCode== "4")
             {
                 foreach (var inid in MakeInids(note, subCode))
                 {
@@ -2277,7 +2335,63 @@ namespace Diamond_UZ_Maksim
                     else Console.WriteLine($"{inid}");
                 }
             }
+            if (subCode == "13" || subCode == "16")
+            {
+                var generalMatch = Regex.Match(note,
+                    @"\(18\)(?<sub18>.+)(?<date>\d{2}\.\d{2}\.\d{4})\s?(?<sub11>.+)",
+                    RegexOptions.Singleline);
 
+                if (generalMatch.Success)
+                {
+                    legalStatus.Biblio.Publication.Number = generalMatch.Groups["sub11"].Value.Trim();
+
+                    legalStatus.LegalEvent = new LegalEvent
+                    {
+                        Note = "|| (18) | " + generalMatch.Groups["sub18"].Value.Trim() + " | "
+                               + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
+                                   .ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
+                        Language = "UZ",
+                        Translations = new List<NoteTranslation> {
+                            new NoteTranslation
+                            {
+                                Language = "EN",
+                                Type = "INID",
+                                Tr =  "|| (18) | Date to which the term of the patent is extended | "
+                                      + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
+                                          .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                            }
+                        }
+                    };
+
+                    var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
+                    if (match.Success)
+                    {
+                        legalStatus.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(note);
+                }
+            }
+
+            if (subCode == "17")
+            {
+                var generalMatch = Regex.Match(note, @"\(11\).+raqami(?<sub11>.+)");
+                if (generalMatch.Success)
+                {
+                    legalStatus.Biblio.Publication.Number = generalMatch.Groups["sub11"].Value.Trim();
+                    var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
+                    if (match.Success)
+                    {
+                        legalStatus.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(note);
+                }
+            }
             return legalStatus;
         }
         internal List<string> MakeInids (string note, string subCode)

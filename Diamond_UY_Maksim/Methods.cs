@@ -52,7 +52,7 @@ namespace Diamond_UY_Maksim
                 }
             }
 
-                return statusEvents;
+            return statusEvents;
         }
 
 
