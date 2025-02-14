@@ -2345,24 +2345,51 @@ namespace Diamond_UZ_Maksim
                 {
                     legalStatus.Biblio.Publication.Number = generalMatch.Groups["sub11"].Value.Trim();
 
-                    legalStatus.LegalEvent = new LegalEvent
+                    try
                     {
-                        Note = "|| (18) | " + generalMatch.Groups["sub18"].Value.Trim() + " | "
-                               + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
-                                   .ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
-                        Language = "UZ",
-                        Translations = new List<NoteTranslation> {
-                            new NoteTranslation
-                            {
-                                Language = "EN",
-                                Type = "INID",
-                                Tr =  "|| (18) | Date to which the term of the patent is extended | "
-                                      + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
-                                          .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                        legalStatus.LegalEvent = new LegalEvent
+                        {
+                            Note = "|| (18) | " + generalMatch.Groups["sub18"].Value.Trim() + " | "
+                                   + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
+                                       .ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
+                            Language = "UZ",
+                            Translations = new List<NoteTranslation> {
+                                new NoteTranslation
+                                {
+                                    Language = "EN",
+                                    Type = "INID",
+                                    Tr =  "|| (18) | Date to which the term of the patent is extended | "
+                                          + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
+                                              .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                                }
                             }
-                        }
-                    };
+                        };
+                    }
+                    catch
+                    {
+                        var matchDate = Regex.Match(generalMatch.Groups["date"].Value.Trim(),
+                            @"(?<day>\d{2}).?(?<month>\d{2}).?(?<year>\d{4})");
 
+                        legalStatus.LegalEvent = new LegalEvent
+                        {
+                            Note = "|| (18) | " + generalMatch.Groups["sub18"].Value.Trim() + " | "
+                                   + matchDate.Groups["year"].Value.Trim() + "/" +
+                                   matchDate.Groups["month"].Value.Trim() + "/" +
+                                   matchDate.Groups["day"].Value.Trim(),
+                            Language = "UZ",
+                            Translations = new List<NoteTranslation> {
+                                new NoteTranslation
+                                {
+                                    Language = "EN",
+                                    Type = "INID",
+                                    Tr =  "|| (18) | Date to which the term of the patent is extended | "
+                                          +  matchDate.Groups["year"].Value.Trim() + "/" +
+                                          matchDate.Groups["month"].Value.Trim() + "/" +
+                                          matchDate.Groups["day"].Value.Trim()
+                                }
+                            }
+                        };
+                    }
                     var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
                     if (match.Success)
                     {
