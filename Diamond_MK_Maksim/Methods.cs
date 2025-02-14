@@ -51,8 +51,8 @@ namespace Diamond_MK_Maksim
                 if (subCode == "7")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("ПРОМЕНИ / NDRYSHIME"))
-                        .TakeWhile(val => !val.Value.StartsWith("ПРЕСТАНОК / NDËRPRERJE"))
+                        .SkipWhile(val => !val.Value.StartsWith("ПРЕСТАНОК / NDËRPRERJE"))
+                        .TakeWhile(val => !val.Value.StartsWith("Промена на назив на пронајдокот / Ndryshimi i titullit të"))
                         .ToList();
 
                     foreach (var note in BuildNotes(xElements, subCode))
