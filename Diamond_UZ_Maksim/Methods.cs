@@ -2350,7 +2350,7 @@ namespace Diamond_UZ_Maksim
                         legalStatus.LegalEvent = new LegalEvent
                         {
                             Note = "|| (18) | " + generalMatch.Groups["sub18"].Value.Trim() + " | "
-                                   + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
+                                   + DateTime.Parse(generalMatch.Groups["date"].Value.Trim(), culture)
                                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim(),
                             Language = "UZ",
                             Translations = new List<NoteTranslation> {
@@ -2359,7 +2359,7 @@ namespace Diamond_UZ_Maksim
                                     Language = "EN",
                                     Type = "INID",
                                     Tr =  "|| (18) | Date to which the term of the patent is extended | "
-                                          + DateTime.Parse(generalMatch.Groups["date"].Value.Trim())
+                                          + DateTime.Parse(generalMatch.Groups["date"].Value.Trim(), culture)
                                               .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
                                 }
                             }
