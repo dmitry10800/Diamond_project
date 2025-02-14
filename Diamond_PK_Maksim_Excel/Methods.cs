@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using Integration;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -41,7 +42,7 @@ public class Methods
             {
                 var series = string.Empty;
                 var fileNumber = string.Empty;
-
+                var culture = new CultureInfo("ru-RU");
                 for (var row = 1; row <= sheet.LastRowNum; row++)
                 {
                     var statusEvent = new Diamond.Core.Models.LegalStatusEvent()
@@ -80,7 +81,7 @@ public class Methods
                     {
                         try
                         {
-                            statusEvent.Biblio.Application.Date = DateTime.Parse(cellValueApplicationDate)
+                            statusEvent.Biblio.Application.Date = DateTime.Parse(cellValueApplicationDate, culture)
                                 .ToString("yyyy/MM/dd")
                                 .Trim();
                         }
@@ -100,7 +101,7 @@ public class Methods
                     {
                         try
                         {
-                            priority.Date = DateTime.Parse(cellValuePriorityDate)
+                            priority.Date = DateTime.Parse(cellValuePriorityDate, culture)
                                 .ToString("yyyy/MM/dd")
                                 .Trim();
                         }
@@ -126,7 +127,7 @@ public class Methods
                     {
                         try
                         {
-                            statusEvent.LegalEvent.Date = DateTime.Parse(cellValueLegalEventDate)
+                            statusEvent.LegalEvent.Date = DateTime.Parse(cellValueLegalEventDate, culture)
                                 .ToString("yyyy/MM/dd")
                                 .Trim();
                         }
