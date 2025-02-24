@@ -255,78 +255,18 @@ namespace Diamond_MD_Maksim
                 }
                 if (inid.StartsWith(I54))
                 {
-                    var titleMatchList = Regex.Split(inid.Replace(I54, "").Trim(), @"(?=\n[A-Z][a-z]|\n[А-Я][а-я])").Where(_ => !string.IsNullOrEmpty(_)).ToList();
+                    var regexMatch = Regex.Match(inid.Trim(), @"\(54\)(?<inid54>.+)[A-Z]", RegexOptions.Singleline);
 
-                    if (titleMatchList.Count == 3)
+                    if (regexMatch.Success)
                     {
-                        for (var i = 0; i < titleMatchList.Count; i++)
+                        legalStatus.Biblio.Titles.Add(new Title
                         {
-                            if (i == 0)
-                            {
-                                legalStatus.Biblio.Titles.Add(new Title
-                                {
-                                    Language = "RO",
-                                    Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                });
-                            }
-                            //if (i == 1)
-                            //{
-                            //    legalStatus.Biblio.Titles.Add(new Title
-                            //    {
-                            //        Language = "EN",
-                            //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                            //    });
-                            //}
-                            //if (i == 2)
-                            //{
-                            //    legalStatus.Biblio.Titles.Add(new Title
-                            //    {
-                            //        Language = "RU",
-                            //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                            //    });
-                            //}
-                        }
+                            Language = "RO",
+                            Text = regexMatch.Groups["inid54"].Value.Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                        });
                     }
                     else
-                    {
-                        titleMatchList = Regex.Split(inid.Replace(I54, "").Trim(), @"(?=\n[A-Z]{2,3}|\n[А-Я][а-я])")
-                            .Where(_ => !string.IsNullOrEmpty(_)).ToList();
-
-                        if (titleMatchList.Count == 3)
-                        {
-                            for (var i = 0; i < titleMatchList.Count; i++)
-                            {
-                                if (i == 0)
-                                {
-                                    legalStatus.Biblio.Titles.Add(new Title
-                                    {
-                                        Language = "RO",
-                                        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                    });
-                                }
-
-                                //if (i == 1)
-                                //{
-                                //    legalStatus.Biblio.Titles.Add(new Title
-                                //    {
-                                //        Language = "EN",
-                                //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                //    });
-                                //}
-
-                                //if (i == 2)
-                                //{
-                                //    legalStatus.Biblio.Titles.Add(new Title
-                                //    {
-                                //        Language = "RU",
-                                //        Text = titleMatchList[i].Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
-                                //    });
-                                //}
-                            }
-                        }
-                        else
                             Console.WriteLine($"{inid} --- 54");
-                    }
                 }
                 else
                     Console.WriteLine($"{inid} don't processed");

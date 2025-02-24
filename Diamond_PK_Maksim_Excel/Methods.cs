@@ -142,6 +142,7 @@ public class Methods
                         }
                     }
 
+                    statusEvent.LegalEvent.Language = "EN";
                     if (priority.Date == null && priority.Country == null)
                     {
                         statusEvent.LegalEvent.Note = "|| Series | " + series + '\n'
