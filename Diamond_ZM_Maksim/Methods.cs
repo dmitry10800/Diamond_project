@@ -66,7 +66,7 @@ public class Methods
 
             if (noteMatch.Success)
             {
-                statusEvent.Biblio.Application.Number = noteMatch.Groups["appNum"].Value.Trim();
+                statusEvent.Biblio.Application.Number = noteMatch.Groups["appNum"].Value.Replace("|","").Trim();
 
                 statusEvent.LegalEvent.Date = DateTime.Parse(noteMatch.Groups["evDate"].Value.Trim())
                     .ToString("yyyy.MM.dd").Replace(".", "/");
