@@ -136,7 +136,9 @@ namespace Diamond_MD_Maksim
                             });
                         }
                         else
+                        {
                             Console.WriteLine($"{iinid} in 51");
+                        }
                     }
                 }
                 if (inid.StartsWith(I96))
@@ -255,21 +257,44 @@ namespace Diamond_MD_Maksim
                 }
                 if (inid.StartsWith(I54))
                 {
-                    var regexMatch = Regex.Match(inid.Trim(), @"\(54\)(?<inid54>.+)[A-Z]", RegexOptions.Singleline);
+                    var lines = Regex.Split(inid.Trim(), "\n").Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
-                    if (regexMatch.Success)
+                    if (lines.Count % 3 == 0)
                     {
+                        var firstThird = lines.Take(lines.Count / 3).ToList();
+
+                        var str = string.Empty;
+                        foreach (var strItem in firstThird)
+                        {
+                            str += strItem + " ";
+                        }
+
                         legalStatus.Biblio.Titles.Add(new Title
                         {
                             Language = "RO",
-                            Text = regexMatch.Groups["inid54"].Value.Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                            Text = str.Replace(I54, "").Replace("- ", "").Trim()
                         });
                     }
                     else
+                    {
+                        var regexMatch = Regex.Match(inid.Trim(), @"\(54\)(?<inid54>.+)[A-Z][a-z]", RegexOptions.Singleline);
+
+                        if (regexMatch.Success)
+                        {
+                            legalStatus.Biblio.Titles.Add(new Title
+                            {
+                                Language = "RO",
+                                Text = regexMatch.Groups["inid54"].Value.Replace("\r", "").Replace("\n", " ").Replace("- ", "").Trim()
+                            });
+                        }
+                        else
                             Console.WriteLine($"{inid} --- 54");
+                    }
                 }
                 else
+                {
                     Console.WriteLine($"{inid} don't processed");
+                }
             }
 
             for (var i = 0; i < priorityNumbers.Count; i++)
