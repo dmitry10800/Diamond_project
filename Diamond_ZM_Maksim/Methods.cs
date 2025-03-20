@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Integration;
@@ -68,13 +69,18 @@ public class Methods
             {
                 statusEvent.Biblio.Application.Number = noteMatch.Groups["appNum"].Value.Replace("|","").Trim();
 
-                statusEvent.LegalEvent.Date = DateTime.Parse(noteMatch.Groups["evDate"].Value.Trim())
-                    .ToString("yyyy.MM.dd").Replace(".", "/");
+                statusEvent.LegalEvent.Date = DateTime.ParseExact(
+                    noteMatch.Groups["evDate"].Value.Trim(),
+                    "dd.MM.yyyy",
+                    CultureInfo.InvariantCulture
+                ).ToString("yyyy/MM/dd");
 
                 statusEvent.LegalEvent.Language = "EN";
-                statusEvent.LegalEvent.Note = "|| VALID UNTIL DATE | " + DateTime
-                                                  .Parse(noteMatch.Groups["validDate"].Value.Trim())
-                                                  .ToString("yyyy.MM.dd").Replace(".", "/") + "\n"
+                statusEvent.LegalEvent.Note = "|| VALID UNTIL DATE | " + DateTime.ParseExact(
+                                                  noteMatch.Groups["validDate"].Value.Trim(),
+                                                  "dd.MM.yyyy",
+                                                  CultureInfo.InvariantCulture
+                                              ).ToString("yyyy/MM/dd") + "\n"
                                               + "|| ANNIVERSARY | " + noteMatch.Groups["note"].Value.Trim();
             }
         }
