@@ -2,7 +2,7 @@
 {
     class Main_CO
     {
-        private const string Path = @"D:\LENS\CO\CO_20220809_970";
+        private const string Path = @"D:\LENS\TET\CO\CO_20250416_1064";
         private const string SubCode = "8";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 

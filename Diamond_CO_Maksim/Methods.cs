@@ -66,6 +66,9 @@ namespace Diamond_CO_Maksim
 
                     for (var i = 0; i < sheet.LastRowNum; i++)
                     {
+                        var row = sheet.GetRow(i);
+                        if (row == null) continue;
+
                         var text = string.Join(" ", sheet.GetRow(i).Cells.Where(x => x.CellType is CellType.String && !string.IsNullOrWhiteSpace(x.StringCellValue)).Select(x => x?.StringCellValue));
                         if (text.Contains("Expediente No. Tipo de trámite"))
                         {
