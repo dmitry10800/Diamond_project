@@ -13,9 +13,9 @@ namespace Diamond_PH_Maksim_Excel
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start(string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> legalStatusEvents = new();
+            var legalStatusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
 
-            DirectoryInfo directory = new(path);
+            var directory = new DirectoryInfo(path);
 
             var files = directory.GetFiles("*.xlsx", SearchOption.AllDirectories).Select(file => file.FullName).ToList();
 
@@ -31,13 +31,16 @@ namespace Diamond_PH_Maksim_Excel
                 }
 
                 var sheet = OpenedDocument.GetSheet("Sheet1") ?? OpenedDocument.GetSheet("Лист1");
-
+                if (sheet == null) continue;
                 var culture = new CultureInfo("ru-RU");
 
                 if (subCode == "7")
                 {
                     for (var row = 0; row <= sheet.LastRowNum; row++)
                     {
+                        var rowObj = sheet.GetRow(row);
+                        if (rowObj == null) continue;
+
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
                             CountryCode = "PH",
@@ -45,43 +48,39 @@ namespace Diamond_PH_Maksim_Excel
                             SubCode = subCode,
                             Id = _id++,
                             GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
-                            Biblio = new Biblio
-                            {
-                                DOfPublication = new DOfPublication()
-                            },
+                            Biblio = new Biblio { DOfPublication = new DOfPublication() },
                             LegalEvent = new LegalEvent()
                         };
 
-                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+                        statusEvent.Biblio.Application.Number = GetCellStringValue(rowObj, 0);
 
                         statusEvent.Biblio.Titles.Add(new Title()
                         {
-                            Text = sheet.GetRow(row).GetCell(1).ToString(),
+                            Text = GetCellStringValue(rowObj, 1),
                             Language = "EN"
                         });
 
-                        statusEvent.Biblio.Application.Date = DateTime
-                            .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
-                            .Replace(".", "/").Trim();
+                        statusEvent.Biblio.Application.Date = ParseDateString(GetCellStringValue(rowObj, 2), row).ToString("yyyy/MM/dd");
+                        statusEvent.LegalEvent.Date = ParseDateString(GetCellStringValue(rowObj, 3), row).ToString("yyyy/MM/dd");
 
-                        statusEvent.LegalEvent.Date = DateTime
-                            .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
-                            .Replace(".", "/").Trim();
+                        var assignersRaw = GetCellStringValue(rowObj, 4);
 
-                        var assignersList = Regex.Split(sheet.GetRow(row).GetCell(4).ToString(), @"(?<=[A-Z]{2}\])")
-                            .Where(x => !string.IsNullOrEmpty(x)).ToList();
-
-                        foreach (var assigner in assignersList)
+                        if (!string.IsNullOrWhiteSpace(assignersRaw))
                         {
-                            var match = Regex.Match(assigner.Trim(), @"(?<name>.+)\s\[(?<code>[A-Z]{2})", RegexOptions.Singleline);
+                            var assignersList = Regex.Split(assignersRaw, @"(?<=[A-Z]{2}\])")
+                                .Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
 
-                            if (match.Success)
+                            foreach (var assigner in assignersList)
                             {
-                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                var match = Regex.Match(assigner.Trim(), @"(?<name>.+)\s\[(?<code>[A-Z]{2})", RegexOptions.Singleline);
+                                if (match.Success)
                                 {
-                                    Name = match.Groups["name"].Value.Trim().TrimStart(';').TrimStart(',').Trim(),
-                                    Country = match.Groups["code"].Value.Trim()
-                                });
+                                    statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                    {
+                                        Name = match.Groups["name"].Value.Trim().TrimStart(';').TrimStart(',').Trim(),
+                                        Country = match.Groups["code"].Value.Trim()
+                                    });
+                                }
                             }
                         }
                         legalStatusEvents.Add(statusEvent);
@@ -91,6 +90,9 @@ namespace Diamond_PH_Maksim_Excel
                 {
                     for (var row = 1; row <= sheet.LastRowNum; row++)
                     {
+                        var rowObj = sheet.GetRow(row);
+                        if (rowObj == null) continue;
+
                         Diamond.Core.Models.LegalStatusEvent statusEvent = new()
                         {
                             CountryCode = "PH",
@@ -98,69 +100,69 @@ namespace Diamond_PH_Maksim_Excel
                             SubCode = subCode,
                             Id = _id++,
                             GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
-                            Biblio = new()
-                            {
-                                DOfPublication = new()
-                            },
-                            LegalEvent = new()
+                            Biblio = new Biblio { DOfPublication = new DOfPublication() },
+                            LegalEvent = new LegalEvent()
                         };
 
-                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+                        statusEvent.Biblio.Application.Number = GetCellStringValue(rowObj, 0);
 
-                        var aasigneers = Regex.Split(sheet.GetRow(row).GetCell(1).ToString(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        foreach (var assigneer in aasigneers)
+                        var assigneesRaw = GetCellStringValue(rowObj, 1);
+                        if (!string.IsNullOrWhiteSpace(assigneesRaw))
                         {
-                            var match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
+                            var assigneersList = Regex.Split(assigneesRaw, @";")
+                                .Where(val => !string.IsNullOrWhiteSpace(val)).ToList();
 
-                            if (match73.Success)
+                            foreach (var assigneer in assigneersList)
                             {
-                                statusEvent.Biblio.Assignees.Add(new PartyMember()
-                                {
-                                    Name = match73.Groups["name"].Value.Trim(),
-                                    Country = match73.Groups["code"].Value.Trim()
-                                });
-                            }
-                            else
-                            {
-                                var match73Second = Regex.Match(assigneer, @"(?<name>.+)\((?<code>\D{2})");
-                                if (match73Second.Success)
+                                var match73 = Regex.Match(assigneer, @"(?<name>.+)\[(?<code>\D{2})");
+                                if (match73.Success)
                                 {
                                     statusEvent.Biblio.Assignees.Add(new PartyMember()
                                     {
-                                        Name = match73Second.Groups["name"].Value.Trim(),
-                                        Country = match73Second.Groups["code"].Value.Trim()
+                                        Name = match73.Groups["name"].Value.Trim(),
+                                        Country = match73.Groups["code"].Value.Trim()
                                     });
                                 }
-                                else Console.WriteLine($"{assigneer} --- not process");
+                                else
+                                {
+                                    var match73Second = Regex.Match(assigneer, @"(?<name>.+)\((?<code>\D{2})");
+                                    if (match73Second.Success)
+                                    {
+                                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                        {
+                                            Name = match73Second.Groups["name"].Value.Trim(),
+                                            Country = match73Second.Groups["code"].Value.Trim()
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"{assigneer} --- not processed");
+                                    }
+                                }
                             }
                         }
 
-                        var pubDate = sheet.GetRow(row).GetCell(2);
-
-                        if (pubDate != null)
+                        var pubDateString = GetCellStringValue(rowObj, 2);
+                        if (!string.IsNullOrWhiteSpace(pubDateString))
                         {
-                            statusEvent.Biblio.Publication.Date = DateTime
-                                .Parse(sheet.GetRow(row).GetCell(2).ToString(), culture).ToString("yyyy.MM.dd")
-                                .Replace(".", "/").Trim();
+                            var pubDate = ParseDateString(pubDateString, row);
+                            statusEvent.Biblio.Publication.Date = pubDate.ToString("yyyy/MM/dd");
                         }
 
-                        var pctPubDate = sheet.GetRow(row).GetCell(3);
-                        if (pctPubDate != null)
+                        var pctPubDateString = GetCellStringValue(rowObj, 3);
+                        if (!string.IsNullOrWhiteSpace(pctPubDateString))
                         {
-                            statusEvent.Biblio.IntConvention.PctPublDate = DateTime
-                                .Parse(sheet.GetRow(row).GetCell(3).ToString(), culture).ToString("yyyy.MM.dd")
-                                .Replace(".", "/").Trim();
+                            var pctPubDate = ParseDateString(pctPubDateString, row);
+                            statusEvent.Biblio.IntConvention.PctPublDate = pctPubDate.ToString("yyyy/MM/dd");
                         }
 
                         statusEvent.Biblio.Titles.Add(new Title()
                         {
                             Language = "EN",
-                            Text = sheet.GetRow(row).GetCell(5).ToString()
+                            Text = GetCellStringValue(rowObj, 5)
                         });
 
                         var match = Regex.Match(_currentFileName, @"_(?<date>\d{8})_");
-
                         if (match.Success)
                         {
                             statusEvent.LegalEvent.Date = match.Groups["date"].Value.Insert(4, "/").Insert(7, "/").Trim();
@@ -319,6 +321,29 @@ namespace Diamond_PH_Maksim_Excel
                 }
             }
             return legalStatusEvents;
+        }
+
+        private static string GetCellStringValue(IRow row, int cellIndex)
+        {
+            var cell = row.GetCell(cellIndex);
+            return cell?.ToString().Trim();
+        }
+
+        private static DateTime ParseDateString(string dateString, int rowNumber)
+        {
+            if (string.IsNullOrWhiteSpace(dateString))
+                throw new Exception($"Empty date {rowNumber + 1}");
+
+            if (!DateTime.TryParseExact(dateString,
+                    new[] { "dd.MM.yyyy", "MM/dd/yyyy", "yyyy-MM-dd" },
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var parsedDate))
+            {
+                throw new Exception($"{dateString} in {rowNumber + 1}");
+            }
+
+            return parsedDate;
         }
     }
 }
