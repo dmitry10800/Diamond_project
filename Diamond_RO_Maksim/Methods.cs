@@ -1507,7 +1507,7 @@ namespace Diamond_RO_Maksim
                         {
                             Language = "EN",
                             Tr = "|| Number of the Official Bulletin of Industrial Property in which the patent application was published | " + match.Groups["leNote"].Value.Trim(),
-                            Type = "note"
+                            Type = "INID"
                         }
                     };
 

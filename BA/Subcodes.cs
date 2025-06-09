@@ -148,7 +148,7 @@ namespace BA
                                         {
                                             Language = "EN",
                                             Tr = $"|| The number of other claims | {tmpNotes}",
-                                            Type = "note"
+                                            Type = "INID"
                                         }
                                     }
                                 };

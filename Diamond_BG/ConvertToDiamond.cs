@@ -757,7 +757,7 @@ namespace Diamond_BG
                         var noteTransl = new NoteTranslation();
                         noteTransl.Tr = record.INote;
                         noteTransl.Language = "EN";
-                        noteTransl.Type = "";
+                        noteTransl.Type = "INID";
                         legalEvent.LegalEvent.Translations.Add(noteTransl);
                     }
                     /*--------------------*/

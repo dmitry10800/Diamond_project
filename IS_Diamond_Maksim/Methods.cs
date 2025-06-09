@@ -240,7 +240,7 @@ namespace IS_Diamond_Maksim
                                 {
                                     Language = "EN",
                                     Tr = "|| (80) Date of notification of EP patent grant | " + DateTime.Parse(match.Value.Trim(), cultureInfo).ToString("yyyy/MM/dd").Replace(".", "/").Trim(),
-                                    Type = "note"
+                                    Type = "INID"
                                 }
                             }
                             };

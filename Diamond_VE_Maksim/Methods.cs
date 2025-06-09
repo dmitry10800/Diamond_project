@@ -235,7 +235,7 @@ namespace Diamond_VE_Maksim
                     //Integration.NoteTranslation noteTranslation = new()
                     //{
                     //    Language = "EN",
-                    //    Type = "note",
+                    //    Type = "INID",
                     //    Tr = "THIS APPLICATION CONTRAVES ARTICLES 8 (MORE THAN AN INVENT), 14.1 (USE OF UNPAIRED TERMS) AND 59.2A (MEMORY WITH LACK OF CLARITY), AND IS UNCURRENT IN THE PROHIBITIONS PROVIDED IN ARTICLE 15.7 (CONTRAVES THE METROLOGY LAW)."
                     //};
 

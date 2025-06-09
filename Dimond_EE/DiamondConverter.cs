@@ -199,7 +199,7 @@ namespace Dimond_EE
                                 {
                                     Language = "EN",
                                     Tr = tmpTranlation,
-                                    Type = "note"
+                                    Type = "INID"
                                 }
                             }
                         };

@@ -327,7 +327,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match.Groups["numClaims"].Value.Trim()+"\n"+"|| figures | "+match.Groups["numFigures"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                             };
@@ -348,7 +348,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match.Groups["numClaims"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                                 };
@@ -585,7 +585,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match.Groups["numClaims"].Value.Trim()+"\n"+"|| figures | "+match.Groups["numFigures"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                             };
@@ -606,7 +606,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match.Groups["numClaims"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                                 };
@@ -998,7 +998,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match1.Groups["numClaims"].Value.Trim()+"\n"+"|| figures | "+match1.Groups["numFigures"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                                 };
@@ -1019,7 +1019,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " + match2.Groups["numClaims"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                                     };
@@ -1234,7 +1234,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match.Groups["numClaims"].Value.Trim()+"\n"+"|| figures | "+match.Groups["numFigures"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                             };
@@ -1255,7 +1255,7 @@ namespace Diamond_BG_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| claims | " +match1.Groups["numClaims"].Value.Trim(),
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                                 };

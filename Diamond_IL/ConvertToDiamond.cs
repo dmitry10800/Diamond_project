@@ -240,7 +240,7 @@ namespace Diamond_IL
                             var noteTransl = new NoteTranslation();
                             noteTransl.Tr = record.INoteEng;
                             noteTransl.Language = "EN";
-                            noteTransl.Type = "";
+                            noteTransl.Type = "INID";
                             legalEvent.LegalEvent.Translations.Add(noteTransl);
                         }
                     }

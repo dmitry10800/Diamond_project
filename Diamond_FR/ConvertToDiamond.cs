@@ -38,7 +38,7 @@ namespace Diamond_FR
                     {
                         Language = "EN",
                         Tr = $"|| Registration number | {record.LeNoteNumber} || Nature of application | {record.LeNoteCountry}",
-                        Type = "note"
+                        Type = "INID"
                     });
                     /**********************/
                     legalEvent.Biblio = biblioData;
@@ -154,7 +154,7 @@ namespace Diamond_FR
                     {
                         Language = "EN",
                         Tr = $"|| Registration number | {record.RegNumber}\n|| Nature of application | {record.NatureOfApplication}",
-                        Type = "note"
+                        Type = "INID"
                     });
                     /**********************/
                     legalEvent.Biblio = biblioData;
@@ -196,7 +196,7 @@ namespace Diamond_FR
                     {
                         Language = "EN",
                         Tr = $"|| Registration number | {record.RegNumber}\n|| Nature of application | {record.NatureOfApplication}",
-                        Type = "note"
+                        Type = "INID"
                     });
                     /**********************/
                     legalEvent.Biblio = biblioData;

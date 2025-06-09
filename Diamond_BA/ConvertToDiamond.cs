@@ -310,7 +310,7 @@ namespace Diamond_BA
                             Note = $"|| Broj ostalih patentnih zahtjeva | {record.I99}",
                             Language = "HR",
                             Translations = new List<NoteTranslation> {
-                            new NoteTranslation {Language = "EN", Tr = $"|| The number of other claims | {record.I99}", Type = "note" }
+                            new NoteTranslation {Language = "EN", Tr = $"|| The number of other claims | {record.I99}", Type = "INID" }
                         }
                         };
                     }

@@ -42,7 +42,7 @@ namespace Diamond_EA
                             new NoteTranslation {
                                 Language = "EN",
                                 Tr = $"|| Bulletin No. | {record.LeBulletinNumber}",
-                                Type = "note"
+                                Type = "INID"
                             }
                         }
                     };
@@ -96,7 +96,7 @@ namespace Diamond_EA
                         $"|| Country code in which territory the patent is terminated | {record.LeCcTerminated}" +
                         $"|| Country code in which territory the patent is valid | {record.LeCcValid}" +
                         $"|| Publication date of notice | {record.NoteDate}",
-                            Type = "note"
+                            Type = "INID"
                             }
                         }
                     };

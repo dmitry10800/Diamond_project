@@ -275,7 +275,7 @@ namespace Diamond_RU
                         {
                             Tr = $"|| Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     else if (array2.Contains(numberSubCode))
@@ -292,7 +292,7 @@ namespace Diamond_RU
                             Tr = $"|| Registration number of transfer of an exclusive right | {record.B919i} \n|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| " +
                                  $"Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     else if (array3.Contains(numberSubCode))
@@ -307,7 +307,7 @@ namespace Diamond_RU
                         {
                             Tr = $"|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     else if (numberSubCode == 16)
@@ -324,7 +324,7 @@ namespace Diamond_RU
                             Tr = $"|| Date of withdrawal of the application | {DateNormalize(record.B236)} \n|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| " +
                                  $"Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     else if (array4.Contains(numberSubCode))
@@ -349,7 +349,7 @@ namespace Diamond_RU
                         {
                             Tr = $"|| Bulletin No. | {record.B405i} \n|| Bulletin publication date | {DateNormalize(record.B460i)}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     else if (numberSubCode == 6)
@@ -366,7 +366,7 @@ namespace Diamond_RU
                             Tr = $"|| Registration number of transfer of an exclusive right | {record.B919i} \n|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| " +
                                  $"Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
 
@@ -384,7 +384,7 @@ namespace Diamond_RU
                             Tr = $"|| Revoked patent number | {record.B110} \n|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| " +
                                  $"Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     if (numberSubCode == 24)
@@ -403,7 +403,7 @@ namespace Diamond_RU
                                 Tr = $"|| Opposition received on | {DateNormalize(record.B909i.Title)} \n|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| " +
                                      $"Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                                 Language = "EN",
-                                Type = "note"
+                                Type = "INID"
                             });
                         }
                     }
@@ -421,7 +421,7 @@ namespace Diamond_RU
                             Tr = $"|| Number of patent granted for an identical invention | {record.B110j} \n|| Bulletin publication date | {DateNormalize(record.B460i)} \n|| " +
                                  $"Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     if (numberSubCode == 29 || numberSubCode == 30)
@@ -438,7 +438,7 @@ namespace Diamond_RU
                             Tr = $"|| Registration date of terminated license | {record.B920i} \n|| Registration number of license termination | {record.B919ic} \n|| " +
                                  $"Bulletin publication date | {DateNormalize(record.B460i)} \n|| Bulletin No. | {record.B405i}\n|| (12) | {record.Field12.versionEN}",
                             Language = "EN",
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
                     /**********************/

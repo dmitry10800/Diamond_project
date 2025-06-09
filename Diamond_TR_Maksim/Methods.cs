@@ -635,7 +635,7 @@ namespace Diamond_TR_Maksim
                 statusEvent.LegalEvent.Translations = new List<NoteTranslation>() { new NoteTranslation
                 {
                     Language = "EN",
-                    Type = "note",
+                    Type = "INID",
                     Tr = "|| Corrected Information | null"
                 }};
 

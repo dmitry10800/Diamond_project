@@ -373,7 +373,7 @@ namespace Diamond_ME_Maksim
                                 {
                                     new NoteTranslation
                                     {
-                                        Type = "note",
+                                        Type = "INID",
                                         Language = "EN",
                                         Tr = "|| The patent contains more patent claims | " + match.Groups["num"].Value.Trim()
                                     }

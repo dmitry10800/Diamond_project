@@ -69,7 +69,7 @@ namespace Diamond_MX
                         {
                             Language = "EN",
                             Tr = tmpLeNoteTranslation.Trim(),
-                            Type = "note"
+                            Type = "INID"
                         });
                     }
 

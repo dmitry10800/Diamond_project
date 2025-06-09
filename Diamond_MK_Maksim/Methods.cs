@@ -408,7 +408,7 @@ namespace Diamond_MK_Maksim
                                     {
                                         Language = "EN",
                                         Tr = "|| Patent claims | there are " + match.Groups["num"].Value.Trim() +" more patent claims",
-                                        Type = "note"
+                                        Type = "INID"
                                     }
                                 }
                             };

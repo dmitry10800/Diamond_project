@@ -42,7 +42,7 @@ namespace EE
                             new NoteTranslation {
                                 Language = "EN",
                                 Tr = $"|| Bulletin No. | {record.LeBulletinNumber}",
-                                Type = "note"
+                                Type = "INID"
                             }
                         }
                     };
@@ -89,7 +89,7 @@ namespace EE
                         Tr = $"|| Bulletin No. | {record.LeBulletinNumber} " +
                         $"|| Country code in which territory the patent is terminated | {record.LeCcTerminated}" +
                         $"|| Country code in which territory the patent is valid | {record.LeCcValid}",
-                        Type = "note"
+                        Type = "INID"
                     });
                     legalEvent.Biblio = biblioData;
                     fullGazetteInfo.Add(legalEvent);
