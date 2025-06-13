@@ -49,13 +49,31 @@ namespace Diamond_CY_Maksim
                 if (subCode == "57")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("ββ) Οι πιο κάτω Μεταφράσεις Ευρωπαϊκών Διπλωμάτων Ευρεσιτεχνίας διεγράφησαν από το"))
+                        .SkipWhile(val => !val.Value.StartsWith("ββ) Οι πιο κάτω Μεταφράσεις Ευρωπαϊκών"))
                         .TakeWhile(val => !val.Value.StartsWith("ΔΙΑΓΡΑΦΕΣ ΣΥΜΠΛΗΡΩΜΑΤΙΚΩΝ ΠΙΣΤΟΠΟΙΗΤΙΚΩΝ ΠΡΟΣΤΑΣΙΑΣ ΓΙΑ ΤΑ ΦΑΡΜΑΚΑ (ΣΠΠΦ)"))
                         .ToList();
 
                     var text = MakeText(xElements, subCode);
 
-                    var notes = Regex.Split(text, @"(?=CY\d+\s\()", RegexOptions.Singleline)
+                    var notes = Regex.Split(text, @"(?=CY\s?\d+\s\()", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("CY")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakeNotes(note, subCode, "MK"));
+                    }
+                }
+
+                if (subCode == "39")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("αα) Τα πιο κάτω Διπλώματα Ευρεσιτεχνίας"))
+                        .TakeWhile(val => !val.Value.StartsWith("ΔΙΑΓΡΑΦΕΣ ΜΕΤΑΦΡΑΣΕΩΝ ΕΥΡΩΠΑΪΚΩΝ ΔΙΠΛΩΜΑΤΩΝ ΕΥΡΕΣΙΤΕΧΝΙΑΣ"))
+                        .ToList();
+
+                    var text = MakeText(xElements, subCode);
+
+                    var notes = Regex.Split(text, @"(?=CY\s?\d+\s\()", RegexOptions.Singleline)
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("CY")).ToList();
 
                     foreach (var note in notes)
@@ -81,6 +99,14 @@ namespace Diamond_CY_Maksim
                         break;
                     }
                 case "57":
+                {
+                    foreach (var xElement in xElements)
+                    {
+                        text = text.AppendLine(xElement.Value + "\n");
+                    }
+                    break;
+                }
+                case "39":
                 {
                     foreach (var xElement in xElements)
                     {
@@ -508,7 +534,7 @@ namespace Diamond_CY_Maksim
                 AddAbstractScreenShot(statusEvent, imagesDictionary);
             }
 
-            if (subCode == "57")
+            if (subCode == "57" || subCode =="39")
             {
                 var match = Regex.Match(note,
                     @"(?<pubnum>CY\d+)\s?\((?<euPubNum>.+)\)\s?(?<inid73>.+)\s?(?<evDate>\d{2}\/\d{2}\/\d{4})",
