@@ -99,6 +99,24 @@ namespace Diamond_CY_Maksim
                         statusEvents.Add(MakeNotes(note, subCode, "MK"));
                     }
                 }
+
+                if (subCode == "6")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("β) Τα πιο κάτω Διπλώματα Ευρεσιτεχνίας διεγράφησαν από"))
+                        .TakeWhile(val => !val.Value.StartsWith("βα) Οι πιο κάτω Μεταφράσεις Ευρωπαϊκών Διπλωμάτων"))
+                        .ToList();
+
+                    var text = MakeText(xElements, subCode);
+
+                    var notes = Regex.Split(text, @"(?=CY\s?\d+\s\()", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("CY")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakeNotes(note, subCode, "MM"));
+                    }
+                }
             }
             return statusEvents;
         }
@@ -117,29 +135,37 @@ namespace Diamond_CY_Maksim
                         break;
                     }
                 case "57":
-                {
-                    foreach (var xElement in xElements)
                     {
-                        text = text.AppendLine(xElement.Value + "\n");
+                        foreach (var xElement in xElements)
+                        {
+                            text = text.AppendLine(xElement.Value + "\n");
+                        }
+                        break;
                     }
-                    break;
-                }
                 case "39":
-                {
-                    foreach (var xElement in xElements)
                     {
-                        text = text.AppendLine(xElement.Value + "\n");
+                        foreach (var xElement in xElements)
+                        {
+                            text = text.AppendLine(xElement.Value + "\n");
+                        }
+                        break;
                     }
-                    break;
-                }
                 case "11":
-                {
-                    foreach (var xElement in xElements)
                     {
-                        text = text.AppendLine(xElement.Value + "\n");
+                        foreach (var xElement in xElements)
+                        {
+                            text = text.AppendLine(xElement.Value + "\n");
+                        }
+                        break;
                     }
-                    break;
-                }
+                case "6":
+                    {
+                        foreach (var xElement in xElements)
+                        {
+                            text = text.AppendLine(xElement.Value + "\n");
+                        }
+                        break;
+                    }
             }
             return text.ToString();
         }
@@ -560,7 +586,7 @@ namespace Diamond_CY_Maksim
                 AddAbstractScreenShot(statusEvent, imagesDictionary);
             }
 
-            if (subCode == "57" || subCode =="39")
+            if (subCode == "57" || subCode == "39" || subCode == "6")
             {
                 var match = Regex.Match(note,
                     @"(?<pubnum>CY\d+)\s?\((?<euPubNum>.+)\)\s?(?<inid73>.+)\s?(?<evDate>\d{2}\/\d{2}\/\d{4})",
@@ -571,7 +597,7 @@ namespace Diamond_CY_Maksim
                     statusEvent.Biblio.Publication.Number = match.Groups["pubnum"].Value.Trim();
                     euPatent.PubNumber = match.Groups["pubnum"].Value.Trim();
 
-                    var assignees = Regex.Split(match.Groups["inid73"].Value.Replace("\r","").Replace("\n","").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
+                    var assignees = Regex.Split(match.Groups["inid73"].Value.Replace("\r", "").Replace("\n", "").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
                         .Where(x => !string.IsNullOrEmpty(x)).ToList();
 
                     foreach (var assignee in assignees)
