@@ -45,10 +45,27 @@ namespace Diamond_CY_Maksim
                         statusEvents.Add(MakeNotes(note, subCode, "FG", imageFiles));
                     }
                 }
+
+                if (subCode == "57")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("ββ) Οι πιο κάτω Μεταφράσεις Ευρωπαϊκών Διπλωμάτων Ευρεσιτεχνίας διεγράφησαν από το"))
+                        .TakeWhile(val => !val.Value.StartsWith("ΔΙΑΓΡΑΦΕΣ ΣΥΜΠΛΗΡΩΜΑΤΙΚΩΝ ΠΙΣΤΟΠΟΙΗΤΙΚΩΝ ΠΡΟΣΤΑΣΙΑΣ ΓΙΑ ΤΑ ΦΑΡΜΑΚΑ (ΣΠΠΦ)"))
+                        .ToList();
+
+                    var text = MakeText(xElements, subCode);
+
+                    var notes = Regex.Split(text, @"(?=CY\d+\s\()", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("CY")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakeNotes(note, subCode, "MK"));
+                    }
+                }
             }
             return statusEvents;
         }
-
         private static string MakeText(List<XElement> xElements, string subCode)
         {
             var text = new StringBuilder();
@@ -63,10 +80,17 @@ namespace Diamond_CY_Maksim
                         }
                         break;
                     }
+                case "57":
+                {
+                    foreach (var xElement in xElements)
+                    {
+                        text = text.AppendLine(xElement.Value + "\n");
+                    }
+                    break;
+                }
             }
             return text.ToString();
         }
-
         private Dictionary<string, string> GetImages(XElement tet)
         {
             var result = new Dictionary<string, string>();
@@ -484,6 +508,47 @@ namespace Diamond_CY_Maksim
                 AddAbstractScreenShot(statusEvent, imagesDictionary);
             }
 
+            if (subCode == "57")
+            {
+                var match = Regex.Match(note,
+                    @"(?<pubnum>CY\d+)\s?\((?<euPubNum>.+)\)\s?(?<inid73>.+)\s?(?<evDate>\d{2}\/\d{2}\/\d{4})",
+                    RegexOptions.Singleline);
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubnum"].Value.Trim();
+                    euPatent.PubNumber = match.Groups["pubnum"].Value.Trim();
+
+                    var assignees = Regex.Split(match.Groups["inid73"].Value.Replace("\r","").Replace("\n","").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
+                        .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                    foreach (var assignee in assignees)
+                    {
+                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                        {
+                            Language = "EN",
+                            Name = assignee
+                        });
+                    }
+
+                    statusEvent.LegalEvent.Date = DateTime
+                        .ParseExact(match.Groups["evDate"].Value.Trim(), "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+                }
+                else
+                {
+                    var match2 = Regex.Match(note,
+                        @"(?<pubnum>CY\d+)\s?\((?<euPubNum>.+)\)\s?(?<inid73>.+)",
+                        RegexOptions.Singleline);
+
+                    if (match2.Success)
+                    {
+
+                    }
+                    else Console.WriteLine(note);
+                }
+                statusEvent.Biblio.EuropeanPatents.Add(euPatent);
+            }
             return statusEvent;
         }
 
