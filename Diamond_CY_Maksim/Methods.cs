@@ -81,6 +81,24 @@ namespace Diamond_CY_Maksim
                         statusEvents.Add(MakeNotes(note, subCode, "MK"));
                     }
                 }
+
+                if (subCode == "11")
+                {
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("α) Τα πιο κάτω Διπλώματα Ευρεσιτεχνίας διεγράφησαν"))
+                        .TakeWhile(val => !val.Value.StartsWith("αα) Τα πιο κάτω Διπλώματα Ευρεσιτεχνίας διεγράφησαν"))
+                        .ToList();
+
+                    var text = MakeText(xElements, subCode);
+
+                    var notes = Regex.Split(text, @"(?=CY\s?\d+\s\()", RegexOptions.Singleline)
+                        .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("CY")).ToList();
+
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakeNotes(note, subCode, "MK"));
+                    }
+                }
             }
             return statusEvents;
         }
@@ -107,6 +125,14 @@ namespace Diamond_CY_Maksim
                     break;
                 }
                 case "39":
+                {
+                    foreach (var xElement in xElements)
+                    {
+                        text = text.AppendLine(xElement.Value + "\n");
+                    }
+                    break;
+                }
+                case "11":
                 {
                     foreach (var xElement in xElements)
                     {
@@ -570,6 +596,66 @@ namespace Diamond_CY_Maksim
                     if (match2.Success)
                     {
 
+                    }
+                    else Console.WriteLine(note);
+                }
+                statusEvent.Biblio.EuropeanPatents.Add(euPatent);
+            }
+
+            if (subCode == "11")
+            {
+                var match = Regex.Match(note,
+                    @"(?<pubnum>CY\d+)\s?\((?<euPubNum>.+)\)\s?(?<inid73>.+)\s?(?<evDate>\d{2}\/\d{2}\/\d{4})",
+                    RegexOptions.Singleline);
+
+                if (match.Success)
+                {
+                    statusEvent.Biblio.Publication.Number = match.Groups["pubnum"].Value.Trim();
+                    euPatent.PubNumber = match.Groups["pubnum"].Value.Trim();
+
+                    var assignees = Regex.Split(match.Groups["inid73"].Value.Replace("\r", "").Replace("\n", "").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
+                        .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                    foreach (var assignee in assignees)
+                    {
+                        statusEvent.Biblio.Assignees.Add(new PartyMember()
+                        {
+                            Language = "EN",
+                            Name = assignee
+                        });
+                    }
+
+                    statusEvent.LegalEvent.Date = DateTime
+                        .ParseExact(match.Groups["evDate"].Value.Trim(), "dd/MM/yyyy",
+                            CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+                }
+                else
+                {
+                    var match2 = Regex.Match(note,
+                        @"(?<pubnum>CY\d+)\s?(?<inid73>.+)\s?(?<evDate>\d{2}\/\d{2}\/\d{4})",
+                        RegexOptions.Singleline);
+
+                    if (match2.Success)
+                    {
+                        statusEvent.Biblio.Publication.Number = match2.Groups["pubnum"].Value.Trim();
+
+                        var assignees = Regex
+                            .Split(match2.Groups["inid73"].Value.Replace("\r", "").Replace("\n", "").Trim(),
+                                @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
+                            .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                        foreach (var assignee in assignees)
+                        {
+                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            {
+                                Language = "EN",
+                                Name = assignee
+                            });
+                        }
+
+                        statusEvent.LegalEvent.Date = DateTime
+                            .ParseExact(match2.Groups["evDate"].Value.Trim(), "dd/MM/yyyy",
+                                CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
                     }
                     else Console.WriteLine(note);
                 }
