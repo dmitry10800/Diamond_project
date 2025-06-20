@@ -252,7 +252,6 @@ namespace Diamond_CY_Maksim
             }
             return result;
         }
-
         internal LegalStatusEvent MakeNotes(string note, string subCode, string sectionCode,
             Dictionary<string, string> imagesDictionary = null)
         {
@@ -449,7 +448,9 @@ namespace Diamond_CY_Maksim
                                 {
                                     Name = match.Groups["name"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
-                                    Country = countryCode
+                                    Country = countryCode,
+                                    Language = IsSpanish(match.Groups["name"].Value.Trim()) ? "es" :
+                                        isGerman(match.Groups["name"].Value.Trim()) ? "de" : "en"
                                 });
                             }
                         }
@@ -568,7 +569,6 @@ namespace Diamond_CY_Maksim
                             Console.WriteLine($"{inid} --- 74");
                         }
                     }
-
                     if (inid.StartsWith("(57)"))
                     {
                         var match = Regex.Match(inid, @"\(57\)\sΠερίληψη(?<text>.+)", RegexOptions.Singleline);
@@ -604,7 +604,8 @@ namespace Diamond_CY_Maksim
                     {
                         statusEvent.Biblio.Assignees.Add(new PartyMember()
                         {
-                            Language = "EN",
+                            Language = IsSpanish(assignee) ? "es" :
+                                isGerman(assignee) ? "de" : "en",
                             Name = assignee
                         });
                     }
@@ -621,7 +622,21 @@ namespace Diamond_CY_Maksim
 
                     if (match2.Success)
                     {
+                        statusEvent.Biblio.Publication.Number = match2.Groups["pubnum"].Value.Trim();
+                        euPatent.PubNumber = match2.Groups["pubnum"].Value.Trim();
 
+                        var assignees = Regex.Split(match2.Groups["inid73"].Value.Replace("\r", "").Replace("\n", "").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
+                            .Where(x => !string.IsNullOrEmpty(x)).ToList();
+
+                        foreach (var assignee in assignees)
+                        {
+                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            {
+                                Language = IsSpanish(assignee) ? "es" :
+                                    isGerman(assignee) ? "de" : "en",
+                                Name = assignee
+                            });
+                        }
                     }
                     else Console.WriteLine(note);
                 }
@@ -646,7 +661,8 @@ namespace Diamond_CY_Maksim
                     {
                         statusEvent.Biblio.Assignees.Add(new PartyMember()
                         {
-                            Language = "EN",
+                            Language = IsSpanish(assignee) ? "es" :
+                                isGerman(assignee) ? "de" : "en",
                             Name = assignee
                         });
                     }
@@ -674,7 +690,7 @@ namespace Diamond_CY_Maksim
                         {
                             statusEvent.Biblio.Assignees.Add(new PartyMember()
                             {
-                                Language = "EN",
+                                Language = IsSpanish(assignee) ? "es" : isGerman(assignee) ? "de" : "en",
                                 Name = assignee
                             });
                         }
@@ -689,7 +705,6 @@ namespace Diamond_CY_Maksim
             }
             return statusEvent;
         }
-
         internal string MakeCountry(string country) => country switch
         {
             "France" => "FR",
@@ -711,7 +726,6 @@ namespace Diamond_CY_Maksim
             "Slovakia" => "SK",
             _ => null,
         };
-
         public static Dictionary<string, string> ParseInventors(string input)
         {
             var lines = input.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
@@ -740,7 +754,6 @@ namespace Diamond_CY_Maksim
 
             return dictionary;
         }
-
         private void AddAbstractScreenShot(LegalStatusEvent statusEvent, Dictionary<string, string> imagesDictionary)
         {
             var patentKey = statusEvent.Biblio.Publication.Number + " " + statusEvent.Biblio.Publication.Kind;
@@ -792,12 +805,10 @@ namespace Diamond_CY_Maksim
             var extractedImageFrameBytes = extractedImageStream.ToArray();
             return Convert.ToBase64String(extractedImageFrameBytes);
         }
-
         internal static string GetUniqueScreenShotId()
         {
             return $"{GetRandomString(4)}-{GetRandomString(12)}";
         }
-
         private static string GetRandomString(int stringLength)
         {
             var sb = new StringBuilder();
@@ -807,6 +818,29 @@ namespace Diamond_CY_Maksim
                 sb.Append(Guid.NewGuid().ToString("N"));
             }
             return sb.ToString(0, stringLength);
+        }
+
+        public bool IsSpanish(string inputstring)
+        {
+            if (inputstring.Contains("Ñ") ||
+                inputstring.Contains("ñ"))
+                return true;
+            else
+                return false;
+        }
+        public bool isGerman(string inputstring)
+        {
+            if (inputstring.Contains("Ö") ||
+                inputstring.Contains("ö") ||
+                inputstring.Contains("Ä") ||
+                inputstring.Contains("ä") ||
+                inputstring.Contains("ü") ||
+                inputstring.Contains("Ü") ||
+                inputstring.Contains("ẞ") ||
+                inputstring.Contains("ß"))
+                return true;
+            else
+                return false;
         }
     }
 }
