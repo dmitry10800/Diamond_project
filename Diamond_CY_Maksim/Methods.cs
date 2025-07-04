@@ -91,7 +91,7 @@ namespace Diamond_CY_Maksim
 
                     var text = MakeText(xElements, subCode);
 
-                    var notes = Regex.Split(text, @"(?=CY\s?\d+\s\()", RegexOptions.Singleline)
+                    var notes = Regex.Split(text, @"(?=CY\s?\d+\s)", RegexOptions.Singleline)
                         .Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("CY")).ToList();
 
                     foreach (var note in notes)
@@ -450,7 +450,7 @@ namespace Diamond_CY_Maksim
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Country = countryCode,
                                     Language = IsSpanish(match.Groups["name"].Value.Trim()) ? "es" :
-                                        isGerman(match.Groups["name"].Value.Trim()) ? "de" : "en"
+                                        isGerman(match.Groups["name"].Value.Trim()) ? "de" : isGreek(match.Groups["name"].Value.Trim()) ? "el" : "en"
                                 });
                             }
                         }
@@ -605,7 +605,7 @@ namespace Diamond_CY_Maksim
                         statusEvent.Biblio.Assignees.Add(new PartyMember()
                         {
                             Language = IsSpanish(assignee) ? "es" :
-                                isGerman(assignee) ? "de" : "en",
+                                isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
                             Name = assignee
                         });
                     }
@@ -633,7 +633,7 @@ namespace Diamond_CY_Maksim
                             statusEvent.Biblio.Assignees.Add(new PartyMember()
                             {
                                 Language = IsSpanish(assignee) ? "es" :
-                                    isGerman(assignee) ? "de" : "en",
+                                    isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
                                 Name = assignee
                             });
                         }
@@ -652,7 +652,7 @@ namespace Diamond_CY_Maksim
                 if (match.Success)
                 {
                     statusEvent.Biblio.Publication.Number = match.Groups["pubnum"].Value.Trim();
-                    euPatent.PubNumber = match.Groups["pubnum"].Value.Trim();
+                    euPatent.PubNumber = match.Groups["euPubNum"].Value.Trim();
 
                     var assignees = Regex.Split(match.Groups["inid73"].Value.Replace("\r", "").Replace("\n", "").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
                         .Where(x => !string.IsNullOrEmpty(x)).ToList();
@@ -662,7 +662,7 @@ namespace Diamond_CY_Maksim
                         statusEvent.Biblio.Assignees.Add(new PartyMember()
                         {
                             Language = IsSpanish(assignee) ? "es" :
-                                isGerman(assignee) ? "de" : "en",
+                                isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
                             Name = assignee
                         });
                     }
@@ -690,7 +690,7 @@ namespace Diamond_CY_Maksim
                         {
                             statusEvent.Biblio.Assignees.Add(new PartyMember()
                             {
-                                Language = IsSpanish(assignee) ? "es" : isGerman(assignee) ? "de" : "en",
+                                Language = IsSpanish(assignee) ? "es" : isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
                                 Name = assignee
                             });
                         }
@@ -841,6 +841,22 @@ namespace Diamond_CY_Maksim
                 return true;
             else
                 return false;
+        }
+
+        public bool isGreek(string inputstring)
+        {
+            var greekLetters = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" +
+                                  "αβγδεζηθικλμνξοπρσςτυφχψω";
+
+            foreach (var c in inputstring)
+            {
+                if (greekLetters.Contains(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
