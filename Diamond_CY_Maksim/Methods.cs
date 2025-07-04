@@ -595,7 +595,7 @@ namespace Diamond_CY_Maksim
                 if (match.Success)
                 {
                     statusEvent.Biblio.Publication.Number = match.Groups["pubnum"].Value.Trim();
-                    euPatent.PubNumber = match.Groups["pubnum"].Value.Trim();
+                    euPatent.PubNumber = match.Groups["euPubNum"].Value.Trim();
 
                     var assignees = Regex.Split(match.Groups["inid73"].Value.Replace("\r", "").Replace("\n", "").Trim(), @"\d+\.\s*(.*?)(?=\s*\d+\.|$)")
                         .Where(x => !string.IsNullOrEmpty(x)).ToList();
