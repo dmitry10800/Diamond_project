@@ -248,11 +248,10 @@ namespace Diamond_FI_Maksim
 
                 var pattern =
                     """
-                    Public\s+notification\s+date\s*(?<PublicNotificationDate>[^\n]*)\n?(?(PublicNotificationDate)|(?<PublicNotificationDate>[^\n]+))
-                    Application\s+number\s*(?<ApplicationNumber>[^\n]*)\n?(?(ApplicationNumber)|(?<ApplicationNumber>[^\n]+))
-                    Patent\s+number\s*(?<PatentNumber>[^\n]*)\n?(?(PatentNumber)|(?<PatentNumber>[^\n]+))
-                    Applicant\(s\)\s*(?<ApplicantsLine>[^\n]*)\n(?<ApplicantsBlock>(?:(?!^\w.*).*\n)*)
-                    Title\s+of\s+invention\n
+                    Public\s+notification\s+date\s*(?<PublicNotificationDate>[^\n]*)\s*
+                    Application\s+number\s*(?<ApplicationNumber>[^\n]*)\s*
+                    Patent\s+number\s*(?<PatentNumber>[^\n]*)\s*
+                    Applicant\(s\)\s*(?<Applicants>(?:.*\n)+?)Title\s+of\s+invention\s*
                     (?<TitleOfInvention>(?:.|\n)+)
                     """;
                 var match = Regex.Match(cleanedText, pattern, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
