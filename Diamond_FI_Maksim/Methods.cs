@@ -83,13 +83,13 @@ namespace Diamond_FI_Maksim
                         break;
                     }
                 case "24":
-                {
-                    foreach (var xElement in xElements)
                     {
-                        text = text.AppendLine(xElement.Value + "\n");
+                        foreach (var xElement in xElements)
+                        {
+                            text = text.AppendLine(xElement.Value + "\n");
+                        }
+                        break;
                     }
-                    break;
-                }
             }
             return text.ToString();
         }
@@ -115,15 +115,15 @@ namespace Diamond_FI_Maksim
 
                 var pattern =
                     """
-                    Public\s+notification\s+date\s*(?<PublicNotificationDate>[^\n]*)\n?(?(PublicNotificationDate)|(?<PublicNotificationDate>[^\n]+))
-                    International\s+patent\s+class\s*(?<InternationalPatentClassLine>[^\n]*)\n(?<InternationalPatentClassBlock>(?:(?!^\w.*).*\n)*)
-                    Application\s+number\s*(?<ApplicationNumber>[^\n]*)\n?(?(ApplicationNumber)|(?<ApplicationNumber>[^\n]+))
-                    Patent\s+number\s*(?<PatentNumber>[^\n]*)\n?(?(PatentNumber)|(?<PatentNumber>[^\n]+))
-                    Date\s+of\s+receipt\s*(?<DateOfReceipt>[^\n]*)\n?(?(DateOfReceipt)|(?<DateOfReceipt>[^\n]+))Filing\s+date\s*(?<FilingDate>[^\n]*)\n?(?(FilingDate)|(?<FilingDate>[^\n]+))
-                    Applicant\(s\)\s*(?<ApplicantsLine>[^\n]*)\n(?<ApplicantsBlock>(?:(?!^\w.*).*\n)*)
-                    Inventor\(s\)\s*(?<InventorsLine>(?:\d+\.\s+[^\n]+)?)\n(?<InventorsBlock>(?:(?!^\w.*).*\n)*)
-                    Agent\s*(?<AgentLine>[^\n]*)\n(?<AgentBlock>(?:(?!^Title\s+of\s+invention).*\n)*)
-                    Title\s+of\s+invention\n
+                    Public\s+notification\s+date\s*(?<PublicNotificationDate>[^\n]*)\s*
+                    International\s+patent\s+class\s*(?<InternationalPatentClass>(?:.*\n)+?)Application\s+number\s*
+                    (?<ApplicationNumber>[^\n]*)\s*
+                    Patent\s+number\s*(?<PatentNumber>[^\n]*)\s*
+                    Date\s+of\s+receipt\s*(?<DateOfReceipt>[^\n]*)\s*
+                    Filing\s+date\s*(?<FilingDate>[^\n]*)\s*
+                    Applicant\(s\)\s*(?<Applicants>(?:.*\n)+?)Inventor\(s\)\s*
+                    (?<Inventors>(?:.*\n)+?)Agent\s*
+                    (?<Agent>(?:.*\n)+?)Title\s+of\s+invention\s*
                     (?<TitleOfInvention>(?:.|\n)+)
                     """;
                 var match = Regex.Match(cleanedText, pattern, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
