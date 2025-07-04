@@ -4,8 +4,8 @@ namespace Diamond_NG_Maksim
 {
     class Main_NG
     {
-        private const string Path = @"C:\Work\NG\NG_20210317_01";
-        private const string SubCode = "1";
+        private const string Path = @"D:\LENS\TET\NG\NG_20250630_02";
+        private const string SubCode = "4";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
@@ -15,6 +15,7 @@ namespace Diamond_NG_Maksim
             var patents = SubCode switch
             {
                 "1" => methods.Start(Path, SubCode),
+                "4" => methods.Start(Path, SubCode),
                 _ => null
             };
 
