@@ -4,7 +4,8 @@ namespace Diamond_ZA_Maksim
 {
     class Main_ZA
     {
-        private const string Path = @"D:\LENS\TET\ZA\ZA_20230726_07(2)";
+        //private const string Path = @"D:\_test\TET\LENS-540";
+        private const string Path = @"D:\_test\TET\LENS-540";
         private const string SubCode = "1";
         private const bool SendToProd = false; //true - send to prod; false - send to stag
 

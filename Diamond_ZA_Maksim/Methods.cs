@@ -127,113 +127,40 @@ namespace Diamond_ZA_Maksim
 
             var culture = new CultureInfo("ru-RU");
 
-            if(subCode == "1")
+            var formattedNote = Regex.Replace(
+                    note.Trim(),
+                    @"&#\d{3};",
+                    "")
+                .Replace("\r", "")
+                .Replace("\n", " ")
+                .Trim();
+
+            var cutNote = formattedNote.Length > 100 ? formattedNote[..100] + "…" : formattedNote;
+
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss} | Started processing for {cutNote}");
+
+            if (subCode == "1")
             {
-                var formatedNote = Regex.Replace(note.Trim(), @"&#\d{3};", "").Replace("\r", "").Replace("\n", " ").Trim();
-
-                var match = Regex.Match(formatedNote, @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71:.+)(?<inventors>72:.+?)(?<priority>33:.+)(?<date22>\.\s?-\s?APP.+)",RegexOptions.Singleline);
-
-                if (match.Success)
+                try
                 {
-                    statusEvent.Biblio.Application.Number = match.Groups["aNum"].Value.Trim();
+                    var match = Regex.Match(formattedNote,
+                        @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71:.+)(?<inventors>72:.+?)(?<priority>33:.+)(?<date22>\.\s?-\s?APP.+)",
+                        RegexOptions.Singleline,
+                        TimeSpan.FromSeconds(5));
 
-                    statusEvent.Biblio.Titles.Add(new Integration.Title
+                    if (match.Success)
                     {
-                        Language = "EN",
-                        Text = match.Groups["title"].Value.Replace("54:", "").Replace("~", "").Trim()
-                    });
+                        statusEvent.Biblio.Application.Number = match.Groups["aNum"].Value.Trim();
 
-                    var applicants = Regex.Split(match.Groups["applicants"].Value.Replace("~", "").Replace("71:", ""), @";\s?[A-Z]").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                    foreach (var applicant in applicants)
-                    {
-                        var appli = Regex.Match(applicant.Trim(), @"(?<name>.+?),\s(?<adress>.+),\s(?<country>.+)");
-
-                        if (appli.Success)
-                        {
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
-                            {
-                                Name = appli.Groups["name"].Value.Trim(),
-                                Address1 = appli.Groups["adress"].Value.Trim(),
-                                Country = MakeCountryCode(appli.Groups["country"].Value.Trim())
-                            });
-
-                            if (MakeCountryCode(appli.Groups["country"].Value.Trim()) == null) Console.WriteLine($"{appli.Groups["country"].Value.Trim()}");
-                        }
-                        else 
-                        {
-                            statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
-                            {
-                                Name = applicant.Trim()
-                            });
-                        }
-                    }
-
-                    var inventors = Regex.Split(match.Groups["inventors"].Value.Replace("~", "").Replace("72:", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                    foreach (var inventor in inventors)
-                    {
-                        var inve = Regex.Match(inventor.Trim(), @"(?<name>.+?)\s?\((?<country>.+)\)");
-
-                        if (inve.Success)
-                        {
-                            statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
-                            {
-                                Name = inve.Groups["name"].Value.Trim(),
-                                Country = MakeCountryCode(inve.Groups["country"].Value.Trim())
-                            });
-
-                            if (MakeCountryCode(inve.Groups["country"].Value.Trim()) == null) Console.WriteLine($"{inve.Groups["country"].Value.Trim()}");
-                        }
-                        else
-                        {
-                            statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
-                            {
-                                Name = inventor.Trim()
-                            });                                
-                        }
-                    }
-
-                    var priorities = Regex.Split(match.Groups["priority"].Value.Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                    foreach (var priority in priorities)
-                    {
-                        var prior = Regex.Match(priority.Trim(), @"33:(?<code>\D{2})\s?~?31:(?<num>.+)\s?~32:(?<date>\d{2}.\d{2}.\d{4})");
-
-                        if (prior.Success)
-                        {
-                            statusEvent.Biblio.Priorities.Add(new Integration.Priority
-                            {
-                                Number = prior.Groups["num"].Value.Trim(),
-                                Country = prior.Groups["code"].Value.Trim(),
-                                Date = DateTime.Parse(prior.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim()
-                            });
-                        }
-                        else Console.WriteLine($"{priority}   ------------- 30");
-                    }
-
-                    var date22 = Regex.Match(match.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}.\d{2}.\d{2})");
-                    if (date22.Success)
-                    {
-                        statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
-                    }
-                    else Console.WriteLine($"{match.Groups["date22"].Value.Trim()} ----------- date22");
-                }
-                else
-                {
-                    var match1 = Regex.Match(formatedNote.Replace("\r", "").Replace("\n", " ").Trim(), @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71.+)(?<inventors>72.+)(?<date22>\.\s?-\s?APP.+)");
-
-                    if (match1.Success)
-                    {
-                        statusEvent.Biblio.Application.Number = match1.Groups["aNum"].Value.Trim();
-
-                        statusEvent.Biblio.Titles.Add(new Integration.Title
+                        statusEvent.Biblio.Titles.Add(new Title
                         {
                             Language = "EN",
-                            Text = match1.Groups["title"].Value.Replace("54:", "").Replace("~", "").Trim()
+                            Text = match.Groups["title"].Value.Replace("54:", "").Replace("~", "").Trim()
                         });
 
-                        var applicants = Regex.Split(match1.Groups["applicants"].Value.Replace("~", "").Replace("71:", ""), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var applicants = Regex
+                            .Split(match.Groups["applicants"].Value.Replace("~", "").Replace("71:", ""), @";\s?[A-Z]")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (var applicant in applicants)
                         {
@@ -241,25 +168,28 @@ namespace Diamond_ZA_Maksim
 
                             if (appli.Success)
                             {
-                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                statusEvent.Biblio.Applicants.Add(new PartyMember
                                 {
                                     Name = appli.Groups["name"].Value.Trim(),
                                     Address1 = appli.Groups["adress"].Value.Trim(),
                                     Country = MakeCountryCode(appli.Groups["country"].Value.Trim())
                                 });
 
-                                if (MakeCountryCode(appli.Groups["country"].Value.Trim()) == null) Console.WriteLine($"{appli.Groups["country"].Value.Trim()}");
+                                if (MakeCountryCode(appli.Groups["country"].Value.Trim()) == null)
+                                    Console.WriteLine($"{appli.Groups["country"].Value.Trim()}");
                             }
                             else
                             {
-                                statusEvent.Biblio.Applicants.Add(new Integration.PartyMember
+                                statusEvent.Biblio.Applicants.Add(new PartyMember
                                 {
                                     Name = applicant.Trim()
                                 });
                             }
                         }
 
-                        var inventors = Regex.Split(match1.Groups["inventors"].Value.Replace("~", "").Replace("72:", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+                        var inventors = Regex
+                            .Split(match.Groups["inventors"].Value.Replace("~", "").Replace("72:", "").Trim(), @";")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
                         foreach (var inventor in inventors)
                         {
@@ -267,29 +197,169 @@ namespace Diamond_ZA_Maksim
 
                             if (inve.Success)
                             {
-                                statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
+                                statusEvent.Biblio.Inventors.Add(new PartyMember
                                 {
                                     Name = inve.Groups["name"].Value.Trim(),
                                     Country = MakeCountryCode(inve.Groups["country"].Value.Trim())
                                 });
 
-                                if (MakeCountryCode(inve.Groups["country"].Value.Trim()) == null) Console.WriteLine($"{inve.Groups["country"].Value.Trim()}");
+                                if (MakeCountryCode(inve.Groups["country"].Value.Trim()) == null)
+                                    Console.WriteLine($"{inve.Groups["country"].Value.Trim()}");
                             }
                             else
                             {
-                                statusEvent.Biblio.Inventors.Add(new Integration.PartyMember
+                                statusEvent.Biblio.Inventors.Add(new PartyMember
                                 {
                                     Name = inventor.Trim()
                                 });
                             }
                         }
-                        var date22 = Regex.Match(match1.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}.\d{2}.\d{2})");
+
+                        var priorities = Regex.Split(match.Groups["priority"].Value.Trim(), @";")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (var priority in priorities)
+                        {
+                            var prior = Regex.Match(priority.Trim(),
+                                @"33:(?<code>\D{2})\s?~?31:(?<num>.+)\s?~32:(?<date>\d{2}.\d{2}.\d{4})");
+
+                            if (prior.Success)
+                            {
+                                statusEvent.Biblio.Priorities.Add(new Priority
+                                {
+                                    Number = prior.Groups["num"].Value.Trim(),
+                                    Country = prior.Groups["code"].Value.Trim(),
+                                    Date = DateTime.Parse(prior.Groups["date"].Value.Trim(), culture)
+                                        .ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{priority}   ------------- 30");
+                        }
+
+                        var date22 = Regex.Match(match.Groups["date22"].Value.Trim(), @".+(?<date>\d{4}.\d{2}.\d{2})");
                         if (date22.Success)
                         {
                             statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
                         }
+                        else
+                        {
+                            Console.WriteLine($"{match.Groups["date22"].Value.Trim()} ----------- date22");
+                        }
                     }
-                    else Console.WriteLine($"{note}");
+                    else
+                    {
+                        var match1 = Regex.Match(formattedNote.Replace("\r", "").Replace("\n", " ").Trim(),
+                            @"(?<aNum>.+?)\s.+(?<title>54.+)(?<applicants>71.+)(?<inventors>72.+)(?<date22>\.\s?-\s?APP.+)",
+                            RegexOptions.None,
+                            TimeSpan.FromSeconds(10));
+
+                        if (match1.Success)
+                        {
+                            statusEvent.Biblio.Application.Number = match1.Groups["aNum"].Value.Trim();
+
+                            statusEvent.Biblio.Titles.Add(new Title
+                            {
+                                Language = "EN",
+                                Text = match1.Groups["title"].Value.Replace("54:", "").Replace("~", "").Trim()
+                            });
+
+                            var applicants = Regex
+                                .Split(match1.Groups["applicants"].Value.Replace("~", "").Replace("71:", ""), @";")
+                                .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (var applicant in applicants)
+                            {
+                                var appli = Regex.Match(applicant.Trim(),
+                                    @"(?<name>.+?),\s(?<adress>.+),\s(?<country>.+)");
+
+                                if (appli.Success)
+                                {
+                                    statusEvent.Biblio.Applicants.Add(new PartyMember
+                                    {
+                                        Name = appli.Groups["name"].Value.Trim(),
+                                        Address1 = appli.Groups["adress"].Value.Trim(),
+                                        Country = MakeCountryCode(appli.Groups["country"].Value.Trim())
+                                    });
+
+                                    if (MakeCountryCode(appli.Groups["country"].Value.Trim()) == null)
+                                        Console.WriteLine($"{appli.Groups["country"].Value.Trim()}");
+                                }
+                                else
+                                {
+                                    statusEvent.Biblio.Applicants.Add(new PartyMember
+                                    {
+                                        Name = applicant.Trim()
+                                    });
+                                }
+                            }
+
+                            var inventors = Regex
+                                .Split(match1.Groups["inventors"].Value.Replace("~", "").Replace("72:", "").Trim(),
+                                    @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (var inventor in inventors)
+                            {
+                                var inve = Regex.Match(inventor.Trim(), @"(?<name>.+?)\s?\((?<country>.+)\)");
+
+                                if (inve.Success)
+                                {
+                                    statusEvent.Biblio.Inventors.Add(new PartyMember
+                                    {
+                                        Name = inve.Groups["name"].Value.Trim(),
+                                        Country = MakeCountryCode(inve.Groups["country"].Value.Trim())
+                                    });
+
+                                    if (MakeCountryCode(inve.Groups["country"].Value.Trim()) == null)
+                                        Console.WriteLine($"{inve.Groups["country"].Value.Trim()}");
+                                }
+                                else
+                                {
+                                    statusEvent.Biblio.Inventors.Add(new PartyMember
+                                    {
+                                        Name = inventor.Trim()
+                                    });
+                                }
+                            }
+
+                            var date22 = Regex.Match(match1.Groups["date22"].Value.Trim(),
+                                @".+(?<date>\d{4}.\d{2}.\d{2})");
+                            if (date22.Success)
+                            {
+                                statusEvent.Biblio.Application.Date = date22.Groups["date"].Value.Trim();
+                            }
+                        }
+                        else
+                        {
+                            var prev = Console.ForegroundColor;
+                            try
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine($"{DateTime.Now:HH:mm:ss} | No matching pattern for {cutNote}");
+                            }
+                            finally
+                            {
+                                Console.ForegroundColor = prev;
+                            }
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var prev = Console.ForegroundColor;
+                    try
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"{DateTime.Now:HH:mm:ss} | Error processing for {cutNote}. Exception: {ex.Message}");
+                    }
+                    finally
+                    {
+                        Console.ForegroundColor = prev;
+                    }
+                }
+                finally
+                {
+                    Console.WriteLine($"{DateTime.Now:HH:mm:ss} | Completed processing for {cutNote}");
                 }
             }
             else if(subCode == "3")

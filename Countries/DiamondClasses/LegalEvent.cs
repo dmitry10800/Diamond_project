@@ -27,7 +27,7 @@ namespace Integration
     {
         public string Tr { get; set; }
 
-        public string Type { get; set; }
+        public string Type { get; set; } = "INID";
 
         public string Language { get; set; }
     }

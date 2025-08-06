@@ -169,7 +169,11 @@ namespace Diamond_VE_Maksim
 
                     foreach (var note in notes)
                     {
-                        statusEvents.Add(MakePatentWithImage(note, subCode, "FG", imageFiles));
+                        var legalEvent = MakePatentWithImage(note, subCode, "FG", imageFiles);
+                        if (legalEvent != null)
+                        {
+                            statusEvents.Add(legalEvent);
+                        }
                     }
                 }
             }
@@ -656,8 +660,11 @@ namespace Diamond_VE_Maksim
             return statusEvent;
         }
 
-        private LegalStatusEvent MakePatentWithImage(string note,
-            string subCode, string sectionCode, Dictionary<string, string> imagesDictionary = null)
+        private LegalStatusEvent MakePatentWithImage(
+            string note,
+            string subCode,
+            string sectionCode,
+            Dictionary<string, string> imagesDictionary = null)
         {
             var statusEvent = new LegalStatusEvent()
             {
@@ -673,104 +680,142 @@ namespace Diamond_VE_Maksim
                 LegalEvent = new LegalEvent()
             };
 
-            if (subCode == "71")
+            try
             {
-                var inids = Regex.Split(note.Trim(),
-                    @"(?=\(\d{2}\))")
-                    .Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                foreach (var inid in inids)
+                if (subCode == "71")
                 {
-                    if (inid.StartsWith("(21)"))
-                    {
-                        statusEvent.Biblio.Application.Number = inid.Replace("(21)", "").Trim();
-                    }
-                    if (inid.StartsWith("(22)"))
-                    {
-                        var match = Regex.Match(inid.Replace("(22)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.Application.Date = DateTime.Parse(match.Groups["date"].Value.Trim())
-                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                        }
-                    }
-                    if (inid.StartsWith("(11)"))
-                    {
-                        statusEvent.Biblio.Publication.Number = inid.Replace("(11)", "").Trim();
-                    }
-                    if (inid.StartsWith("(45)"))
-                    {
-                        var match = Regex.Match(inid.Replace("(45)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
-                        if (match.Success)
-                        {
-                            statusEvent.Biblio.DOfPublication.date_45 = DateTime.Parse(match.Groups["date"].Value.Trim().Trim())
-                                .ToString("yyyy.MM.dd").Replace(".", "/").Trim();
-                        }
-                    }
-                    if (inid.StartsWith("(73)"))
-                    {
-                        var assigneesList = Regex.Split(inid.Replace("(73)", ""), @"\n")
-                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
+                    var inids = Regex.Split(note.Trim(),
+                            @"(?=\(\d{2}\))")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
 
-                        foreach (var assigner in assigneesList)
+                    foreach (var inid in inids)
+                    {
+                        if (inid.StartsWith("(21)"))
                         {
-                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            statusEvent.Biblio.Application.Number = inid.Replace("(21)", "").Trim();
+                        }
+
+                        if (inid.StartsWith("(22)"))
+                        {
+                            var match = Regex.Match(inid.Replace("(22)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                            if (match.Success)
                             {
-                                Name = assigner.Trim().TrimEnd(',').TrimEnd(';')
-                            });
-                        }
-                    }
-                    if (inid.StartsWith("(74)"))
-                    {
-                        var agentsList = Regex.Split(inid.Replace("(74)", "").Trim(), @"\s-\s", RegexOptions.Singleline)
-                            .Where(val => !string.IsNullOrEmpty(val))
-                            .ToList();
+                                var raw = match.Groups["date"].Value.Trim();
+                                string[] formats = { "dd'/'MM'/'yyyy", "dd'.'MM'.'yyyy", "dd'-'MM'-'yyyy" };
 
-                        foreach (var agent in agentsList)
-                        {
-                            statusEvent.Biblio.Agents.Add(new PartyMember()
-                            {
-                                Name = agent.Trim()
-                            });
-                        }
-                    }
-                    if (inid.StartsWith("(51)"))
-                    {
-                        statusEvent.LegalEvent.Note = "|| (51) | " + inid.Replace("(51)", "").Trim().TrimEnd(';').Trim();
-                        statusEvent.LegalEvent.Language = "EN";
-
-                        var ipcs = Regex.Split(inid.Replace("(51)", "").Trim(),
-                            ";")
-                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
-
-                        foreach (var ipc in ipcs)
-                        {
-                            var matchIpc = Regex.Match(ipc.Trim(),
-                                @".+=(?<ipc>.+)");
-                            if (matchIpc.Success)
-                            {
-                                statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                if (DateTime.TryParseExact(raw, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
                                 {
-                                    Class = matchIpc.Groups["ipc"].Value.Trim()
+                                    statusEvent.Biblio.Application.Date = date.ToString("yyyy'/'MM'/'dd", CultureInfo.InvariantCulture);
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Incorrect ate: {raw}");
+                                }
+                            }
+                        }
+
+                        if (inid.StartsWith("(11)"))
+                        {
+                            statusEvent.Biblio.Publication.Number = inid.Replace("(11)", "").Trim();
+                        }
+
+                        if (inid.StartsWith("(45)"))
+                        {
+                            var match = Regex.Match(inid.Replace("(45)", "").Trim(), @"(?<date>\d{2}.\d{2}.\d{4})");
+                            if (match.Success)
+                            {
+                                var raw = match.Groups["date"].Value.Trim();
+                                string[] formats = { "dd'/'MM'/'yyyy", "dd'.'MM'.'yyyy", "dd'-'MM'-'yyyy" };
+
+                                if (DateTime.TryParseExact(raw, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                                {
+                                    statusEvent.Biblio.DOfPublication.date_45 = date.ToString("yyyy'/'MM'/'dd", CultureInfo.InvariantCulture);
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Incorrect ate: {raw}");
+                                }
+                            }
+                        }
+
+                        if (inid.StartsWith("(73)"))
+                        {
+                            var assigneesList = Regex.Split(inid.Replace("(73)", ""), @"\n")
+                                .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (var assigner in assigneesList)
+                            {
+                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = assigner.Trim().TrimEnd(',').TrimEnd(';')
                                 });
                             }
-                            else Console.WriteLine($"{ipc} - 51");
+                        }
+
+                        if (inid.StartsWith("(74)"))
+                        {
+                            var agentsList = Regex.Split(inid.Replace("(74)", "").Trim(), @"\s-\s",
+                                    RegexOptions.Singleline)
+                                .Where(val => !string.IsNullOrEmpty(val))
+                                .ToList();
+
+                            foreach (var agent in agentsList)
+                            {
+                                statusEvent.Biblio.Agents.Add(new PartyMember()
+                                {
+                                    Name = agent.Trim()
+                                });
+                            }
+                        }
+
+                        if (inid.StartsWith("(51)"))
+                        {
+                            statusEvent.LegalEvent.Note =
+                                "|| (51) | " + inid.Replace("(51)", "").Trim().TrimEnd(';').Trim();
+                            statusEvent.LegalEvent.Language = "EN";
+
+                            var ipcs = Regex.Split(inid.Replace("(51)", "").Trim(),
+                                    ";")
+                                .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                            foreach (var ipc in ipcs)
+                            {
+                                var matchIpc = Regex.Match(ipc.Trim(),
+                                    @".+=(?<ipc>.+)");
+                                if (matchIpc.Success)
+                                {
+                                    statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                    {
+                                        Class = matchIpc.Groups["ipc"].Value.Trim()
+                                    });
+                                }
+                                else Console.WriteLine($"{ipc} - 51");
+                            }
+                        }
+
+                        if (inid.StartsWith("(54)"))
+                        {
+                            statusEvent.Biblio.Titles.Add(new Title()
+                            {
+                                Language = "ES",
+                                Text = inid.Replace("(54)", "").Replace("_", "").Trim()
+                            });
                         }
                     }
-                    if (inid.StartsWith("(54)"))
-                    {
-                        statusEvent.Biblio.Titles.Add(new Title()
-                        {
-                            Language = "ES",
-                            Text = inid.Replace("(54)","").Replace("_", "").Trim()
-                        });
-                    }
+
+                    statusEvent.Biblio.Abstracts.Add(new Abstract());
+                    statusEvent.Biblio.Application.EffectiveDate = _resolutionDate;
+                    AddAbstractScreenShot(statusEvent, imagesDictionary);
                 }
-                statusEvent.Biblio.Abstracts.Add(new Abstract());
-                statusEvent.Biblio.Application.EffectiveDate = _resolutionDate;
-                AddAbstractScreenShot(statusEvent, imagesDictionary);
+
+                return statusEvent;
             }
-            return statusEvent;
+            catch (Exception e)
+            {
+                var cutNote = note.Length > 100 ? note.Substring(0, 100) + "..." : note;
+                Console.WriteLine($"Failed to process legalEvent from: {cutNote}. Ex: {e.Message}");
+            }
+            return null;
         }
         internal string MakeCountryCode(string country) => country switch
         {
