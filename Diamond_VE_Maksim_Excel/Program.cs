@@ -2,8 +2,8 @@
 {
     internal class Program
     {
-        private const string Path = @"D:\LENS\TET\VE\VE_20240305_628";
-        private const string SubCode = "72";
+        private const string Path = @"D:\LENS\TET\VE\excel\VE_20170830_577";
+        private const string SubCode = "3";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
@@ -12,6 +12,7 @@
 
             var convertedPatents = SubCode switch
             {
+                "3" => methods.Start(Path, SubCode),
                 "26" => methods.Start(Path, SubCode),
                 "34" => methods.Start(Path, SubCode),
                 "55" => methods.Start(Path, SubCode),

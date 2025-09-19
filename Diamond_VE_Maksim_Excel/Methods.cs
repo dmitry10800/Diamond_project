@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using Integration;
+﻿using Integration;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Text.RegularExpressions;
 
 
 namespace Diamond_VE_Maksim_Excel
@@ -190,6 +190,58 @@ namespace Diamond_VE_Maksim_Excel
                         }
 
                         statusEvent.LegalEvent.Date = DateTime.Parse(sheet.GetRow(row).GetCell(4).ToString()).ToString("yyyy/MM/dd");
+                        legalStatusEvents.Add(statusEvent);
+                    }
+                }
+                else if (subCode == "3")
+                {
+                    for (var row = 0; row <= sheet.LastRowNum; row++)
+                    {
+                        Diamond.Core.Models.LegalStatusEvent statusEvent = new()
+                        {
+                            CountryCode = "VE",
+                            SectionCode = "AZ",
+                            SubCode = subCode,
+                            Id = _id++,
+                            GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
+                            Biblio = new Biblio(),
+                            LegalEvent = new LegalEvent()
+                        };
+
+                        statusEvent.Biblio.Application.Number = sheet.GetRow(row).GetCell(0).ToString();
+
+                        statusEvent.Biblio.Titles.Add(new Title()
+                        {
+                            Text = sheet.GetRow(row).GetCell(1).ToString(),
+                            Language = "ES"
+                        });
+
+                        var listAssignees = Regex.Split(sheet.GetRow(row).GetCell(2).ToString().Trim(), ";")
+                            .Where(x => !string.IsNullOrEmpty(x))
+                            .ToList();
+
+                        foreach (var assignee in listAssignees)
+                        {
+                            statusEvent.Biblio.Assignees.Add(new PartyMember()
+                            {
+                                Name = assignee.Trim()
+                            });
+                        }
+
+                        var listAgents = Regex.Split(sheet.GetRow(row).GetCell(3).ToString().Trim(), ";")
+                            .Where(_ => !string.IsNullOrEmpty(_))
+                            .ToList();
+
+                        foreach (var agent in listAgents)
+                        {
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = agent.Trim()
+                            });
+                        }
+
+                        statusEvent.Biblio.Publication.Date = DateTime.Parse(sheet.GetRow(row).GetCell(4).ToString()).ToString("yyyy/MM/dd");
+                        statusEvent.Biblio.Application.EffectiveDate = DateTime.Parse(sheet.GetRow(row).GetCell(5).ToString()).ToString("yyyy/MM/dd");
                         legalStatusEvents.Add(statusEvent);
                     }
                 }
