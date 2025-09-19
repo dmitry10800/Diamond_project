@@ -40,6 +40,32 @@ namespace Diamond_VE_Maksim
                 _currentFileName = tetml;
 
                 tet = XElement.Load(tetml);
+                if (subCode == "1")
+                {
+                    //var imageFiles = GetImages(tet, subCode);
+                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                        .SkipWhile(val => !val.Value.StartsWith("SOLICITADAS DE PATENTES"))
+                        .TakeWhile(val => !val.Value.StartsWith("Total de Solicitudes"))
+                        .ToList();
+
+                    var text = MakeText(xElements, subCode).Trim();
+                    var notes = Regex.Split(text, @"(?=\(11\)\s\d)").Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
+                    var match = Regex.Match(text, @"Caracas,\s(?<day>\d{2})\s?de\s?(?<month>[a-zA-Z]+)\s?de\s?(?<year>\d{4})");
+
+                    if (match.Success)
+                    {
+                        _resolutionDate =
+                            $"{match.Groups["year"].Value.Trim()}/{MakeMonth(match.Groups["month"].Value.Trim())}/{match.Groups["date"].Value.Trim()}";
+                    }
+                    else
+                    {
+                        Console.WriteLine("Bad resolution date");
+                    }
+                    foreach (var note in notes)
+                    {
+                        statusEvents.Add(MakePatentWithImage(note, subCode, "CA"));
+                    }
+                }
                 if (subCode == "12")
                 {
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
@@ -126,7 +152,6 @@ namespace Diamond_VE_Maksim
                         statusEvents.Add(MakePatent(note, subCode, "FC"));
                     }
                 }
-
                 if (subCode == "71")
                 {
                     var imageFiles = GetImages(tet, subCode);
@@ -368,7 +393,7 @@ namespace Diamond_VE_Maksim
                     }
                 }
             }
-            if (subCode is "12")
+            if (subCode == "12")
             {
                 List<string> inids = new();
 
@@ -551,7 +576,7 @@ namespace Diamond_VE_Maksim
 
                 statusEvent.Biblio.Application.EffectiveDate = _resolutionDate;
             }
-            if (subCode is "19")
+            if (subCode == "19")
             {
                 var inids = Regex.Split(note.Trim(), @"(?=\(\d{2}\))", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val)).ToList();
 
@@ -668,10 +693,289 @@ namespace Diamond_VE_Maksim
                 GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
                 Biblio = new Biblio
                 {
-                    DOfPublication = new DOfPublication()
+                    DOfPublication = new DOfPublication(),
+                    IntConvention = new IntConvention()
                 },
                 LegalEvent = new LegalEvent()
             };
+            var culture = new CultureInfo("ru-RU");
+
+            if (subCode == "1")
+            {
+                var inids = new List<string>();
+
+                var splitNote = Regex.Match(note.Trim(),
+                    @"(?<allinids>.+)\s(?<inid57>\(57\).+)_",
+                    RegexOptions.Singleline);
+
+                if (splitNote.Success)
+                {
+                    inids = Regex.Split(splitNote.Groups["allinids"].Value.Trim(), @"(?=\(\d{2}\)\s)")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                    inids.Add(splitNote.Groups["inid57"].Value.Trim());
+                }
+                else
+                {
+                    var splitNoteLast = Regex.Match(note.Trim(),
+                        @"(?<allinids>.+)\s(?<inid57>\(57\).+)",
+                        RegexOptions.Singleline);
+
+                    if (splitNoteLast.Success)
+                    {
+                        inids = Regex.Split(splitNoteLast.Groups["allinids"].Value.Trim(), @"(?=\(\d{2}\)\s)")
+                            .Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        inids.Add(splitNoteLast.Groups["inid57"].Value.Trim());
+                    }
+                    else Console.WriteLine($"{note} -- not split");
+                }
+
+                var leNote51inid = "|| (51) | ";
+                var leNote57inidEs = "|| EQ. | ";
+                var leNote57inidEn = "|| Also published as | ";
+                var isHas87inid = false;
+
+                foreach (var inid in inids)
+                {
+                    if (inid.StartsWith("(11)"))
+                    {
+                        statusEvent.Biblio.Publication.Number = inid.Replace("\r","").Replace("\n"," ").Replace("(11)", "").Trim();
+                    }
+                    else if (inid.StartsWith("(21)"))
+                    {
+                        statusEvent.Biblio.Application.Number = inid.Replace("\r", "").Replace("\n", " ").Replace("(21)", "").Trim();
+                    }
+                    else if (inid.StartsWith("(22)"))
+                    {
+                        statusEvent.Biblio.Application.Date = DateTime.Parse(inid.Replace("\r", "").Replace("\n", " ").Replace("(22)", "").Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim();
+                    }
+                    else if (inid.StartsWith("(30)"))
+                    {
+                        var priorities = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(30)", "").Trim(), @";").Where(val => !string.IsNullOrEmpty(val)).ToList();
+
+                        foreach (var priority in priorities)
+                        {
+                            var match = Regex.Match(priority.Trim(), @"(?<num>.+)\s(?<code>[A-Z]{2}).+(?<date>\d{2}\/\d{2}\/\d{4})");
+
+                            if (match.Success)
+                            {
+                                statusEvent.Biblio.Priorities.Add(new Priority()
+                                {
+                                    Number = match.Groups["num"].Value.Trim(),
+                                    Country = match.Groups["code"].Value.Trim(),
+                                    Date = DateTime.Parse(match.Groups["date"].Value.Trim(), culture).ToString("yyyy.MM.dd").Replace(".", "/").Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{priority} --- 30");
+                        }
+                    }
+                    else if (inid.StartsWith("(51)"))
+                    {
+                        if (inid.Replace("(51)", "").Trim() is not "")
+                        {
+                            leNote51inid += inid.Replace("(51)", "").Trim().TrimEnd(';').Trim();
+                        }
+
+                        var ipcs = Regex.Split(inid.Replace("\r", "").Replace("\n", " ").Replace("(51)", "").Trim(), @";")
+                            .Where(val => !string.IsNullOrEmpty(val))
+                            .ToList();
+
+                        foreach (var ipc in ipcs)
+                        {
+                            var match = Regex.Match(ipc.Trim(), @".+=(?<ipc>.+)");
+
+                            if (match.Success)
+                            {
+                                statusEvent.Biblio.Ipcs.Add(new Ipc()
+                                {
+                                    Class = match.Groups["ipc"].Value.Trim()
+                                });
+                            }
+                            else Console.WriteLine($"{ipc} - 51");
+                        }
+                    }
+                    else if (inid.StartsWith("(73)"))
+                    {
+                        var match = Regex.Match(inid.Replace("\r", "").Replace("\n", " ").Replace("(73)", "").Trim(),
+                            @"(?<name>.+)Domicilio:(?<adress>.+)Pa.s:(?<country>.+)");
+
+                        if (match.Success)
+                        {
+                            var country = MakeCountryCode(match.Groups["country"].Value.Trim());
+
+                            if (country == null)
+                            {
+                                Console.WriteLine($"{match.Groups["country"].Value.Trim()}");
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Assignees.Add(new PartyMember()
+                                {
+                                    Name = match.Groups["name"].Value.Trim(),
+                                    Address1 = match.Groups["adress"].Value.Trim(),
+                                    Country = country
+                                });
+                            }
+                        }
+                        else Console.WriteLine($"{inid} -- 73");
+                    }
+                    else if (inid.StartsWith("(72)"))
+                    {
+                        var inventors = Regex.Split(inid.Replace("\r","").Replace("\n"," ").Replace("(72)", "").Trim(), @";")
+                            .Where(val => !string.IsNullOrEmpty(val))
+                            .ToList();
+
+                        foreach (var inventor in inventors)
+                        {
+                            statusEvent.Biblio.Inventors.Add(new PartyMember()
+                            {
+                                Name = inventor.Trim()
+                            });
+                        }
+                    }
+                    else if (inid.StartsWith("(74)"))
+                    {
+                        var agents = Regex.Split(inid.Replace("(74)", "").Trim(), @";")
+                            .Where(val => !string.IsNullOrEmpty(val))
+                            .ToList();
+
+                        foreach (var agent in agents)
+                        {
+                            statusEvent.Biblio.Agents.Add(new PartyMember()
+                            {
+                                Name = agent.Trim()
+                            });
+                        }
+                    }
+                    else if (inid.StartsWith("(54)"))
+                    {
+                        statusEvent.Biblio.Titles.Add(new Title()
+                        {
+                            Language = "ES",
+                            Text = inid.Replace("\r","").Replace("\n"," ").Replace("(54)", "").Trim()
+                        });
+                    }
+                    else if (inid.StartsWith("(57)"))
+                    {
+                        var cleanInid = inid.Replace("\r", "").Replace("\n", " ").Replace("(57)", "");
+                        var match = Regex.Match(cleanInid,
+                            @"(?<inid57>.+\.)\s(?<inid87>[A-Z]{2}\d.+?)\s__",
+                            RegexOptions.Singleline);
+
+                        if (match.Success)
+                        {
+                            statusEvent.Biblio.Abstracts.Add(new Abstract()
+                            {
+                                Language = "ES",
+                                Text = match.Groups["inid57"].Value.Trim()
+                            });
+
+                            var keys = Regex.Split(match.Groups["inid87"].Value.Trim(), " ")
+                                .Where(_ => !string.IsNullOrEmpty(_))
+                                .ToList();
+
+                            var stringKeys = new StringBuilder(); 
+
+                            foreach (var key in keys)
+                            {
+                                if (key.StartsWith("WO"))
+                                {
+                                    statusEvent.Biblio.IntConvention.PctPublNumber = key.Trim();
+                                }
+                                else if (key.StartsWith("EP"))
+                                {
+                                    statusEvent.Biblio.EuropeanPatents.Add(new EuropeanPatent()
+                                    {
+                                        PubNumber = key
+                                    });
+                                }
+                                else
+                                {
+                                    stringKeys = stringKeys.Append(key + " ");
+                                    isHas87inid = true;
+                                }
+                            }
+                            leNote57inidEs += stringKeys.ToString();
+                            leNote57inidEn += stringKeys.ToString();
+
+                        }
+                        else
+                        {
+                            var match1 = Regex.Match(cleanInid,
+                                @"(?<inid57>.+\.)\s(?<inid87>[A-Z]{2}\d.+)",
+                                RegexOptions.Singleline);
+
+                            if (match1.Success)
+                            {
+                                statusEvent.Biblio.Abstracts.Add(new Abstract()
+                                {
+                                    Language = "ES",
+                                    Text = match1.Groups["inid57"].Value.Trim()
+                                });
+
+                                var keys = Regex.Split(match1.Groups["inid87"].Value.Trim(), " ")
+                                    .Where(_ => !string.IsNullOrEmpty(_))
+                                    .ToList();
+
+                                var stringKeys = new StringBuilder();
+
+                                foreach (var key in keys)
+                                {
+                                    if (key.StartsWith("WO"))
+                                    {
+                                        statusEvent.Biblio.IntConvention.PctPublNumber = key.Trim();
+                                    }
+                                    else if (key.StartsWith("EP"))
+                                    {
+                                        statusEvent.Biblio.EuropeanPatents.Add(new EuropeanPatent()
+                                        {
+                                            PubNumber = key
+                                        });
+                                    }
+                                    else
+                                    {
+                                        stringKeys = stringKeys.Append(key + " ");
+                                        isHas87inid = true;
+                                    }
+                                }
+                                leNote57inidEs += stringKeys.ToString();
+                                leNote57inidEn += stringKeys.ToString();
+                            }
+                            else
+                            {
+                                statusEvent.Biblio.Abstracts.Add(new Abstract()
+                                {
+                                    Language = "ES",
+                                    Text = cleanInid.Replace("_", "")
+                                });
+                            }
+                        }
+                    }
+                    else Console.WriteLine($"{inid} --- not process");
+                }
+
+                if (isHas87inid)
+                {
+                    statusEvent.LegalEvent.Note = leNote57inidEs + leNote51inid.Trim();
+                    statusEvent.LegalEvent.Language = "ES";
+
+                    statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
+                    {
+                        Tr = leNote57inidEn + leNote51inid.Trim(),
+                        Language = "EN",
+                        Type = "INID"
+                    });
+                }
+                else
+                {
+                    statusEvent.LegalEvent.Note = leNote51inid.Trim();
+                    statusEvent.LegalEvent.Language = "EN";
+                }
+
+                statusEvent.Biblio.Application.EffectiveDate = _resolutionDate;
+
+            }
 
             if (subCode == "71")
             {
@@ -775,7 +1079,10 @@ namespace Diamond_VE_Maksim
         internal string MakeCountryCode(string country) => country switch
         {
             "PAISES BAJOS ( HOLANDA )" => "NL",
+            "PAISES" => "NL",
             "ESTADOS UNIDOS DE AMÉRICA" => "US",
+            "ESTADOS UNIDOS DE" => "US",
+            "ESTADOS UNIDOS" => "US",
             "ESPAÑA" => "ES",
             "JAPON" => "JP",
             "FRANCIA" => "FR",
@@ -799,20 +1106,23 @@ namespace Diamond_VE_Maksim
             "BELGICA" => "BE",
             "NORUEGA" => "NO",
             "ISRAEL" => "IL",
+            "VENEZUELA" => "VE",
+            "MALASIA" => "MY",
+            "SUECIA" => "SE",
             _ => null
         };
         internal string MakeText(List<XElement> xElements, string subCode)
         {
             var text = new StringBuilder();
 
-            if(subCode is "24" or "19")
+            if(subCode is "24" or "19" or "1")
             {
                 foreach (var xElement in xElements)
                 {
                     text = text.Append(xElement.Value + "\n");
                 }
             }
-            if (subCode is "12" )
+            if (subCode is "12")
             {
                 foreach (var xElement in xElements)
                 {
@@ -829,6 +1139,9 @@ namespace Diamond_VE_Maksim
         private static string MakeMonth(string month) => month switch
         {
             "agosto" => "08",
+            "febrero" => "02",
+            "septiembre" => "09",
+            "noviembre" => "11",
             _ => null
         };
         private Dictionary<string, string> GetImages(XElement tet, string subCode)
