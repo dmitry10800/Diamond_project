@@ -55,7 +55,7 @@ namespace Diamond_VE_Maksim
                     if (match.Success)
                     {
                         _resolutionDate =
-                            $"{match.Groups["year"].Value.Trim()}/{MakeMonth(match.Groups["month"].Value.Trim())}/{match.Groups["date"].Value.Trim()}";
+                            $"{match.Groups["year"].Value.Trim()}/{MakeMonth(match.Groups["month"].Value.Trim())}/{match.Groups["day"].Value.Trim()}";
                     }
                     else
                     {

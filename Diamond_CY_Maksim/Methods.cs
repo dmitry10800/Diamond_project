@@ -449,8 +449,8 @@ namespace Diamond_CY_Maksim
                                     Name = match.Groups["name"].Value.Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Country = countryCode,
-                                    Language = IsSpanish(match.Groups["name"].Value.Trim()) ? "es" :
-                                        isGerman(match.Groups["name"].Value.Trim()) ? "de" : isGreek(match.Groups["name"].Value.Trim()) ? "el" : "en"
+                                    Language = IsSpanish(match.Groups["name"].Value.Trim()) ? "es".ToUpper() :
+                                        isGerman(match.Groups["name"].Value.Trim()) ? "de".ToUpper() : isGreek(match.Groups["name"].Value.Trim()) ? "el".ToUpper() : "en".ToUpper()
                                 });
                             }
                         }
@@ -604,8 +604,8 @@ namespace Diamond_CY_Maksim
                     {
                         statusEvent.Biblio.Assignees.Add(new PartyMember()
                         {
-                            Language = IsSpanish(assignee) ? "es" :
-                                isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
+                            Language = IsSpanish(assignee) ? "es".ToUpper() :
+                                isGerman(assignee) ? "de".ToUpper() : isGreek(assignee) ? "el".ToUpper() : "en".ToUpper(),
                             Name = assignee
                         });
                     }
@@ -632,8 +632,8 @@ namespace Diamond_CY_Maksim
                         {
                             statusEvent.Biblio.Assignees.Add(new PartyMember()
                             {
-                                Language = IsSpanish(assignee) ? "es" :
-                                    isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
+                                Language = IsSpanish(assignee) ? "es".ToUpper() :
+                                    isGerman(assignee) ? "de".ToUpper() : isGreek(assignee) ? "el".ToUpper() : "en".ToUpper(),
                                 Name = assignee
                             });
                         }
@@ -661,8 +661,8 @@ namespace Diamond_CY_Maksim
                     {
                         statusEvent.Biblio.Assignees.Add(new PartyMember()
                         {
-                            Language = IsSpanish(assignee) ? "es" :
-                                isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
+                            Language = IsSpanish(assignee) ? "es".ToUpper() :
+                                isGerman(assignee) ? "de".ToUpper() : isGreek(assignee) ? "el".ToUpper() : "en".ToUpper(),
                             Name = assignee
                         });
                     }
@@ -690,7 +690,7 @@ namespace Diamond_CY_Maksim
                         {
                             statusEvent.Biblio.Assignees.Add(new PartyMember()
                             {
-                                Language = IsSpanish(assignee) ? "es" : isGerman(assignee) ? "de" : isGreek(assignee) ? "el" : "en",
+                                Language = IsSpanish(assignee) ? "es".ToUpper() : isGerman(assignee) ? "de".ToUpper() : isGreek(assignee) ? "el".ToUpper() : "en".ToUpper(),
                                 Name = assignee
                             });
                         }
