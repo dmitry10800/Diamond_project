@@ -163,7 +163,7 @@ namespace Diamond_FI_Maksim
 
                     foreach (var applicant in applicants)
                     {
-                        legalEvent.Biblio.Applicants.Add(new PartyMember()
+                        legalEvent.Biblio.Assignees.Add(new PartyMember()
                         {
                             Name = applicant.Trim()
                         });
@@ -272,7 +272,7 @@ namespace Diamond_FI_Maksim
 
                     foreach (var applicant in applicants)
                     {
-                        legalEvent.Biblio.Applicants.Add(new PartyMember()
+                        legalEvent.Biblio.Assignees.Add(new PartyMember()
                         {
                             Name = applicant.Trim()
                         });
