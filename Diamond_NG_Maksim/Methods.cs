@@ -113,7 +113,10 @@ namespace Diamond_NG_Maksim
                 SectionCode = sectionCode,
                 Id = _id++,
                 GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf")),
-                Biblio = new Biblio(),
+                Biblio = new Biblio()
+                {
+                    DOfPublication = new DOfPublication()
+                },
                 LegalEvent = new LegalEvent()
             };
 
@@ -128,7 +131,7 @@ namespace Diamond_NG_Maksim
                     var day = match.Groups["day"].Value.Trim().PadLeft(2, '0');
                     var month = GetMonth(match.Groups["month"].Value.Trim());
                     var year = match.Groups["year"].Value.Trim();
-                    legalEvent.Biblio.Publication.Date = year + "/" + month + "/" + day;
+                    legalEvent.Biblio.DOfPublication.date_45 = year + "/" + month + "/" + day;
 
                     legalEvent.Biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
 
@@ -152,7 +155,15 @@ namespace Diamond_NG_Maksim
                         if (matchApplicant.Success)
                         {
                             var country = GetCountry(matchApplicant.Groups["country"].Value.Trim());
-                            if(country == null) 
+                            var country1 = matchApplicant.Groups["country"].Value.Trim();
+                            var address = matchApplicant.Groups["adress"].Value.Trim();
+
+                            if (!string.IsNullOrEmpty(country1) && address.EndsWith(country1, StringComparison.OrdinalIgnoreCase))
+                            {
+                                address = Regex.Replace(address, $@"(,\s*{Regex.Escape(country1)})$", "", RegexOptions.IgnoreCase).Trim();
+                            }
+
+                            if (country == null) 
                             {
                                 Console.WriteLine(matchApplicant.Groups["country"].Value.Trim());
                             } 
@@ -160,7 +171,7 @@ namespace Diamond_NG_Maksim
                             legalEvent.Biblio.Applicants.Add(new PartyMember()
                             {
                                 Name = matchApplicant.Groups["name"].Value.Trim(),
-                                Address1 = matchApplicant.Groups["adress"].Value.Trim(),
+                                Address1 = address,
                                 Country = country
                             });
                         }
@@ -172,6 +183,14 @@ namespace Diamond_NG_Maksim
                             if (matchApplicant2.Success)
                             {
                                 var country = GetCountry(matchApplicant2.Groups["country"].Value.Trim());
+                                var country1 = matchApplicant2.Groups["country"].Value.Trim();
+                                var address = matchApplicant2.Groups["adress"].Value.Trim();
+
+                                if (!string.IsNullOrEmpty(country1) && address.EndsWith(country1, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    address = Regex.Replace(address, $@"(,\s*{Regex.Escape(country1)})$", "", RegexOptions.IgnoreCase).Trim();
+                                }
+
                                 if (country == null)
                                 {
                                     Console.WriteLine(matchApplicant2.Groups["country"].Value.Trim());
@@ -180,7 +199,7 @@ namespace Diamond_NG_Maksim
                                 legalEvent.Biblio.Applicants.Add(new PartyMember()
                                 {
                                     Name = matchApplicant2.Groups["name"].Value.Trim(),
-                                    Address1 = matchApplicant2.Groups["adress"].Value.Trim(),
+                                    Address1 = address,
                                     Country = country
                                 });
                             }
@@ -192,6 +211,14 @@ namespace Diamond_NG_Maksim
                                 if (matchApplicant3.Success)
                                 {
                                     var country = GetCountry(matchApplicant3.Groups["country"].Value.Trim());
+                                    var country1 = matchApplicant3.Groups["country"].Value.Trim();
+                                    var address = matchApplicant3.Groups["adress"].Value.Trim();
+
+                                    if (!string.IsNullOrEmpty(country1) && address.EndsWith(country1, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        address = Regex.Replace(address, $@"(,\s*{Regex.Escape(country1)})$", "", RegexOptions.IgnoreCase).Trim();
+                                    }
+
                                     if (country == null)
                                     {
                                         Console.WriteLine(matchApplicant3.Groups["country"].Value.Trim());
@@ -200,7 +227,7 @@ namespace Diamond_NG_Maksim
                                     legalEvent.Biblio.Applicants.Add(new PartyMember()
                                     {
                                         Name = matchApplicant3.Groups["name"].Value.Trim(),
-                                        Address1 = matchApplicant3.Groups["adress"].Value.Trim(),
+                                        Address1 = address,
                                         Country = country
                                     });
                                 }
@@ -227,6 +254,14 @@ namespace Diamond_NG_Maksim
                         if (matchInventor.Success)
                         {
                             var country = GetCountry(matchInventor.Groups["country"].Value.Trim());
+                            var country1 = matchInventor.Groups["country"].Value.Trim();
+                            var address = matchInventor.Groups["adress"].Value.Trim();
+
+                            if (!string.IsNullOrEmpty(country1) && address.EndsWith(country1, StringComparison.OrdinalIgnoreCase))
+                            {
+                                address = Regex.Replace(address, $@"(,\s*{Regex.Escape(country1)})$", "", RegexOptions.IgnoreCase).Trim();
+                            }
+
                             if (country == null)
                             {
                                 Console.WriteLine(matchInventor.Groups["country"].Value.Trim());
@@ -235,7 +270,7 @@ namespace Diamond_NG_Maksim
                             legalEvent.Biblio.Inventors.Add(new PartyMember()
                             {
                                 Name = matchInventor.Groups["name"].Value.Trim(),
-                                Address1 = matchInventor.Groups["adress"].Value.Trim(),
+                                Address1 = address,
                                 Country = country
                             });
                         }
@@ -247,6 +282,14 @@ namespace Diamond_NG_Maksim
                             if (matchApplicant2.Success)
                             {
                                 var country = GetCountry(matchApplicant2.Groups["country"].Value.Trim());
+                                var country1 = matchApplicant2.Groups["country"].Value.Trim();
+                                var address = matchApplicant2.Groups["adress"].Value.Trim();
+
+                                if (!string.IsNullOrEmpty(country1) && address.EndsWith(country1, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    address = Regex.Replace(address, $@"(,\s*{Regex.Escape(country1)})$", "", RegexOptions.IgnoreCase).Trim();
+                                }
+
                                 if (country == null)
                                 {
                                     Console.WriteLine(matchApplicant2.Groups["country"].Value.Trim());
@@ -255,7 +298,7 @@ namespace Diamond_NG_Maksim
                                 legalEvent.Biblio.Inventors.Add(new PartyMember()
                                 {
                                     Name = matchApplicant2.Groups["name"].Value.Trim(),
-                                    Address1 = matchApplicant2.Groups["adress"].Value.Trim(),
+                                    Address1 = address,
                                     Country = country
                                 });
                             }
@@ -267,6 +310,14 @@ namespace Diamond_NG_Maksim
                                 if (matchApplicant3.Success)
                                 {
                                     var country = GetCountry(matchApplicant3.Groups["country"].Value.Trim());
+                                    var country1 = matchApplicant3.Groups["country"].Value.Trim();
+                                    var address = matchApplicant3.Groups["adress"].Value.Trim();
+
+                                    if (!string.IsNullOrEmpty(country1) && address.EndsWith(country1, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        address = Regex.Replace(address, $@"(,\s*{Regex.Escape(country1)})$", "", RegexOptions.IgnoreCase).Trim();
+                                    }
+
                                     if (country == null)
                                     {
                                         Console.WriteLine(matchApplicant3.Groups["country"].Value.Trim());
@@ -275,7 +326,7 @@ namespace Diamond_NG_Maksim
                                     legalEvent.Biblio.Inventors.Add(new PartyMember()
                                     {
                                         Name = matchApplicant3.Groups["name"].Value.Trim(),
-                                        Address1 = matchApplicant3.Groups["adress"].Value.Trim(),
+                                        Address1 = address,
                                         Country = country
                                     });
                                 }
