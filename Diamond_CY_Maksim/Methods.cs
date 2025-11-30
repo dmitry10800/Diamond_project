@@ -169,6 +169,7 @@ namespace Diamond_CY_Maksim
             }
             return text.ToString();
         }
+
         private Dictionary<string, string> GetImages(XElement tet)
         {
             var result = new Dictionary<string, string>();
@@ -252,6 +253,7 @@ namespace Diamond_CY_Maksim
             }
             return result;
         }
+
         internal LegalStatusEvent MakeNotes(string note, string subCode, string sectionCode,
             Dictionary<string, string> imagesDictionary = null)
         {
@@ -446,7 +448,7 @@ namespace Diamond_CY_Maksim
                             {
                                 statusEvent.Biblio.Assignees.Add(new PartyMember()
                                 {
-                                    Name = match.Groups["name"].Value.Trim(),
+                                    Name = match.Groups["name"].Value.Replace("(73) Ιδιοκτήτης/ες �", "").Trim(),
                                     Address1 = match.Groups["adress"].Value.Trim(),
                                     Country = countryCode,
                                     Language = IsSpanish(match.Groups["name"].Value.Trim()) ? "es".ToUpper() :
@@ -461,7 +463,7 @@ namespace Diamond_CY_Maksim
                     }
                     if (inid.StartsWith("(72)"))
                     {
-                        var pairs = ParseInventors(inid);
+                        var pairs = ParseInventors(inid.Replace("(72) Εφευρέτης/ες �",""));
                         foreach (var pair in pairs)
                         {
                             var countryCode = MakeCountry(pair.Value);
@@ -477,7 +479,6 @@ namespace Diamond_CY_Maksim
                                     Country = countryCode
                                 });
                             }
-
                         }
                     }
                     if (inid.StartsWith("(30)"))
@@ -536,19 +537,14 @@ namespace Diamond_CY_Maksim
                     }
                     if (inid.StartsWith("(52)"))
                     {
-                        var match = Regex.Match(inid, @"\(52\).+�(?<ipcrs>.+\/\d{2})", RegexOptions.Singleline);
-                        if (match.Success)
-                        {
-                            var ipcrs = Regex.Split(match.Groups["ipcrs"].Value.Trim(), @"(?=\D\d{2}\D\s?\d+\/\d+)")
-                                .Where(x => !string.IsNullOrEmpty(x)).ToList();
+                        var matches = Regex.Matches(inid, @"[A-Z]\d{2}[A-Z]\s?\d+\/\d+");
 
-                            foreach (var ipcr in ipcrs)
+                        foreach (Match match in matches)
+                        {
+                            statusEvent.Biblio.Ipcrs.Add(new Ipcr
                             {
-                                statusEvent.Biblio.Ipcrs.Add(new Ipcr()
-                                {
-                                    ClassValue = ipcr.Trim()
-                                });
-                            }
+                                ClassValue = match.Value.Trim()
+                            });
                         }
                     }
                     if (inid.StartsWith("(74)"))
@@ -744,7 +740,7 @@ namespace Diamond_CY_Maksim
                 Console.WriteLine("Error - 72");
             }
 
-            var names = lines.Skip(2).Take(countryIndex - 2).ToList();
+            var names = lines.Take(countryIndex).ToList();
             var countries = lines.Skip(countryIndex).ToList();
             var dictionary = new Dictionary<string, string>();
             for (var i = 0; i < names.Count; i++)
