@@ -558,6 +558,7 @@ namespace Diamond_CY_Maksim
                             {
                                 Name = match.Groups["name"].Value.Trim(),
                                 Address1 = match.Groups["adress"].Value.Replace("\r", "").Replace("\n", " ").Trim(),
+                                Language = "EL"
                             });
                         }
                         else
