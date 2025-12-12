@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NPOI" Version="2.7.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Countries\DiamondClasses\DiamondProjectClasses.csproj" />
     <ProjectReference Include="..\DiamondUtilities\DiamondUtilities.csproj" />
   </ItemGroup>

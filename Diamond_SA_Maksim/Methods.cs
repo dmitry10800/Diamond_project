@@ -1,6 +1,8 @@
-﻿using Diamond.Core.Models;
+﻿using Integration;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using Diamond.Core.Models;
 
 namespace Diamond_SA_Maksim;
 
@@ -11,35 +13,73 @@ public class Methods
 
     internal List<LegalStatusEvent> Start(string path, string subCode)
     {
-        var statusEvents = new List<LegalStatusEvent>();
+        var legalStatusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
         var directory = new DirectoryInfo(path);
-        var files = directory.GetFiles("*.tetml", SearchOption.AllDirectories).Select(file => file.FullName).ToList();
+        var files = directory.GetFiles("*.xlsx", SearchOption.AllDirectories).Select(file => file.FullName);
 
-        XElement tet;
-        var xElements = new List<XElement>();
-
-        foreach (var tetml in files)
+        foreach (var xlsxFile in files)
         {
-            _currentFileName = tetml;
-            tet = XElement.Load(tetml);
+            _currentFileName = xlsxFile;
+
+
+            ISheet sheet;
+
+            XSSFWorkbook OpenedDocument;
+
+            using (FileStream file = new(xlsxFile, FileMode.Open, FileAccess.Read))
+            {
+                OpenedDocument = new XSSFWorkbook(file);
+            }
+
+            sheet = OpenedDocument.GetSheet("Sheet1") ?? OpenedDocument.GetSheet("Лист1");
 
             if (subCode == "1")
             {
-                xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                    .SkipWhile(val => !val.Value.StartsWith(""))
-                    .TakeWhile(val => !val.Value.StartsWith(""))
-                    .ToList();
+                for (var row = 0; row <= sheet.LastRowNum; row++)
+                {
+                    var currentRow = sheet.GetRow(row);
+                    if (currentRow == null) continue;
 
-                //var text = MakeText(xElements, subCode);
+                    var cell0 = GetCellValue(currentRow.GetCell(0));
+                    var cell1 = GetCellValue(currentRow.GetCell(1));
+                    if (string.IsNullOrWhiteSpace(cell0) || string.IsNullOrWhiteSpace(cell1)) continue;
 
-                //var notes = Regex.Split(text, @"(?=\(11\).+)", RegexOptions.Singleline).Where(val => !string.IsNullOrEmpty(val) && val.StartsWith("(11)")).ToList();
+                    var statusEvent = new Diamond.Core.Models.LegalStatusEvent()
+                    {
+                        CountryCode = "SA",
+                        SectionCode = "FD",
+                        SubCode = subCode,
+                        Id = _id++,
+                        GazetteName = Path.GetFileName(_currentFileName.Replace(".xlsx", ".pdf")),
+                        Biblio = new Biblio(),
+                        LegalEvent = new LegalEvent()
+                    };
 
-                //foreach (var note in notes)
-                //{
-                //    statusEvents.Add();
-                //}
+                    statusEvent.Biblio.Application.Number = cell1;
+                    statusEvent.Biblio.Titles.Add(new Title()
+                    {
+                        Text = cell0,
+                        Language = "AR"
+                    });
+
+                    var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"[0-9]{8}");
+                    if (date.Success)
+                    {
+                        statusEvent.LegalEvent.Date = date.Value.Insert(4, "/").Insert(7, "/").Trim();
+                    }
+
+                    legalStatusEvents.Add(statusEvent);
+                }
             }
+            OpenedDocument.Close();
         }
-        return statusEvents;
+        return legalStatusEvents;
+    }
+
+    private string GetCellValue(ICell cell)
+    {
+        if (cell == null) return string.Empty;
+
+        return cell.ToString()?.Trim() ?? string.Empty;
     }
 }
