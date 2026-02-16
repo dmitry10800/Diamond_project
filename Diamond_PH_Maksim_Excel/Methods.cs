@@ -331,19 +331,57 @@ namespace Diamond_PH_Maksim_Excel
 
         private static DateTime ParseDateString(string dateString, int rowNumber)
         {
-            if (string.IsNullOrWhiteSpace(dateString))
-                throw new Exception($"Empty date {rowNumber + 1}");
+            var exactFormats = new[] {"dd.MM.yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "dd/MM/yyyy", "dd-MMM-yyyy", "dd-MMMM-yyyy", "dd MMM yyyy", "dd MMMM yyyy"};
 
-            if (!DateTime.TryParseExact(dateString,
-                    new[] { "dd.MM.yyyy", "MM/dd/yyyy", "yyyy-MM-dd" },
-                    CultureInfo.InvariantCulture,
-                    DateTimeStyles.None,
-                    out var parsedDate))
+            var supportedCultures = new[] {CultureInfo.InvariantCulture, new CultureInfo("en-US"),new CultureInfo("en-GB")};
+
+            if (string.IsNullOrWhiteSpace(dateString))
             {
-                throw new Exception($"{dateString} in {rowNumber + 1}");
+                throw new Exception($"Empty date in row {rowNumber + 1}");
             }
 
-            return parsedDate;
+            dateString = Normalize(dateString);
+
+            foreach (var culture in supportedCultures)
+            {
+                if (DateTime.TryParseExact(
+                        dateString,
+                        exactFormats,
+                        culture,
+                        DateTimeStyles.None,
+                        out var parsedExact))
+                {
+                    return parsedExact;
+                }
+            }
+
+            foreach (var culture in supportedCultures)
+            {
+                if (DateTime.TryParse(
+                        dateString,
+                        culture,
+                        DateTimeStyles.None,
+                        out var parsed))
+                {
+                    return parsed;
+                }
+            }
+
+            throw new Exception($"Invalid date '{dateString}' in row {rowNumber + 1}");
+        }
+
+        private static string Normalize(string input)
+        {
+            var value = input.Trim();
+
+            value = value.Replace("Sept", "Sep", StringComparison.OrdinalIgnoreCase);
+
+            while (value.Contains("  "))
+            {
+                value = value.Replace("  ", " ");
+            }
+
+            return value;
         }
     }
 }
