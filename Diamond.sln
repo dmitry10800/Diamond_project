@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11520.95 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Countries", "Countries", "{CD278762-9ACD-48B2-BD8A-424C2CD42A38}"
 EndProject
@@ -408,6 +408,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SA", "SA", "{3DC21E61-EF4A-4C9A-BF8F-158AB2353A1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_SA_Maksim", "Diamond_SA_Maksim\Diamond_SA_Maksim.csproj", "{35BDB7F6-5F87-47B2-B65C-F1C641F73E2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BN", "BN", "{0BC2C126-C398-4714-A7DF-51F5B147808A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diamond_BN_Maksim", "Diamond_BN_Maksim\Diamond_BN_Maksim.csproj", "{7132B30F-3C13-48A6-86A4-4ED414F5A839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -943,6 +947,10 @@ Global
 		{35BDB7F6-5F87-47B2-B65C-F1C641F73E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35BDB7F6-5F87-47B2-B65C-F1C641F73E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35BDB7F6-5F87-47B2-B65C-F1C641F73E2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7132B30F-3C13-48A6-86A4-4ED414F5A839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7132B30F-3C13-48A6-86A4-4ED414F5A839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7132B30F-3C13-48A6-86A4-4ED414F5A839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7132B30F-3C13-48A6-86A4-4ED414F5A839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1149,6 +1157,8 @@ Global
 		{C26D371B-1AC2-4061-A5B0-C74F095E2BF9} = {6CD61FCD-4252-467F-A409-BFE11AAD0FDE}
 		{3DC21E61-EF4A-4C9A-BF8F-158AB2353A1E} = {CD278762-9ACD-48B2-BD8A-424C2CD42A38}
 		{35BDB7F6-5F87-47B2-B65C-F1C641F73E2A} = {3DC21E61-EF4A-4C9A-BF8F-158AB2353A1E}
+		{0BC2C126-C398-4714-A7DF-51F5B147808A} = {CD278762-9ACD-48B2-BD8A-424C2CD42A38}
+		{7132B30F-3C13-48A6-86A4-4ED414F5A839} = {0BC2C126-C398-4714-A7DF-51F5B147808A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D20EC653-9AB2-4390-80D0-3B8BEC2529F8}
