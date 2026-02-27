@@ -121,7 +121,7 @@ namespace Diamond_BN_Maksim
             return sb.ToString();
         }
 
-        private string MakeMonth(string month) => month switch
+        private string? MakeMonth(string month) => month switch
         {
             "May" => "05",
             "October" => "10",

@@ -142,18 +142,20 @@ namespace Diamond_PH_Maksim_Excel
                             }
                         }
 
+                        var noteString = "|| PUBLICATION DATE | ";
+
                         var pubDateString = GetCellStringValue(rowObj, 2);
                         if (!string.IsNullOrWhiteSpace(pubDateString))
                         {
                             var pubDate = ParseDateString(pubDateString, row);
-                            statusEvent.Biblio.Publication.Date = pubDate.ToString("yyyy/MM/dd");
+                            statusEvent.LegalEvent.Note = noteString + $"{pubDate.ToString("yyyy/MM/dd")}, ";
                         }
 
                         var pctPubDateString = GetCellStringValue(rowObj, 3);
                         if (!string.IsNullOrWhiteSpace(pctPubDateString))
                         {
                             var pctPubDate = ParseDateString(pctPubDateString, row);
-                            statusEvent.Biblio.IntConvention.PctPublDate = pctPubDate.ToString("yyyy/MM/dd");
+                            statusEvent.LegalEvent.Note = noteString + $"{pctPubDate.ToString("yyyy/MM/dd")}";
                         }
 
                         statusEvent.Biblio.Titles.Add(new Title()
