@@ -95,10 +95,7 @@ namespace Diamond_BN_Maksim
 
                     if (match1.Success)
                     {
-                        statusEvent.LegalEvent = new LegalEvent
-                        {
-                            Date = match1.Value.Insert(4, @"/").Insert(7, @"/").Trim()
-                        };
+                        statusEvent.LegalEvent.Date = match1.Value.Insert(4, @"/").Insert(7, @"/").Trim();
                     }
                 }
                 else
