@@ -130,8 +130,8 @@ namespace Diamond_VN_Maksim
                 {
                     var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        //.SkipWhile(val => !val.Value.StartsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
-                        //.TakeWhile(val => !val.Value.StartsWith("PHẦN II"))
+                        .SkipWhile(val => !val.Value.StartsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
+                        .TakeWhile(val => !val.Value.StartsWith("PHẦN II"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
@@ -945,17 +945,17 @@ namespace Diamond_VN_Maksim
                     }
                     else if (inid.StartsWith("(15)"))
                     {
-                        var match = Regex.Match(inid.Trim(), @"(?<date>\d{2}\/\d{2}\/\d{4})");
+                        var match = Regex.Match(inid.Trim(), @"(?<day>\d{2})\/(?<month>\d{2})\/(?<year>\d{4})");
 
                         if (match.Success)
                         {
-                            statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + match.Groups["date"].Value.Trim() + "\n";
+                            statusEvent.LegalEvent.Note = "|| (15) Ngày cấp | " + match.Groups["year"].Value.Trim() + "/" + match.Groups["month"].Value.Trim() + "/" + match.Groups["day"].Value.Trim() + "\n";
                             statusEvent.LegalEvent.Language = "VI";
                             statusEvent.LegalEvent.Translations.Add(new NoteTranslation()
                             {
                                 Language = "EN",
                                 Type = "INID",
-                                Tr = "|| (15) Date of grant | " + match.Groups["date"].Value.Trim() + "\n"
+                                Tr = "|| (15) Date of grant | " + match.Groups["year"].Value.Trim() + "/" + match.Groups["month"].Value.Trim() + "/" + match.Groups["day"].Value.Trim() + "\n"
                             });
                         }
                         else Console.WriteLine($"{inid} ---- 15");
