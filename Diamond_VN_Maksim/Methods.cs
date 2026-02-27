@@ -130,8 +130,8 @@ namespace Diamond_VN_Maksim
                 {
                     var imageFiles = GetImages(tet);
                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
-                        .SkipWhile(val => !val.Value.StartsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
-                        .TakeWhile(val => !val.Value.StartsWith("PHẦN II"))
+                        //.SkipWhile(val => !val.Value.StartsWith("SÁNG CHẾ ĐƯỢC CẤP BẰNG ĐỘC QUYỀN"))
+                        //.TakeWhile(val => !val.Value.StartsWith("PHẦN II"))
                         .ToList();
 
                     var notes = Regex.Split(MakeText(xElements, subCode), @"(?=\(11\)\s\d)")
@@ -434,6 +434,11 @@ namespace Diamond_VN_Maksim
                         inids = Regex.Split(splitTextAndField57.Groups["allinids"].Value.Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
                         inids.Add(splitTextAndField57.Groups["inid57"].Value.Trim());
                     }
+                }
+                else
+                {
+                    inids = Regex.Split(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\(\d{2}\))")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
 
                 foreach (var inid in inids)
@@ -911,6 +916,11 @@ namespace Diamond_VN_Maksim
                         inids = Regex.Split(splitTextAndField57.Groups["allinids"].Value.Trim(), @"(?=\(\d{2}\))").Where(val => !string.IsNullOrEmpty(val)).ToList();
                         inids.Add(splitTextAndField57.Groups["inid57"].Value.Trim());
                     }
+                }
+                else
+                {
+                    inids = Regex.Split(note.Replace("\r", "").Replace("\n", " ").Trim(), @"(?=\(\d{2}\))")
+                        .Where(val => !string.IsNullOrEmpty(val)).ToList();
                 }
 
                 foreach (var inid in inids)
