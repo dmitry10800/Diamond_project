@@ -22,7 +22,6 @@ public class Methods
         {
             _currentFileName = xlsxFile;
 
-
             ISheet sheet;
 
             XSSFWorkbook OpenedDocument;
@@ -41,9 +40,9 @@ public class Methods
                     var currentRow = sheet.GetRow(row);
                     if (currentRow == null) continue;
 
-                    var cell0 = GetCellValue(currentRow.GetCell(0));
+                    //var cell0 = GetCellValue(currentRow.GetCell(0));
                     var cell1 = GetCellValue(currentRow.GetCell(1));
-                    if (string.IsNullOrWhiteSpace(cell0) || string.IsNullOrWhiteSpace(cell1)) continue;
+                    if (/*string.IsNullOrWhiteSpace(cell0) ||*/ string.IsNullOrWhiteSpace(cell1)) continue;
 
                     var statusEvent = new Diamond.Core.Models.LegalStatusEvent()
                     {
@@ -57,11 +56,11 @@ public class Methods
                     };
 
                     statusEvent.Biblio.Application.Number = cell1;
-                    statusEvent.Biblio.Titles.Add(new Title()
-                    {
-                        Text = cell0,
-                        Language = "AR"
-                    });
+                    //statusEvent.Biblio.Titles.Add(new Title()
+                    //{
+                    //    Text = cell0,
+                    //    Language = "AR"
+                    //});
 
                     var date = Regex.Match(Path.GetFileName(_currentFileName.Replace(".xlsx", "")), @"[0-9]{8}");
                     if (date.Success)
