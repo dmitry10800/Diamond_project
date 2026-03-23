@@ -4,8 +4,8 @@ namespace Diamond_UZ_Maksim
 {
     class Main_UZ
     {
-        private const string Path = @"D:\LENS\TET\UZ\UZ_20241231_12";
-        private const string SubCode = "20";
+        private const string Path = @"D:\LENS\TET\UZ\UZ_20260228_02\Newfolder";
+        private const string SubCode = "1";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         private static void Main(string[] args)
