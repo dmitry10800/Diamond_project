@@ -2969,7 +2969,10 @@ namespace Diamond_UZ_Maksim
                             legalStatus.Biblio.Titles.Add(new Title()
                             {
                                 Language = "UZ",
-                                Text = cleanInid.Replace("(54) Hазвание изобретения (UZ)", "").Trim()
+                                Text = cleanInid
+                                    .Replace("(54) Hазвание изобретения (UZ)", "")
+                                    .Replace("(54) Foydali model nomi (UZ)", "")
+                                    .Trim()
                             });
                         }
                         else
@@ -2981,6 +2984,8 @@ namespace Diamond_UZ_Maksim
                                     .Replace("(54) Hазвание изобретения (UZ)", "")
                                     .Replace("(54) Hазвание изобретения (RU)", "")
                                     .Replace("(54) название изобретения (RU)", "")
+                                    .Replace("(54) Foydali model nomi (RU)", "")
+                                    .Replace("FOYDALI MODELNING REFERATI", "")
                                     .Replace("IXTIRONING FORMULASI", "")
                                     .Replace("ФОРМУЛА ИЗОБРЕТЕНИЯ", "")
                                     .Replace("IXTIRONING REFERATI", "")
