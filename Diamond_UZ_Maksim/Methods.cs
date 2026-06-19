@@ -2979,6 +2979,8 @@ namespace Diamond_UZ_Maksim
                                 Language = "RU",
                                 Text = cleanInid
                                     .Replace("(54) Hазвание изобретения (UZ)", "")
+                                    .Replace("(54) Hазвание изобретения (RU)", "")
+                                    .Replace("(54) название изобретения (RU)", "")
                                     .Replace("IXTIRONING FORMULASI", "")
                                     .Replace("ФОРМУЛА ИЗОБРЕТЕНИЯ", "")
                                     .Replace("IXTIRONING REFERATI", "")
