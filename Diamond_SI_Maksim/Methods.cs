@@ -315,7 +315,7 @@ namespace Diamond_SI_Maksim
                             new Title
                             {
                                 Text = inid.Replace(I54, "").Trim(),
-                                Language = "SI"
+                                Language = "SL"
                             }
                         };
                 }
