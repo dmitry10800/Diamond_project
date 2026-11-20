@@ -15,11 +15,11 @@ namespace DIamond_EA_Maksim
 
         internal List<Diamond.Core.Models.LegalStatusEvent> Start (string path, string subCode)
         {
-            List<Diamond.Core.Models.LegalStatusEvent> statusEvents = new();
+            var statusEvents = new List<Diamond.Core.Models.LegalStatusEvent>();
 
-            DirectoryInfo directory = new(path);
+            var directory = new DirectoryInfo(path);
 
-            List<string> files = new();
+            var files = new List<string>();
 
             foreach (var file in directory.GetFiles("*.tetml", SearchOption.AllDirectories))
             {
@@ -28,7 +28,7 @@ namespace DIamond_EA_Maksim
 
             XElement tet;
 
-            List<XElement> xElements = new();
+            var xElements = new List<XElement>();
 
             foreach (var tetml in files)
             {
@@ -87,15 +87,21 @@ namespace DIamond_EA_Maksim
                 }
                 else
                  if (subCode  == "12")
-                {
-                    xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                 {
+                     xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
                             .SkipWhile(val => !val.Value.StartsWith("MM4A ДОСРОЧНОЕ ПРЕКРАЩЕНИЕ ДЕЙСТВИЯ ЕВРАЗИЙСКОГО ПАТЕНТА ИЗ-ЗА НЕУПЛАТЫ В УСТАНОВЛЕННЫЙ СРОК"))
                             .TakeWhile(val => !val.Value.StartsWith("Период публикации сведений в бюллетене"))
                             .TakeWhile(val => !val.Value.StartsWith("ЕВРАЗИЙСКАЯ ПАТЕНТНАЯ ОРГАНИЗАЦИЯ (ЕАПО)"))
                             .ToList();
+                    if (xElements.Count == 0 || xElements == null)
+                    {
+                        xElements = tet.Descendants().Where(val => val.Name.LocalName == "Text")
+                            .ToList();
+                    }
 
                     var notes = Regex.Split(BuildText(xElements).Replace("\r", "").Replace("\n", " "), @"(?=0\d{5}\s)")
                         .Where(val => !string.IsNullOrEmpty(val)).Where(val => val.StartsWith("0")).ToList();
+
 
                     foreach (var note in notes)
                     {
@@ -150,31 +156,31 @@ namespace DIamond_EA_Maksim
 
         internal Diamond.Core.Models.LegalStatusEvent SplitNote(string note, string subCode, string sectionCode)
         {
-            Diamond.Core.Models.LegalStatusEvent legal = new()
+            var legal = new Diamond.Core.Models.LegalStatusEvent()
             {
                 CountryCode = "EA",
                 SectionCode = sectionCode,
                 SubCode = subCode,
                 Id = _id++,
-                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf"))              
+                GazetteName = Path.GetFileName(_currentFileName.Replace(".tetml", ".pdf"))             
             };
 
-            Biblio biblio = new()
+            var biblio = new Biblio()
             {
-                Assignees = new(),
-                Applicants = new()
+                Assignees = new List<PartyMember>(),
+                Applicants = new List<PartyMember>()
             };
 
-            LegalEvent legalEvent = new()
+            var legalEvent = new LegalEvent()
             {
-                Translations = new()
+                Translations = new List<NoteTranslation>()
             };
-            NoteTranslation noteTranslation = new();
+            var noteTranslation = new NoteTranslation();
 
             legal.NewBiblio= new Biblio()
             {
-                Applicants = new(),
-                Assignees = new()
+                Applicants = new List<PartyMember>(),
+                Assignees = new List<PartyMember>()
             };
 
             if (subCode == "5")
@@ -231,7 +237,6 @@ namespace DIamond_EA_Maksim
                 legal.LegalEvent = legalEvent;
                 legal.Biblio = biblio;
             }
-            else
             if( subCode == "9")
             {
                 var match = Regex.Match(note.Trim(), @"(?<appNum>\d+)\s(?<appKind>\D\d+)\s(?<date43>\d{4}.\d{2}.\d{2})\s(?<note>N\s?o\s?\d+)\s(?<applicants>.+)\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<noteDate>\d{4}.\d{2}.\d{2})");
@@ -356,7 +361,6 @@ namespace DIamond_EA_Maksim
                 legal.LegalEvent = legalEvent;
                 legal.Biblio = biblio;
             }
-            else
             if(subCode == "11")
             {
                 var match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>[A-Z]\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<noteNum>N\s?o\s?\d+)\s(?<appNum>\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leDate>\d{4}.\d{2}.\d{2})\s(?<leNote>.+)\s(?<leNoteDate>\d{4}.\d{2}.\d{2})");
@@ -427,7 +431,6 @@ namespace DIamond_EA_Maksim
                 legal.LegalEvent = legalEvent;
                 legal.Biblio = biblio;
             }
-            else
             if (subCode == "12")
             {
                 var match = Regex.Match(note.Trim(), 
@@ -438,7 +441,7 @@ namespace DIamond_EA_Maksim
                     biblio.Publication.Number = match.Groups["pubNum"].Value.Trim();
                     biblio.Publication.Kind = match.Groups["pubKind"].Value.Trim();
 
-                    biblio.DOfPublication = new()
+                    biblio.DOfPublication = new DOfPublication()
                     {
                         date_45 = match.Groups["date45"].Value.Replace(".", "/").Trim()
                     };
@@ -556,7 +559,47 @@ namespace DIamond_EA_Maksim
 
                                 legalEvent.Date = match3.Groups["leDate"].Value.Replace(".", "/").Trim();
                             }
-                            else Console.WriteLine($"{note}");
+                            else
+                            {
+                                var match4 = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>\D{1}\d{1,2})\s(?<fPartNote>.+)\s(?<legalDate>\d{4}.\d{2}.\d{2})\s(?<sPartNote>.+)\s(?<pubDate>\d{4}.\d{2}.\d{2})");
+
+                                if (match4.Success)
+                                {
+                                    biblio.Publication.Number = match4.Groups["pubNum"].Value.Trim();
+                                    biblio.Publication.Kind = match4.Groups["pubKind"].Value.Trim();
+
+                                    legalEvent.Date = match4.Groups["legalDate"].Value.Replace(".", "/").Trim();
+
+                                    if (match4.Groups["sPartNote"].Value.Trim() == "-")
+                                    {
+                                        legalEvent.Note = "|| Код государства, на территории которого прекращено действие патента | " + match4.Groups["fPartNote"].Value.Trim() +
+                                                          "\n" + "|| Дата публикации извещения | " + match4.Groups["pubDate"].Value.Replace(".", "/").Trim();
+                                        legalEvent.Language = "RU";
+                                        noteTranslation.Language = "EN";
+                                        noteTranslation.Type = "INID";
+                                        noteTranslation.Tr = "|| Code of country on which territory the patent is terminated | " + match4.Groups["fPartNote"].Value.Trim()
+                                                             + "\n" + "|| Publication date of notice | " + match4.Groups["pubDate"].Value.Replace(".", "/").Trim();
+                                        legalEvent.Translations.Add(noteTranslation);
+                                    }
+                                    else
+                                    {
+                                        legalEvent.Note = "|| Код государства, на территории которого прекращено действие патента | " + match4.Groups["fPartNote"].Value.Trim() +
+                                                          "\n" + "|| Код государства, на территории которого продолжается действие патента | " + match4.Groups["sPartNote"].Value.Trim()
+                                                          + "\n" + "|| Дата публикации извещения | " + match4.Groups["pubDate"].Value.Replace(".", "/").Trim();
+                                        legalEvent.Language = "RU";
+                                        noteTranslation.Language = "EN";
+                                        noteTranslation.Type = "INID";
+                                        noteTranslation.Tr = "|| Code of country on which territory the patent is terminated | " + match4.Groups["fPartNote"].Value.Trim()
+                                                             + "\n" + "|| Code of country on which territory the patent is valid | " + match4.Groups["sPartNote"].Value.Trim()
+                                                             + "\n" + "|| Publication date of notice | " + match4.Groups["pubDate"].Value.Replace(".", "/").Trim();
+                                        legalEvent.Translations.Add(noteTranslation);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"{note}");
+                                }
+                            }
                         }
                        
 
@@ -568,7 +611,6 @@ namespace DIamond_EA_Maksim
                 legal.LegalEvent = legalEvent;
                 legal.Biblio = biblio;
             }
-            else
             if (subCode == "14")
             {
                 var match = Regex.Match(note.Trim(), @"(?<pubNum>\d+)\s(?<pubKind>[A-Z]\d+)\s(?<date45>\d{4}.\d{2}.\d{2})\s(?<noteNum>N\s?o\s?\d+)\s(?<appDate>\d{4}.\d{2}.\d{2})\s(?<leNoteNumber>.+?)\s(?<leNoteCountry>[A-Z].+)\s(?<leDate>\d{4}.\d{2}.\d{2})");
@@ -603,7 +645,6 @@ namespace DIamond_EA_Maksim
                 legal.LegalEvent = legalEvent;
                 legal.Biblio = biblio;
             }
-            else
             if (subCode == "31")
             {
                 var match = Regex.Match(note.Trim(), @"(?<pubNum>[0-9]+)\s?(?<pubKind>[A-Z][0-9]+)\s?(?<date45>[0-9]{4}.[0-9]{2}.[0-9]{2}).+(?<note1>[N|№]\s?o?\s?\d+)\s?(?<name1>.+?)\((?<code1>[A-Z]{2})\)\s?(?<name2>.+)\((?<code2>[A-Z]{2})\)\s?(?<evDate>[0-9]{4}.[0-9]{2}.[0-9]{2})\s?(?<noteNum>.+)\s(?<noteDate>[0-9]{4}.[0-9]{2}.[0-9]{2})");
@@ -652,7 +693,6 @@ namespace DIamond_EA_Maksim
                 legal.LegalEvent = legalEvent;
                 legal.Biblio = biblio;
             }
-
             return legal;
         }
     }

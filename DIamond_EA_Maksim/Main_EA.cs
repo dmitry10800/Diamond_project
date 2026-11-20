@@ -4,8 +4,8 @@ namespace DIamond_EA_Maksim
 {
     class Main_EA
     {
-        private const string Path = @"D:\_work\TET\EA\EA_20220531_05";
-        private const string SubCode = "31";
+        private const string Path = @"D:\LENS\TET\EA\EA_20260831_08\EA_20260831_08";
+        private const string SubCode = "12";
         private const bool SendToProd = false; // true - send to Prod ; false - send to Stag
 
         static void Main(string[] args)
